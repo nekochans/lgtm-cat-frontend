@@ -15,7 +15,9 @@
     "lint": "yarn lint:prettier && yarn lint:eslint && yarn lint:stylelint",
     "format": "yarn fix:prettier && yarn fix:eslint && yarn fix:stylelint",
     "test": "jest",
-    "test:coverage": "jest --collect-coverage"
+    "test:coverage": "jest --collect-coverage",
+    "storybook": "start-storybook -p 6006",
+    "build:storybook": "build-storybook -o build/storybook"
   },
   "dependencies": {
     "next": "^10.0.6",
@@ -23,6 +25,13 @@
     "react-dom": "^17.0.1"
   },
   "devDependencies": {
+    "@storybook/addon-a11y": "^6.1.18",
+    "@storybook/addon-actions": "^6.1.18",
+    "@storybook/addon-docs": "^6.1.18",
+    "@storybook/addon-knobs": "^6.1.18",
+    "@storybook/addon-links": "^6.1.18",
+    "@storybook/addon-storyshots": "^6.1.18",
+    "@storybook/react": "^6.1.18",
     "@types/jest": "^26.0.20",
     "@types/node": "^14.14.28",
     "@types/prettier": "^2.2.1",
