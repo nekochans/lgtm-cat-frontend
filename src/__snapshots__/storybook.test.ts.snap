@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Storyshots src/components/ListDetail.tsx Show List Detail With Prop 1`] = `
+<div>
+  <h1>
+    Detail for 
+    cat🐱
+  </h1>
+  <p>
+    ID: 
+    1
+  </p>
+</div>
+`;
