@@ -20,9 +20,11 @@
     "build:storybook": "build-storybook -o build/storybook"
   },
   "dependencies": {
+    "bulma": "^0.9.2",
     "next": "^10.0.6",
     "react": "^17.0.1",
-    "react-dom": "^17.0.1"
+    "react-dom": "^17.0.1",
+    "sass": "^1.32.7"
   },
   "devDependencies": {
     "@storybook/addon-a11y": "^6.1.18",
@@ -31,6 +33,7 @@
     "@storybook/addon-knobs": "^6.1.18",
     "@storybook/addon-links": "^6.1.18",
     "@storybook/addon-storyshots": "^6.1.18",
+    "@storybook/preset-scss": "^1.0.3",
     "@storybook/react": "^6.1.18",
     "@types/jest": "^26.0.20",
     "@types/node": "^14.14.28",
@@ -40,6 +43,7 @@
     "@types/stylelint": "^9.10.1",
     "@typescript-eslint/eslint-plugin": "^4.15.0",
     "@typescript-eslint/parser": "^4.15.0",
+    "css-loader": "^5.0.2",
     "eslint": "^7.20.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^7.2.0",
@@ -51,6 +55,8 @@
     "jest": "^26.6.3",
     "prettier": "^2.2.1",
     "prettier-stylelint": "^0.4.2",
+    "sass-loader": "^10.1.1",
+    "style-loader": "^2.0.0",
     "stylelint-config-recess-order": "^2.3.0",
     "stylelint-config-standard": "^20.0.0",
     "stylelint-order": "^4.1.0",
