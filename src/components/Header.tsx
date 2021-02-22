@@ -1,12 +1,12 @@
 import React from 'react';
+import { urlList } from '../constants/url';
 
 const Header: React.FC = () => (
   <header>
     <nav className="navbar navbar-padding">
       <div className="container" style={{ display: 'block' }}>
         <div className="navbar-brand">
-          {/* TODO hrefを環境に合わせて変更する */}
-          <a className="navbar-item" href="http://localhost:3000">
+          <a className="navbar-item" href={urlList.top}>
             <p className="is-size-4 has-text-black">LGTMeow</p>
           </a>
           <div
