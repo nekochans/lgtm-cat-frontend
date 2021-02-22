@@ -105,14 +105,6 @@ module.exports = {
       },
     ],
     'react/react-in-jsx-scope': 'off',
-    'import/no-extraneous-dependencies': [
-      'error',
-      {
-        devDependencies: [
-          '**/storybook.test.ts',
-        ],
-      },
-    ],
   },
   overrides: [
     {
