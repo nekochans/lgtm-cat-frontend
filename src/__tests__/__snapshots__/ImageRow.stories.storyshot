@@ -1,0 +1,80 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Storyshots src/components/ImageRow.tsx Show Image Row With Props 1`] = `
+<div
+  className="columns"
+>
+  <div
+    className="column is-one-third"
+  >
+    <div
+      style={
+        Object {
+          "height": "100%",
+          "margin": "auto",
+          "textAlign": "center",
+        }
+      }
+    >
+      <img
+        alt="lgtm cat"
+        src="/cat.jpeg"
+        style={
+          Object {
+            "maxHeight": "300px",
+            "padding": "0.75rem",
+          }
+        }
+      />
+    </div>
+  </div>
+  <div
+    className="column is-one-third"
+  >
+    <div
+      style={
+        Object {
+          "height": "100%",
+          "margin": "auto",
+          "textAlign": "center",
+        }
+      }
+    >
+      <img
+        alt="lgtm cat"
+        src="/cat2.jpeg"
+        style={
+          Object {
+            "maxHeight": "300px",
+            "padding": "0.75rem",
+          }
+        }
+      />
+    </div>
+  </div>
+  <div
+    className="column is-one-third"
+  >
+    <div
+      style={
+        Object {
+          "height": "100%",
+          "margin": "auto",
+          "textAlign": "center",
+        }
+      }
+    >
+      <img
+        alt="lgtm cat"
+        src="/cat.jpeg"
+        style={
+          Object {
+            "maxHeight": "300px",
+            "padding": "0.75rem",
+          }
+        }
+      />
+    </div>
+  </div>
+</div>
+`;

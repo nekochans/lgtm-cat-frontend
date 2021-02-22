@@ -1,15 +1,24 @@
-import Link from 'next/link';
+import React from 'react';
+import { GetStaticProps } from 'next';
 import Layout from '../components/Layout';
+import { LgtmImage, sampleLgtmData } from '../utils/sampleLtgmData';
+import ImageList from '../components/ImageList';
 
-const IndexPage = () => (
-  <Layout title="Home | Next.js + TypeScript Example">
-    <h1>Hello Next.js 👋</h1>
-    <p>
-      <Link href="/about">
-        <a>About</a>
-      </Link>
-    </p>
+type Props = {
+  imageList: LgtmImage[];
+};
+
+const IndexPage: React.FC<Props> = ({ imageList }: Props) => (
+  <Layout title="LGTMeow">
+    <ImageList imageList={imageList} />
   </Layout>
 );
+
+// eslint-disable-next-line @typescript-eslint/require-await
+export const getStaticProps: GetStaticProps = async () => {
+  const imageList: LgtmImage[] = sampleLgtmData;
+
+  return { props: { imageList } };
+};
 
 export default IndexPage;
