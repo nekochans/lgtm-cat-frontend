@@ -18,7 +18,7 @@ exports[`Storyshots src/components/Header.tsx Show Header 1`] = `
       >
         <a
           className="navbar-item"
-          href="http://localhost:3000"
+          href=""
         >
           <p
             className="is-size-4 has-text-black"
