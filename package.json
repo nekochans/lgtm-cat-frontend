@@ -16,6 +16,7 @@
     "format": "yarn fix:prettier && yarn fix:eslint && yarn fix:stylelint",
     "test": "jest",
     "test:coverage": "jest --collect-coverage",
+    "test:ci": "jest --runInBand --collect-coverage",
     "storybook": "start-storybook -s ./public -p 6006",
     "build:storybook": "build-storybook -o build/storybook"
   },
