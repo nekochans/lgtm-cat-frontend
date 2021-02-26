@@ -7,7 +7,7 @@ type Props = {
 
 const Terms: React.FC<Props> = ({ terms }: Props) => (
   <div className="container" style={{ display: 'block' }}>
-    <div className="content">
+    <div className="content mb-6">
       <ReactMarkdown source={terms} />
     </div>
   </div>
