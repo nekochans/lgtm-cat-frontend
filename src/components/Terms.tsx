@@ -6,8 +6,10 @@ type Props = {
 };
 
 const Terms: React.FC<Props> = ({ terms }: Props) => (
-  <div className="content p-5">
-    <ReactMarkdown source={terms} />
+  <div className="container" style={{ display: 'block' }}>
+    <div className="content">
+      <ReactMarkdown source={terms} />
+    </div>
   </div>
 );
 
