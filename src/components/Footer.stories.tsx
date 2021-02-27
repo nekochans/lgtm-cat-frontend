@@ -7,4 +7,13 @@ export default {
   includeStories: ['showFooter'],
 };
 
-export const showFooter = (): JSX.Element => <Footer />;
+const props = {
+  termsLink: <a href="https://policies.google.com/terms">利用規約</a>,
+  privacyLink: (
+    <a href="https://policies.google.com/privacy">プライバシーポリシー</a>
+  ),
+};
+
+export const showFooterWithProps = (): JSX.Element => (
+  <Footer termsLink={props.termsLink} privacyLink={props.privacyLink} />
+);

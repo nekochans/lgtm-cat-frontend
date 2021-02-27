@@ -1,17 +1,17 @@
-import React from 'react';
-import Link from 'next/link';
+import React, { ReactNode } from 'react';
 
-const Footer: React.FC = () => (
+type Props = {
+  termsLink: ReactNode;
+  privacyLink: ReactNode;
+};
+
+const Footer: React.FC<Props> = ({ termsLink, privacyLink }: Props) => (
   <footer className="footer">
     <div className="level-left">
       <div className="level-item breadcrumb">
         <ul>
-          <li>
-            <Link href="/terms">利用規約</Link>
-          </li>
-          <li>
-            <Link href="/privacy">プライバシーポリシー</Link>
-          </li>
+          <li>{termsLink}</li>
+          <li>{privacyLink}</li>
         </ul>
       </div>
     </div>

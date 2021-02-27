@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
 import Head from 'next/head';
+import Link from 'next/link';
 import Footer from './Footer';
 import Header from './Header';
 
@@ -17,7 +18,10 @@ const Layout: React.FC<Props> = ({ children, title }: Props) => (
     </Head>
     <Header />
     {children}
-    <Footer />
+    <Footer
+      termsLink={<Link href="/terms">利用規約</Link>}
+      privacyLink={<Link href="/privacy">プライバシーポリシー</Link>}
+    />
   </div>
 );
 
