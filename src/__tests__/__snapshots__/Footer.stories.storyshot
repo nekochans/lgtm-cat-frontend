@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Storyshots src/components/Footer.tsx Show Footer 1`] = `
+exports[`Storyshots src/components/Footer.tsx Show Footer With Props 1`] = `
 <footer
   className="footer"
 >
@@ -13,18 +13,24 @@ exports[`Storyshots src/components/Footer.tsx Show Footer 1`] = `
       <ul>
         <li>
           <a
-            href="/terms"
-            onClick={[Function]}
-            onMouseEnter={[Function]}
+            href="https://policies.google.com/terms"
+            style={
+              Object {
+                "color": "royalblue",
+              }
+            }
           >
             利用規約
           </a>
         </li>
         <li>
           <a
-            href="/privacy"
-            onClick={[Function]}
-            onMouseEnter={[Function]}
+            href="https://policies.google.com/privacy"
+            style={
+              Object {
+                "color": "royalblue",
+              }
+            }
           >
             プライバシーポリシー
           </a>
