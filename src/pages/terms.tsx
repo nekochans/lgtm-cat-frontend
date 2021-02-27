@@ -1,7 +1,7 @@
 import fs from 'fs';
 import React from 'react';
 import { GetStaticProps, NextPage } from 'next';
-import Layout from '../components/Layout';
+import SimpleLayout from '../components/SimpleLayout';
 import MarkdownContents from '../components/MarkdownContents';
 
 type Props = {
@@ -9,9 +9,9 @@ type Props = {
 };
 
 const TermsPage: NextPage<Props> = ({ terms }: Props) => (
-  <Layout title="LGTMeow 利用規約">
+  <SimpleLayout title="LGTMeow 利用規約">
     <MarkdownContents markdown={terms} />
-  </Layout>
+  </SimpleLayout>
 );
 
 export const getStaticProps: GetStaticProps = async () => {
