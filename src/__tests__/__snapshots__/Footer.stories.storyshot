@@ -5,6 +5,34 @@ exports[`Storyshots src/components/Footer.tsx Show Footer 1`] = `
   className="footer"
 >
   <div
+    className="level-left"
+  >
+    <div
+      className="level-item breadcrumb"
+    >
+      <ul>
+        <li>
+          <a
+            href="/terms"
+            onClick={[Function]}
+            onMouseEnter={[Function]}
+          >
+            利用規約
+          </a>
+        </li>
+        <li>
+          <a
+            href="/privacy"
+            onClick={[Function]}
+            onMouseEnter={[Function]}
+          >
+            プライバシーポリシー
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div
     className="content has-text-centered"
   >
     <p>
