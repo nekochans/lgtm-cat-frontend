@@ -19,8 +19,18 @@ const Layout: React.FC<Props> = ({ children, title }: Props) => (
     <Header />
     {children}
     <Footer
-      termsLink={<Link href="/terms">利用規約</Link>}
-      privacyLink={<Link href="/privacy">プライバシーポリシー</Link>}
+      termsLink={
+        <Link href="/terms">
+          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+          <a>利用規約</a>
+        </Link>
+      }
+      privacyLink={
+        <Link href="/privacy">
+          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+          <a>プライバシーポリシー</a>
+        </Link>
+      }
     />
   </div>
 );
