@@ -2,7 +2,7 @@ import fs from 'fs';
 import React from 'react';
 import { GetStaticProps, NextPage } from 'next';
 import Layout from '../components/Layout';
-import Terms from '../components/Terms';
+import MarkdownContents from '../components/MarkdownContents';
 
 type Props = {
   terms: string;
@@ -10,7 +10,7 @@ type Props = {
 
 const TermsPage: NextPage<Props> = ({ terms }: Props) => (
   <Layout title="LGTMeow 利用規約">
-    <Terms terms={terms} />
+    <MarkdownContents markdown={terms} />
   </Layout>
 );
 

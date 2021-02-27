@@ -2,15 +2,15 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 
 type Props = {
-  terms: string;
+  markdown: string;
 };
 
-const Terms: React.FC<Props> = ({ terms }: Props) => (
+const MarkdownContents: React.FC<Props> = ({ markdown }: Props) => (
   <div className="container" style={{ display: 'block' }}>
     <div className="content mb-6">
-      <ReactMarkdown source={terms} />
+      <ReactMarkdown source={markdown} />
     </div>
   </div>
 );
 
-export default Terms;
+export default MarkdownContents;
