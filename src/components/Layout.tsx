@@ -3,6 +3,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import Footer from './Footer';
 import Header from './Header';
+import { pathList } from '../constants/url';
 
 type Props = {
   children: ReactNode;
@@ -20,13 +21,13 @@ const Layout: React.FC<Props> = ({ children, title }: Props) => (
     {children}
     <Footer
       termsLink={
-        <Link href="/terms">
+        <Link href={pathList.terms}>
           {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
           <a>利用規約</a>
         </Link>
       }
       privacyLink={
-        <Link href="/privacy">
+        <Link href={pathList.privacy}>
           {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
           <a>プライバシーポリシー</a>
         </Link>

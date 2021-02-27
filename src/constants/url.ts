@@ -5,3 +5,9 @@ const appBaseUrl = (): string =>
 export const urlList = {
   top: appBaseUrl(),
 } as const;
+
+export const pathList = {
+  top: '/',
+  terms: '/terms',
+  privacy: '/privacy',
+} as const;
