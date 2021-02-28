@@ -2,23 +2,20 @@ const generateSitemapXml = (): string => {
   let xml = `<?xml version="1.0" encoding="UTF-8"?>`;
   xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
 
-  const targetUrlList = [
-    'https://lgtmeow.com/',
-    'https://lgtmeow.com/terms/',
-    'https://lgtmeow.com/privacy/',
-  ];
-
-  // eslint-disable-next-line no-restricted-syntax
-  for (const targetUrl of targetUrlList) {
-    xml += `
-      <url>
-        <loc>${targetUrl}</loc>
-        <changefreq>weekly</changefreq>
-      </url>
-    `;
-  }
-
-  xml += `</urlset>`;
+  xml += `
+    <url>
+      <loc>https://lgtmeow.com/</loc>
+      <changefreq>weekly</changefreq>
+    </url>
+    <url>
+      <loc>https://lgtmeow.com/terms/</loc>
+      <changefreq>weekly</changefreq>
+    </url>
+    <url>
+      <loc>https://lgtmeow.com/privacy/</loc>
+      <changefreq>weekly</changefreq>
+    </url>
+  </urlset>`;
 
   return xml;
 };
