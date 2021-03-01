@@ -10,11 +10,11 @@ describe('generateSitemapXml.ts Functions TestCases', () => {
     </url>
     <url>
       <loc>https://lgtmeow.com/terms/</loc>
-      <changefreq>weekly</changefreq>
+      <changefreq>monthly</changefreq>
     </url>
     <url>
       <loc>https://lgtmeow.com/privacy/</loc>
-      <changefreq>weekly</changefreq>
+      <changefreq>monthly</changefreq>
     </url>
   </urlset>`;
 
