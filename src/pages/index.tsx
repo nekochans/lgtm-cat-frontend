@@ -26,7 +26,10 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const imageList: Image[] = response.images;
 
-  return { props: { imageList } };
+  return {
+    props: { imageList },
+    revalidate: 3600,
+  };
 };
 
 export default IndexPage;
