@@ -2,8 +2,9 @@ import React from 'react';
 import { GetStaticProps } from 'next';
 import Layout from '../components/Layout';
 import ImageList from '../components/ImageList';
-import { urlList } from '../constants/url';
 import { Image } from '../domain/image';
+import extractRandomImages from '../utils/randomImages';
+import imageData from '../utils/imageData';
 
 type Props = {
   imageList: Image[];
@@ -15,16 +16,11 @@ const IndexPage: React.FC<Props> = ({ imageList }: Props) => (
   </Layout>
 );
 
+const imageLength = 9;
+
+// eslint-disable-next-line @typescript-eslint/require-await
 export const getStaticProps: GetStaticProps = async () => {
-  type ImagesResponse = {
-    images: Image[];
-  };
-
-  const response = (await fetch(`${urlList.top}/api/lgtm/images`).then((r) =>
-    r.json(),
-  )) as ImagesResponse;
-
-  const imageList: Image[] = response.images;
+  const imageList: Image[] = extractRandomImages(imageData, imageLength);
 
   return {
     props: { imageList },
