@@ -1,11 +1,12 @@
 import React from 'react';
 import { GetStaticProps } from 'next';
 import Layout from '../components/Layout';
-import { LgtmImage, sampleLgtmData } from '../utils/sampleLtgmData';
 import ImageList from '../components/ImageList';
+import { urlList } from '../constants/url';
+import { Image } from '../domain/image';
 
 type Props = {
-  imageList: LgtmImage[];
+  imageList: Image[];
 };
 
 const IndexPage: React.FC<Props> = ({ imageList }: Props) => (
@@ -14,9 +15,16 @@ const IndexPage: React.FC<Props> = ({ imageList }: Props) => (
   </Layout>
 );
 
-// eslint-disable-next-line @typescript-eslint/require-await
 export const getStaticProps: GetStaticProps = async () => {
-  const imageList: LgtmImage[] = sampleLgtmData;
+  type ImagesResponse = {
+    images: Image[];
+  };
+
+  const response = (await fetch(`${urlList.top}/api/lgtm/images`).then((r) =>
+    r.json(),
+  )) as ImagesResponse;
+
+  const imageList: Image[] = response.images;
 
   return { props: { imageList } };
 };

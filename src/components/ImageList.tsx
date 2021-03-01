@@ -1,9 +1,9 @@
 import React from 'react';
-import { LgtmImage } from '../utils/sampleLtgmData';
 import ImageRow from './ImageRow';
+import { Image } from '../domain/image';
 
 type Props = {
-  imageList: LgtmImage[];
+  imageList: Image[];
 };
 
 const ImageList: React.FC<Props> = ({ imageList }: Props) => (
