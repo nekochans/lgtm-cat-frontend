@@ -1,6 +1,6 @@
-export type LgtmImage = { id: number; url: string };
+import { Image } from '../domain/image';
 
-export const sampleLgtmData: LgtmImage[] = [
+const imageData: Image[] = [
   {
     id: 1,
     url: '/cat.jpeg',
@@ -37,4 +37,18 @@ export const sampleLgtmData: LgtmImage[] = [
     id: 9,
     url: '/cat2.jpeg',
   },
+  {
+    id: 10,
+    url: '/cat2.jpeg',
+  },
+  {
+    id: 11,
+    url: '/cat2.jpeg',
+  },
+  {
+    id: 12,
+    url: '/cat2.jpeg',
+  },
 ];
+
+export default imageData;
