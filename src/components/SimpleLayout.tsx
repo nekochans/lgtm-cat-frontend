@@ -4,18 +4,24 @@ import Link from 'next/link';
 import Footer from './Footer';
 import SimpleHeader from './SimpleHeader';
 import { pathList } from '../constants/url';
+import { MetaTag } from '../constants/metaTag';
 
 type Props = {
   children: ReactNode;
-  title: string;
+  metaTag: MetaTag;
 };
 
-const SimpleLayout: React.FC<Props> = ({ children, title }: Props) => (
+const SimpleLayout: React.FC<Props> = ({ children, metaTag }: Props) => (
   <div>
     <Head>
-      <title>{title}</title>
+      <title>{metaTag.title}</title>
       <meta charSet="utf-8" />
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      <meta property="og:title" content={metaTag.title} />
+      <meta property="og:type" content="website" />
+      <meta property="og:image" content={metaTag.ogpImgUrl} />
+      <meta property="og:url" content={metaTag.ogpTargetUrl} />
+      <meta property="og:site_name" content={metaTag.title} />
     </Head>
     <SimpleHeader />
     {children}

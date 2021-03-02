@@ -3,13 +3,14 @@ import React from 'react';
 import { GetStaticProps, NextPage } from 'next';
 import SimpleLayout from '../components/SimpleLayout';
 import MarkdownContents from '../components/MarkdownContents';
+import { metaTagList } from '../constants/metaTag';
 
 type Props = {
   privacy: string;
 };
 
 const PrivacyPage: NextPage<Props> = ({ privacy }: Props) => (
-  <SimpleLayout title="LGTMeow プライバシーポリシー">
+  <SimpleLayout metaTag={metaTagList().privacy}>
     <MarkdownContents markdown={privacy} />
   </SimpleLayout>
 );
