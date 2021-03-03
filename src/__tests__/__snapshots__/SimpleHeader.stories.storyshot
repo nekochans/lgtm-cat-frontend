@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Storyshots src/components/SimpleHeader.tsx Show Simple Header 1`] = `
+<header>
+  <nav
+    className="navbar navbar-padding"
+  >
+    <div
+      className="container"
+      style={
+        Object {
+          "display": "block",
+        }
+      }
+    >
+      <div
+        className="navbar-brand"
+      >
+        <a
+          className="navbar-item"
+          href=""
+        >
+          <p
+            className="is-size-4 has-text-black"
+          >
+            LGTMeow
+          </p>
+        </a>
+        <div
+          style={
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+              "marginLeft": "auto",
+            }
+          }
+        />
+      </div>
+    </div>
+  </nav>
+</header>
+`;

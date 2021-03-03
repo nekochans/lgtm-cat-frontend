@@ -1,9 +1,43 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Storyshots src/components/Footer.tsx Show Footer 1`] = `
+exports[`Storyshots src/components/Footer.tsx Show Footer With Props 1`] = `
 <footer
   className="footer"
 >
+  <div
+    className="level-left"
+  >
+    <div
+      className="level-item breadcrumb"
+    >
+      <ul>
+        <li>
+          <a
+            href="https://policies.google.com/terms"
+            style={
+              Object {
+                "color": "royalblue",
+              }
+            }
+          >
+            利用規約
+          </a>
+        </li>
+        <li>
+          <a
+            href="https://policies.google.com/privacy"
+            style={
+              Object {
+                "color": "royalblue",
+              }
+            }
+          >
+            プライバシーポリシー
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
   <div
     className="content has-text-centered"
   >

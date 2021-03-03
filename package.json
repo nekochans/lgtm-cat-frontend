@@ -25,6 +25,7 @@
     "next": "^10.0.6",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-markdown": "^5.0.3",
     "sass": "^1.32.7"
   },
   "devDependencies": {
