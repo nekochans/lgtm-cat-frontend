@@ -3,13 +3,14 @@ import React from 'react';
 import { GetStaticProps, NextPage } from 'next';
 import SimpleLayout from '../components/SimpleLayout';
 import MarkdownContents from '../components/MarkdownContents';
+import { metaTagList } from '../constants/metaTag';
 
 type Props = {
   terms: string;
 };
 
 const TermsPage: NextPage<Props> = ({ terms }: Props) => (
-  <SimpleLayout title="LGTMeow 利用規約">
+  <SimpleLayout metaTag={metaTagList().terms}>
     <MarkdownContents markdown={terms} />
   </SimpleLayout>
 );

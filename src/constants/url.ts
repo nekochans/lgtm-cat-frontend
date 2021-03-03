@@ -4,6 +4,9 @@ const appBaseUrl = (): string =>
 // eslint-disable-next-line import/prefer-default-export
 export const urlList = {
   top: appBaseUrl(),
+  ogpImg: `${appBaseUrl()}/ogp.webp`,
+  terms: `${appBaseUrl()}/terms`,
+  privacy: `${appBaseUrl()}/privacy`,
 } as const;
 
 export const pathList = {
@@ -11,3 +14,5 @@ export const pathList = {
   terms: '/terms',
   privacy: '/privacy',
 } as const;
+
+export type AppPathName = 'top' | 'terms' | 'privacy';
