@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Image } from '../domain/image';
+import useClipboardMarkdown from '../hooks/useClipboardMarkdown';
 
 type Props = {
   image: Image;
@@ -7,17 +8,18 @@ type Props = {
 
 const ImageContent: React.FC<Props> = ({ image }: Props) => {
   const [copied, setCopied] = useState(false);
-  const onClicked = () => {
+
+  const onCopySuccess = useCallback(() => {
     setCopied(true);
-  };
+    setTimeout(() => {
+      setCopied(false);
+    }, 1000);
+  }, []);
+
+  const { imageContextRef } = useClipboardMarkdown(onCopySuccess, image.url);
 
   return (
-    // eslint-disable-next-line
-    <div
-      className="column is-one-third"
-      key={image.id}
-      onClick={() => onClicked()}
-    >
+    <div className="column is-one-third" key={image.id} ref={imageContextRef}>
       <div
         style={{
           margin: 'auto',

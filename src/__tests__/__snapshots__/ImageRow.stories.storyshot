@@ -6,7 +6,6 @@ exports[`Storyshots src/components/ImageRow.tsx Show Image Row With Props 1`] = 
 >
   <div
     className="column is-one-third"
-    onClick={[Function]}
   >
     <div
       style={
@@ -32,7 +31,6 @@ exports[`Storyshots src/components/ImageRow.tsx Show Image Row With Props 1`] = 
   </div>
   <div
     className="column is-one-third"
-    onClick={[Function]}
   >
     <div
       style={
@@ -58,7 +56,6 @@ exports[`Storyshots src/components/ImageRow.tsx Show Image Row With Props 1`] = 
   </div>
   <div
     className="column is-one-third"
-    onClick={[Function]}
   >
     <div
       style={
