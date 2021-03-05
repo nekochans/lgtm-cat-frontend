@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Storyshots src/components/ImageContext.tsx Show Image Context With Props 1`] = `
+<div
+  className="column is-one-third"
+  onClick={[Function]}
+>
+  <div
+    style={
+      Object {
+        "height": "100%",
+        "margin": "auto",
+        "position": "relative",
+        "textAlign": "center",
+      }
+    }
+  >
+    <img
+      alt="lgtm cat"
+      src="/cat.jpeg"
+      style={
+        Object {
+          "maxHeight": "300px",
+          "padding": "0.75rem",
+        }
+      }
+    />
+  </div>
+</div>
+`;

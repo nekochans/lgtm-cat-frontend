@@ -6,12 +6,14 @@ exports[`Storyshots src/components/ImageRow.tsx Show Image Row With Props 1`] = 
 >
   <div
     className="column is-one-third"
+    onClick={[Function]}
   >
     <div
       style={
         Object {
           "height": "100%",
           "margin": "auto",
+          "position": "relative",
           "textAlign": "center",
         }
       }
@@ -30,12 +32,14 @@ exports[`Storyshots src/components/ImageRow.tsx Show Image Row With Props 1`] = 
   </div>
   <div
     className="column is-one-third"
+    onClick={[Function]}
   >
     <div
       style={
         Object {
           "height": "100%",
           "margin": "auto",
+          "position": "relative",
           "textAlign": "center",
         }
       }
@@ -54,12 +58,14 @@ exports[`Storyshots src/components/ImageRow.tsx Show Image Row With Props 1`] = 
   </div>
   <div
     className="column is-one-third"
+    onClick={[Function]}
   >
     <div
       style={
         Object {
           "height": "100%",
           "margin": "auto",
+          "position": "relative",
           "textAlign": "center",
         }
       }
