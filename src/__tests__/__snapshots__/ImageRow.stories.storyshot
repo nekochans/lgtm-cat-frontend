@@ -12,6 +12,7 @@ exports[`Storyshots src/components/ImageRow.tsx Show Image Row With Props 1`] = 
         Object {
           "height": "100%",
           "margin": "auto",
+          "position": "relative",
           "textAlign": "center",
         }
       }
@@ -36,6 +37,7 @@ exports[`Storyshots src/components/ImageRow.tsx Show Image Row With Props 1`] = 
         Object {
           "height": "100%",
           "margin": "auto",
+          "position": "relative",
           "textAlign": "center",
         }
       }
@@ -60,6 +62,7 @@ exports[`Storyshots src/components/ImageRow.tsx Show Image Row With Props 1`] = 
         Object {
           "height": "100%",
           "margin": "auto",
+          "position": "relative",
           "textAlign": "center",
         }
       }

@@ -16,6 +16,7 @@ exports[`Storyshots src/components/ImageList.tsx Show Image List With Props 1`] 
             Object {
               "height": "100%",
               "margin": "auto",
+              "position": "relative",
               "textAlign": "center",
             }
           }
@@ -40,6 +41,7 @@ exports[`Storyshots src/components/ImageList.tsx Show Image List With Props 1`] 
             Object {
               "height": "100%",
               "margin": "auto",
+              "position": "relative",
               "textAlign": "center",
             }
           }
@@ -64,6 +66,7 @@ exports[`Storyshots src/components/ImageList.tsx Show Image List With Props 1`] 
             Object {
               "height": "100%",
               "margin": "auto",
+              "position": "relative",
               "textAlign": "center",
             }
           }
@@ -92,6 +95,7 @@ exports[`Storyshots src/components/ImageList.tsx Show Image List With Props 1`] 
             Object {
               "height": "100%",
               "margin": "auto",
+              "position": "relative",
               "textAlign": "center",
             }
           }
@@ -116,6 +120,7 @@ exports[`Storyshots src/components/ImageList.tsx Show Image List With Props 1`] 
             Object {
               "height": "100%",
               "margin": "auto",
+              "position": "relative",
               "textAlign": "center",
             }
           }
@@ -140,6 +145,7 @@ exports[`Storyshots src/components/ImageList.tsx Show Image List With Props 1`] 
             Object {
               "height": "100%",
               "margin": "auto",
+              "position": "relative",
               "textAlign": "center",
             }
           }
@@ -168,6 +174,7 @@ exports[`Storyshots src/components/ImageList.tsx Show Image List With Props 1`] 
             Object {
               "height": "100%",
               "margin": "auto",
+              "position": "relative",
               "textAlign": "center",
             }
           }
@@ -192,6 +199,7 @@ exports[`Storyshots src/components/ImageList.tsx Show Image List With Props 1`] 
             Object {
               "height": "100%",
               "margin": "auto",
+              "position": "relative",
               "textAlign": "center",
             }
           }
@@ -216,6 +224,7 @@ exports[`Storyshots src/components/ImageList.tsx Show Image List With Props 1`] 
             Object {
               "height": "100%",
               "margin": "auto",
+              "position": "relative",
               "textAlign": "center",
             }
           }
