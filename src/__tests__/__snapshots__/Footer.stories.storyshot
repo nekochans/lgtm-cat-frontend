@@ -5,45 +5,53 @@ exports[`Storyshots src/components/Footer.tsx Show Footer With Props 1`] = `
   className="footer"
 >
   <div
-    className="level-left"
+    className="container"
   >
     <div
-      className="level-item breadcrumb"
+      className="level-left"
     >
-      <ul>
-        <li>
-          <a
-            href="https://policies.google.com/terms"
-            style={
-              Object {
-                "color": "royalblue",
+      <div
+        className="level-item breadcrumb"
+      >
+        <ul>
+          <li>
+            <a
+              href="https://policies.google.com/terms"
+              style={
+                Object {
+                  "color": "royalblue",
+                }
               }
-            }
-          >
-            利用規約
-          </a>
-        </li>
-        <li>
-          <a
-            href="https://policies.google.com/privacy"
-            style={
-              Object {
-                "color": "royalblue",
+            >
+              利用規約
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://policies.google.com/privacy"
+              style={
+                Object {
+                  "color": "royalblue",
+                }
               }
-            }
-          >
-            プライバシーポリシー
-          </a>
-        </li>
-      </ul>
+            >
+              プライバシーポリシー
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
-  </div>
-  <div
-    className="content has-text-centered"
-  >
-    <p>
-      Copyright (c) nekochans
-    </p>
+    <div
+      className="level-right"
+    >
+      <div
+        className="content has-text-centered"
+      >
+        <p>
+          Copyright (c) nekochans
+        </p>
+      </div>
+    </div>
   </div>
 </footer>
 `;
