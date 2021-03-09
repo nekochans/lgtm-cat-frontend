@@ -30,7 +30,7 @@ const ImageContent: React.FC<Props> = ({ image }: Props) => {
       >
         <img
           src={image.url}
-          style={{ maxHeight: '300px', padding: '0.75rem' }}
+          style={{ maxHeight: '300px', padding: '0.75rem', cursor: 'pointer' }}
           alt="lgtm cat"
         />
         {copied && (

@@ -19,6 +19,7 @@ exports[`Storyshots src/components/ImageContext.tsx Show Image Context With Prop
       src="/cat.jpeg"
       style={
         Object {
+          "cursor": "pointer",
           "maxHeight": "300px",
           "padding": "0.75rem",
         }

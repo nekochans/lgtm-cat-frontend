@@ -8,6 +8,12 @@
 
 @media screen and (min-width: 1216px) {
   .navbar-padding {
-    padding: 2rem 4rem;
+    padding: 1rem 4rem;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .header-description-margin {
+    margin-left: -0.75rem;
   }
 }
