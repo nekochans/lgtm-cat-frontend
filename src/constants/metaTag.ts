@@ -23,7 +23,7 @@ type MetaTagList = {
 
 export const metaTagList = (): MetaTagList => ({
   top: {
-    title: defaultTitle,
+    title: `${defaultTitle} | LGTM image share service for cat lovers`,
     ogpImgUrl: urlList.ogpImg,
     ogpTargetUrl: urlList.top,
     appName,
