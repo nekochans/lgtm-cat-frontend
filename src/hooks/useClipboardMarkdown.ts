@@ -8,6 +8,7 @@ const useClipboardMarkdown = (
   const buttonRef = useRef(null);
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const cb = new Clipboard(buttonRef.current!, {
       text: () => `![LGTMeow](${url})`,
     });

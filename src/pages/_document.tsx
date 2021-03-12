@@ -22,7 +22,7 @@ export default class CustomDocument extends Document {
 
   render(): JSX.Element {
     return (
-      <Html>
+      <Html prefix="og: https://ogp.me/ns#">
         <Head>
           {/* Google Analytics */}
           <script
