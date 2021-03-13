@@ -6,16 +6,22 @@ import { metaTagList } from '../constants/metaTag';
 import { Image } from '../domain/image';
 import extractRandomImages from '../utils/randomImages';
 import imageData from '../utils/imageData';
+import { useSetAppState } from '../contexts/AppStateContext';
 
 type Props = {
   imageList: Image[];
 };
 
-const IndexPage: React.FC<Props> = ({ imageList }: Props) => (
-  <Layout metaTag={metaTagList().top}>
-    <ImageList imageList={imageList} />
-  </Layout>
-);
+const IndexPage: React.FC<Props> = ({ imageList }: Props) => {
+  const setAppState = useSetAppState();
+  setAppState({ imageList });
+
+  return (
+    <Layout metaTag={metaTagList().top}>
+      <ImageList />
+    </Layout>
+  );
+};
 
 const imageLength = 9;
 

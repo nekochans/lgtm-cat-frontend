@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 
 import * as gtag from '../utils/gtag';
+import { AppStateProvider } from '../contexts/AppStateContext';
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   const router = useRouter();
@@ -19,8 +20,12 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
     };
   }, [router.events]);
 
-  // eslint-disable-next-line react/jsx-props-no-spreading
-  return <Component {...pageProps} />;
+  return (
+    <AppStateProvider>
+      {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+      <Component {...pageProps} />
+    </AppStateProvider>
+  );
 };
 
 export default App;
