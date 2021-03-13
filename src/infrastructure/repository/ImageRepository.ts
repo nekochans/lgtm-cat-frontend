@@ -1,6 +1,7 @@
 import { ImageList } from '../../domain/image';
 import { urlList } from '../../constants/url';
 import { FetchRandomImageList } from '../../domain/repository';
+import FetchRandomImageListError from '../../domain/error/FetchRandomImageListError';
 
 // eslint-disable-next-line import/prefer-default-export
 export const fetchRandomImageList: FetchRandomImageList = async () => {
@@ -8,7 +9,7 @@ export const fetchRandomImageList: FetchRandomImageList = async () => {
   const response = await fetch(url);
 
   if (!response.ok) {
-    // TODO
+    throw new FetchRandomImageListError();
   }
 
   return (await response.json()) as ImageList;

@@ -7,8 +7,14 @@ const Header: React.FC = () => {
   const setAppState = useSetAppState();
 
   const handleRandom = async () => {
-    const imageList = await fetchRandomImageList();
-    setAppState({ imageList: imageList.images });
+    try {
+      const imageList = await fetchRandomImageList();
+      setAppState({ imageList: imageList.images });
+    } catch (e) {
+      if (window) {
+        window.location.href = urlList.error;
+      }
+    }
   };
 
   return (
