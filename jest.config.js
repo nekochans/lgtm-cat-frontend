@@ -5,7 +5,7 @@ module.exports = {
     '<rootDir>/src'
   ],
   setupFilesAfterEnv: ['<rootDir>/test/setupTests.ts'],
-  testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/', '<rootDir>/src/__tests__/data/'],
+  testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/'],
   transform: {
     '^.+\\.(ts|tsx)$': 'ts-jest'
   },
