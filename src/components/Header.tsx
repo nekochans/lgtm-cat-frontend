@@ -1,5 +1,6 @@
 import React from 'react';
 import { urlList } from '../constants/url';
+import RandomButtonContainer from '../containers/RandomButton';
 
 const Header: React.FC = () => (
   <header>
@@ -16,13 +17,7 @@ const Header: React.FC = () => (
               marginLeft: 'auto',
             }}
           >
-            <button
-              className="button is-outlined"
-              style={{ margin: '0.5rem 0.75rem' }}
-              type="submit"
-            >
-              ランダム
-            </button>
+            <RandomButtonContainer />
           </div>
         </div>
         <p

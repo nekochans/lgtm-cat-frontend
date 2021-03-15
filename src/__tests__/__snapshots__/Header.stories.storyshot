@@ -37,6 +37,7 @@ exports[`Storyshots src/components/Header.tsx Show Header 1`] = `
         >
           <button
             className="button is-outlined"
+            onClick={[Function]}
             style={
               Object {
                 "margin": "0.5rem 0.75rem",

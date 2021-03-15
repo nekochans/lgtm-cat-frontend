@@ -1,21 +1,27 @@
 import React from 'react';
 import { GetStaticProps } from 'next';
 import Layout from '../components/Layout';
-import ImageList from '../components/ImageList';
 import { metaTagList } from '../constants/metaTag';
 import { Image } from '../domain/image';
 import extractRandomImages from '../utils/randomImages';
 import imageData from '../utils/imageData';
+import { useSetAppState } from '../contexts/AppStateContext';
+import ImageListContainer from '../containers/ImageLIst';
 
 type Props = {
   imageList: Image[];
 };
 
-const IndexPage: React.FC<Props> = ({ imageList }: Props) => (
-  <Layout metaTag={metaTagList().top}>
-    <ImageList imageList={imageList} />
-  </Layout>
-);
+const IndexPage: React.FC<Props> = ({ imageList }: Props) => {
+  const setAppState = useSetAppState();
+  setAppState({ imageList });
+
+  return (
+    <Layout metaTag={metaTagList().top}>
+      <ImageListContainer />
+    </Layout>
+  );
+};
 
 const imageLength = 9;
 

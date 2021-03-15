@@ -41,4 +41,10 @@ export const metaTagList = (): MetaTagList => ({
     ogpTargetUrl: urlList.privacy,
     appName,
   },
+  error: {
+    title: `${defaultTitle} エラー`,
+    ogpImgUrl: urlList.ogpImg,
+    ogpTargetUrl: urlList.error,
+    appName,
+  },
 });

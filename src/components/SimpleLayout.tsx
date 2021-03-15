@@ -12,7 +12,7 @@ type Props = {
 };
 
 const SimpleLayout: React.FC<Props> = ({ children, metaTag }: Props) => (
-  <div>
+  <div className="hero is-fullheight">
     <Head>
       <title>{metaTag.title}</title>
       <meta charSet="utf-8" />

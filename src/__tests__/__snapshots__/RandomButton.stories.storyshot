@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Storyshots src/components/RandomButton.tsx Show Random Button With Props 1`] = `
+<button
+  className="button is-outlined"
+  onClick={[Function]}
+  style={
+    Object {
+      "margin": "0.5rem 0.75rem",
+    }
+  }
+  type="submit"
+>
+  ランダム
+</button>
+`;
