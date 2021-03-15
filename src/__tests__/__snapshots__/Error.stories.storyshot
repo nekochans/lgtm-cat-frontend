@@ -13,7 +13,7 @@ exports[`Storyshots src/components/Error.tsx Show Error 1`] = `
     <h2
       className="subtitle"
     >
-      エラーが発生しました。TOPページより再度行なってください。
+      エラーが発生しました。お手数ですが、時間がたってから再度お試し下さい。
     </h2>
     <a
       href="https://policies.google.com"

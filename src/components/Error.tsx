@@ -1,16 +1,16 @@
 import React, { ReactNode } from 'react';
 
 type Props = {
+  title: string;
+  message: string;
   topLink: ReactNode;
 };
 
-const Error: React.FC<Props> = ({ topLink }: Props) => (
+const Error: React.FC<Props> = ({ title, message, topLink }: Props) => (
   <main>
     <div className="container has-text-centered">
-      <h1 className="title">Error</h1>
-      <h2 className="subtitle">
-        エラーが発生しました。TOPページより再度行なってください。
-      </h2>
+      <h1 className="title">{title}</h1>
+      <h2 className="subtitle">{message}</h2>
       {topLink}
     </div>
   </main>

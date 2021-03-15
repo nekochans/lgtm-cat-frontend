@@ -12,6 +12,9 @@ const style = {
 };
 
 const props = {
+  title: 'Error',
+  message:
+    'エラーが発生しました。お手数ですが、時間がたってから再度お試し下さい。',
   topLink: (
     <a href="https://policies.google.com" style={style}>
       TOPページへ
@@ -19,4 +22,6 @@ const props = {
   ),
 };
 
-export const showError = (): JSX.Element => <Error topLink={props.topLink} />;
+export const showError = (): JSX.Element => (
+  <Error title={props.title} message={props.message} topLink={props.topLink} />
+);
