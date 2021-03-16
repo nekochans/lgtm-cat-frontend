@@ -7,7 +7,7 @@ import Error from '../components/Error';
 import { pathList } from '../constants/url';
 
 const ErrorPage: NextPage = () => (
-  <SimpleLayout metaTag={metaTagList().privacy}>
+  <SimpleLayout metaTag={metaTagList().error}>
     <Error
       title="Error"
       message="エラーが発生しました。お手数ですが、時間がたってから再度お試し下さい。"
