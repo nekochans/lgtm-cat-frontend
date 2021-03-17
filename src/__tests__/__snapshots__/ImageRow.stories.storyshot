@@ -19,11 +19,14 @@ exports[`Storyshots src/components/ImageRow.tsx Show Image Row With Props 1`] = 
     >
       <img
         alt="lgtm cat"
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
         src="/cat.jpeg"
         style={
           Object {
             "cursor": "pointer",
             "maxHeight": "300px",
+            "opacity": "1",
             "padding": "0.75rem",
           }
         }
@@ -45,11 +48,14 @@ exports[`Storyshots src/components/ImageRow.tsx Show Image Row With Props 1`] = 
     >
       <img
         alt="lgtm cat"
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
         src="/cat2.jpeg"
         style={
           Object {
             "cursor": "pointer",
             "maxHeight": "300px",
+            "opacity": "1",
             "padding": "0.75rem",
           }
         }
@@ -71,11 +77,14 @@ exports[`Storyshots src/components/ImageRow.tsx Show Image Row With Props 1`] = 
     >
       <img
         alt="lgtm cat"
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
         src="/cat.jpeg"
         style={
           Object {
             "cursor": "pointer",
             "maxHeight": "300px",
+            "opacity": "1",
             "padding": "0.75rem",
           }
         }
