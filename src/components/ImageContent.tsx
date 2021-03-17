@@ -8,6 +8,7 @@ type Props = {
 
 const ImageContent: React.FC<Props> = ({ image }: Props) => {
   const [copied, setCopied] = useState(false);
+  const [opacity, setOpacity] = useState('1');
 
   const onCopySuccess = useCallback(() => {
     setCopied(true);
@@ -17,6 +18,13 @@ const ImageContent: React.FC<Props> = ({ image }: Props) => {
   }, []);
 
   const { imageContextRef } = useClipboardMarkdown(onCopySuccess, image.url);
+
+  const imageStyles = {
+    maxHeight: '300px',
+    padding: '0.75rem',
+    cursor: 'pointer',
+    opacity,
+  };
 
   return (
     <div className="column is-one-third" key={image.id} ref={imageContextRef}>
@@ -30,8 +38,10 @@ const ImageContent: React.FC<Props> = ({ image }: Props) => {
       >
         <img
           src={image.url}
-          style={{ maxHeight: '300px', padding: '0.75rem', cursor: 'pointer' }}
+          style={imageStyles}
           alt="lgtm cat"
+          onMouseEnter={() => setOpacity('0.7')}
+          onMouseLeave={() => setOpacity('1')}
         />
         {copied && (
           <div
