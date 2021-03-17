@@ -1,14 +1,14 @@
-import React from 'react';
-import { urlList } from '../constants/url';
+import React, { ReactNode } from 'react';
 
-const SimpleHeader: React.FC = () => (
+type Props = {
+  topLink: ReactNode;
+};
+const SimpleHeader: React.FC<Props> = ({ topLink }: Props) => (
   <header>
     <nav className="navbar navbar-padding">
       <div className="container" style={{ display: 'block' }}>
         <div className="navbar-brand">
-          <a className="navbar-item" href={urlList.top}>
-            <p className="is-size-4 has-text-black">LGTMeow</p>
-          </a>
+          {topLink}
           <div
             style={{
               alignItems: 'center',

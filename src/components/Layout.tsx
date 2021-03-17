@@ -24,7 +24,16 @@ const Layout: React.FC<Props> = ({ children, metaTag }: Props) => (
       <meta property="og:url" content={metaTag.ogpTargetUrl} />
       <meta property="og:site_name" content={metaTag.title} />
     </Head>
-    <Header />
+    <Header
+      topLink={
+        <Link href={pathList.top}>
+          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+          <a className="navbar-item">
+            <p className="is-size-4 has-text-black">LGTMeow</p>
+          </a>
+        </Link>
+      }
+    />
     {children}
     <Footer
       termsLink={

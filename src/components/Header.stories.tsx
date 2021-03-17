@@ -7,4 +7,12 @@ export default {
   includeStories: ['showHeader'],
 };
 
-export const showHeader = (): JSX.Element => <Header />;
+const props = {
+  topLink: (
+    <a className="navbar-item" href="https://policies.google.com">
+      <p className="is-size-4 has-text-black">LGTMeow</p>
+    </a>
+  ),
+};
+
+export const showHeader = (): JSX.Element => <Header topLink={props.topLink} />;

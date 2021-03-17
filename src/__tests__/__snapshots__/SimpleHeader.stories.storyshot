@@ -18,7 +18,7 @@ exports[`Storyshots src/components/SimpleHeader.tsx Show Simple Header 1`] = `
       >
         <a
           className="navbar-item"
-          href=""
+          href="https://policies.google.com"
         >
           <p
             className="is-size-4 has-text-black"
