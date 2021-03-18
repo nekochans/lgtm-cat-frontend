@@ -1,9 +1,10 @@
 import React, { useCallback, useState } from 'react';
-import { Image } from '../domain/image';
+import Image from 'next/image';
+import { Image as ImageType } from '../domain/image';
 import useClipboardMarkdown from '../hooks/useClipboardMarkdown';
 
 type Props = {
-  image: Image;
+  image: ImageType;
 };
 
 const ImageContent: React.FC<Props> = ({ image }: Props) => {
@@ -19,30 +20,19 @@ const ImageContent: React.FC<Props> = ({ image }: Props) => {
 
   const { imageContextRef } = useClipboardMarkdown(onCopySuccess, image.url);
 
-  const imageStyles = {
-    maxHeight: '300px',
-    padding: '0.75rem',
-    cursor: 'pointer',
-    opacity,
-  };
-
   return (
     <div className="column is-one-third" key={image.id} ref={imageContextRef}>
       <div
         style={{
-          margin: 'auto',
-          height: '100%',
-          textAlign: 'center',
+          height: '300px',
           position: 'relative',
+          cursor: 'pointer',
+          opacity,
         }}
+        onMouseEnter={() => setOpacity('0.7')}
+        onMouseLeave={() => setOpacity('1')}
       >
-        <img
-          src={image.url}
-          style={imageStyles}
-          alt="lgtm cat"
-          onMouseEnter={() => setOpacity('0.7')}
-          onMouseLeave={() => setOpacity('1')}
-        />
+        <Image src={image.url} layout="fill" objectFit="scale-down" />
         {copied && (
           <div
             style={{
