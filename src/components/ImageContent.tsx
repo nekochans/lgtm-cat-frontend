@@ -32,7 +32,7 @@ const ImageContent: React.FC<Props> = ({ image }: Props) => {
         onMouseEnter={() => setOpacity('0.7')}
         onMouseLeave={() => setOpacity('1')}
       >
-        <Image src={image.url} layout="fill" objectFit="scale-down" />
+        <Image src={image.url} layout="fill" objectFit="contain" />
         {copied && (
           <div
             style={{
