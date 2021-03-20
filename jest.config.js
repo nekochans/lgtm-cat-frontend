@@ -28,5 +28,6 @@ module.exports = {
     'ts-jest': {
       'tsconfig': '<rootDir>/test/tsconfig.jest.json'
     }
-  }
+  },
+  coveragePathIgnorePatterns: ["<rootDir>/.storybook/__mocks/"]
 };

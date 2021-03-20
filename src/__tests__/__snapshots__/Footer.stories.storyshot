@@ -7,51 +7,55 @@ exports[`Storyshots src/components/Footer.tsx Show Footer With Props 1`] = `
   <div
     className="container"
   >
-    <div
-      className="level-left"
+    <nav
+      className="level"
     >
       <div
-        className="level-item breadcrumb"
+        className="level-left"
       >
-        <ul>
-          <li>
-            <a
-              href="https://policies.google.com/terms"
-              style={
-                Object {
-                  "color": "royalblue",
+        <div
+          className="level-item breadcrumb"
+        >
+          <ul>
+            <li>
+              <a
+                href="https://policies.google.com/terms"
+                style={
+                  Object {
+                    "color": "royalblue",
+                  }
                 }
-              }
-            >
-              利用規約
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://policies.google.com/privacy"
-              style={
-                Object {
-                  "color": "royalblue",
+              >
+                利用規約
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://policies.google.com/privacy"
+                style={
+                  Object {
+                    "color": "royalblue",
+                  }
                 }
-              }
-            >
-              プライバシーポリシー
-            </a>
-          </li>
-        </ul>
+              >
+                プライバシーポリシー
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
-    <div
-      className="level-right"
-    >
       <div
-        className="content has-text-centered"
+        className="level-right"
       >
-        <p>
-          Copyright (c) nekochans
-        </p>
+        <div
+          className="content has-text-centered"
+        >
+          <p>
+            Copyright (c) nekochans
+          </p>
+        </div>
       </div>
-    </div>
+    </nav>
   </div>
 </footer>
 `;
