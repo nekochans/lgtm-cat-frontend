@@ -41,7 +41,7 @@ exports[`Storyshots src/components/ImageList.tsx Show Image List With Props 1`] 
             <img
               decoding="async"
               layout="fill"
-              objectFit="scale-down"
+              objectFit="contain"
               src="/cat.jpeg"
               style={
                 Object {
@@ -56,7 +56,7 @@ exports[`Storyshots src/components/ImageList.tsx Show Image List With Props 1`] 
                   "maxWidth": "100%",
                   "minHeight": "100%",
                   "minWidth": "100%",
-                  "objectFit": "scale-down",
+                  "objectFit": "contain",
                   "objectPosition": undefined,
                   "padding": 0,
                   "position": "absolute",
@@ -102,7 +102,7 @@ exports[`Storyshots src/components/ImageList.tsx Show Image List With Props 1`] 
             <img
               decoding="async"
               layout="fill"
-              objectFit="scale-down"
+              objectFit="contain"
               src="/cat2.jpeg"
               style={
                 Object {
@@ -117,7 +117,7 @@ exports[`Storyshots src/components/ImageList.tsx Show Image List With Props 1`] 
                   "maxWidth": "100%",
                   "minHeight": "100%",
                   "minWidth": "100%",
-                  "objectFit": "scale-down",
+                  "objectFit": "contain",
                   "objectPosition": undefined,
                   "padding": 0,
                   "position": "absolute",
@@ -163,7 +163,7 @@ exports[`Storyshots src/components/ImageList.tsx Show Image List With Props 1`] 
             <img
               decoding="async"
               layout="fill"
-              objectFit="scale-down"
+              objectFit="contain"
               src="/cat.jpeg"
               style={
                 Object {
@@ -178,7 +178,7 @@ exports[`Storyshots src/components/ImageList.tsx Show Image List With Props 1`] 
                   "maxWidth": "100%",
                   "minHeight": "100%",
                   "minWidth": "100%",
-                  "objectFit": "scale-down",
+                  "objectFit": "contain",
                   "objectPosition": undefined,
                   "padding": 0,
                   "position": "absolute",
@@ -228,7 +228,7 @@ exports[`Storyshots src/components/ImageList.tsx Show Image List With Props 1`] 
             <img
               decoding="async"
               layout="fill"
-              objectFit="scale-down"
+              objectFit="contain"
               src="/cat2.jpeg"
               style={
                 Object {
@@ -243,7 +243,7 @@ exports[`Storyshots src/components/ImageList.tsx Show Image List With Props 1`] 
                   "maxWidth": "100%",
                   "minHeight": "100%",
                   "minWidth": "100%",
-                  "objectFit": "scale-down",
+                  "objectFit": "contain",
                   "objectPosition": undefined,
                   "padding": 0,
                   "position": "absolute",
@@ -289,7 +289,7 @@ exports[`Storyshots src/components/ImageList.tsx Show Image List With Props 1`] 
             <img
               decoding="async"
               layout="fill"
-              objectFit="scale-down"
+              objectFit="contain"
               src="/cat.jpeg"
               style={
                 Object {
@@ -304,7 +304,7 @@ exports[`Storyshots src/components/ImageList.tsx Show Image List With Props 1`] 
                   "maxWidth": "100%",
                   "minHeight": "100%",
                   "minWidth": "100%",
-                  "objectFit": "scale-down",
+                  "objectFit": "contain",
                   "objectPosition": undefined,
                   "padding": 0,
                   "position": "absolute",
@@ -350,7 +350,7 @@ exports[`Storyshots src/components/ImageList.tsx Show Image List With Props 1`] 
             <img
               decoding="async"
               layout="fill"
-              objectFit="scale-down"
+              objectFit="contain"
               src="/cat2.jpeg"
               style={
                 Object {
@@ -365,7 +365,7 @@ exports[`Storyshots src/components/ImageList.tsx Show Image List With Props 1`] 
                   "maxWidth": "100%",
                   "minHeight": "100%",
                   "minWidth": "100%",
-                  "objectFit": "scale-down",
+                  "objectFit": "contain",
                   "objectPosition": undefined,
                   "padding": 0,
                   "position": "absolute",
@@ -415,7 +415,7 @@ exports[`Storyshots src/components/ImageList.tsx Show Image List With Props 1`] 
             <img
               decoding="async"
               layout="fill"
-              objectFit="scale-down"
+              objectFit="contain"
               src="/cat.jpeg"
               style={
                 Object {
@@ -430,7 +430,7 @@ exports[`Storyshots src/components/ImageList.tsx Show Image List With Props 1`] 
                   "maxWidth": "100%",
                   "minHeight": "100%",
                   "minWidth": "100%",
-                  "objectFit": "scale-down",
+                  "objectFit": "contain",
                   "objectPosition": undefined,
                   "padding": 0,
                   "position": "absolute",
@@ -476,7 +476,7 @@ exports[`Storyshots src/components/ImageList.tsx Show Image List With Props 1`] 
             <img
               decoding="async"
               layout="fill"
-              objectFit="scale-down"
+              objectFit="contain"
               src="/cat2.jpeg"
               style={
                 Object {
@@ -491,7 +491,7 @@ exports[`Storyshots src/components/ImageList.tsx Show Image List With Props 1`] 
                   "maxWidth": "100%",
                   "minHeight": "100%",
                   "minWidth": "100%",
-                  "objectFit": "scale-down",
+                  "objectFit": "contain",
                   "objectPosition": undefined,
                   "padding": 0,
                   "position": "absolute",
@@ -537,7 +537,7 @@ exports[`Storyshots src/components/ImageList.tsx Show Image List With Props 1`] 
             <img
               decoding="async"
               layout="fill"
-              objectFit="scale-down"
+              objectFit="contain"
               src="/cat.jpeg"
               style={
                 Object {
@@ -552,7 +552,7 @@ exports[`Storyshots src/components/ImageList.tsx Show Image List With Props 1`] 
                   "maxWidth": "100%",
                   "minHeight": "100%",
                   "minWidth": "100%",
-                  "objectFit": "scale-down",
+                  "objectFit": "contain",
                   "objectPosition": undefined,
                   "padding": 0,
                   "position": "absolute",

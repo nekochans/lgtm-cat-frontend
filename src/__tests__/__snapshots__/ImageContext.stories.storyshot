@@ -34,7 +34,7 @@ exports[`Storyshots src/components/ImageContext.tsx Show Image Context With Prop
       <img
         decoding="async"
         layout="fill"
-        objectFit="scale-down"
+        objectFit="contain"
         src="/cat.jpeg"
         style={
           Object {
@@ -49,7 +49,7 @@ exports[`Storyshots src/components/ImageContext.tsx Show Image Context With Prop
             "maxWidth": "100%",
             "minHeight": "100%",
             "minWidth": "100%",
-            "objectFit": "scale-down",
+            "objectFit": "contain",
             "objectPosition": undefined,
             "padding": 0,
             "position": "absolute",
