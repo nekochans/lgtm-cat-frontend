@@ -26,3 +26,32 @@ export const event = ({ action, category, label, value }: GaEventProps) => {
     value,
   });
 };
+
+// Markdownソースがコピーされた際に実行する
+type SendCopyMarkdownEventLabel = 'copy_markdown_button';
+
+export const sendCopyMarkdownEvent = (
+  label: SendCopyMarkdownEventLabel,
+): void => {
+  event({
+    action: 'copy_markdown',
+    category: 'copy_markdown',
+    label,
+    value: 1,
+  });
+};
+
+// ランダムでLGTM画像を表示させる機能が利用された際に実行する
+
+type SendFetchRandomImagesLabel = 'fetch_random_images_button';
+
+export const sendFetchRandomImages = (
+  label: SendFetchRandomImagesLabel,
+): void => {
+  event({
+    action: 'fetch_random_images',
+    category: 'fetch_random_images',
+    label,
+    value: 1,
+  });
+};
