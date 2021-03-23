@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import Image from 'next/image';
 import { Image as ImageType } from '../domain/image';
 import useClipboardMarkdown from '../hooks/useClipboardMarkdown';
-import * as gtag from '../utils/gtag';
+import { sendCopyMarkdownEvent } from '../utils/gtag';
 
 type Props = {
   image: ImageType;
@@ -13,12 +13,7 @@ const ImageContent: React.FC<Props> = ({ image }: Props) => {
   const [opacity, setOpacity] = useState('1');
 
   const onCopySuccess = useCallback(() => {
-    gtag.event({
-      action: 'copy_markdown',
-      category: 'copy_markdown',
-      label: 'copy_markdown_button',
-      value: 1,
-    });
+    sendCopyMarkdownEvent('copy_markdown_button');
 
     setCopied(true);
     setTimeout(() => {
