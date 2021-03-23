@@ -10,7 +10,7 @@ lgtm-cat（サービス名 LGTMeow https://lgtmeow.com  のフロントエンド
 `.env`を作成し、下記を設定してください。
 
 ```
-NEXT_PUBLIC_APP_URL=本アプリケーションのURL、ローカルの場合は http://localhost:3000
+NEXT_PUBLIC_APP_URL=本アプリケーションのURL、ローカルの場合は http://localhost:2222
 NEXT_PUBLIC_GA_MEASUREMENT_ID=Google Analytics（次世代の4）の測定ID（G-から始まるID）を指定
 ```
 
