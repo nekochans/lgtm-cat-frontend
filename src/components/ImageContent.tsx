@@ -14,7 +14,7 @@ const ImageContent: React.FC<Props> = ({ image }: Props) => {
 
   const onCopySuccess = useCallback(() => {
     gtag.event({
-      action: 'click',
+      action: 'copy_markdown',
       category: 'copy_markdown',
       label: 'copy_markdown_button',
       value: 1,

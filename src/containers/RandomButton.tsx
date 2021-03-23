@@ -16,7 +16,7 @@ const RandomButtonContainer: React.FC = () => {
       setAppState({ imageList: imageList.images });
 
       gtag.event({
-        action: 'click',
+        action: 'fetch_random_button',
         category: 'fetch_random_images',
         label: 'fetch_random_images_button',
         value: 1,
