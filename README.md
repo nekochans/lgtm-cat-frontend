@@ -10,7 +10,7 @@ lgtm-cat（サービス名 LGTMeow https://lgtmeow.com  のフロントエンド
 `.env`を作成し、下記を設定してください。
 
 ```
-NEXT_PUBLIC_APP_URL=本アプリケーションのURL、ローカルの場合は http://localhost:3000
+NEXT_PUBLIC_APP_URL=本アプリケーションのURL、ローカルの場合は http://localhost:2222
 NEXT_PUBLIC_GA_MEASUREMENT_ID=Google Analytics（次世代の4）の測定ID（G-から始まるID）を指定
 ```
 
@@ -26,8 +26,11 @@ NEXT_PUBLIC_GA_MEASUREMENT_ID=Google Analytics（次世代の4）の測定ID（G
 
 環境変数は以下の環境毎に必要です。
 
-- Production（本番環境）
-- Preview（GitHubのブランチにプッシュされる度に一時的に生成される環境）
-- Development（Vercelのプロジェクトを作成すると自動で生成される環境）
+- Production
+  - 本番環境
+- Preview
+  - GitHubのブランチにプッシュされる度に一時的に生成される環境
+- Development
+  - [vercel dev](https://vercel.com/docs/cli#commands/dev) コマンドでローカル環境を起動した場合、この環境変数が利用されます。
 
 ※ 全環境で共有な環境変数を設定する事も可能です。

@@ -1,8 +1,9 @@
 {
-  "name": "with-typescript",
+  "name": "lgtm-cat-frontend",
   "version": "1.0.0",
+  "private": true,
   "scripts": {
-    "dev": "next",
+    "dev": "next -p 2222",
     "build": "next build",
     "start": "next start",
     "type-check": "tsc",
@@ -70,6 +71,5 @@
     "stylelint-order": "^4.1.0",
     "ts-jest": "^26.5.1",
     "typescript": "4.1.5"
-  },
-  "license": "MIT"
+  }
 }
