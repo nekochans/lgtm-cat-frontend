@@ -1,5 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import throttle from 'lodash/throttle';
 import { urlList } from '../constants/url';
 import { useSetAppState } from '../contexts/AppStateContext';
 import { fetchRandomImageList } from '../infrastructure/repository/ImageRepository';
@@ -20,8 +22,9 @@ const RandomButtonContainer: React.FC = () => {
       await router.push(urlList.error);
     }
   };
+  const handleRandomThrottled = throttle(() => handleRandom(), 500);
 
-  return <RandomButton handleRandom={handleRandom} />;
+  return <RandomButton handleRandom={handleRandomThrottled} />;
 };
 
 export default RandomButtonContainer;
