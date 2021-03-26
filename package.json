@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next -p 2222",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 2222",
     "type-check": "tsc",
     "lint:prettier": "prettier 'src/**/*.{js,jsx,ts,tsx,css,json}' --check",
     "fix:prettier": "yarn lint:prettier --write",
