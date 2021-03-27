@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 
 type Props = {
   title: string;
-  message: string;
+  message: ReactNode;
   topLink: ReactNode;
 };
 
