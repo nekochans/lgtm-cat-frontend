@@ -6,7 +6,7 @@ const appName: AppName = 'LGTMeow';
 
 const defaultTitle = appName;
 
-export const custom404title = `ページが見つかりません | ${appName}}`;
+export const custom404title = `ページが見つかりません | ${appName}`;
 export const customErrorTitle = `エラー | ${appName}`;
 
 const defaultDescription =
