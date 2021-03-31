@@ -10,7 +10,7 @@ exports[`Storyshots src/components/MarkdownContents.tsx Show Markdown Contents W
   }
 >
   <div
-    className="content mb-6"
+    className="content mb-6 mx-3"
   >
     <h1>
       🐱ねこの種類🐱
