@@ -6,7 +6,7 @@ import { pathList } from '../constants/url';
 import ErrorLayout from '../components/ErrorLayout';
 import { customErrorTitle } from '../constants/metaTag';
 
-const Custom404: NextPage = () => (
+const CustomError: NextPage = () => (
   <ErrorLayout title={customErrorTitle}>
     <Error
       title="Error"
@@ -21,4 +21,4 @@ const Custom404: NextPage = () => (
   </ErrorLayout>
 );
 
-export default Custom404;
+export default CustomError;
