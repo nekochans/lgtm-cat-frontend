@@ -6,7 +6,8 @@ const appName: AppName = 'LGTMeow';
 
 const defaultTitle = appName;
 
-export const custom404title = `ページが見つかりません | ${appName}}`;
+export const custom404title = `ページが見つかりません | ${appName}`;
+export const customErrorTitle = `エラー | ${appName}`;
 
 const defaultDescription =
   'LGTMeowは可愛い猫のLGTM画像を共有出来るサービスです。';
