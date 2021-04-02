@@ -41,6 +41,7 @@ const ImageContent: React.FC<Props> = ({ image }: Props) => {
           <div
             style={{
               position: 'absolute',
+              textAlign: 'center',
               bottom: '10%',
               left: '50%',
               color: 'white',
