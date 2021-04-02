@@ -15,6 +15,7 @@ const ImageContent: React.FC<Props> = ({ image }: Props) => {
   const onCopySuccess = useCallback(() => {
     sendCopyMarkdownEvent('copy_markdown_button');
 
+    setOpacity('1');
     setCopied(true);
     setTimeout(() => {
       setCopied(false);
