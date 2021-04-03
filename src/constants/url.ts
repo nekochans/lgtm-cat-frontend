@@ -6,7 +6,6 @@ export const urlList = {
   ogpImg: `${appBaseUrl()}/ogp.webp`,
   terms: `${appBaseUrl()}/terms`,
   privacy: `${appBaseUrl()}/privacy`,
-  error: `${appBaseUrl()}/error`,
 } as const;
 
 export const apiList = { fetchLgtmImages: '/api/lgtm/images' };
@@ -18,4 +17,4 @@ export const pathList = {
   error: '/error',
 } as const;
 
-export type AppPathName = 'top' | 'terms' | 'privacy' | 'error';
+export type AppPathName = 'top' | 'terms' | 'privacy';

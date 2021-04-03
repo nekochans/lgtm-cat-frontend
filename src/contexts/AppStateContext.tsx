@@ -3,10 +3,12 @@ import { Image } from '../domain/image';
 
 export type AppState = {
   imageList: Image[];
+  isFailedFetchImages: boolean;
 };
 
 const initialAppState: AppState = {
   imageList: [],
+  isFailedFetchImages: false,
 };
 
 const AppStateContext = React.createContext<AppState>(initialAppState);

@@ -14,7 +14,7 @@ type Props = {
 
 const IndexPage: React.FC<Props> = ({ imageList }: Props) => {
   const setAppState = useSetAppState();
-  setAppState({ imageList });
+  setAppState({ imageList, isFailedFetchImages: false });
 
   return (
     <Layout metaTag={metaTagList().top}>
