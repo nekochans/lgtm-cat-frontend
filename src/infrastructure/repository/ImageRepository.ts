@@ -1,12 +1,11 @@
 import { ImageList } from '../../domain/image';
-import { urlList } from '../../constants/url';
 import { FetchRandomImageList } from '../../domain/repository';
 import FetchRandomImageListError from '../../domain/error/FetchRandomImageListError';
+import { apiList } from '../../constants/url';
 
 // eslint-disable-next-line import/prefer-default-export
 export const fetchRandomImageList: FetchRandomImageList = async () => {
-  const url = `${urlList.top}/api/lgtm/images`;
-  const response = await fetch(url);
+  const response = await fetch(apiList.fetchLgtmImages);
 
   if (!response.ok) {
     throw new FetchRandomImageListError();
