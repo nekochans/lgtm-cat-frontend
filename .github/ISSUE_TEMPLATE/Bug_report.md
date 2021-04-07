@@ -1,4 +1,4 @@
-PULL_REQUEST_TEMPLATE.md---
+---
 name: バグ報告
 about: バグの報告用テンプレート
 
