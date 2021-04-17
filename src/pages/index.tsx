@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { GetStaticProps } from 'next';
 import Layout from '../components/Layout';
 import { metaTagList } from '../constants/metaTag';
@@ -14,7 +14,11 @@ type Props = {
 
 const IndexPage: React.FC<Props> = ({ imageList }: Props) => {
   const setAppState = useSetAppState();
-  setAppState({ imageList, isFailedFetchImages: false });
+
+  useEffect(() => {
+    setAppState({ imageList, isFailedFetchImages: false });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Layout metaTag={metaTagList().top}>
