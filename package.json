@@ -65,7 +65,7 @@
     "jest-fetch-mock": "^3.0.3",
     "prettier": "^2.3.0",
     "prettier-stylelint": "^0.4.2",
-    "sass-loader": "^11.1.0",
+    "sass-loader": "^10.2.0",
     "style-loader": "^2.0.0",
     "stylelint": "^13.13.1",
     "stylelint-config-recess-order": "^2.4.0",
