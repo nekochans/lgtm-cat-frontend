@@ -45,7 +45,7 @@ exports[`Storyshots src/components/Header.tsx Show Header 1`] = `
             }
             type="submit"
           >
-            ランダム
+            他の猫ちゃんを表示
           </button>
         </div>
       </div>

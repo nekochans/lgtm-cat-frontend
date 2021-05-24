@@ -11,7 +11,7 @@ const RandomButton: React.FC<Props> = ({ handleRandom }: Props) => (
     type="submit"
     onClick={() => handleRandom()}
   >
-    ランダム
+    他の猫ちゃんを表示
   </button>
 );
 
