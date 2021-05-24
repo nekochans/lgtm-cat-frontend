@@ -11,6 +11,6 @@ exports[`Storyshots src/components/RandomButton.tsx Show Random Button With Prop
   }
   type="submit"
 >
-  ランダム
+  他の猫ちゃんを表示
 </button>
 `;
