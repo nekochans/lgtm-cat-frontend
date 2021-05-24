@@ -39,6 +39,7 @@ jobs:
           yarn run build
           yarn run lint
           yarn run test:ci
+          yarn run build:storybook
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:
