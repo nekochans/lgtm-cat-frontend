@@ -1,8 +1,8 @@
 import React, { ReactNode } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import Footer from './Footer';
-import Header from './Header';
+import Footer from '../components/Footer';
+import SimpleHeader from '../components/SimpleHeader';
 import { pathList } from '../constants/url';
 import { MetaTag } from '../constants/metaTag';
 
@@ -11,20 +11,19 @@ type Props = {
   metaTag: MetaTag;
 };
 
-const Layout: React.FC<Props> = ({ children, metaTag }: Props) => (
+const SimpleLayout: React.FC<Props> = ({ children, metaTag }: Props) => (
   <div className="hero is-fullheight">
     <Head>
       <title>{metaTag.title}</title>
       <meta charSet="utf-8" />
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       <meta property="og:title" content={metaTag.title} />
-      <meta property="og:description" content={metaTag.description} />
       <meta property="og:type" content="website" />
       <meta property="og:image" content={metaTag.ogpImgUrl} />
       <meta property="og:url" content={metaTag.ogpTargetUrl} />
       <meta property="og:site_name" content={metaTag.title} />
     </Head>
-    <Header
+    <SimpleHeader
       topLink={
         <Link href={pathList.top}>
           {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
@@ -52,4 +51,4 @@ const Layout: React.FC<Props> = ({ children, metaTag }: Props) => (
   </div>
 );
 
-export default Layout;
+export default SimpleLayout;
