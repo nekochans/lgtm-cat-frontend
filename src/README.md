@@ -109,3 +109,15 @@ Next.jsに依存する処理以外は極力書かずに、その他の層に処�
 Reduxなどの状態管理ライブラリに依存する関数群が実装されます。
 
 現状はReactContextを使ったState管理用の関数群が格納されています。
+
+## その他
+
+### テストコード
+
+各ディレクトリの `__tests__` に定義します。
+
+### Storybook
+
+「Component名」 + `.stories.tsx` で命名します。
+
+components配下のComponentのみStorybookを作成しています。
