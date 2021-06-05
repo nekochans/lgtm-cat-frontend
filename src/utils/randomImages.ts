@@ -1,4 +1,4 @@
-import { Image } from '../domain/image';
+import { Image } from '../domain/types/image';
 
 const extractRandomImages = (arr: Image[], n: number): Image[] => {
   const copy = [...arr];

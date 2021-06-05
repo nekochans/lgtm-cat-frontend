@@ -1,4 +1,4 @@
-import { ImageList } from '../../domain/image';
+import { ImageList } from '../../domain/types/image';
 import { FetchRandomImageList } from '../../domain/repository';
 import FetchRandomImageListError from '../../domain/errors/FetchRandomImageListError';
 import { apiList } from '../../constants/url';

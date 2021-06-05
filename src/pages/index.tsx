@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { GetStaticProps } from 'next';
 import Layout from '../components/Layout';
 import { metaTagList } from '../constants/metaTag';
-import { Image } from '../domain/image';
+import { Image } from '../domain/types/image';
 import extractRandomImages from '../utils/randomImages';
 import imageData from '../utils/imageData';
 import { useSetAppState } from '../contexts/AppStateContext';

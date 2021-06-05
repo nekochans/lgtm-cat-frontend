@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import Image from 'next/image';
-import { Image as ImageType } from '../domain/image';
+import { Image as ImageType } from '../domain/types/image';
 import useClipboardMarkdown from '../hooks/useClipboardMarkdown';
 import { sendCopyMarkdownEvent } from '../utils/gtag';
 

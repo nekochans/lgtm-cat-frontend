@@ -1,5 +1,5 @@
 import extractRandomImages from '../randomImages';
-import { Image } from '../../domain/image';
+import { Image } from '../../domain/types/image';
 
 const testImageList: Image[] = [
   {

@@ -1,6 +1,6 @@
 import React from 'react';
 import ImageRow from './ImageRow';
-import { Image } from '../domain/image';
+import { Image } from '../domain/types/image';
 
 type Props = {
   imageList: Image[];
