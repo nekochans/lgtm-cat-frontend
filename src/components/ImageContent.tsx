@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import Image from 'next/image';
 import { Image as ImageType } from '../domain/types/image';
 import useClipboardMarkdown from '../hooks/useClipboardMarkdown';
-import { sendCopyMarkdownEvent } from '../utils/gtag';
+import { sendCopyMarkdownEvent } from '../infrastructures/utils/gtag';
 
 type Props = {
   image: ImageType;

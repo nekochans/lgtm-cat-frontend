@@ -3,7 +3,7 @@ import { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 
-import * as gtag from '../utils/gtag';
+import * as gtag from '../infrastructures/utils/gtag';
 import { AppStateProvider } from '../contexts/AppStateContext';
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {

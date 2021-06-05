@@ -1,4 +1,4 @@
-import { Image } from '../domain/types/image';
+import { Image } from '../../domain/types/image';
 
 const imageData: Image[] = [
   {
