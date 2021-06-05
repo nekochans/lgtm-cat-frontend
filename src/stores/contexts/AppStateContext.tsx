@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useContext, useState } from 'react';
-import { Image } from '../domain/types/image';
+import { Image } from '../../domain/types/image';
 
 export type AppState = {
   imageList: Image[];

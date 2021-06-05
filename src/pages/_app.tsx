@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 
 import * as gtag from '../infrastructures/utils/gtag';
-import { AppStateProvider } from '../contexts/AppStateContext';
+import { AppStateProvider } from '../stores/contexts/AppStateContext';
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   const router = useRouter();

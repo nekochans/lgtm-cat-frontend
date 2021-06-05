@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import ImageList from '../components/ImageList';
-import { useAppState } from '../contexts/AppStateContext';
+import { useAppState } from '../stores/contexts/AppStateContext';
 import Error from '../components/Error';
 import { pathList } from '../constants/url';
 

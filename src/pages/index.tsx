@@ -5,7 +5,7 @@ import { metaTagList } from '../constants/metaTag';
 import { Image } from '../domain/types/image';
 import extractRandomImages from '../infrastructures/utils/randomImages';
 import imageData from '../infrastructures/utils/imageData';
-import { useSetAppState } from '../contexts/AppStateContext';
+import { useSetAppState } from '../stores/contexts/AppStateContext';
 import ImageListContainer from '../containers/ImageLIst';
 
 type Props = {
