@@ -1,6 +1,6 @@
 import { ImageList } from '../../domain/image';
 import { FetchRandomImageList } from '../../domain/repository';
-import FetchRandomImageListError from '../../domain/error/FetchRandomImageListError';
+import FetchRandomImageListError from '../../domain/errors/FetchRandomImageListError';
 import { apiList } from '../../constants/url';
 
 // eslint-disable-next-line import/prefer-default-export
