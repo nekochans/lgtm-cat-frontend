@@ -37,4 +37,6 @@ NEXT_PUBLIC_GA_MEASUREMENT_ID=Google Analytics（次世代の4）の測定ID（G
 
 ## 設計方針
 
+各ドキュメントを参照して下さい。
+
 - [ディレクトリ構成説明](https://github.com/nekochans/lgtm-cat-frontend/blob/main/src/README.md)
