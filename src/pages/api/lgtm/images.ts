@@ -1,6 +1,6 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
-import imageData from '../../../utils/imageData';
-import extractRandomImages from '../../../utils/randomImages';
+import imageData from '../../../infrastructures/utils/imageData';
+import extractRandomImages from '../../../infrastructures/utils/randomImages';
 
 type Image = { id: number; url: string };
 

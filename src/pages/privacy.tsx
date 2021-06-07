@@ -1,7 +1,7 @@
 import fs from 'fs';
 import React from 'react';
 import { GetStaticProps, NextPage } from 'next';
-import SimpleLayout from '../components/SimpleLayout';
+import SimpleLayout from '../layouts/SimpleLayout';
 import MarkdownContents from '../components/MarkdownContents';
 import { metaTagList } from '../constants/metaTag';
 

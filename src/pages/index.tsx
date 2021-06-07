@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { GetStaticProps } from 'next';
-import Layout from '../components/Layout';
+import DefaultLayout from '../layouts/DefaultLayout';
 import { metaTagList } from '../constants/metaTag';
-import { Image } from '../domain/image';
-import extractRandomImages from '../utils/randomImages';
-import imageData from '../utils/imageData';
-import { useSetAppState } from '../contexts/AppStateContext';
+import { Image } from '../domain/types/image';
+import extractRandomImages from '../infrastructures/utils/randomImages';
+import imageData from '../infrastructures/utils/imageData';
+import { useSetAppState } from '../stores/contexts/AppStateContext';
 import ImageListContainer from '../containers/ImageLIst';
 
 type Props = {
@@ -21,9 +21,9 @@ const IndexPage: React.FC<Props> = ({ imageList }: Props) => {
   }, []);
 
   return (
-    <Layout metaTag={metaTagList().top}>
+    <DefaultLayout metaTag={metaTagList().top}>
       <ImageListContainer />
-    </Layout>
+    </DefaultLayout>
   );
 };
 

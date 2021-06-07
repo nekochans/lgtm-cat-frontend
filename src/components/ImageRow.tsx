@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image } from '../domain/image';
+import { Image } from '../domain/types/image';
 import ImageContent from './ImageContent';
 
 type Props = {

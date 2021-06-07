@@ -7,7 +7,7 @@ import Document, {
 } from 'next/document';
 import React from 'react';
 import { DocumentInitialProps } from 'next/dist/next-server/lib/utils';
-import { gaMeasurementId } from '../utils/gtag';
+import { gaMeasurementId } from '../infrastructures/utils/gtag';
 
 export default class CustomDocument extends Document {
   static async getInitialProps(

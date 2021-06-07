@@ -1,10 +1,10 @@
 import React from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import throttle from 'lodash/throttle';
-import { useSetAppState } from '../contexts/AppStateContext';
-import { fetchRandomImageList } from '../infrastructure/repository/ImageRepository';
+import { useSetAppState } from '../stores/contexts/AppStateContext';
+import { fetchRandomImageList } from '../infrastructures/repositories/api/fetch/ImageRepository';
 import RandomButton from '../components/RandomButton';
-import { sendFetchRandomImages } from '../utils/gtag';
+import { sendFetchRandomImages } from '../infrastructures/utils/gtag';
 
 const RandomButtonContainer: React.FC = () => {
   const setAppState = useSetAppState();
