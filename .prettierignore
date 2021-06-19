@@ -1,1 +1,4 @@
 package.json
+.next/
+build/
+coverage/
