@@ -9,6 +9,9 @@ module.exports = {
   ignoreFiles: [
     '**/node_modules/**',
     'src/styles/bundle.css',
+    '**/.next/**',
+    '**/build/**',
+    '**/coverage/**',
   ],
   rules: {
     'string-quotes': 'single',
