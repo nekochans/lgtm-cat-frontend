@@ -52,6 +52,38 @@ Storybook のサーバーを起動します。
 
 テストを実行します。
 
+## npm package の注意点
+
+### `dependencies` と `devDependencies` を明確に使い分ける
+
+`npm install [package名]` を実行すると `package.json` の `dependencies` に追加されます。
+
+開発にしか利用しない package（テストコードや Linter, Storybook とか）は `devDependencies` に追加します。
+
+`devDependencies` に追加を行う為には `--save-dev` オプションを利用します。
+
+`npm install [package名] --save-dev`
+
+### `npm install` より `npm ci` を利用する
+
+package 内容に変更を加えない場合は `npm install` ではなく `npm ci` を利用します。
+
+`npm install` は `package-lock.json` が変更されてしまう可能性がある為です。
+
+また `npm ci` のほうが高速に動作します。
+
+### 場合によっては `--legacy-peer-deps` オプションを利用する
+
+npm の 7 系からは依存 package の整合性を厳密にチェックするようになりました。
+
+例えば `storybook` は React の最新版での動作しますが、依存関係上は 16 系を要求してくるので、インストールが出来ません。
+
+具体的には [こんな感じのエラー](https://github.com/nekochans/lgtm-cat-frontend/issues/87#issuecomment-864349773) が発生します。
+
+これを回避する為には、 `npm install --legacy-peer-deps` のように `--legacy-peer-deps` オプションを使って対応します。
+
+あまり良い方法ではありませんが、依存先の package が対応しない限りは、こちらではどうしようもないので、一時的に `--legacy-peer-deps` が必要な場合もあります。
+
 ## デプロイについて
 
 このアプリケーションは [Vercel](https://vercel.com) によってホスティングされています。
