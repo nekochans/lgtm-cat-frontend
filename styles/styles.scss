@@ -1,4 +1,4 @@
-@import "~bulma/bulma";
+@import '~bulma/bulma';
 
 @media screen and (min-width: 1024px) {
   .navbar-padding {
@@ -21,14 +21,15 @@
 .columns {
   margin: 0;
 }
+
 .columns:last-child {
-  margin-bottom: 1rem
+  margin-bottom: 1rem;
 }
 
 @media screen and (min-width: 768px) {
   .columns {
-    margin-left: -0.75rem;
-    margin-right: -0.75rem;
     margin-top: -0.75rem;
+    margin-right: -0.75rem;
+    margin-left: -0.75rem;
   }
 }
