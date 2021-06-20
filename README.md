@@ -3,7 +3,7 @@
 [![ci](https://github.com/nekochans/lgtm-cat-frontend/actions/workflows/ci.yml/badge.svg)](https://github.com/nekochans/lgtm-cat-frontend/actions/workflows/ci.yml)
 [![Coverage Status](https://coveralls.io/repos/github/nekochans/lgtm-cat-frontend/badge.svg?branch=main)](https://coveralls.io/github/nekochans/lgtm-cat-frontend?branch=main)
 
-lgtm-cat（サービス名 LGTMeow https://lgtmeow.com  のフロントエンド用プロジェクトです。
+lgtm-cat（サービス名 LGTMeow https://lgtmeow.com のフロントエンド用プロジェクトです。
 
 ## 環境変数
 
@@ -16,11 +16,11 @@ NEXT_PUBLIC_GA_MEASUREMENT_ID=Google Analytics（次世代の4）の測定ID（G
 
 ## デプロイについて
 
-このアプリケーションは [Vercel](https://vercel.com) によってホスティングされています。 
+このアプリケーションは [Vercel](https://vercel.com) によってホスティングされています。
 
 `main` ブランチにマージされた時点で本番環境へデプロイが行われます。
 
-### Vercel上の環境変数について
+### Vercel 上の環境変数について
 
 アプリケーションで利用する環境変数が増えた場合は [こちら](https://vercel.com/nekochans/lgtm-cat-frontend/settings/environment-variables) より設定が必要です。
 
@@ -29,7 +29,7 @@ NEXT_PUBLIC_GA_MEASUREMENT_ID=Google Analytics（次世代の4）の測定ID（G
 - Production
   - 本番環境
 - Preview
-  - GitHubのブランチにプッシュされる度に一時的に生成される環境
+  - GitHub のブランチにプッシュされる度に一時的に生成される環境
 - Development
   - [vercel dev](https://vercel.com/docs/cli#commands/dev) コマンドでローカル環境を起動した場合、この環境変数が利用されます。
 

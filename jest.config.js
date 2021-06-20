@@ -1,24 +1,15 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  roots: [
-    '<rootDir>/src'
-  ],
+  roots: ['<rootDir>/src'],
   setupFilesAfterEnv: ['<rootDir>/test/setupTests.ts'],
   testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/'],
   transform: {
-    '^.+\\.(ts|tsx)$': 'ts-jest'
+    '^.+\\.(ts|tsx)$': 'ts-jest',
   },
-  moduleFileExtensions: [
-    'ts',
-    'tsx',
-    'js',
-    'jsx',
-    'json',
-    'node'
-  ],
-  "moduleNameMapper": {
-    "\\.(scss)$": "identity-obj-proxy"
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+  moduleNameMapper: {
+    '\\.(scss)$': 'identity-obj-proxy',
   },
   // https://github.com/zeit/next.js/issues/8663#issue-490553899
   globals: {
@@ -26,8 +17,8 @@ module.exports = {
     // to transform jsx into js rather than leaving it jsx such as the next build requires. you
     // can see this setting in tsconfig.jest.json -> "jsx": "react"
     'ts-jest': {
-      'tsconfig': '<rootDir>/test/tsconfig.jest.json'
-    }
+      tsconfig: '<rootDir>/test/tsconfig.jest.json',
+    },
   },
-  coveragePathIgnorePatterns: ["<rootDir>/.storybook/__mocks/"]
+  coveragePathIgnorePatterns: ['<rootDir>/.storybook/__mocks/'],
 };
