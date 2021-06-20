@@ -12,7 +12,7 @@
     "lint:eslint": "eslint .",
     "fix:eslint": "npm run lint:eslint -- --fix",
     "lint:stylelint": "stylelint **/*.{css,scss,tsx}",
-    "fix:stylelint": "stylelint --fix **/*.{css,scss,tsx}",
+    "fix:stylelint": "npm run lint:stylelint -- --fix",
     "lint": "run-s lint:*",
     "format": "run-s fix:*",
     "test": "jest",
