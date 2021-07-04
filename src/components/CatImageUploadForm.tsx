@@ -3,7 +3,7 @@ import React, { useState, ChangeEvent } from 'react';
 const acceptedTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg'];
 
 const CatImageUploadForm: React.FC = () => {
-  const [uploadedCatImageUrl, setUploadedCatImageUrl] = useState<string>();
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string>();
 
   const isValidFileType = (fileType: string): boolean =>
     acceptedTypes.includes(fileType);
@@ -18,7 +18,7 @@ const CatImageUploadForm: React.FC = () => {
 
       const url = URL.createObjectURL(file);
 
-      setUploadedCatImageUrl(url);
+      setImagePreviewUrl(url);
     }
   };
 
@@ -46,8 +46,8 @@ const CatImageUploadForm: React.FC = () => {
           アップロード
         </button>
       </form>
-      {uploadedCatImageUrl ? (
-        <img src={uploadedCatImageUrl} alt="preview" />
+      {imagePreviewUrl ? (
+        <img src={imagePreviewUrl} alt="uploadImagePreview" />
       ) : (
         ''
       )}
