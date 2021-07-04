@@ -1,4 +1,5 @@
 import React, { useState, ChangeEvent } from 'react';
+import UploadCatImagePreview from './UploadCatImagePreview';
 
 const acceptedTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg'];
 
@@ -47,7 +48,7 @@ const CatImageUploadForm: React.FC = () => {
         </button>
       </form>
       {imagePreviewUrl ? (
-        <img src={imagePreviewUrl} alt="uploadImagePreview" />
+        <UploadCatImagePreview imagePreviewUrl={imagePreviewUrl} />
       ) : (
         ''
       )}
