@@ -11,11 +11,12 @@ const CatImageUploadForm: React.FC = () => {
   const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     if (e.target.files && e.target.files.length > 0) {
-      if (!isValidFileType(e.target.files[0].type)) {
+      const file = e.target.files[0];
+      if (!isValidFileType(file.type)) {
         return;
       }
 
-      const url = URL.createObjectURL(e.target.files[0]);
+      const url = URL.createObjectURL(file);
 
       setUploadedCatImageUrl(url);
     }
