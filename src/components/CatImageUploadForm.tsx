@@ -2,12 +2,14 @@ import React, { useState, ChangeEvent } from 'react';
 import UploadCatImagePreview from './UploadCatImagePreview';
 import CatImageUploadDescription from './CatImageUploadDescription';
 import CatImageUploadError from './CatImageUploadError';
+import CatImageUploadSuccessMessage from './CatImageUploadSuccessMessage';
 
 const acceptedTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg'];
 
 const CatImageUploadForm: React.FC = () => {
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>();
   const [errorMessage, setErrorMessage] = useState<string>();
+  const [uploaded, setUploaded] = useState<boolean>();
 
   const isValidFileType = (fileType: string): boolean =>
     acceptedTypes.includes(fileType);
@@ -16,6 +18,7 @@ const CatImageUploadForm: React.FC = () => {
     e.preventDefault();
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
+      setUploaded(false);
       if (!isValidFileType(file.type)) {
         setErrorMessage(
           `${file.type} の画像は許可されていません。png, jpg, jpeg の画像のみアップロード出来ます。`,
@@ -32,10 +35,23 @@ const CatImageUploadForm: React.FC = () => {
     }
   };
 
+  const handleOnSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (window.confirm('この画像をアップロードします。よろしいですか？')) {
+      setUploaded(true);
+      setErrorMessage('');
+      setImagePreviewUrl('');
+
+      return true;
+    }
+
+    return false;
+  };
+
   return (
     <div className="container">
       <CatImageUploadDescription />
-      <form method="post">
+      <form method="post" onSubmit={handleOnSubmit}>
         <div className="file has-name is-boxed">
           <label className="file-label mb-3" htmlFor="cat-image-upload">
             <input
@@ -53,7 +69,11 @@ const CatImageUploadForm: React.FC = () => {
             </span>
           </label>
         </div>
-        <button className="button is-primary mb-6" type="submit">
+        <button
+          className="button is-primary mb-6"
+          type="submit"
+          disabled={!(imagePreviewUrl && errorMessage === '')}
+        >
           アップロードする
         </button>
       </form>
@@ -63,6 +83,7 @@ const CatImageUploadForm: React.FC = () => {
         ''
       )}
       {errorMessage ? <CatImageUploadError message={errorMessage} /> : ''}
+      {uploaded ? <CatImageUploadSuccessMessage /> : ''}
     </div>
   );
 };
