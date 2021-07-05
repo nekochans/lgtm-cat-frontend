@@ -32,11 +32,15 @@ const CatImageUploadForm: React.FC = () => {
 
       setErrorMessage('');
       setImagePreviewUrl(url);
+      // TODO 以下の課題で https://github.com/nekochans/lgtm-cat-api/pull/8 で作成中のAPIにリクエストする処理を追加
+      // https://github.com/nekochans/lgtm-cat-frontend/issues/76
     }
   };
 
   const handleOnSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    // TODO 以下の課題で window.confirm の利用はやめてちゃんとしたモーダルを使った処理に変更する
+    // https://github.com/nekochans/lgtm-cat-frontend/issues/93
     if (window.confirm('この画像をアップロードします。よろしいですか？')) {
       setUploaded(true);
       setErrorMessage('');

@@ -1,5 +1,8 @@
 import React from 'react';
 
+// TODO 以下の課題でAPIの返り値からMarkdownソースを生成する形に変更
+// https://github.com/nekochans/lgtm-cat-frontend/issues/76
+// TODO blockquote をクリックしたらクリップボードにソースをコピーするように変更
 const CatImageUploadSuccessMessage: React.FC = () => (
   <div className="content">
     <article className="message is-success">
