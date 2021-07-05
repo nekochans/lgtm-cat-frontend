@@ -1,5 +1,6 @@
 import React, { useState, ChangeEvent } from 'react';
 import UploadCatImagePreview from './UploadCatImagePreview';
+import CatImageUploadDescription from './CatImageUploadDescription';
 
 const acceptedTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg'];
 
@@ -24,7 +25,8 @@ const CatImageUploadForm: React.FC = () => {
   };
 
   return (
-    <>
+    <div className="container">
+      <CatImageUploadDescription />
       <form method="post">
         <div className="file has-name is-boxed">
           <label className="file-label" htmlFor="cat-image-upload">
@@ -44,7 +46,7 @@ const CatImageUploadForm: React.FC = () => {
           </label>
         </div>
         <button className="button is-primary" type="submit">
-          アップロード
+          アップロードする
         </button>
       </form>
       {imagePreviewUrl ? (
@@ -52,7 +54,7 @@ const CatImageUploadForm: React.FC = () => {
       ) : (
         ''
       )}
-    </>
+    </div>
   );
 };
 
