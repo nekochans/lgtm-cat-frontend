@@ -42,6 +42,10 @@ export default class CustomDocument extends Document {
               `,
             }}
           />
+          <script
+            defer
+            src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"
+          />
         </Head>
         <body>
           <Main />
