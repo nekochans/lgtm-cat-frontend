@@ -1,11 +1,13 @@
 import React, { useState, ChangeEvent } from 'react';
 import UploadCatImagePreview from './UploadCatImagePreview';
 import CatImageUploadDescription from './CatImageUploadDescription';
+import CatImageUploadError from './CatImageUploadError';
 
 const acceptedTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg'];
 
 const CatImageUploadForm: React.FC = () => {
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>();
+  const [errorMessage, setErrorMessage] = useState<string>();
 
   const isValidFileType = (fileType: string): boolean =>
     acceptedTypes.includes(fileType);
@@ -15,11 +17,17 @@ const CatImageUploadForm: React.FC = () => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
       if (!isValidFileType(file.type)) {
+        setErrorMessage(
+          `${file.type} の画像は許可されていません。png, jpg, jpeg の画像のみアップロード出来ます。`,
+        );
+        setImagePreviewUrl('');
+
         return;
       }
 
       const url = URL.createObjectURL(file);
 
+      setErrorMessage('');
       setImagePreviewUrl(url);
     }
   };
@@ -29,7 +37,7 @@ const CatImageUploadForm: React.FC = () => {
       <CatImageUploadDescription />
       <form method="post">
         <div className="file has-name is-boxed">
-          <label className="file-label" htmlFor="cat-image-upload">
+          <label className="file-label mb-3" htmlFor="cat-image-upload">
             <input
               className="file-input"
               type="file"
@@ -45,7 +53,7 @@ const CatImageUploadForm: React.FC = () => {
             </span>
           </label>
         </div>
-        <button className="button is-primary" type="submit">
+        <button className="button is-primary mb-6" type="submit">
           アップロードする
         </button>
       </form>
@@ -54,6 +62,7 @@ const CatImageUploadForm: React.FC = () => {
       ) : (
         ''
       )}
+      {errorMessage ? <CatImageUploadError message={errorMessage} /> : ''}
     </div>
   );
 };
