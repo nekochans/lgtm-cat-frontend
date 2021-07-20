@@ -5,7 +5,7 @@ type Props = {
 };
 
 const UploadCatImagePreview: React.FC<Props> = ({ imagePreviewUrl }: Props) => (
-  <figure className="image is-square">
+  <figure className="image">
     <img src={imagePreviewUrl} alt="uploadImagePreview" />
   </figure>
 );
