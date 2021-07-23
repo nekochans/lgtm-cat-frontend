@@ -7,7 +7,10 @@ type Props = {
   createdLgtmImageUrl: string;
 };
 
-const CreatedLgtmImage = ({ imagePreviewUrl, createdLgtmImageUrl }: Props) => {
+const CreatedLgtmImage: React.FC<Props> = ({
+  imagePreviewUrl,
+  createdLgtmImageUrl,
+}: Props) => {
   const [copied, setCopied] = useState(false);
   const [opacity, setOpacity] = useState('1');
 
