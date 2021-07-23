@@ -52,6 +52,14 @@ const CatImageUploadForm: React.FC = () => {
     return false;
   };
 
+  const shouldDisableButton = (): boolean => {
+    if (errorMessage !== '') {
+      return true;
+    }
+
+    return uploaded === true && imagePreviewUrl !== '';
+  };
+
   // TODO 以下の課題で固定値ではなく、APIからの結果を渡すようにする
   // https://github.com/nekochans/lgtm-cat-frontend/issues/76
   const createdLgtmImageProps = {
@@ -84,7 +92,7 @@ const CatImageUploadForm: React.FC = () => {
         <button
           className="button is-primary m-4"
           type="submit"
-          disabled={!(imagePreviewUrl && errorMessage === '')}
+          disabled={shouldDisableButton()}
         >
           アップロードする
         </button>
