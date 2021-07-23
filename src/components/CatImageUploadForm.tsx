@@ -82,7 +82,7 @@ const CatImageUploadForm: React.FC = () => {
           </label>
         </div>
         <button
-          className="button is-primary mb-6"
+          className="button is-primary m-4"
           type="submit"
           disabled={!(imagePreviewUrl && errorMessage === '')}
         >
