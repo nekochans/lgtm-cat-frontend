@@ -3,6 +3,7 @@ import UploadCatImagePreview from './UploadCatImagePreview';
 import CatImageUploadDescription from './CatImageUploadDescription';
 import CatImageUploadError from './CatImageUploadError';
 import CatImageUploadSuccessMessage from './CatImageUploadSuccessMessage';
+import CreatedLgtmImage from './CreatedLgtmImage';
 
 const acceptedTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg'];
 
@@ -44,12 +45,27 @@ const CatImageUploadForm: React.FC = () => {
     if (window.confirm('この画像をアップロードします。よろしいですか？')) {
       setUploaded(true);
       setErrorMessage('');
-      setImagePreviewUrl('');
 
       return true;
     }
 
     return false;
+  };
+
+  const shouldDisableButton = (): boolean => {
+    if (errorMessage !== '') {
+      return true;
+    }
+
+    return uploaded === true && imagePreviewUrl !== '';
+  };
+
+  // TODO 以下の課題で固定値ではなく、APIからの結果を渡すようにする
+  // https://github.com/nekochans/lgtm-cat-frontend/issues/76
+  const createdLgtmImageProps = {
+    imagePreviewUrl: imagePreviewUrl ?? '',
+    createdLgtmImageUrl:
+      'https://lgtm-images.lgtmeow.com/2021/03/16/22/03b4b6a8-931c-47cf-b2e5-ff8218a67b08.webp',
   };
 
   return (
@@ -74,20 +90,28 @@ const CatImageUploadForm: React.FC = () => {
           </label>
         </div>
         <button
-          className="button is-primary mb-6"
+          className="button is-primary m-4"
           type="submit"
-          disabled={!(imagePreviewUrl && errorMessage === '')}
+          disabled={shouldDisableButton()}
         >
           アップロードする
         </button>
       </form>
-      {imagePreviewUrl ? (
+      {imagePreviewUrl && !uploaded ? (
         <UploadCatImagePreview imagePreviewUrl={imagePreviewUrl} />
       ) : (
         ''
       )}
       {errorMessage ? <CatImageUploadError message={errorMessage} /> : ''}
       {uploaded ? <CatImageUploadSuccessMessage /> : ''}
+      {uploaded ? (
+        <CreatedLgtmImage
+          imagePreviewUrl={createdLgtmImageProps.imagePreviewUrl}
+          createdLgtmImageUrl={createdLgtmImageProps.createdLgtmImageUrl}
+        />
+      ) : (
+        ''
+      )}
     </div>
   );
 };

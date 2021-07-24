@@ -24,7 +24,7 @@ exports[`Storyshots src/components/CatImageUploadForm.tsx Show Cat Image Upload 
         人の顔がはっきり写っている画像はアップロード出来ません。
       </li>
       <li>
-        猫のイラスト等のリアルな猫画像はアップロード出来ません。（そのうち出来るようにしたいです。）
+        猫のイラスト等の猫画像はアップロード出来ません。（そのうち出来るようにしたいです。）
       </li>
     </ol>
   </div>
@@ -65,13 +65,14 @@ exports[`Storyshots src/components/CatImageUploadForm.tsx Show Cat Image Upload 
       </label>
     </div>
     <button
-      className="button is-primary mb-6"
+      className="button is-primary m-4"
       disabled={true}
       type="submit"
     >
       アップロードする
     </button>
   </form>
+  
   
   
   
