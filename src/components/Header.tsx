@@ -3,9 +3,10 @@ import RandomButtonContainer from '../containers/RandomButton';
 
 type Props = {
   topLink: ReactNode;
+  uploadLink: ReactNode;
 };
 
-const Header: React.FC<Props> = ({ topLink }: Props) => (
+const Header: React.FC<Props> = ({ topLink, uploadLink }: Props) => (
   <header>
     <nav className="navbar navbar-padding">
       <div className="container" style={{ display: 'block' }}>
@@ -18,6 +19,7 @@ const Header: React.FC<Props> = ({ topLink }: Props) => (
               marginLeft: 'auto',
             }}
           >
+            {uploadLink}
             <RandomButtonContainer />
           </div>
         </div>

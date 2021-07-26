@@ -13,6 +13,16 @@ const props = {
       <p className="is-size-4 has-text-black">LGTMeow</p>
     </a>
   ),
+  uploadLink: (
+    <a
+      className="navbar-item button"
+      href="https://github.com/nekochans/lgtm-cat-frontend"
+    >
+      <p className="has-text-black">猫ちゃん画像をアップロード</p>
+    </a>
+  ),
 };
 
-export const showHeader = (): JSX.Element => <Header topLink={props.topLink} />;
+export const showHeader = (): JSX.Element => (
+  <Header topLink={props.topLink} uploadLink={props.uploadLink} />
+);

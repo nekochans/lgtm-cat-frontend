@@ -33,6 +33,14 @@ const DefaultLayout: React.FC<Props> = ({ children, metaTag }: Props) => (
           </a>
         </Link>
       }
+      uploadLink={
+        <Link href={pathList.upload}>
+          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+          <a className="navbar-item button">
+            <p className="has-text-black">猫ちゃん画像をアップロード</p>
+          </a>
+        </Link>
+      }
     />
     {children}
     <Footer

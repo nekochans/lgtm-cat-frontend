@@ -4,6 +4,7 @@ export const appBaseUrl = (): string =>
 export const urlList = {
   top: appBaseUrl(),
   ogpImg: `${appBaseUrl()}/ogp.webp`,
+  upload: `${appBaseUrl()}/upload`,
   terms: `${appBaseUrl()}/terms`,
   privacy: `${appBaseUrl()}/privacy`,
 } as const;
@@ -12,9 +13,10 @@ export const apiList = { fetchLgtmImages: '/api/lgtm/images' };
 
 export const pathList = {
   top: '/',
+  upload: '/upload',
   terms: '/terms',
   privacy: '/privacy',
   error: '/error',
 } as const;
 
-export type AppPathName = 'top' | 'terms' | 'privacy';
+export type AppPathName = 'top' | 'upload' | 'terms' | 'privacy';

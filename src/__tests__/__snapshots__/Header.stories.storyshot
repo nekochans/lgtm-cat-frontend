@@ -35,6 +35,16 @@ exports[`Storyshots src/components/Header.tsx Show Header 1`] = `
             }
           }
         >
+          <a
+            className="navbar-item button"
+            href="https://github.com/nekochans/lgtm-cat-frontend"
+          >
+            <p
+              className="has-text-black"
+            >
+              猫ちゃん画像をアップロード
+            </p>
+          </a>
           <button
             className="button is-outlined"
             onClick={[Function]}
