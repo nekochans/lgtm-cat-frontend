@@ -16,6 +16,7 @@ const props = {
   uploadLink: (
     <a
       className="navbar-item button"
+      style={{ margin: '0.5rem 0.75rem' }}
       href="https://github.com/nekochans/lgtm-cat-frontend"
     >
       <p className="has-text-black">猫ちゃん画像をアップロード</p>
