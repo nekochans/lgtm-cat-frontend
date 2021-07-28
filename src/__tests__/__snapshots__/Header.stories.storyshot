@@ -34,19 +34,69 @@ exports[`Storyshots src/components/Header.tsx Show Header 1`] = `
               "marginLeft": "auto",
             }
           }
+        />
+        <button
+          aria-expanded="false"
+          aria-label="menu"
+          className="navbar-burger burger "
+          data-target="navbar-burger-menu"
+          onClick={[Function]}
+          role="button"
+          type="button"
         >
-          <button
-            className="button is-outlined"
-            onClick={[Function]}
-            style={
-              Object {
-                "margin": "0.5rem 0.75rem",
-              }
-            }
-            type="submit"
+          <span
+            aria-hidden="true"
+          />
+          <span
+            aria-hidden="true"
+          />
+          <span
+            aria-hidden="true"
+          />
+        </button>
+      </div>
+      <div
+        className="navbar-menu "
+        id="navbar-burger-menu"
+      >
+        <div
+          className="navbar-end"
+        >
+          <div
+            className="navbar-item"
           >
-            他の猫ちゃんを表示
-          </button>
+            <div
+              className="buttons"
+            >
+              <a
+                className="navbar-item button"
+                href="https://github.com/nekochans/lgtm-cat-frontend"
+                style={
+                  Object {
+                    "margin": "0.5rem 0.75rem",
+                  }
+                }
+              >
+                <p
+                  className="has-text-black"
+                >
+                  猫ちゃん画像をアップロード
+                </p>
+              </a>
+              <button
+                className="button is-outlined"
+                onClick={[Function]}
+                style={
+                  Object {
+                    "margin": "0.5rem 0.75rem",
+                  }
+                }
+                type="submit"
+              >
+                他の猫ちゃんを表示
+              </button>
+            </div>
+          </div>
         </div>
       </div>
       <p
