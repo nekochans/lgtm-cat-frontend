@@ -9,7 +9,10 @@ export const urlList = {
   privacy: `${appBaseUrl()}/privacy`,
 } as const;
 
-export const apiList = { fetchLgtmImages: '/api/lgtm/images' };
+export const apiList = {
+  fetchLgtmImages: '/api/lgtm/images',
+  issueAccessToken: '/api/idp/tokens',
+};
 
 export const pathList = {
   top: '/',
@@ -20,3 +23,7 @@ export const pathList = {
 } as const;
 
 export type AppPathName = 'top' | 'upload' | 'terms' | 'privacy';
+
+// この関数はサーバーサイドでしか動作しない
+export const cognitoTokenEndpointUrl = (): string =>
+  process.env.COGNITO_TOKEN_ENDPOINT ? process.env.COGNITO_TOKEN_ENDPOINT : '';
