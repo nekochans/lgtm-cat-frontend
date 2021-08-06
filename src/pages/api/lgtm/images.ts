@@ -15,8 +15,7 @@ type ImagesResponse = {
   };
 };
 
-export type UploadedImageResponse = {
-  uploadedImage?: UploadedImage;
+export type UploadedImageResponse = UploadedImage & {
   error?: {
     code: number;
     message: string;
@@ -55,9 +54,7 @@ const uploadCatImage = async (
 
   const responseBody = (await response.json()) as UploadedImage;
 
-  return res
-    .status(202)
-    .json({ uploadedImage: { imageUrl: responseBody.imageUrl } });
+  return res.status(202).json({ imageUrl: responseBody.imageUrl });
 };
 
 const methodNotAllowedErrorResponse = (

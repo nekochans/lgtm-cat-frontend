@@ -4,7 +4,8 @@ import CatImageUploadDescription from './CatImageUploadDescription';
 import CatImageUploadError from './CatImageUploadError';
 import CatImageUploadSuccessMessage from './CatImageUploadSuccessMessage';
 import CreatedLgtmImage from './CreatedLgtmImage';
-import { UploadedImageResponse } from '../pages/api/lgtm/images';
+import { uploadCatImage } from '../infrastructures/repositories/api/fetch/ImageRepository';
+import { AcceptedTypesImageExtension } from '../domain/repositories/imageRepository';
 
 const acceptedTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg'];
 
@@ -70,24 +71,16 @@ const CatImageUploadForm: React.FC = () => {
       // TODO アップロードAPIのエラーが発生した際の処理を追加
       // TODO アップロード中はローディング用のComponentを表示させる
       // TODO APIにリクエストするリポジトリ用の関数を外から渡すようにする
-      const response = await fetch('/api/lgtm/images', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          image: base64Image,
-          imageExtension: uploadImageExtension,
-        }),
+      const responseBody = await uploadCatImage({
+        image: base64Image,
+        imageExtension: uploadImageExtension as AcceptedTypesImageExtension,
       });
-
-      const responseBody = (await response.json()) as UploadedImageResponse;
 
       setUploaded(true);
       setErrorMessage('');
 
-      if (responseBody.uploadedImage?.imageUrl) {
-        setCreatedLgtmImageUrl(responseBody.uploadedImage?.imageUrl);
+      if (responseBody?.imageUrl) {
+        setCreatedLgtmImageUrl(responseBody?.imageUrl);
       }
 
       return true;
