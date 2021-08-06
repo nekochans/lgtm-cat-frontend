@@ -4,12 +4,15 @@ import CatImageUploadDescription from './CatImageUploadDescription';
 import CatImageUploadError from './CatImageUploadError';
 import CatImageUploadSuccessMessage from './CatImageUploadSuccessMessage';
 import CreatedLgtmImage from './CreatedLgtmImage';
+import { UploadedImageResponse } from '../pages/api/lgtm/images';
 
 const acceptedTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg'];
 
 const CatImageUploadForm: React.FC = () => {
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>();
-  const [base64Image, setBase64Image] = useState<string>();
+  const [base64Image, setBase64Image] = useState<string>('');
+  const [uploadImageExtension, setUploadImageExtension] = useState<string>('');
+  const [createdLgtmImageUrl, setCreatedLgtmImageUrl] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>();
   const [uploaded, setUploaded] = useState<boolean>();
 
@@ -34,11 +37,14 @@ const CatImageUploadForm: React.FC = () => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
       setUploaded(false);
-      if (!isValidFileType(file.type)) {
+      const fileType = file.type;
+      if (!isValidFileType(fileType)) {
         setErrorMessage(
-          `${file.type} の画像は許可されていません。png, jpg, jpeg の画像のみアップロード出来ます。`,
+          `${fileType} の画像は許可されていません。png, jpg, jpeg の画像のみアップロード出来ます。`,
         );
         setImagePreviewUrl('');
+        setUploadImageExtension('');
+        setCreatedLgtmImageUrl('');
 
         return;
       }
@@ -47,24 +53,42 @@ const CatImageUploadForm: React.FC = () => {
 
       setErrorMessage('');
       setImagePreviewUrl(url);
+      // TODO 拡張子を抜き出す関数は別の関数に分離する
+      setUploadImageExtension(`.${fileType.replace('image/', '')}`);
 
       const reader = new FileReader();
       reader.onload = handleReaderLoaded;
       reader.readAsBinaryString(file);
-      // TODO 以下の課題で https://github.com/nekochans/lgtm-cat-api/pull/8 で作成中のAPIにリクエストする処理を追加
-      // https://github.com/nekochans/lgtm-cat-frontend/issues/76
     }
   };
 
-  const handleOnSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleOnSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // TODO 以下の課題で window.confirm の利用はやめてちゃんとしたモーダルを使った処理に変更する
     // https://github.com/nekochans/lgtm-cat-frontend/issues/93
     if (window.confirm('この画像をアップロードします。よろしいですか？')) {
-      console.log(base64Image);
+      // TODO アップロードAPIのエラーが発生した際の処理を追加
+      // TODO アップロード中はローディング用のComponentを表示させる
+      // TODO APIにリクエストするリポジトリ用の関数を外から渡すようにする
+      const response = await fetch('/api/lgtm/images', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          image: base64Image,
+          imageExtension: uploadImageExtension,
+        }),
+      });
+
+      const responseBody = (await response.json()) as UploadedImageResponse;
 
       setUploaded(true);
       setErrorMessage('');
+
+      if (responseBody.uploadedImage?.imageUrl) {
+        setCreatedLgtmImageUrl(responseBody.uploadedImage?.imageUrl);
+      }
 
       return true;
     }
@@ -84,8 +108,7 @@ const CatImageUploadForm: React.FC = () => {
   // https://github.com/nekochans/lgtm-cat-frontend/issues/76
   const createdLgtmImageProps = {
     imagePreviewUrl: imagePreviewUrl ?? '',
-    createdLgtmImageUrl:
-      'https://lgtm-images.lgtmeow.com/2021/03/16/22/03b4b6a8-931c-47cf-b2e5-ff8218a67b08.webp',
+    createdLgtmImageUrl: createdLgtmImageUrl ?? '',
   };
 
   return (
