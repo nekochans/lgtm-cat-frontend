@@ -9,11 +9,25 @@ const acceptedTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg'];
 
 const CatImageUploadForm: React.FC = () => {
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>();
+  const [base64Image, setBase64Image] = useState<string>();
   const [errorMessage, setErrorMessage] = useState<string>();
   const [uploaded, setUploaded] = useState<boolean>();
 
   const isValidFileType = (fileType: string): boolean =>
     acceptedTypes.includes(fileType);
+
+  const handleReaderLoaded = (event: ProgressEvent<FileReader>) => {
+    if (event.target === null) {
+      return;
+    }
+
+    const binaryString = event.target?.result;
+    if (typeof binaryString !== 'string') {
+      return;
+    }
+
+    setBase64Image(btoa(binaryString));
+  };
 
   const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -33,6 +47,10 @@ const CatImageUploadForm: React.FC = () => {
 
       setErrorMessage('');
       setImagePreviewUrl(url);
+
+      const reader = new FileReader();
+      reader.onload = handleReaderLoaded;
+      reader.readAsBinaryString(file);
       // TODO 以下の課題で https://github.com/nekochans/lgtm-cat-api/pull/8 で作成中のAPIにリクエストする処理を追加
       // https://github.com/nekochans/lgtm-cat-frontend/issues/76
     }
@@ -43,6 +61,8 @@ const CatImageUploadForm: React.FC = () => {
     // TODO 以下の課題で window.confirm の利用はやめてちゃんとしたモーダルを使った処理に変更する
     // https://github.com/nekochans/lgtm-cat-frontend/issues/93
     if (window.confirm('この画像をアップロードします。よろしいですか？')) {
+      console.log(base64Image);
+
       setUploaded(true);
       setErrorMessage('');
 
