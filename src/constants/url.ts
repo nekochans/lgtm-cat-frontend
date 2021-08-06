@@ -12,7 +12,6 @@ export const urlList = {
 export const apiList = {
   fetchLgtmImages: '/api/lgtm/images',
   uploadCatImage: '/api/lgtm/images',
-  issueAccessToken: '/api/idp/tokens',
 };
 
 export const pathList = {
