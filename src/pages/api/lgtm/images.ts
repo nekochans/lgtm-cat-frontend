@@ -4,6 +4,7 @@ import extractRandomImages from '../../../infrastructures/utils/randomImages';
 import { UploadedImage } from '../../../domain/types/image';
 import { UploadCatImageRequest } from '../../../domain/repositories/imageRepository';
 import { uploadCatImageUrl } from '../../../constants/url';
+import { issueAccessToken } from '../../../infrastructures/repositories/api/fetch/authTokenRepository';
 
 type Image = { id: number; url: string };
 
@@ -39,10 +40,13 @@ const uploadCatImage = async (
 ) => {
   const requestBody = req.body as UploadCatImageRequest;
 
+  const accessToken = await issueAccessToken();
+
   const options = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken.jwtString}`,
     },
     body: JSON.stringify({
       image: requestBody.image,
