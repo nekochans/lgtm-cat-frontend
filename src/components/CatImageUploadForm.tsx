@@ -4,13 +4,19 @@ import CatImageUploadDescription from './CatImageUploadDescription';
 import CatImageUploadError from './CatImageUploadError';
 import CatImageUploadSuccessMessage from './CatImageUploadSuccessMessage';
 import CreatedLgtmImage from './CreatedLgtmImage';
-import { uploadCatImage } from '../infrastructures/repositories/api/fetch/ImageRepository';
-import { AcceptedTypesImageExtension } from '../domain/repositories/imageRepository';
+import {
+  AcceptedTypesImageExtension,
+  UploadCatImage,
+} from '../domain/repositories/imageRepository';
 
 // TODO acceptedTypesは定数化して分離する
 const acceptedTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg'];
 
-const CatImageUploadForm: React.FC = () => {
+type Props = {
+  uploadCatImage: UploadCatImage;
+};
+
+const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>();
   const [base64Image, setBase64Image] = useState<string>('');
   const [uploadImageExtension, setUploadImageExtension] = useState<
@@ -78,7 +84,6 @@ const CatImageUploadForm: React.FC = () => {
     if (window.confirm('この画像をアップロードします。よろしいですか？')) {
       // TODO アップロードAPIのエラーが発生した際の処理を追加
       // TODO アップロード中はローディング用のComponentを表示させる
-      // TODO APIにリクエストするリポジトリ用の関数を外から渡すようにする
       const responseBody = await uploadCatImage({
         image: base64Image,
         imageExtension: uploadImageExtension as AcceptedTypesImageExtension,
