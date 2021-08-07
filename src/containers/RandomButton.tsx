@@ -2,7 +2,7 @@ import React from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import throttle from 'lodash/throttle';
 import { useSetAppState } from '../stores/contexts/AppStateContext';
-import { fetchRandomImageList } from '../infrastructures/repositories/api/fetch/ImageRepository';
+import { fetchRandomImageList } from '../infrastructures/repositories/api/fetch/imageRepository';
 import RandomButton from '../components/RandomButton';
 import { sendFetchRandomImages } from '../infrastructures/utils/gtag';
 
