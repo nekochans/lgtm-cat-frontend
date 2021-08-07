@@ -12,13 +12,20 @@ const acceptedTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg'];
 const CatImageUploadForm: React.FC = () => {
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>();
   const [base64Image, setBase64Image] = useState<string>('');
-  const [uploadImageExtension, setUploadImageExtension] = useState<string>('');
+  const [uploadImageExtension, setUploadImageExtension] = useState<
+    AcceptedTypesImageExtension | string
+  >('');
   const [createdLgtmImageUrl, setCreatedLgtmImageUrl] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>();
   const [uploaded, setUploaded] = useState<boolean>();
 
   const isValidFileType = (fileType: string): boolean =>
     acceptedTypes.includes(fileType);
+
+  const extractImageExtFromValidFileType = (
+    fileType: string,
+  ): AcceptedTypesImageExtension =>
+    `.${fileType.replace('image/', '')}` as AcceptedTypesImageExtension;
 
   const handleReaderLoaded = (event: ProgressEvent<FileReader>) => {
     if (event.target === null) {
@@ -54,8 +61,7 @@ const CatImageUploadForm: React.FC = () => {
 
       setErrorMessage('');
       setImagePreviewUrl(url);
-      // TODO 拡張子を抜き出す関数は別の関数に分離する
-      setUploadImageExtension(`.${fileType.replace('image/', '')}`);
+      setUploadImageExtension(extractImageExtFromValidFileType(fileType));
 
       const reader = new FileReader();
       reader.onload = handleReaderLoaded;
