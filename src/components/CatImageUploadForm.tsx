@@ -7,6 +7,7 @@ import CreatedLgtmImage from './CreatedLgtmImage';
 import { uploadCatImage } from '../infrastructures/repositories/api/fetch/ImageRepository';
 import { AcceptedTypesImageExtension } from '../domain/repositories/imageRepository';
 
+// TODO acceptedTypesは定数化して分離する
 const acceptedTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg'];
 
 const CatImageUploadForm: React.FC = () => {
@@ -19,6 +20,7 @@ const CatImageUploadForm: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string>();
   const [uploaded, setUploaded] = useState<boolean>();
 
+  // TODO どの画像を許可するかはビジネスロジックとして意味があるので分離する
   const isValidFileType = (fileType: string): boolean =>
     acceptedTypes.includes(fileType);
 
