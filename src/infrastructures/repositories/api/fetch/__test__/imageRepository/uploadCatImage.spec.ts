@@ -30,4 +30,6 @@ describe('imageRepository.ts uploadCatImage TestCases', () => {
 
     expect(uploadedImage).toStrictEqual(mockBody);
   });
+
+  // TODO 異常系のテストケースを実装
 });
