@@ -2,6 +2,7 @@
 import fetch from 'jest-fetch-mock';
 import { uploadCatImage } from '../../imageRepository';
 import { UploadCatImageRequest } from '../../../../../../domain/repositories/imageRepository';
+import { isSuccessResult } from '../../../../../../domain/repositories/repositoryResult';
 
 describe('imageRepository.ts uploadCatImage TestCases', () => {
   beforeEach(() => {
@@ -26,9 +27,10 @@ describe('imageRepository.ts uploadCatImage TestCases', () => {
       imageExtension: '.jpg',
     };
 
-    const uploadedImage = await uploadCatImage(request);
+    const uploadedImageResult = await uploadCatImage(request);
 
-    expect(uploadedImage).toStrictEqual(mockBody);
+    expect(isSuccessResult(uploadedImageResult)).toBeTruthy();
+    expect(uploadedImageResult.value).toStrictEqual(mockBody);
   });
 
   // TODO 異常系のテストケースを実装
