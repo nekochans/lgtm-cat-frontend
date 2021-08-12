@@ -5,6 +5,7 @@ import { UploadedImage } from '../../../domain/types/image';
 import { UploadCatImageRequest } from '../../../domain/repositories/imageRepository';
 import { uploadCatImageUrl } from '../../../constants/url';
 import { issueAccessToken } from '../../../infrastructures/repositories/api/fetch/authTokenRepository';
+import { isSuccessResult } from '../../../domain/repositories/repositoryResult';
 
 type Image = { id: number; url: string };
 
@@ -16,7 +17,8 @@ type ImagesResponse = {
   };
 };
 
-export type UploadedImageResponse = UploadedImage & {
+export type UploadedImageResponse = {
+  imageUrl?: string;
   error?: {
     code: number;
     message: string;
@@ -34,31 +36,53 @@ const fetchLgtmImages = (res: NextApiResponse<ImagesResponse>) => {
   return res.status(200).json(imagesResponse);
 };
 
+const uploadCatImageErrorResponse = (
+  res: NextApiResponse<UploadedImageResponse>,
+  error: Error,
+) => {
+  const errorName = error.name;
+
+  switch (errorName) {
+    case 'IssueAccessTokenError':
+      return res
+        .status(500)
+        .json({ error: { code: 500, message: error.name } });
+    default:
+      return res
+        .status(500)
+        .json({ error: { code: 500, message: 'Internal Server Error' } });
+  }
+};
+
 const uploadCatImage = async (
   req: NextApiRequest,
   res: NextApiResponse<UploadedImageResponse>,
 ) => {
   const requestBody = req.body as UploadCatImageRequest;
 
-  const accessToken = await issueAccessToken();
+  const accessTokenResult = await issueAccessToken();
 
-  const options = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken.jwtString}`,
-    },
-    body: JSON.stringify({
-      image: requestBody.image,
-      imageExtension: requestBody.imageExtension,
-    }),
-  };
+  if (isSuccessResult(accessTokenResult)) {
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessTokenResult.value.jwtString}`,
+      },
+      body: JSON.stringify({
+        image: requestBody.image,
+        imageExtension: requestBody.imageExtension,
+      }),
+    };
 
-  const response = await fetch(uploadCatImageUrl(), options);
+    const response = await fetch(uploadCatImageUrl(), options);
 
-  const responseBody = (await response.json()) as UploadedImage;
+    const responseBody = (await response.json()) as UploadedImage;
 
-  return res.status(202).json({ imageUrl: responseBody.imageUrl });
+    return res.status(202).json({ imageUrl: responseBody.imageUrl });
+  }
+
+  return uploadCatImageErrorResponse(res, accessTokenResult.value);
 };
 
 const methodNotAllowedErrorResponse = (
