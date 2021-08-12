@@ -1,13 +1,20 @@
 import React from 'react';
 import CatImageUploadForm from './CatImageUploadForm';
 import { UploadCatImage } from '../domain/repositories/imageRepository';
-import { createSuccessResult } from '../domain/repositories/repositoryResult';
+import {
+  createFailureResult,
+  createSuccessResult,
+} from '../domain/repositories/repositoryResult';
 import { UploadedImage } from '../domain/types/image';
+import UploadCatImageAuthError from '../domain/errors/UploadCatImageAuthError';
 
 export default {
   title: 'src/components/CatImageUploadForm.tsx',
   component: Error,
-  includeStories: ['showSuccessCatImageUploadForm'],
+  includeStories: [
+    'showSuccessCatImageUploadForm',
+    'showAuthErrorCatImageUploadForm',
+  ],
 };
 
 const mockSuccessUploadCatImage: UploadCatImage = (_request) => {
@@ -19,6 +26,15 @@ const mockSuccessUploadCatImage: UploadCatImage = (_request) => {
   return Promise.resolve(createSuccessResult<UploadedImage>(uploadedImage));
 };
 
+const mockUploadCatImageAuthError: UploadCatImage = (_request) =>
+  Promise.resolve(
+    createFailureResult<UploadCatImageAuthError>(new UploadCatImageAuthError()),
+  );
+
 export const showSuccessCatImageUploadForm = (): JSX.Element => (
   <CatImageUploadForm uploadCatImage={mockSuccessUploadCatImage} />
+);
+
+export const showAuthErrorCatImageUploadForm = (): JSX.Element => (
+  <CatImageUploadForm uploadCatImage={mockUploadCatImageAuthError} />
 );
