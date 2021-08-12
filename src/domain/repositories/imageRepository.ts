@@ -1,4 +1,6 @@
 import { ImageList, UploadedImage } from '../types/image';
+import { RepositoryResult } from './repositoryResult';
+import UploadCatImageAuthError from '../errors/UploadCatImageAuthError';
 
 export type FetchRandomImageList = () => Promise<ImageList>;
 
@@ -11,4 +13,4 @@ export type UploadCatImageRequest = {
 
 export type UploadCatImage = (
   request: UploadCatImageRequest,
-) => Promise<UploadedImage>;
+) => Promise<RepositoryResult<UploadedImage, UploadCatImageAuthError | Error>>;

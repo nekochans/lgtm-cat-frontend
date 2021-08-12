@@ -8,6 +8,7 @@ import {
   AcceptedTypesImageExtension,
   UploadCatImage,
 } from '../domain/repositories/imageRepository';
+import { isSuccessResult } from '../domain/repositories/repositoryResult';
 
 // TODO acceptedTypesは定数化して分離する
 const acceptedTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg'];
@@ -77,6 +78,17 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
     }
   };
 
+  const createDisplayErrorMessage = (error: Error) => {
+    const errorName = error.name;
+
+    switch (errorName) {
+      case 'UploadCatImageAuthError':
+        return 'アプロード中に予期せぬエラーが発生しました。しばらく時間が経ってからお試し下さい。';
+      default:
+        return 'アプロード中に予期せぬエラーが発生しました。しばらく時間が経ってからお試し下さい。';
+    }
+  };
+
   const handleOnSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // TODO 以下の課題で window.confirm の利用はやめてちゃんとしたモーダルを使った処理に変更する
@@ -84,16 +96,20 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
     if (window.confirm('この画像をアップロードします。よろしいですか？')) {
       // TODO アップロードAPIのエラーが発生した際の処理を追加
       // TODO アップロード中はローディング用のComponentを表示させる
-      const responseBody = await uploadCatImage({
+      const uploadCatResult = await uploadCatImage({
         image: base64Image,
         imageExtension: uploadImageExtension as AcceptedTypesImageExtension,
       });
 
-      setUploaded(true);
-      setErrorMessage('');
-
-      if (responseBody?.imageUrl) {
-        setCreatedLgtmImageUrl(responseBody?.imageUrl);
+      if (isSuccessResult(uploadCatResult)) {
+        setUploaded(true);
+        setErrorMessage('');
+        setCreatedLgtmImageUrl(uploadCatResult.value.imageUrl);
+      } else {
+        setErrorMessage(createDisplayErrorMessage(uploadCatResult.value));
+        setImagePreviewUrl('');
+        setUploadImageExtension('');
+        setCreatedLgtmImageUrl('');
       }
 
       return true;
