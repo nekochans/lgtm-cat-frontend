@@ -40,6 +40,14 @@ export const uploadCatImage: UploadCatImage = async (request) => {
   const response = await fetch(apiList.uploadCatImage, options);
 
   if (response.status !== 202) {
+    // vercelのpayloadサイズリミットに引っかかった場合
+    // https://vercel.com/docs/platform/limits#serverless-function-payload-size-limit
+    if (response.status !== 413) {
+      return createFailureResult<UploadCatImageSizeTooLargeError>(
+        new UploadCatImageSizeTooLargeError(),
+      );
+    }
+
     const errorBody = (await response.json()) as UploadedImageResponse;
 
     // TODO メッセージを型安全に取り出せるようにリファクタリングする
