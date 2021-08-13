@@ -69,8 +69,6 @@ const uploadCatImage = async (
 ) => {
   const requestBody = req.body as UploadCatImageRequest;
 
-  console.log(requestBody);
-
   const accessTokenResult = await issueAccessToken();
 
   if (isSuccessResult(accessTokenResult)) {
