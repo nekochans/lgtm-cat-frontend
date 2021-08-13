@@ -11,6 +11,9 @@ import {
   createSuccessResult,
 } from '../../../../domain/repositories/repositoryResult';
 import UploadCatImageAuthError from '../../../../domain/errors/UploadCatImageAuthError';
+import UploadCatImageSizeTooLargeError from '../../../../domain/errors/UploadCatImageSizeTooLargeError';
+import UploadCatImageValidationError from '../../../../domain/errors/UploadCatImageValidationError';
+import UploadCatImageUnexpectedError from '../../../../domain/errors/UploadCatImageUnexpectedError';
 
 export const fetchRandomImageList: FetchRandomImageList = async () => {
   const response = await fetch(apiList.fetchLgtmImages);
@@ -39,20 +42,26 @@ export const uploadCatImage: UploadCatImage = async (request) => {
   if (response.status !== 202) {
     const errorBody = (await response.json()) as UploadedImageResponse;
 
+    // TODO メッセージを型安全に取り出せるようにリファクタリングする
     switch (errorBody.error?.message) {
       case 'IssueAccessTokenError':
         return createFailureResult<UploadCatImageAuthError>(
           new UploadCatImageAuthError(),
         );
+      case 'UploadCatImageSizeTooLargeError':
+        return createFailureResult<UploadCatImageSizeTooLargeError>(
+          new UploadCatImageSizeTooLargeError(),
+        );
+      case 'UploadCatImageValidationError':
+        return createFailureResult<UploadCatImageValidationError>(
+          new UploadCatImageValidationError(),
+        );
       default:
-        // TODO 後で例外的なエラーを定義する
-        return createFailureResult<UploadCatImageAuthError>(
-          new UploadCatImageAuthError(),
+        return createFailureResult<UploadCatImageUnexpectedError>(
+          new UploadCatImageUnexpectedError(),
         );
     }
   }
-
-  // TODO response.status が 202 以外はエラーを返す
 
   const uploadedImage = (await response.json()) as UploadedImage;
 

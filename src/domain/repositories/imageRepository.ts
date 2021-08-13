@@ -1,6 +1,9 @@
 import { ImageList, UploadedImage } from '../types/image';
 import { RepositoryResult } from './repositoryResult';
 import UploadCatImageAuthError from '../errors/UploadCatImageAuthError';
+import UploadCatImageSizeTooLargeError from '../errors/UploadCatImageSizeTooLargeError';
+import UploadCatImageValidationError from '../errors/UploadCatImageValidationError';
+import UploadCatImageUnexpectedError from '../errors/UploadCatImageUnexpectedError';
 
 export type FetchRandomImageList = () => Promise<ImageList>;
 
@@ -13,4 +16,12 @@ export type UploadCatImageRequest = {
 
 export type UploadCatImage = (
   request: UploadCatImageRequest,
-) => Promise<RepositoryResult<UploadedImage, UploadCatImageAuthError | Error>>;
+) => Promise<
+  RepositoryResult<
+    UploadedImage,
+    | UploadCatImageAuthError
+    | UploadCatImageSizeTooLargeError
+    | UploadCatImageValidationError
+    | UploadCatImageUnexpectedError
+  >
+>;

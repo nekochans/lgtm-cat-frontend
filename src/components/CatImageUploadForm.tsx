@@ -81,11 +81,14 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
   const createDisplayErrorMessage = (error: Error) => {
     const errorName = error.name;
 
+    // TODO errorNameを型安全に取り出せるようにリファクタリングする
     switch (errorName) {
-      case 'UploadCatImageAuthError':
-        return 'アプロード中に予期せぬエラーが発生しました。しばらく時間が経ってからお試し下さい。';
+      case 'UploadCatImageSizeTooLargeError':
+        return '画像サイズが大きすぎます。お手数ですが2MB以下の画像を利用して下さい。';
+      case 'UploadCatImageValidationError':
+        return '画像フォーマットが不正です。お手数ですが別の画像を利用して下さい。';
       default:
-        return 'アプロード中に予期せぬエラーが発生しました。しばらく時間が経ってからお試し下さい。';
+        return 'アプロード中に予期せぬエラーが発生しました。お手数ですが、しばらく時間が経ってからお試し下さい。';
     }
   };
 
@@ -94,7 +97,6 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
     // TODO 以下の課題で window.confirm の利用はやめてちゃんとしたモーダルを使った処理に変更する
     // https://github.com/nekochans/lgtm-cat-frontend/issues/93
     if (window.confirm('この画像をアップロードします。よろしいですか？')) {
-      // TODO アップロードAPIのエラーが発生した際の処理を追加
       // TODO アップロード中はローディング用のComponentを表示させる
       const uploadCatResult = await uploadCatImage({
         image: base64Image,

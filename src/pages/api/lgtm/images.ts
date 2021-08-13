@@ -36,17 +36,26 @@ const fetchLgtmImages = (res: NextApiResponse<ImagesResponse>) => {
   return res.status(200).json(imagesResponse);
 };
 
-const uploadCatImageErrorResponse = (
+const uploadCatImageIssueAccessTokenErrorResponse = (
   res: NextApiResponse<UploadedImageResponse>,
-  error: Error,
-) => {
-  const errorName = error.name;
+) =>
+  res
+    .status(500)
+    .json({ error: { code: 500, message: 'IssueAccessTokenError' } });
 
-  switch (errorName) {
-    case 'IssueAccessTokenError':
-      return res
-        .status(500)
-        .json({ error: { code: 500, message: error.name } });
+const createUploadCatImageErrorResponse = (
+  res: NextApiResponse<UploadedImageResponse>,
+  fetchResponse: Response,
+) => {
+  switch (fetchResponse.status) {
+    case 413:
+      return res.status(413).json({
+        error: { code: 413, message: 'UploadCatImageSizeTooLargeError' },
+      });
+    case 422:
+      return res.status(422).json({
+        error: { code: 422, message: 'UploadCatImageValidationError' },
+      });
     default:
       return res
         .status(500)
@@ -76,13 +85,16 @@ const uploadCatImage = async (
     };
 
     const response = await fetch(uploadCatImageUrl(), options);
+    if (response.status !== 202) {
+      return createUploadCatImageErrorResponse(res, response);
+    }
 
     const responseBody = (await response.json()) as UploadedImage;
 
     return res.status(202).json({ imageUrl: responseBody.imageUrl });
   }
 
-  return uploadCatImageErrorResponse(res, accessTokenResult.value);
+  return uploadCatImageIssueAccessTokenErrorResponse(res);
 };
 
 const methodNotAllowedErrorResponse = (
@@ -112,7 +124,7 @@ const handler: NextApiHandler = async (
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: '6mb',
+      sizeLimit: '10mb',
     },
   },
 };
