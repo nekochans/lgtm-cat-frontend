@@ -7,13 +7,19 @@ import {
 } from '../domain/repositories/repositoryResult';
 import { UploadedImage } from '../domain/types/image';
 import UploadCatImageAuthError from '../domain/errors/UploadCatImageAuthError';
+import UploadCatImageSizeTooLargeError from '../domain/errors/UploadCatImageSizeTooLargeError';
+import UploadCatImageValidationError from '../domain/errors/UploadCatImageValidationError';
+import UploadCatImageUnexpectedError from '../domain/errors/UploadCatImageUnexpectedError';
 
 export default {
   title: 'src/components/CatImageUploadForm.tsx',
   component: Error,
   includeStories: [
-    'showSuccessCatImageUploadForm',
-    'showAuthErrorCatImageUploadForm',
+    'showCatImageUploadForm',
+    'showCatImageUploadFormWithAuthError',
+    'showCatImageUploadFormWithImageSizeTooLargeError',
+    'showCatImageUploadFormWithValidationError',
+    'showCatImageUploadFormWithUnexpectedError',
   ],
 };
 
@@ -31,10 +37,44 @@ const mockUploadCatImageAuthError: UploadCatImage = (_request) =>
     createFailureResult<UploadCatImageAuthError>(new UploadCatImageAuthError()),
   );
 
-export const showSuccessCatImageUploadForm = (): JSX.Element => (
+const mockUploadCatImageSizeTooLargeError: UploadCatImage = (_request) =>
+  Promise.resolve(
+    createFailureResult<UploadCatImageSizeTooLargeError>(
+      new UploadCatImageSizeTooLargeError(),
+    ),
+  );
+
+const mockUploadCatImageValidationError: UploadCatImage = (_request) =>
+  Promise.resolve(
+    createFailureResult<UploadCatImageValidationError>(
+      new UploadCatImageValidationError(),
+    ),
+  );
+
+const mockUploadCatImageUnexpectedError: UploadCatImage = (_request) =>
+  Promise.resolve(
+    createFailureResult<UploadCatImageUnexpectedError>(
+      new UploadCatImageUnexpectedError(),
+    ),
+  );
+
+export const showCatImageUploadForm = (): JSX.Element => (
   <CatImageUploadForm uploadCatImage={mockSuccessUploadCatImage} />
 );
 
-export const showAuthErrorCatImageUploadForm = (): JSX.Element => (
+export const showCatImageUploadFormWithAuthError = (): JSX.Element => (
   <CatImageUploadForm uploadCatImage={mockUploadCatImageAuthError} />
+);
+
+export const showCatImageUploadFormWithImageSizeTooLargeError =
+  (): JSX.Element => (
+    <CatImageUploadForm uploadCatImage={mockUploadCatImageSizeTooLargeError} />
+  );
+
+export const showCatImageUploadFormWithValidationError = (): JSX.Element => (
+  <CatImageUploadForm uploadCatImage={mockUploadCatImageValidationError} />
+);
+
+export const showCatImageUploadFormWithUnexpectedError = (): JSX.Element => (
+  <CatImageUploadForm uploadCatImage={mockUploadCatImageUnexpectedError} />
 );
