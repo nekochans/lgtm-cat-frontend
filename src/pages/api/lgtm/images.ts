@@ -69,6 +69,8 @@ const uploadCatImage = async (
 ) => {
   const requestBody = req.body as UploadCatImageRequest;
 
+  console.log(requestBody);
+
   const accessTokenResult = await issueAccessToken();
 
   if (isSuccessResult(accessTokenResult)) {
@@ -124,7 +126,7 @@ const handler: NextApiHandler = async (
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: '5mb',
+      sizeLimit: '10mb',
     },
   },
 };
