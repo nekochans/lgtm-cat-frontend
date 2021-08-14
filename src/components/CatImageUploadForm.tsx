@@ -9,6 +9,7 @@ import {
   UploadCatImage,
 } from '../domain/repositories/imageRepository';
 import { isSuccessResult } from '../domain/repositories/repositoryResult';
+import ProgressBar from './ProgressBar';
 
 // TODO acceptedTypesは定数化して分離する
 const acceptedTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg'];
@@ -26,6 +27,7 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
   const [createdLgtmImageUrl, setCreatedLgtmImageUrl] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>();
   const [uploaded, setUploaded] = useState<boolean>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // TODO どの画像を許可するかはビジネスロジックとして意味があるので分離する
   const isValidFileType = (fileType: string): boolean =>
@@ -62,6 +64,7 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
         setImagePreviewUrl('');
         setUploadImageExtension('');
         setCreatedLgtmImageUrl('');
+        setIsLoading(false);
 
         return;
       }
@@ -71,6 +74,7 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
       setErrorMessage('');
       setImagePreviewUrl(url);
       setUploadImageExtension(extractImageExtFromValidFileType(fileType));
+      setIsLoading(false);
 
       const reader = new FileReader();
       reader.onload = handleReaderLoaded;
@@ -97,7 +101,8 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
     // TODO 以下の課題で window.confirm の利用はやめてちゃんとしたモーダルを使った処理に変更する
     // https://github.com/nekochans/lgtm-cat-frontend/issues/93
     if (window.confirm('この画像をアップロードします。よろしいですか？')) {
-      // TODO アップロード中はローディング用のComponentを表示させる
+      setIsLoading(true);
+
       const uploadCatResult = await uploadCatImage({
         image: base64Image,
         imageExtension: uploadImageExtension as AcceptedTypesImageExtension,
@@ -107,11 +112,13 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
         setUploaded(true);
         setErrorMessage('');
         setCreatedLgtmImageUrl(uploadCatResult.value.imageUrl);
+        setIsLoading(false);
       } else {
         setErrorMessage(createDisplayErrorMessage(uploadCatResult.value));
         setImagePreviewUrl('');
         setUploadImageExtension('');
         setCreatedLgtmImageUrl('');
+        setIsLoading(false);
       }
 
       return true;
@@ -164,6 +171,7 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
           アップロードする
         </button>
       </form>
+      {isLoading ? <ProgressBar /> : ''}
       {imagePreviewUrl && !uploaded ? (
         <UploadCatImagePreview imagePreviewUrl={imagePreviewUrl} />
       ) : (
