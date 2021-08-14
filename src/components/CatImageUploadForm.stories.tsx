@@ -23,13 +23,17 @@ export default {
   ],
 };
 
-const mockSuccessUploadCatImage: UploadCatImage = (_request) => {
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const mockSuccessUploadCatImage: UploadCatImage = async (_request) => {
   const uploadedImage = {
     imageUrl:
       'https://lgtm-images.lgtmeow.com/2021/03/16/00/35afef75-2d6d-4ca1-ab00-fb37f8848fca.webp',
   };
 
-  return Promise.resolve(createSuccessResult<UploadedImage>(uploadedImage));
+  await sleep(3000);
+
+  return createSuccessResult<UploadedImage>(uploadedImage);
 };
 
 const mockUploadCatImageAuthError: UploadCatImage = (_request) =>
