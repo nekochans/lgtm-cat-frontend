@@ -1,9 +1,9 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import fetch from 'jest-fetch-mock';
-import { fetchRandomImageList } from '../ImageRepository';
-import FetchRandomImageListError from '../../../../../domain/errors/FetchRandomImageListError';
+import { fetchRandomImageList } from '../../imageRepository';
+import FetchRandomImageListError from '../../../../../../domain/errors/FetchRandomImageListError';
 
-describe('ImageRepository.ts Functions TestCases', () => {
+describe('imageRepository.ts fetchRandomImageList TestCases', () => {
   beforeEach(() => {
     fetch.resetMocks();
   });

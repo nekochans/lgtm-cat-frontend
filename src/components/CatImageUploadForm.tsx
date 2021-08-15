@@ -4,27 +4,63 @@ import CatImageUploadDescription from './CatImageUploadDescription';
 import CatImageUploadError from './CatImageUploadError';
 import CatImageUploadSuccessMessage from './CatImageUploadSuccessMessage';
 import CreatedLgtmImage from './CreatedLgtmImage';
+import {
+  AcceptedTypesImageExtension,
+  UploadCatImage,
+} from '../domain/repositories/imageRepository';
 
+// TODO acceptedTypesは定数化して分離する
 const acceptedTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg'];
 
-const CatImageUploadForm: React.FC = () => {
+type Props = {
+  uploadCatImage: UploadCatImage;
+};
+
+const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>();
+  const [base64Image, setBase64Image] = useState<string>('');
+  const [uploadImageExtension, setUploadImageExtension] = useState<
+    AcceptedTypesImageExtension | string
+  >('');
+  const [createdLgtmImageUrl, setCreatedLgtmImageUrl] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>();
   const [uploaded, setUploaded] = useState<boolean>();
 
+  // TODO どの画像を許可するかはビジネスロジックとして意味があるので分離する
   const isValidFileType = (fileType: string): boolean =>
     acceptedTypes.includes(fileType);
+
+  const extractImageExtFromValidFileType = (
+    fileType: string,
+  ): AcceptedTypesImageExtension =>
+    `.${fileType.replace('image/', '')}` as AcceptedTypesImageExtension;
+
+  const handleReaderLoaded = (event: ProgressEvent<FileReader>) => {
+    if (event.target === null) {
+      return;
+    }
+
+    const binaryString = event.target?.result;
+    if (typeof binaryString !== 'string') {
+      return;
+    }
+
+    setBase64Image(btoa(binaryString));
+  };
 
   const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
       setUploaded(false);
-      if (!isValidFileType(file.type)) {
+      const fileType = file.type;
+      if (!isValidFileType(fileType)) {
         setErrorMessage(
-          `${file.type} の画像は許可されていません。png, jpg, jpeg の画像のみアップロード出来ます。`,
+          `${fileType} の画像は許可されていません。png, jpg, jpeg の画像のみアップロード出来ます。`,
         );
         setImagePreviewUrl('');
+        setUploadImageExtension('');
+        setCreatedLgtmImageUrl('');
 
         return;
       }
@@ -33,18 +69,32 @@ const CatImageUploadForm: React.FC = () => {
 
       setErrorMessage('');
       setImagePreviewUrl(url);
-      // TODO 以下の課題で https://github.com/nekochans/lgtm-cat-api/pull/8 で作成中のAPIにリクエストする処理を追加
-      // https://github.com/nekochans/lgtm-cat-frontend/issues/76
+      setUploadImageExtension(extractImageExtFromValidFileType(fileType));
+
+      const reader = new FileReader();
+      reader.onload = handleReaderLoaded;
+      reader.readAsBinaryString(file);
     }
   };
 
-  const handleOnSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleOnSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // TODO 以下の課題で window.confirm の利用はやめてちゃんとしたモーダルを使った処理に変更する
     // https://github.com/nekochans/lgtm-cat-frontend/issues/93
     if (window.confirm('この画像をアップロードします。よろしいですか？')) {
+      // TODO アップロードAPIのエラーが発生した際の処理を追加
+      // TODO アップロード中はローディング用のComponentを表示させる
+      const responseBody = await uploadCatImage({
+        image: base64Image,
+        imageExtension: uploadImageExtension as AcceptedTypesImageExtension,
+      });
+
       setUploaded(true);
       setErrorMessage('');
+
+      if (responseBody?.imageUrl) {
+        setCreatedLgtmImageUrl(responseBody?.imageUrl);
+      }
 
       return true;
     }
@@ -64,8 +114,7 @@ const CatImageUploadForm: React.FC = () => {
   // https://github.com/nekochans/lgtm-cat-frontend/issues/76
   const createdLgtmImageProps = {
     imagePreviewUrl: imagePreviewUrl ?? '',
-    createdLgtmImageUrl:
-      'https://lgtm-images.lgtmeow.com/2021/03/16/22/03b4b6a8-931c-47cf-b2e5-ff8218a67b08.webp',
+    createdLgtmImageUrl: createdLgtmImageUrl ?? '',
   };
 
   return (
