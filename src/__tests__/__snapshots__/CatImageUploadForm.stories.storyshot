@@ -1,6 +1,480 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Storyshots src/components/CatImageUploadForm.tsx Show Auth Error Cat Image Upload Form 1`] = `
+<div
+  className="container"
+>
+  <div
+    className="content"
+  >
+    <h1>
+      猫ちゃん画像をアップロード
+    </h1>
+    <p>
+      猫ちゃん画像をアップロードしてLGTM画像を作れます🐱 利用出来る画像には以下の制約があります。
+    </p>
+    <ol>
+      <li>
+        拡張子が png, jpg, jpeg の画像のみアップロード出来ます。
+      </li>
+      <li>
+        猫が写っていない画像はアップロード出来ません。
+      </li>
+      <li>
+        人の顔がはっきり写っている画像はアップロード出来ません。
+      </li>
+      <li>
+        猫のイラスト等の猫画像はアップロード出来ません。（そのうち出来るようにしたいです。）
+      </li>
+    </ol>
+  </div>
+  <form
+    method="post"
+    onSubmit={[Function]}
+  >
+    <div
+      className="file has-name is-boxed"
+    >
+      <label
+        className="file-label mb-3"
+        htmlFor="cat-image-upload"
+      >
+        <input
+          className="file-input"
+          id="cat-image-upload"
+          name="uploadedCatImage"
+          onChange={[Function]}
+          type="file"
+        />
+        <span
+          className="file-cta"
+        >
+          <span
+            className="file-icon"
+          >
+            <i
+              className="fas fa-upload"
+            />
+          </span>
+          <span
+            className="file-label"
+          >
+            猫ちゃん画像を選択
+          </span>
+        </span>
+      </label>
+    </div>
+    <button
+      className="button is-primary m-4"
+      disabled={true}
+      type="submit"
+    >
+      アップロードする
+    </button>
+  </form>
+  
+  
+  
+  
+</div>
+`;
+
 exports[`Storyshots src/components/CatImageUploadForm.tsx Show Cat Image Upload Form 1`] = `
+<div
+  className="container"
+>
+  <div
+    className="content"
+  >
+    <h1>
+      猫ちゃん画像をアップロード
+    </h1>
+    <p>
+      猫ちゃん画像をアップロードしてLGTM画像を作れます🐱 利用出来る画像には以下の制約があります。
+    </p>
+    <ol>
+      <li>
+        拡張子が png, jpg, jpeg の画像のみアップロード出来ます。
+      </li>
+      <li>
+        猫が写っていない画像はアップロード出来ません。
+      </li>
+      <li>
+        人の顔がはっきり写っている画像はアップロード出来ません。
+      </li>
+      <li>
+        猫のイラスト等の猫画像はアップロード出来ません。（そのうち出来るようにしたいです。）
+      </li>
+    </ol>
+  </div>
+  <form
+    method="post"
+    onSubmit={[Function]}
+  >
+    <div
+      className="file has-name is-boxed"
+    >
+      <label
+        className="file-label mb-3"
+        htmlFor="cat-image-upload"
+      >
+        <input
+          className="file-input"
+          id="cat-image-upload"
+          name="uploadedCatImage"
+          onChange={[Function]}
+          type="file"
+        />
+        <span
+          className="file-cta"
+        >
+          <span
+            className="file-icon"
+          >
+            <i
+              className="fas fa-upload"
+            />
+          </span>
+          <span
+            className="file-label"
+          >
+            猫ちゃん画像を選択
+          </span>
+        </span>
+      </label>
+    </div>
+    <button
+      className="button is-primary m-4"
+      disabled={true}
+      type="submit"
+    >
+      アップロードする
+    </button>
+  </form>
+  
+  
+  
+  
+</div>
+`;
+
+exports[`Storyshots src/components/CatImageUploadForm.tsx Show Cat Image Upload Form With Auth Error 1`] = `
+<div
+  className="container"
+>
+  <div
+    className="content"
+  >
+    <h1>
+      猫ちゃん画像をアップロード
+    </h1>
+    <p>
+      猫ちゃん画像をアップロードしてLGTM画像を作れます🐱 利用出来る画像には以下の制約があります。
+    </p>
+    <ol>
+      <li>
+        拡張子が png, jpg, jpeg の画像のみアップロード出来ます。
+      </li>
+      <li>
+        猫が写っていない画像はアップロード出来ません。
+      </li>
+      <li>
+        人の顔がはっきり写っている画像はアップロード出来ません。
+      </li>
+      <li>
+        猫のイラスト等の猫画像はアップロード出来ません。（そのうち出来るようにしたいです。）
+      </li>
+    </ol>
+  </div>
+  <form
+    method="post"
+    onSubmit={[Function]}
+  >
+    <div
+      className="file has-name is-boxed"
+    >
+      <label
+        className="file-label mb-3"
+        htmlFor="cat-image-upload"
+      >
+        <input
+          className="file-input"
+          id="cat-image-upload"
+          name="uploadedCatImage"
+          onChange={[Function]}
+          type="file"
+        />
+        <span
+          className="file-cta"
+        >
+          <span
+            className="file-icon"
+          >
+            <i
+              className="fas fa-upload"
+            />
+          </span>
+          <span
+            className="file-label"
+          >
+            猫ちゃん画像を選択
+          </span>
+        </span>
+      </label>
+    </div>
+    <button
+      className="button is-primary m-4"
+      disabled={true}
+      type="submit"
+    >
+      アップロードする
+    </button>
+  </form>
+  
+  
+  
+  
+</div>
+`;
+
+exports[`Storyshots src/components/CatImageUploadForm.tsx Show Cat Image Upload Form With Image Size Too Large Error 1`] = `
+<div
+  className="container"
+>
+  <div
+    className="content"
+  >
+    <h1>
+      猫ちゃん画像をアップロード
+    </h1>
+    <p>
+      猫ちゃん画像をアップロードしてLGTM画像を作れます🐱 利用出来る画像には以下の制約があります。
+    </p>
+    <ol>
+      <li>
+        拡張子が png, jpg, jpeg の画像のみアップロード出来ます。
+      </li>
+      <li>
+        猫が写っていない画像はアップロード出来ません。
+      </li>
+      <li>
+        人の顔がはっきり写っている画像はアップロード出来ません。
+      </li>
+      <li>
+        猫のイラスト等の猫画像はアップロード出来ません。（そのうち出来るようにしたいです。）
+      </li>
+    </ol>
+  </div>
+  <form
+    method="post"
+    onSubmit={[Function]}
+  >
+    <div
+      className="file has-name is-boxed"
+    >
+      <label
+        className="file-label mb-3"
+        htmlFor="cat-image-upload"
+      >
+        <input
+          className="file-input"
+          id="cat-image-upload"
+          name="uploadedCatImage"
+          onChange={[Function]}
+          type="file"
+        />
+        <span
+          className="file-cta"
+        >
+          <span
+            className="file-icon"
+          >
+            <i
+              className="fas fa-upload"
+            />
+          </span>
+          <span
+            className="file-label"
+          >
+            猫ちゃん画像を選択
+          </span>
+        </span>
+      </label>
+    </div>
+    <button
+      className="button is-primary m-4"
+      disabled={true}
+      type="submit"
+    >
+      アップロードする
+    </button>
+  </form>
+  
+  
+  
+  
+</div>
+`;
+
+exports[`Storyshots src/components/CatImageUploadForm.tsx Show Cat Image Upload Form With Unexpected Error 1`] = `
+<div
+  className="container"
+>
+  <div
+    className="content"
+  >
+    <h1>
+      猫ちゃん画像をアップロード
+    </h1>
+    <p>
+      猫ちゃん画像をアップロードしてLGTM画像を作れます🐱 利用出来る画像には以下の制約があります。
+    </p>
+    <ol>
+      <li>
+        拡張子が png, jpg, jpeg の画像のみアップロード出来ます。
+      </li>
+      <li>
+        猫が写っていない画像はアップロード出来ません。
+      </li>
+      <li>
+        人の顔がはっきり写っている画像はアップロード出来ません。
+      </li>
+      <li>
+        猫のイラスト等の猫画像はアップロード出来ません。（そのうち出来るようにしたいです。）
+      </li>
+    </ol>
+  </div>
+  <form
+    method="post"
+    onSubmit={[Function]}
+  >
+    <div
+      className="file has-name is-boxed"
+    >
+      <label
+        className="file-label mb-3"
+        htmlFor="cat-image-upload"
+      >
+        <input
+          className="file-input"
+          id="cat-image-upload"
+          name="uploadedCatImage"
+          onChange={[Function]}
+          type="file"
+        />
+        <span
+          className="file-cta"
+        >
+          <span
+            className="file-icon"
+          >
+            <i
+              className="fas fa-upload"
+            />
+          </span>
+          <span
+            className="file-label"
+          >
+            猫ちゃん画像を選択
+          </span>
+        </span>
+      </label>
+    </div>
+    <button
+      className="button is-primary m-4"
+      disabled={true}
+      type="submit"
+    >
+      アップロードする
+    </button>
+  </form>
+  
+  
+  
+  
+</div>
+`;
+
+exports[`Storyshots src/components/CatImageUploadForm.tsx Show Cat Image Upload Form With Validation Error 1`] = `
+<div
+  className="container"
+>
+  <div
+    className="content"
+  >
+    <h1>
+      猫ちゃん画像をアップロード
+    </h1>
+    <p>
+      猫ちゃん画像をアップロードしてLGTM画像を作れます🐱 利用出来る画像には以下の制約があります。
+    </p>
+    <ol>
+      <li>
+        拡張子が png, jpg, jpeg の画像のみアップロード出来ます。
+      </li>
+      <li>
+        猫が写っていない画像はアップロード出来ません。
+      </li>
+      <li>
+        人の顔がはっきり写っている画像はアップロード出来ません。
+      </li>
+      <li>
+        猫のイラスト等の猫画像はアップロード出来ません。（そのうち出来るようにしたいです。）
+      </li>
+    </ol>
+  </div>
+  <form
+    method="post"
+    onSubmit={[Function]}
+  >
+    <div
+      className="file has-name is-boxed"
+    >
+      <label
+        className="file-label mb-3"
+        htmlFor="cat-image-upload"
+      >
+        <input
+          className="file-input"
+          id="cat-image-upload"
+          name="uploadedCatImage"
+          onChange={[Function]}
+          type="file"
+        />
+        <span
+          className="file-cta"
+        >
+          <span
+            className="file-icon"
+          >
+            <i
+              className="fas fa-upload"
+            />
+          </span>
+          <span
+            className="file-label"
+          >
+            猫ちゃん画像を選択
+          </span>
+        </span>
+      </label>
+    </div>
+    <button
+      className="button is-primary m-4"
+      disabled={true}
+      type="submit"
+    >
+      アップロードする
+    </button>
+  </form>
+  
+  
+  
+  
+</div>
+`;
+
+exports[`Storyshots src/components/CatImageUploadForm.tsx Show Success Cat Image Upload Form 1`] = `
 <div
   className="container"
 >

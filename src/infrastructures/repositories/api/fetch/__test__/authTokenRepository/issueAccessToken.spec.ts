@@ -1,6 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import fetch from 'jest-fetch-mock';
 import { issueAccessToken } from '../../authTokenRepository';
+import { isSuccessResult } from '../../../../../../domain/repositories/repositoryResult';
 
 describe('authTokenRepository.ts issueAccessToken TestCases', () => {
   beforeEach(() => {
@@ -22,13 +23,14 @@ describe('authTokenRepository.ts issueAccessToken TestCases', () => {
 
     fetch.mockResponseOnce(JSON.stringify(mockBody), mockParams);
 
-    const accessToken = await issueAccessToken();
+    const accessTokenResult = await issueAccessToken();
 
-    const expected = {
+    const expectedValue = {
       jwtString: mockBody.access_token,
     };
 
-    expect(accessToken).toStrictEqual(expected);
+    expect(isSuccessResult(accessTokenResult)).toBeTruthy();
+    expect(accessTokenResult.value).toStrictEqual(expectedValue);
   });
 
   // TODO 異常系のテストケースを実装する
