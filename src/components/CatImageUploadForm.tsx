@@ -92,7 +92,7 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
       case 'UploadCatImageValidationError':
         return '画像フォーマットが不正です。お手数ですが別の画像を利用して下さい。';
       default:
-        return 'アプロード中に予期せぬエラーが発生しました。お手数ですが、しばらく時間が経ってからお試し下さい。';
+        return 'アップロード中に予期せぬエラーが発生しました。お手数ですが、しばらく時間が経ってからお試し下さい。';
     }
   };
 
