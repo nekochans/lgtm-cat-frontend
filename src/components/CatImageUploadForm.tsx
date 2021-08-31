@@ -10,6 +10,7 @@ import {
 } from '../domain/repositories/imageRepository';
 import { isSuccessResult } from '../domain/repositories/repositoryResult';
 import ProgressBar from './ProgressBar';
+import { sendUploadCatImage } from '../infrastructures/utils/gtag';
 
 // TODO acceptedTypesは定数化して分離する
 const acceptedTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg'];
@@ -120,6 +121,8 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
         setCreatedLgtmImageUrl('');
         setIsLoading(false);
       }
+
+      sendUploadCatImage('upload_cat_image_button');
 
       return true;
     }

@@ -55,3 +55,16 @@ export const sendFetchRandomImages = (
     value: 1,
   });
 };
+
+// ねこ画像がアップロードしLGTM画像を作成する機能が利用された際に実行する
+
+type SendUploadCatImageLabel = 'upload_cat_image_button';
+
+export const sendUploadCatImage = (label: SendUploadCatImageLabel): void => {
+  event({
+    action: 'upload_cat_image',
+    category: 'upload_cat_image',
+    label,
+    value: 1,
+  });
+};
