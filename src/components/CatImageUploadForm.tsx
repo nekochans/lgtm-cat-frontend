@@ -12,6 +12,7 @@ import { isSuccessResult } from '../domain/repositories/repositoryResult';
 import ProgressBar from './ProgressBar';
 import { sendUploadCatImage } from '../infrastructures/utils/gtag';
 import CopyMarkdownSourceButton from './CopyMarkdownSourceButton';
+import AfterUploadWarningMessage from './AfterUploadWarningMessage';
 
 // TODO acceptedTypesは定数化して分離する
 const acceptedTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg'];
@@ -190,6 +191,7 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
       )}
       {errorMessage ? <CatImageUploadError message={errorMessage} /> : ''}
       {uploaded ? <CatImageUploadSuccessMessage /> : ''}
+      {uploaded ? <AfterUploadWarningMessage /> : ''}
       {uploaded ? (
         <CreatedLgtmImage
           imagePreviewUrl={createdLgtmImageProps.imagePreviewUrl}
