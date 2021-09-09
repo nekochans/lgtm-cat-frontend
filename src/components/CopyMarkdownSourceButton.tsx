@@ -37,7 +37,7 @@ const CopyMarkdownSourceButton: React.FC<Props> = ({ createdLgtmImageUrl }) => {
           style={{
             position: 'absolute',
             textAlign: 'center',
-            bottom: '25%',
+            top: '50%',
             left: '50%',
             color: 'white',
             transform: 'translate(-50%, 0)',
