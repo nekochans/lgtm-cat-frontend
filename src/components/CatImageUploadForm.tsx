@@ -11,6 +11,7 @@ import {
 import { isSuccessResult } from '../domain/repositories/repositoryResult';
 import ProgressBar from './ProgressBar';
 import { sendUploadCatImage } from '../infrastructures/utils/gtag';
+import CopyMarkdownSourceButton from './CopyMarkdownSourceButton';
 
 // TODO acceptedTypesは定数化して分離する
 const acceptedTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg'];
@@ -173,6 +174,13 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
         >
           アップロードする
         </button>
+        {uploaded ? (
+          <CopyMarkdownSourceButton
+            createdLgtmImageUrl={createdLgtmImageProps.createdLgtmImageUrl}
+          />
+        ) : (
+          ''
+        )}
       </form>
       {isLoading ? <ProgressBar /> : ''}
       {imagePreviewUrl && !uploaded ? (
