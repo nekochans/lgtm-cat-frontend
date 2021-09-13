@@ -15,7 +15,7 @@ const CreatedLgtmImage: React.FC<Props> = ({
   const [opacity, setOpacity] = useState('1');
 
   const onCopySuccess = useCallback(() => {
-    sendCopyMarkdownEvent('copy_markdown_button');
+    sendCopyMarkdownEvent('created_lgtm_image');
 
     setOpacity('1');
     setCopied(true);
