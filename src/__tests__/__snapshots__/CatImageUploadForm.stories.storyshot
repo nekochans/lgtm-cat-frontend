@@ -71,7 +71,9 @@ exports[`Storyshots src/components/CatImageUploadForm.tsx Show Cat Image Upload 
     >
       アップロードする
     </button>
+    
   </form>
+  
   
   
   
@@ -151,7 +153,9 @@ exports[`Storyshots src/components/CatImageUploadForm.tsx Show Cat Image Upload 
     >
       アップロードする
     </button>
+    
   </form>
+  
   
   
   
@@ -231,7 +235,9 @@ exports[`Storyshots src/components/CatImageUploadForm.tsx Show Cat Image Upload 
     >
       アップロードする
     </button>
+    
   </form>
+  
   
   
   
@@ -311,7 +317,9 @@ exports[`Storyshots src/components/CatImageUploadForm.tsx Show Cat Image Upload 
     >
       アップロードする
     </button>
+    
   </form>
+  
   
   
   
@@ -391,7 +399,9 @@ exports[`Storyshots src/components/CatImageUploadForm.tsx Show Cat Image Upload 
     >
       アップロードする
     </button>
+    
   </form>
+  
   
   
   

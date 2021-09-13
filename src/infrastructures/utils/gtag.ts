@@ -28,7 +28,10 @@ export const event = ({ action, category, label, value }: GaEventProps) => {
 };
 
 // Markdownソースがコピーされた際に実行する
-type SendCopyMarkdownEventLabel = 'copy_markdown_button' | 'created_lgtm_image';
+type SendCopyMarkdownEventLabel =
+  | 'copy_markdown_button'
+  | 'created_lgtm_image'
+  | 'after_upload_copy_markdown_button';
 
 export const sendCopyMarkdownEvent = (
   label: SendCopyMarkdownEventLabel,
