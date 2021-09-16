@@ -5,7 +5,7 @@ import React from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { render } from '@testing-library/react';
 import fs from 'fs';
-import PrivacyPage from '../privacy';
+import PrivacyPage from '../../pages/privacy';
 
 test('PrivacyPage Snapshot test', async () => {
   const fsPromise = fs.promises;

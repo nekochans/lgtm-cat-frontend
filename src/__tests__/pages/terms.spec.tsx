@@ -5,7 +5,7 @@ import React from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { render } from '@testing-library/react';
 import fs from 'fs';
-import TermsPage from '../terms';
+import TermsPage from '../../pages/terms';
 
 test('TermsPage Snapshot test', async () => {
   const fsPromise = fs.promises;
