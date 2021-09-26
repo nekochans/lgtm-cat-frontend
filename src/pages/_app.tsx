@@ -2,6 +2,7 @@ import '../../styles/styles.scss';
 import { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
+import GoogleAnalytics from '../components/GoogleAnalytics';
 
 import * as gtag from '../infrastructures/utils/gtag';
 import { AppStateProvider } from '../stores/contexts/AppStateContext';
@@ -22,6 +23,7 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
 
   return (
     <AppStateProvider>
+      <GoogleAnalytics />
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
       <Component {...pageProps} />
     </AppStateProvider>

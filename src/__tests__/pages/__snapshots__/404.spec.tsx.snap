@@ -1,0 +1,110 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Custom404 Snapshot test 1`] = `
+<DocumentFragment>
+  <div
+    class="hero is-fullheight"
+  >
+    <header>
+      <nav
+        class="navbar navbar-padding"
+      >
+        <div
+          class="container"
+          style="display: block;"
+        >
+          <div
+            class="navbar-brand"
+          >
+            <a
+              class="navbar-item"
+              href="/"
+            >
+              <p
+                class="is-size-4 has-text-black"
+              >
+                LGTMeow
+              </p>
+            </a>
+            <div
+              style="align-items: center; display: flex; margin-left: auto;"
+            />
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <div
+        class="container has-text-centered"
+      >
+        <h1
+          class="title"
+        >
+          404
+        </h1>
+        <h2
+          class="subtitle"
+        >
+          <p>
+            お探しのページが見つかりません。
+            <br />
+            URLが間違っている、もしくは移動または削除された可能性があります。
+          </p>
+        </h2>
+        <a
+          href="/"
+        >
+          TOPページへ
+        </a>
+      </div>
+    </main>
+    <footer
+      class="footer"
+    >
+      <div
+        class="container"
+      >
+        <nav
+          class="level"
+        >
+          <div
+            class="level-left"
+          >
+            <div
+              class="level-item breadcrumb"
+            >
+              <ul>
+                <li>
+                  <a
+                    href="/terms"
+                  >
+                    利用規約
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/privacy"
+                  >
+                    プライバシーポリシー
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div
+            class="level-right"
+          >
+            <div
+              class="content has-text-centered"
+            >
+              <p>
+                Copyright (c) nekochans
+              </p>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </footer>
+  </div>
+</DocumentFragment>
+`;
