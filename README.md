@@ -88,6 +88,14 @@ npm の 7 系からは依存 package の整合性を厳密にチェックする�
 
 あまり良い方法ではありませんが、依存先の package が対応しない限りは、こちらではどうしようもないので、一時的に `--legacy-peer-deps` が必要な場合もあります。
 
+### `npm dedupe` でモジュールの依存関係を整理する
+
+`npm dedupe` を実行すると、モジュールの重複を整理してくれるので、複数の package を入れた後はこちらを実行するようにします。
+
+`npm install` 実行時に `--legacy-peer-deps` を実行した場合は `npm dedupe --legacy-peer-deps` のように実行する必要があります。
+
+https://docs.npmjs.com/cli/v7/commands/npm-dedupe
+
 ## デプロイについて
 
 このアプリケーションは [Vercel](https://vercel.com) によってホスティングされています。
