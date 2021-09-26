@@ -4,10 +4,9 @@ import Document, {
   Html,
   Main,
   NextScript,
+  DocumentInitialProps,
 } from 'next/document';
 import React from 'react';
-import { DocumentInitialProps } from 'next/dist/next-server/lib/utils';
-import { gaMeasurementId } from '../infrastructures/utils/gtag';
 
 export default class CustomDocument extends Document {
   static async getInitialProps(
@@ -23,30 +22,7 @@ export default class CustomDocument extends Document {
   render(): JSX.Element {
     return (
       <Html prefix="og: https://ogp.me/ns#">
-        <Head>
-          {/* Google Analytics */}
-          <script
-            async
-            src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}
-          />
-          <script
-            // eslint-disable-next-line react/no-danger
-            dangerouslySetInnerHTML={{
-              __html: `
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', '${gaMeasurementId}', {
-                  page_path: window.location.pathname,
-                });
-              `,
-            }}
-          />
-          <script
-            defer
-            src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"
-          />
-        </Head>
+        <Head />
         <body>
           <Main />
           <NextScript />
