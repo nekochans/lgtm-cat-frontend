@@ -4,7 +4,7 @@ import throttle from 'lodash/throttle';
 import { useSetAppState } from '../stores/contexts/AppStateContext';
 import { fetchRandomImageList } from '../infrastructures/repositories/api/fetch/ImageRepository';
 import RandomButton from '../components/RandomButton';
-import { sendFetchRandomImages } from '../infrastructures/utils/gtag';
+import { sendFetchRandomImages } from '../infrastructures/utils/gtm';
 
 const RandomButtonContainer: React.FC = () => {
   const setAppState = useSetAppState();
