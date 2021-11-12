@@ -2,9 +2,11 @@ import '../../styles/styles.scss';
 import { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
-import GoogleAnalytics from '../components/GoogleAnalytics';
+import { pageview, googleTagManagerId } from '../infrastructures/utils/gtm';
+import GoogleTagManager, {
+  GoogleTagManagerId,
+} from '../components/GoogleTagManager';
 
-import * as gtag from '../infrastructures/utils/gtag';
 import { AppStateProvider } from '../stores/contexts/AppStateContext';
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
@@ -12,7 +14,7 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {
-      gtag.pageview(url);
+      pageview(url);
     };
     router.events.on('routeChangeComplete', handleRouteChange);
 
@@ -23,7 +25,9 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
 
   return (
     <AppStateProvider>
-      <GoogleAnalytics />
+      <GoogleTagManager
+        googleTagManagerId={googleTagManagerId as GoogleTagManagerId}
+      />
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
       <Component {...pageProps} />
     </AppStateProvider>
