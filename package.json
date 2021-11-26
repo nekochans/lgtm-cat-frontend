@@ -30,6 +30,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-markdown": "^5.0.3",
+    "react-modal": "^3.14.4",
     "sass": "^1.39.2"
   },
   "devDependencies": {
@@ -49,6 +50,7 @@
     "@types/prettier": "^2.3.2",
     "@types/react": "^17.0.21",
     "@types/react-dom": "^17.0.9",
+    "@types/react-modal": "^3.13.1",
     "@types/stylelint": "^13.13.2",
     "@typescript-eslint/eslint-plugin": "^4.31.1",
     "@typescript-eslint/parser": "^4.31.1",
