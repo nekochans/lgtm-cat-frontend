@@ -215,7 +215,7 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
         isOpen={modalIsOpen}
         onClickCancel={closeModal}
         onClickUpload={onClickUpload}
-        imagePreviewUrl={imagePreviewUrl as string}
+        imagePreviewUrl={imagePreviewUrl}
       />
     </>
   );

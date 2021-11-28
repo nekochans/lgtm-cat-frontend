@@ -6,7 +6,9 @@ type Props = {
   isOpen: boolean;
   onClickCancel: () => void;
   onClickUpload: () => Promise<void>;
-  imagePreviewUrl: string;
+  // TODO react/require-default-props のルールは無効化したほうが良いかも、Default値を持たせるにしても関数型Componentの場合は引数のDefault値で表現するべき
+  // eslint-disable-next-line react/require-default-props
+  imagePreviewUrl?: string;
 };
 
 const CatImageUploadConfirmModal: React.FC<Props> = ({
@@ -30,7 +32,11 @@ const CatImageUploadConfirmModal: React.FC<Props> = ({
         </header>
         <section className="modal-card-body">
           <strong>この画像をアップロードします。よろしいですか？</strong>
-          <UploadCatImagePreview imagePreviewUrl={imagePreviewUrl} />
+          {imagePreviewUrl ? (
+            <UploadCatImagePreview imagePreviewUrl={imagePreviewUrl} />
+          ) : (
+            ''
+          )}
         </section>
         <footer className="modal-card-foot">
           <button
