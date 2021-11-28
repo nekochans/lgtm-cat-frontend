@@ -157,65 +157,67 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
   };
 
   return (
-    <div className="container">
-      <CatImageUploadDescription />
-      <form method="post" onSubmit={handleOnSubmit}>
-        <div className="file has-name is-boxed">
-          <label className="file-label mb-3" htmlFor="cat-image-upload">
-            <input
-              className="file-input"
-              type="file"
-              name="uploadedCatImage"
-              id="cat-image-upload"
-              onChange={handleFileUpload}
-            />
-            <span className="file-cta">
-              <span className="file-icon">
-                <i className="fas fa-upload" />
+    <>
+      <div className="container">
+        <CatImageUploadDescription />
+        <form method="post" onSubmit={handleOnSubmit}>
+          <div className="file has-name is-boxed">
+            <label className="file-label mb-3" htmlFor="cat-image-upload">
+              <input
+                className="file-input"
+                type="file"
+                name="uploadedCatImage"
+                id="cat-image-upload"
+                onChange={handleFileUpload}
+              />
+              <span className="file-cta">
+                <span className="file-icon">
+                  <i className="fas fa-upload" />
+                </span>
+                <span className="file-label">猫ちゃん画像を選択</span>
               </span>
-              <span className="file-label">猫ちゃん画像を選択</span>
-            </span>
-          </label>
-        </div>
-        <button
-          className="button is-primary m-4"
-          type="submit"
-          disabled={shouldDisableButton()}
-        >
-          アップロードする
-        </button>
+            </label>
+          </div>
+          <button
+            className="button is-primary m-4"
+            type="submit"
+            disabled={shouldDisableButton()}
+          >
+            アップロードする
+          </button>
+          {uploaded ? (
+            <CopyMarkdownSourceButton
+              createdLgtmImageUrl={createdLgtmImageProps.createdLgtmImageUrl}
+            />
+          ) : (
+            ''
+          )}
+        </form>
+        {isLoading ? <ProgressBar /> : ''}
+        {imagePreviewUrl && !uploaded ? (
+          <UploadCatImagePreview imagePreviewUrl={imagePreviewUrl} />
+        ) : (
+          ''
+        )}
+        {errorMessage ? <CatImageUploadError message={errorMessage} /> : ''}
+        {uploaded ? <CatImageUploadSuccessMessage /> : ''}
+        {uploaded ? <AfterUploadWarningMessage /> : ''}
         {uploaded ? (
-          <CopyMarkdownSourceButton
+          <CreatedLgtmImage
+            imagePreviewUrl={createdLgtmImageProps.imagePreviewUrl}
             createdLgtmImageUrl={createdLgtmImageProps.createdLgtmImageUrl}
           />
         ) : (
           ''
         )}
-      </form>
-      {isLoading ? <ProgressBar /> : ''}
-      {imagePreviewUrl && !uploaded ? (
-        <UploadCatImagePreview imagePreviewUrl={imagePreviewUrl} />
-      ) : (
-        ''
-      )}
+      </div>
       <CatImageUploadConfirmModal
         isOpen={modalIsOpen}
         onClickCancel={closeModal}
         onClickUpload={onClickUpload}
         imagePreviewUrl={imagePreviewUrl as string}
       />
-      {errorMessage ? <CatImageUploadError message={errorMessage} /> : ''}
-      {uploaded ? <CatImageUploadSuccessMessage /> : ''}
-      {uploaded ? <AfterUploadWarningMessage /> : ''}
-      {uploaded ? (
-        <CreatedLgtmImage
-          imagePreviewUrl={createdLgtmImageProps.imagePreviewUrl}
-          createdLgtmImageUrl={createdLgtmImageProps.createdLgtmImageUrl}
-        />
-      ) : (
-        ''
-      )}
-    </div>
+    </>
   );
 };
 

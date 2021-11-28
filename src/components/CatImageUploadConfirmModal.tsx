@@ -15,7 +15,7 @@ const CatImageUploadConfirmModal: React.FC<Props> = ({
   onClickUpload,
   imagePreviewUrl,
 }) => (
-  <Modal isOpen={isOpen} ariaHideApp={false}>
+  <Modal isOpen={isOpen} ariaHideApp={false} onRequestClose={onClickCancel}>
     <div className="modal is-active">
       <div className="modal-background" />
       <div className="modal-card">
