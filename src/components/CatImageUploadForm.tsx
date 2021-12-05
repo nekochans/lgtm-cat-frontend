@@ -13,6 +13,7 @@ import ProgressBar from './ProgressBar';
 import { sendUploadCatImage } from '../infrastructures/utils/gtag';
 import CopyMarkdownSourceButton from './CopyMarkdownSourceButton';
 import AfterUploadWarningMessage from './AfterUploadWarningMessage';
+import CatImageUploadConfirmModal from './CatImageUploadConfirmModal';
 
 // TODO acceptedTypesは定数化して分離する
 const acceptedTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg'];
@@ -31,6 +32,15 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
   const [errorMessage, setErrorMessage] = useState<string>();
   const [uploaded, setUploaded] = useState<boolean>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [modalIsOpen, setModalIsOpen] = React.useState(false);
+
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
 
   // TODO どの画像を許可するかはビジネスロジックとして意味があるので分離する
   const isValidFileType = (fileType: string): boolean =>
@@ -99,37 +109,36 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
     }
   };
 
-  const handleOnSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleOnSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // TODO 以下の課題で window.confirm の利用はやめてちゃんとしたモーダルを使った処理に変更する
-    // https://github.com/nekochans/lgtm-cat-frontend/issues/93
-    if (window.confirm('この画像をアップロードします。よろしいですか？')) {
-      setIsLoading(true);
 
-      const uploadCatResult = await uploadCatImage({
-        image: base64Image,
-        imageExtension: uploadImageExtension as AcceptedTypesImageExtension,
-      });
+    openModal();
+  };
 
-      if (isSuccessResult(uploadCatResult)) {
-        setUploaded(true);
-        setErrorMessage('');
-        setCreatedLgtmImageUrl(uploadCatResult.value.imageUrl);
-        setIsLoading(false);
-      } else {
-        setErrorMessage(createDisplayErrorMessage(uploadCatResult.value));
-        setImagePreviewUrl('');
-        setUploadImageExtension('');
-        setCreatedLgtmImageUrl('');
-        setIsLoading(false);
-      }
+  const onClickUpload = async () => {
+    closeModal();
 
-      sendUploadCatImage('upload_cat_image_button');
+    setIsLoading(true);
 
-      return true;
+    const uploadCatResult = await uploadCatImage({
+      image: base64Image,
+      imageExtension: uploadImageExtension as AcceptedTypesImageExtension,
+    });
+
+    if (isSuccessResult(uploadCatResult)) {
+      setUploaded(true);
+      setErrorMessage('');
+      setCreatedLgtmImageUrl(uploadCatResult.value.imageUrl);
+      setIsLoading(false);
+    } else {
+      setErrorMessage(createDisplayErrorMessage(uploadCatResult.value));
+      setImagePreviewUrl('');
+      setUploadImageExtension('');
+      setCreatedLgtmImageUrl('');
+      setIsLoading(false);
     }
 
-    return false;
+    sendUploadCatImage('upload_cat_image_button');
   };
 
   const shouldDisableButton = (): boolean => {
@@ -148,59 +157,67 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
   };
 
   return (
-    <div className="container">
-      <CatImageUploadDescription />
-      <form method="post" onSubmit={handleOnSubmit}>
-        <div className="file has-name is-boxed">
-          <label className="file-label mb-3" htmlFor="cat-image-upload">
-            <input
-              className="file-input"
-              type="file"
-              name="uploadedCatImage"
-              id="cat-image-upload"
-              onChange={handleFileUpload}
-            />
-            <span className="file-cta">
-              <span className="file-icon">
-                <i className="fas fa-upload" />
+    <>
+      <div className="container">
+        <CatImageUploadDescription />
+        <form method="post" onSubmit={handleOnSubmit}>
+          <div className="file has-name is-boxed">
+            <label className="file-label mb-3" htmlFor="cat-image-upload">
+              <input
+                className="file-input"
+                type="file"
+                name="uploadedCatImage"
+                id="cat-image-upload"
+                onChange={handleFileUpload}
+              />
+              <span className="file-cta">
+                <span className="file-icon">
+                  <i className="fas fa-upload" />
+                </span>
+                <span className="file-label">猫ちゃん画像を選択</span>
               </span>
-              <span className="file-label">猫ちゃん画像を選択</span>
-            </span>
-          </label>
-        </div>
-        <button
-          className="button is-primary m-4"
-          type="submit"
-          disabled={shouldDisableButton()}
-        >
-          アップロードする
-        </button>
+            </label>
+          </div>
+          <button
+            className="button is-primary m-4"
+            type="submit"
+            disabled={shouldDisableButton()}
+          >
+            アップロードする
+          </button>
+          {uploaded ? (
+            <CopyMarkdownSourceButton
+              createdLgtmImageUrl={createdLgtmImageProps.createdLgtmImageUrl}
+            />
+          ) : (
+            ''
+          )}
+        </form>
+        {isLoading ? <ProgressBar /> : ''}
+        {imagePreviewUrl && !uploaded ? (
+          <UploadCatImagePreview imagePreviewUrl={imagePreviewUrl} />
+        ) : (
+          ''
+        )}
+        {errorMessage ? <CatImageUploadError message={errorMessage} /> : ''}
+        {uploaded ? <CatImageUploadSuccessMessage /> : ''}
+        {uploaded ? <AfterUploadWarningMessage /> : ''}
         {uploaded ? (
-          <CopyMarkdownSourceButton
+          <CreatedLgtmImage
+            imagePreviewUrl={createdLgtmImageProps.imagePreviewUrl}
             createdLgtmImageUrl={createdLgtmImageProps.createdLgtmImageUrl}
           />
         ) : (
           ''
         )}
-      </form>
-      {isLoading ? <ProgressBar /> : ''}
-      {imagePreviewUrl && !uploaded ? (
-        <UploadCatImagePreview imagePreviewUrl={imagePreviewUrl} />
-      ) : (
-        ''
-      )}
-      {errorMessage ? <CatImageUploadError message={errorMessage} /> : ''}
-      {uploaded ? <CatImageUploadSuccessMessage /> : ''}
-      {uploaded ? <AfterUploadWarningMessage /> : ''}
-      {uploaded ? (
-        <CreatedLgtmImage
-          imagePreviewUrl={createdLgtmImageProps.imagePreviewUrl}
-          createdLgtmImageUrl={createdLgtmImageProps.createdLgtmImageUrl}
-        />
-      ) : (
-        ''
-      )}
-    </div>
+      </div>
+      <CatImageUploadConfirmModal
+        isOpen={modalIsOpen}
+        onClickCancel={closeModal}
+        onClickUpload={onClickUpload}
+        imagePreviewUrl={imagePreviewUrl}
+      />
+    </>
   );
 };
 
