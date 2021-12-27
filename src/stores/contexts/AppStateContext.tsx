@@ -1,14 +1,14 @@
 import React, { Dispatch, SetStateAction, useContext, useState } from 'react';
-import { Image } from '../../domain/types/image';
+import { LgtmImage } from '../../domain/types/lgtmImage';
 
 export type AppState = {
-  imageList: Image[];
-  isFailedFetchImages: boolean;
+  lgtmImages: LgtmImage[];
+  isFailedFetchLgtmImages: boolean;
 };
 
 const initialAppState: AppState = {
-  imageList: [],
-  isFailedFetchImages: false,
+  lgtmImages: [],
+  isFailedFetchLgtmImages: false,
 };
 
 const AppStateContext = React.createContext<AppState>(initialAppState);

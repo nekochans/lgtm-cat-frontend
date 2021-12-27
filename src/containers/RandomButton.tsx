@@ -11,12 +11,15 @@ const RandomButtonContainer: React.FC = () => {
 
   const handleRandom = async () => {
     try {
-      const imageList = await fetchRandomImageList();
-      setAppState({ imageList: imageList.images, isFailedFetchImages: false });
+      const lgtmImagesResponse = await fetchRandomImageList();
+      setAppState({
+        lgtmImages: lgtmImagesResponse.lgtmImages,
+        isFailedFetchLgtmImages: false,
+      });
 
       sendFetchRandomImages('fetch_random_images_button');
     } catch (e) {
-      setAppState({ imageList: [], isFailedFetchImages: true });
+      setAppState({ lgtmImages: [], isFailedFetchLgtmImages: true });
     }
   };
   const handleRandomThrottled = throttle(() => handleRandom(), 500);

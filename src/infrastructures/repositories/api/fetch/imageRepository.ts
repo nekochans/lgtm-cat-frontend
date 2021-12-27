@@ -1,4 +1,4 @@
-import { ImageList, UploadedImage } from '../../../../domain/types/image';
+import { LgtmImages, UploadedImage } from '../../../../domain/types/lgtmImage';
 import {
   FetchRandomImageList,
   UploadCatImage,
@@ -22,7 +22,7 @@ export const fetchRandomImageList: FetchRandomImageList = async () => {
     throw new FetchRandomImageListError();
   }
 
-  return (await response.json()) as ImageList;
+  return (await response.json()) as LgtmImages;
 };
 
 export const uploadCatImage: UploadCatImage = async (request) => {

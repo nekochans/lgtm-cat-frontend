@@ -1,16 +1,14 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import imageData from '../../../infrastructures/utils/imageData';
 import extractRandomImages from '../../../infrastructures/utils/randomImages';
-import { UploadedImage } from '../../../domain/types/image';
+import { LgtmImage, UploadedImage } from '../../../domain/types/lgtmImage';
 import { UploadCatImageRequest } from '../../../domain/repositories/imageRepository';
 import { uploadCatImageUrl } from '../../../constants/url';
 import { issueAccessToken } from '../../../infrastructures/repositories/api/fetch/authTokenRepository';
 import { isSuccessResult } from '../../../domain/repositories/repositoryResult';
 
-type Image = { id: number; url: string };
-
-type ImagesResponse = {
-  images?: Image[];
+type FetchImagesResponse = {
+  lgtmImages?: LgtmImage[];
   error?: {
     code: number;
     message: string;
@@ -27,10 +25,10 @@ export type UploadedImageResponse = {
 
 const imageLength = 9;
 
-const fetchLgtmImages = (res: NextApiResponse<ImagesResponse>) => {
+const fetchLgtmImages = (res: NextApiResponse<FetchImagesResponse>) => {
   const randomImages = extractRandomImages(imageData, imageLength);
   const imagesResponse = {
-    images: randomImages,
+    lgtmImages: randomImages,
   };
 
   return res.status(200).json(imagesResponse);
@@ -98,13 +96,13 @@ const uploadCatImage = async (
 };
 
 const methodNotAllowedErrorResponse = (
-  res: NextApiResponse<ImagesResponse | UploadedImageResponse>,
+  res: NextApiResponse<FetchImagesResponse | UploadedImageResponse>,
 ) =>
   res.status(405).json({ error: { code: 405, message: 'Method Not Allowed' } });
 
 const handler: NextApiHandler = async (
   req: NextApiRequest,
-  res: NextApiResponse<ImagesResponse | UploadedImageResponse>,
+  res: NextApiResponse<FetchImagesResponse | UploadedImageResponse>,
 ): Promise<void> => {
   switch (req.method) {
     case 'GET': {
