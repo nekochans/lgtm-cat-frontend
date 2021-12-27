@@ -8,9 +8,9 @@ describe('imageRepository.ts fetchLgtmImagesInRandom TestCases', () => {
     fetch.resetMocks();
   });
 
-  it('should be able to fetch random image list', async () => {
+  it('should be able to fetch LGTM Images', async () => {
     const mockBody = {
-      images: [
+      lgtmImages: [
         {
           id: 5,
           url: '/cat.jpeg',
@@ -57,9 +57,9 @@ describe('imageRepository.ts fetchLgtmImagesInRandom TestCases', () => {
 
     fetch.mockResponseOnce(JSON.stringify(mockBody), mockParams);
 
-    const jwkList = await fetchLgtmImagesInRandom();
+    const lgtmImages = await fetchLgtmImagesInRandom();
 
-    expect(jwkList).toStrictEqual(mockBody);
+    expect(lgtmImages).toStrictEqual(mockBody);
   });
 
   it('should return an Error because the HTTP status is not 200', async () => {
@@ -72,10 +72,8 @@ describe('imageRepository.ts fetchLgtmImagesInRandom TestCases', () => {
 
     fetch.mockResponseOnce(JSON.stringify(mockBody), mockParams);
 
-    const jwkListPromise = fetchLgtmImagesInRandom();
+    const promise = fetchLgtmImagesInRandom();
 
-    await expect(jwkListPromise).rejects.toThrowError(
-      FetchLgtmImagesInRandomError,
-    );
+    await expect(promise).rejects.toThrowError(FetchLgtmImagesInRandomError);
   });
 });
