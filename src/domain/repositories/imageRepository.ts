@@ -5,7 +5,7 @@ import UploadCatImageSizeTooLargeError from '../errors/UploadCatImageSizeTooLarg
 import UploadCatImageValidationError from '../errors/UploadCatImageValidationError';
 import UploadCatImageUnexpectedError from '../errors/UploadCatImageUnexpectedError';
 
-export type FetchRandomImageList = () => Promise<LgtmImages>;
+export type FetchLgtmImagesInRandom = () => Promise<LgtmImages>;
 
 export type AcceptedTypesImageExtension = '.png' | '.jpg' | '.jpeg';
 

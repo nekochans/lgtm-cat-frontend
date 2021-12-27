@@ -1,9 +1,9 @@
 import { LgtmImages, UploadedImage } from '../../../../domain/types/lgtmImage';
 import {
-  FetchRandomImageList,
+  FetchLgtmImagesInRandom,
   UploadCatImage,
 } from '../../../../domain/repositories/imageRepository';
-import FetchRandomImageListError from '../../../../domain/errors/FetchRandomImageListError';
+import FetchLgtmImagesInRandomError from '../../../../domain/errors/FetchLgtmImagesInRandomError';
 import { apiList } from '../../../../constants/url';
 import { UploadedImageResponse } from '../../../../pages/api/lgtm/images';
 import {
@@ -15,11 +15,11 @@ import UploadCatImageSizeTooLargeError from '../../../../domain/errors/UploadCat
 import UploadCatImageValidationError from '../../../../domain/errors/UploadCatImageValidationError';
 import UploadCatImageUnexpectedError from '../../../../domain/errors/UploadCatImageUnexpectedError';
 
-export const fetchRandomImageList: FetchRandomImageList = async () => {
+export const fetchLgtmImagesInRandom: FetchLgtmImagesInRandom = async () => {
   const response = await fetch(apiList.fetchLgtmImages);
 
   if (!response.ok) {
-    throw new FetchRandomImageListError();
+    throw new FetchLgtmImagesInRandomError();
   }
 
   return (await response.json()) as LgtmImages;

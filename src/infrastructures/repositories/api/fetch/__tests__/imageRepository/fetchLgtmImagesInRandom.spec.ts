@@ -1,9 +1,9 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import fetch from 'jest-fetch-mock';
-import { fetchRandomImageList } from '../../imageRepository';
-import FetchRandomImageListError from '../../../../../../domain/errors/FetchRandomImageListError';
+import { fetchLgtmImagesInRandom } from '../../imageRepository';
+import FetchLgtmImagesInRandomError from '../../../../../../domain/errors/FetchLgtmImagesInRandomError';
 
-describe('imageRepository.ts fetchRandomImageList TestCases', () => {
+describe('imageRepository.ts fetchLgtmImagesInRandom TestCases', () => {
   beforeEach(() => {
     fetch.resetMocks();
   });
@@ -57,7 +57,7 @@ describe('imageRepository.ts fetchRandomImageList TestCases', () => {
 
     fetch.mockResponseOnce(JSON.stringify(mockBody), mockParams);
 
-    const jwkList = await fetchRandomImageList();
+    const jwkList = await fetchLgtmImagesInRandom();
 
     expect(jwkList).toStrictEqual(mockBody);
   });
@@ -72,10 +72,10 @@ describe('imageRepository.ts fetchRandomImageList TestCases', () => {
 
     fetch.mockResponseOnce(JSON.stringify(mockBody), mockParams);
 
-    const jwkListPromise = fetchRandomImageList();
+    const jwkListPromise = fetchLgtmImagesInRandom();
 
     await expect(jwkListPromise).rejects.toThrowError(
-      FetchRandomImageListError,
+      FetchLgtmImagesInRandomError,
     );
   });
 });
