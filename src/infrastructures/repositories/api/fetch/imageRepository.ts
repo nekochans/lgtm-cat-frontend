@@ -19,10 +19,12 @@ export const fetchLgtmImagesInRandom: FetchLgtmImagesInRandom = async () => {
   const response = await fetch(apiList.fetchLgtmImages);
 
   if (!response.ok) {
-    throw new FetchLgtmImagesInRandomError();
+    return createFailureResult(new FetchLgtmImagesInRandomError());
   }
 
-  return (await response.json()) as LgtmImages;
+  const lgtmImages = (await response.json()) as LgtmImages;
+
+  return createSuccessResult<LgtmImages>(lgtmImages);
 };
 
 export const uploadCatImage: UploadCatImage = async (request) => {

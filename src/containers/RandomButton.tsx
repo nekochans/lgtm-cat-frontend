@@ -5,20 +5,22 @@ import { useSetAppState } from '../stores/contexts/AppStateContext';
 import { fetchLgtmImagesInRandom } from '../infrastructures/repositories/api/fetch/imageRepository';
 import RandomButton from '../components/RandomButton';
 import { sendFetchRandomImages } from '../infrastructures/utils/gtag';
+import { isSuccessResult } from '../domain/repositories/repositoryResult';
 
 const RandomButtonContainer: React.FC = () => {
   const setAppState = useSetAppState();
 
   const handleRandom = async () => {
-    try {
-      const lgtmImagesResponse = await fetchLgtmImagesInRandom();
+    const lgtmImagesResponse = await fetchLgtmImagesInRandom();
+
+    if (isSuccessResult(lgtmImagesResponse)) {
       setAppState({
-        lgtmImages: lgtmImagesResponse.lgtmImages,
+        lgtmImages: lgtmImagesResponse.value.lgtmImages,
         isFailedFetchLgtmImages: false,
       });
 
       sendFetchRandomImages('fetch_random_images_button');
-    } catch (e) {
+    } else {
       setAppState({ lgtmImages: [], isFailedFetchLgtmImages: true });
     }
   };

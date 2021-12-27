@@ -4,8 +4,11 @@ import UploadCatImageAuthError from '../errors/UploadCatImageAuthError';
 import UploadCatImageSizeTooLargeError from '../errors/UploadCatImageSizeTooLargeError';
 import UploadCatImageValidationError from '../errors/UploadCatImageValidationError';
 import UploadCatImageUnexpectedError from '../errors/UploadCatImageUnexpectedError';
+import FetchLgtmImagesInRandomError from '../errors/FetchLgtmImagesInRandomError';
 
-export type FetchLgtmImagesInRandom = () => Promise<LgtmImages>;
+export type FetchLgtmImagesInRandom = () => Promise<
+  RepositoryResult<LgtmImages, FetchLgtmImagesInRandomError>
+>;
 
 export type AcceptedTypesImageExtension = '.png' | '.jpg' | '.jpeg';
 

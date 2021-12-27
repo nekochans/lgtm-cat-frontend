@@ -2,6 +2,7 @@
 import fetch from 'jest-fetch-mock';
 import { fetchLgtmImagesInRandom } from '../../imageRepository';
 import FetchLgtmImagesInRandomError from '../../../../../../domain/errors/FetchLgtmImagesInRandomError';
+import { isSuccessResult } from '../../../../../../domain/repositories/repositoryResult';
 
 describe('imageRepository.ts fetchLgtmImagesInRandom TestCases', () => {
   beforeEach(() => {
@@ -57,9 +58,10 @@ describe('imageRepository.ts fetchLgtmImagesInRandom TestCases', () => {
 
     fetch.mockResponseOnce(JSON.stringify(mockBody), mockParams);
 
-    const lgtmImages = await fetchLgtmImagesInRandom();
+    const lgtmImagesResponse = await fetchLgtmImagesInRandom();
 
-    expect(lgtmImages).toStrictEqual(mockBody);
+    expect(isSuccessResult(lgtmImagesResponse)).toBeTruthy();
+    expect(lgtmImagesResponse.value).toStrictEqual(mockBody);
   });
 
   it('should return an Error because the HTTP status is not 200', async () => {
@@ -72,8 +74,11 @@ describe('imageRepository.ts fetchLgtmImagesInRandom TestCases', () => {
 
     fetch.mockResponseOnce(JSON.stringify(mockBody), mockParams);
 
-    const promise = fetchLgtmImagesInRandom();
+    const lgtmImagesResponse = await fetchLgtmImagesInRandom();
 
-    await expect(promise).rejects.toThrowError(FetchLgtmImagesInRandomError);
+    expect(isSuccessResult(lgtmImagesResponse)).toBeFalsy();
+    expect(lgtmImagesResponse.value).toStrictEqual(
+      new FetchLgtmImagesInRandomError(),
+    );
   });
 });
