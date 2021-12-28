@@ -9,7 +9,7 @@ import { fetchLgtmImagesUrl, uploadCatImageUrl } from '../../../constants/url';
 import { issueAccessToken } from '../../../infrastructures/repositories/api/fetch/authTokenRepository';
 import { isSuccessResult } from '../../../domain/repositories/repositoryResult';
 
-type FetchImagesResponse = {
+type FetchLgtmImagesResponse = {
   lgtmImages?: LgtmImage[];
   error?: {
     code: number;
@@ -25,7 +25,7 @@ export type UploadedImageResponse = {
   };
 };
 
-const fetchLgtmImages = async (res: NextApiResponse<FetchImagesResponse>) => {
+const fetchLgtmImages = async (res: NextApiResponse<FetchLgtmImagesResponse>) => {
   const accessTokenResult = await issueAccessToken();
   if (isSuccessResult(accessTokenResult)) {
     const options = {
@@ -114,13 +114,13 @@ const uploadCatImage = async (
 };
 
 const methodNotAllowedErrorResponse = (
-  res: NextApiResponse<FetchImagesResponse | UploadedImageResponse>,
+  res: NextApiResponse<FetchLgtmImagesResponse | UploadedImageResponse>,
 ) =>
   res.status(405).json({ error: { code: 405, message: 'Method Not Allowed' } });
 
 const handler: NextApiHandler = async (
   req: NextApiRequest,
-  res: NextApiResponse<FetchImagesResponse | UploadedImageResponse>,
+  res: NextApiResponse<FetchLgtmImagesResponse | UploadedImageResponse>,
 ): Promise<void> => {
   switch (req.method) {
     case 'GET': {
