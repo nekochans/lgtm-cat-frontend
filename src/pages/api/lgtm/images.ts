@@ -25,7 +25,9 @@ export type UploadedImageResponse = {
   };
 };
 
-const fetchLgtmImages = async (res: NextApiResponse<FetchLgtmImagesResponse>) => {
+const fetchLgtmImages = async (
+  res: NextApiResponse<FetchLgtmImagesResponse>,
+) => {
   const accessTokenResult = await issueAccessToken();
   if (isSuccessResult(accessTokenResult)) {
     const options = {
