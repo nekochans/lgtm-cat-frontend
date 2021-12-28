@@ -15,17 +15,18 @@ import UploadCatImageSizeTooLargeError from '../../../../domain/errors/UploadCat
 import UploadCatImageValidationError from '../../../../domain/errors/UploadCatImageValidationError';
 import UploadCatImageUnexpectedError from '../../../../domain/errors/UploadCatImageUnexpectedError';
 
-export const fetchLgtmImagesInRandom: FetchLgtmImagesInRandom = async () => {
-  const response = await fetch(apiList.fetchLgtmImages);
+export const fetchLgtmImagesInRandomWithClient: FetchLgtmImagesInRandom =
+  async () => {
+    const response = await fetch(apiList.fetchLgtmImages);
 
-  if (!response.ok) {
-    return createFailureResult(new FetchLgtmImagesInRandomError());
-  }
+    if (!response.ok) {
+      return createFailureResult(new FetchLgtmImagesInRandomError());
+    }
 
-  const lgtmImages = (await response.json()) as LgtmImages;
+    const lgtmImages = (await response.json()) as LgtmImages;
 
-  return createSuccessResult<LgtmImages>(lgtmImages);
-};
+    return createSuccessResult<LgtmImages>(lgtmImages);
+  };
 
 export const uploadCatImage: UploadCatImage = async (request) => {
   const options = {

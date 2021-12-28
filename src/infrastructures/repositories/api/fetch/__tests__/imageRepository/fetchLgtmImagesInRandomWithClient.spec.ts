@@ -1,10 +1,10 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import fetch from 'jest-fetch-mock';
-import { fetchLgtmImagesInRandom } from '../../imageRepository';
+import { fetchLgtmImagesInRandomWithClient } from '../../imageRepository';
 import FetchLgtmImagesInRandomError from '../../../../../../domain/errors/FetchLgtmImagesInRandomError';
 import { isSuccessResult } from '../../../../../../domain/repositories/repositoryResult';
 
-describe('imageRepository.ts fetchLgtmImagesInRandom TestCases', () => {
+describe('imageRepository.ts fetchLgtmImagesInRandomWithClient TestCases', () => {
   beforeEach(() => {
     fetch.resetMocks();
   });
@@ -58,7 +58,7 @@ describe('imageRepository.ts fetchLgtmImagesInRandom TestCases', () => {
 
     fetch.mockResponseOnce(JSON.stringify(mockBody), mockParams);
 
-    const lgtmImagesResponse = await fetchLgtmImagesInRandom();
+    const lgtmImagesResponse = await fetchLgtmImagesInRandomWithClient();
 
     expect(isSuccessResult(lgtmImagesResponse)).toBeTruthy();
     expect(lgtmImagesResponse.value).toStrictEqual(mockBody);
@@ -74,7 +74,7 @@ describe('imageRepository.ts fetchLgtmImagesInRandom TestCases', () => {
 
     fetch.mockResponseOnce(JSON.stringify(mockBody), mockParams);
 
-    const lgtmImagesResponse = await fetchLgtmImagesInRandom();
+    const lgtmImagesResponse = await fetchLgtmImagesInRandomWithClient();
 
     expect(isSuccessResult(lgtmImagesResponse)).toBeFalsy();
     expect(lgtmImagesResponse.value).toStrictEqual(

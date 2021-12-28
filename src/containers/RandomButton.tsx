@@ -2,7 +2,7 @@ import React from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import throttle from 'lodash/throttle';
 import { useSetAppState } from '../stores/contexts/AppStateContext';
-import { fetchLgtmImagesInRandom } from '../infrastructures/repositories/api/fetch/imageRepository';
+import { fetchLgtmImagesInRandomWithClient } from '../infrastructures/repositories/api/fetch/imageRepository';
 import RandomButton from '../components/RandomButton';
 import { sendFetchRandomImages } from '../infrastructures/utils/gtag';
 import { isSuccessResult } from '../domain/repositories/repositoryResult';
@@ -11,7 +11,7 @@ const RandomButtonContainer: React.FC = () => {
   const setAppState = useSetAppState();
 
   const handleRandom = async () => {
-    const lgtmImagesResponse = await fetchLgtmImagesInRandom();
+    const lgtmImagesResponse = await fetchLgtmImagesInRandomWithClient();
 
     if (isSuccessResult(lgtmImagesResponse)) {
       setAppState({
