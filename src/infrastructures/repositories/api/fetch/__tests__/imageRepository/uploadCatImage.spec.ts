@@ -1,12 +1,12 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
-import fetch from 'jest-fetch-mock';
+import fetchMock from 'fetch-mock-jest';
 import { uploadCatImage } from '../../imageRepository';
 import { UploadCatImageRequest } from '../../../../../../domain/repositories/imageRepository';
 import { isSuccessResult } from '../../../../../../domain/repositories/repositoryResult';
+import { apiList } from '../../../../../../constants/url';
 
 describe('imageRepository.ts uploadCatImage TestCases', () => {
   beforeEach(() => {
-    fetch.resetMocks();
+    fetchMock.mockReset();
   });
 
   it('should return the LGTM image URL', async () => {
@@ -15,12 +15,7 @@ describe('imageRepository.ts uploadCatImage TestCases', () => {
         'https://lgtm-images.lgtmeow.com/2021/03/16/22/ff92782d-fae7-4a7a-b042-adbfccf64826.webp',
     };
 
-    const mockParams = {
-      status: 202,
-      statusText: 'Accepted',
-    };
-
-    fetch.mockResponseOnce(JSON.stringify(mockBody), mockParams);
+    fetchMock.post(apiList.uploadCatImage, { status: 202, body: mockBody });
 
     const request: UploadCatImageRequest = {
       image: '',

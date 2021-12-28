@@ -1,11 +1,11 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
-import fetch from 'jest-fetch-mock';
+import fetchMock from 'fetch-mock-jest';
 import { issueAccessToken } from '../../authTokenRepository';
 import { isSuccessResult } from '../../../../../../domain/repositories/repositoryResult';
+import { cognitoTokenEndpointUrl } from '../../../../../../constants/url';
 
 describe('authTokenRepository.ts issueAccessToken TestCases', () => {
   beforeEach(() => {
-    fetch.resetMocks();
+    fetchMock.mockReset();
   });
 
   it('should be able to issue an access token', async () => {
@@ -16,12 +16,7 @@ describe('authTokenRepository.ts issueAccessToken TestCases', () => {
       token_type: 'Bearer',
     };
 
-    const mockParams = {
-      status: 200,
-      statusText: 'OK',
-    };
-
-    fetch.mockResponseOnce(JSON.stringify(mockBody), mockParams);
+    fetchMock.post(cognitoTokenEndpointUrl(), { status: 200, body: mockBody });
 
     const accessTokenResult = await issueAccessToken();
 

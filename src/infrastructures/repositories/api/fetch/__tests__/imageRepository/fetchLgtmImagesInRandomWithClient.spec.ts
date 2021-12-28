@@ -1,12 +1,12 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
-import fetch from 'jest-fetch-mock';
+import fetchMock from 'fetch-mock-jest';
 import { fetchLgtmImagesInRandomWithClient } from '../../imageRepository';
 import FetchLgtmImagesInRandomError from '../../../../../../domain/errors/FetchLgtmImagesInRandomError';
 import { isSuccessResult } from '../../../../../../domain/repositories/repositoryResult';
+import { apiList } from '../../../../../../constants/url';
 
 describe('imageRepository.ts fetchLgtmImagesInRandomWithClient TestCases', () => {
   beforeEach(() => {
-    fetch.resetMocks();
+    fetchMock.mockReset();
   });
 
   it('should be able to fetch LGTM Images', async () => {
@@ -51,12 +51,7 @@ describe('imageRepository.ts fetchLgtmImagesInRandomWithClient TestCases', () =>
       ],
     };
 
-    const mockParams = {
-      status: 200,
-      statusText: 'OK',
-    };
-
-    fetch.mockResponseOnce(JSON.stringify(mockBody), mockParams);
+    fetchMock.get(apiList.fetchLgtmImages, { status: 200, body: mockBody });
 
     const lgtmImagesResponse = await fetchLgtmImagesInRandomWithClient();
 
@@ -67,12 +62,7 @@ describe('imageRepository.ts fetchLgtmImagesInRandomWithClient TestCases', () =>
   it('should return an Error because the HTTP status is not 200', async () => {
     const mockBody = { message: 'Internal Server Error' };
 
-    const mockParams = {
-      status: 500,
-      statusText: 'Internal Server Error',
-    };
-
-    fetch.mockResponseOnce(JSON.stringify(mockBody), mockParams);
+    fetchMock.get(apiList.fetchLgtmImages, { status: 500, body: mockBody });
 
     const lgtmImagesResponse = await fetchLgtmImagesInRandomWithClient();
 
