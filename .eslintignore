@@ -4,5 +4,4 @@ build/
 coverage/
 .eslintrc.js
 next-env.d.ts
-test/setupTests.ts
 *.config.js
