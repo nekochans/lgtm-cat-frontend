@@ -49,5 +49,5 @@ export const testProps = {
 };
 
 export const showImageListWithProps = (): JSX.Element => (
-  <ImageList imageList={testProps.imageList} />
+  <ImageList lgtmImages={testProps.imageList} />
 );

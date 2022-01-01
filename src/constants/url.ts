@@ -33,3 +33,7 @@ const lgtmeowApiUrl = (): string =>
 
 // この関数はサーバーサイドでしか動作しない
 export const uploadCatImageUrl = (): string => `${lgtmeowApiUrl()}/lgtm-images`;
+
+// この関数はサーバーサイドでしか動作しない
+export const fetchLgtmImagesUrl = (): string =>
+  `${lgtmeowApiUrl()}/lgtm-images`;

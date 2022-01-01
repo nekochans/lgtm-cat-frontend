@@ -1,29 +1,59 @@
-import { ImageList, UploadedImage } from '../../../../domain/types/image';
+import { LgtmImages, UploadedImage } from '../../../../domain/types/lgtmImage';
 import {
-  FetchRandomImageList,
+  FetchLgtmImagesInRandom,
   UploadCatImage,
 } from '../../../../domain/repositories/imageRepository';
-import FetchRandomImageListError from '../../../../domain/errors/FetchRandomImageListError';
-import { apiList } from '../../../../constants/url';
+import FetchLgtmImagesInRandomError from '../../../../domain/errors/FetchLgtmImagesInRandomError';
+import { apiList, fetchLgtmImagesUrl } from '../../../../constants/url';
 import { UploadedImageResponse } from '../../../../pages/api/lgtm/images';
 import {
   createFailureResult,
   createSuccessResult,
+  isSuccessResult,
 } from '../../../../domain/repositories/repositoryResult';
 import UploadCatImageAuthError from '../../../../domain/errors/UploadCatImageAuthError';
 import UploadCatImageSizeTooLargeError from '../../../../domain/errors/UploadCatImageSizeTooLargeError';
 import UploadCatImageValidationError from '../../../../domain/errors/UploadCatImageValidationError';
 import UploadCatImageUnexpectedError from '../../../../domain/errors/UploadCatImageUnexpectedError';
+import { issueAccessToken } from './authTokenRepository';
+import FetchLgtmImagesInRandomAuthError from '../../../../domain/errors/FetchLgtmImagesInRandomAuthError';
 
-export const fetchRandomImageList: FetchRandomImageList = async () => {
-  const response = await fetch(apiList.fetchLgtmImages);
+export const fetchLgtmImagesInRandomWithClient: FetchLgtmImagesInRandom =
+  async () => {
+    const response = await fetch(apiList.fetchLgtmImages);
 
-  if (!response.ok) {
-    throw new FetchRandomImageListError();
-  }
+    if (!response.ok) {
+      return createFailureResult(new FetchLgtmImagesInRandomError());
+    }
 
-  return (await response.json()) as ImageList;
-};
+    const lgtmImages = (await response.json()) as LgtmImages;
+
+    return createSuccessResult<LgtmImages>(lgtmImages);
+  };
+
+export const fetchLgtmImagesInRandomWithServer: FetchLgtmImagesInRandom =
+  async () => {
+    const accessTokenResult = await issueAccessToken();
+    if (isSuccessResult(accessTokenResult)) {
+      const options = {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessTokenResult.value.jwtString}`,
+        },
+      };
+
+      const response = await fetch(fetchLgtmImagesUrl(), options);
+      if (!response.ok) {
+        return createFailureResult(new FetchLgtmImagesInRandomError());
+      }
+
+      const lgtmImages = (await response.json()) as LgtmImages;
+
+      return createSuccessResult<LgtmImages>(lgtmImages);
+    }
+
+    return createFailureResult(new FetchLgtmImagesInRandomAuthError());
+  };
 
 export const uploadCatImage: UploadCatImage = async (request) => {
   const options = {

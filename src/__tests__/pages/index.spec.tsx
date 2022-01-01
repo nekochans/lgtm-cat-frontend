@@ -48,6 +48,6 @@ test('IndexPage Snapshot test', () => {
     ],
   };
 
-  const { asFragment } = render(<IndexPage imageList={testProps.imageList} />);
+  const { asFragment } = render(<IndexPage lgtmImages={testProps.imageList} />);
   expect(asFragment()).toMatchSnapshot();
 });

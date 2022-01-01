@@ -1,6 +1,6 @@
-import { Image } from '../../domain/types/image';
+import { LgtmImage } from '../../domain/types/lgtmImage';
 
-const extractRandomImages = (arr: Image[], n: number): Image[] => {
+const extractRandomImages = (arr: LgtmImage[], n: number): LgtmImage[] => {
   const copy = [...arr];
   const ret = [];
 

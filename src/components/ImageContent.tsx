@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from 'react';
 import Image from 'next/image';
-import { Image as ImageType } from '../domain/types/image';
+import { LgtmImage } from '../domain/types/lgtmImage';
 import useClipboardMarkdown from '../hooks/useClipboardMarkdown';
 import { sendCopyMarkdownEvent } from '../infrastructures/utils/gtag';
 
 type Props = {
-  image: ImageType;
+  image: LgtmImage;
 };
 
 const ImageContent: React.FC<Props> = ({ image }: Props) => {

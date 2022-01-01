@@ -1,16 +1,16 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
-import imageData from '../../../infrastructures/utils/imageData';
-import extractRandomImages from '../../../infrastructures/utils/randomImages';
-import { UploadedImage } from '../../../domain/types/image';
+import {
+  LgtmImage,
+  LgtmImages,
+  UploadedImage,
+} from '../../../domain/types/lgtmImage';
 import { UploadCatImageRequest } from '../../../domain/repositories/imageRepository';
-import { uploadCatImageUrl } from '../../../constants/url';
+import { fetchLgtmImagesUrl, uploadCatImageUrl } from '../../../constants/url';
 import { issueAccessToken } from '../../../infrastructures/repositories/api/fetch/authTokenRepository';
 import { isSuccessResult } from '../../../domain/repositories/repositoryResult';
 
-type Image = { id: number; url: string };
-
-type ImagesResponse = {
-  images?: Image[];
+type FetchLgtmImagesResponse = {
+  lgtmImages?: LgtmImage[];
   error?: {
     code: number;
     message: string;
@@ -25,15 +25,33 @@ export type UploadedImageResponse = {
   };
 };
 
-const imageLength = 9;
+const fetchLgtmImages = async (
+  res: NextApiResponse<FetchLgtmImagesResponse>,
+) => {
+  const accessTokenResult = await issueAccessToken();
+  if (isSuccessResult(accessTokenResult)) {
+    const options = {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${accessTokenResult.value.jwtString}`,
+      },
+    };
 
-const fetchLgtmImages = (res: NextApiResponse<ImagesResponse>) => {
-  const randomImages = extractRandomImages(imageData, imageLength);
-  const imagesResponse = {
-    images: randomImages,
-  };
+    const response = await fetch(fetchLgtmImagesUrl(), options);
+    if (!response.ok) {
+      return res
+        .status(500)
+        .json({ error: { code: 500, message: 'Internal Server Error' } });
+    }
 
-  return res.status(200).json(imagesResponse);
+    const lgtmImages = (await response.json()) as LgtmImages;
+
+    return res.status(200).json(lgtmImages);
+  }
+
+  return res
+    .status(500)
+    .json({ error: { code: 500, message: 'IssueAccessTokenError' } });
 };
 
 const uploadCatImageIssueAccessTokenErrorResponse = (
@@ -98,13 +116,13 @@ const uploadCatImage = async (
 };
 
 const methodNotAllowedErrorResponse = (
-  res: NextApiResponse<ImagesResponse | UploadedImageResponse>,
+  res: NextApiResponse<FetchLgtmImagesResponse | UploadedImageResponse>,
 ) =>
   res.status(405).json({ error: { code: 405, message: 'Method Not Allowed' } });
 
 const handler: NextApiHandler = async (
   req: NextApiRequest,
-  res: NextApiResponse<ImagesResponse | UploadedImageResponse>,
+  res: NextApiResponse<FetchLgtmImagesResponse | UploadedImageResponse>,
 ): Promise<void> => {
   switch (req.method) {
     case 'GET': {

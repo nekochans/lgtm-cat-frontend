@@ -8,7 +8,7 @@ export default {
 };
 
 export const testProps = {
-  imageList: [
+  lgtmImages: [
     {
       id: 1,
       url: '/cat.jpeg',
@@ -25,5 +25,5 @@ export const testProps = {
 };
 
 export const showImageRowWithProps = (): JSX.Element => (
-  <ImageRow imageList={testProps.imageList} />
+  <ImageRow lgtmImages={testProps.lgtmImages} />
 );

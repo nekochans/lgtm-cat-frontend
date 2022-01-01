@@ -5,7 +5,7 @@ import {
   createFailureResult,
   createSuccessResult,
 } from '../domain/repositories/repositoryResult';
-import { UploadedImage } from '../domain/types/image';
+import { UploadedImage } from '../domain/types/lgtmImage';
 import UploadCatImageAuthError from '../domain/errors/UploadCatImageAuthError';
 import UploadCatImageSizeTooLargeError from '../domain/errors/UploadCatImageSizeTooLargeError';
 import UploadCatImageValidationError from '../domain/errors/UploadCatImageValidationError';
