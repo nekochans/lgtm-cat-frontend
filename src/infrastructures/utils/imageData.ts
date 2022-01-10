@@ -1,6 +1,6 @@
-import { Image } from '../../domain/types/image';
+import { LgtmImage } from '../../domain/types/lgtmImage';
 
-const imageData: Image[] = [
+const imageData: LgtmImage[] = [
   {
     id: 0,
     url: 'https://lgtm-images.lgtmeow.com/2021/03/16/00/35afef75-2d6d-4ca1-ab00-fb37f8848fca.webp',

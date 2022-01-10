@@ -28,14 +28,59 @@ exports[`IndexPage Snapshot test 1`] = `
             </a>
             <div
               style="align-items: center; display: flex; margin-left: auto;"
+            />
+            <button
+              aria-expanded="false"
+              aria-label="menu"
+              class="navbar-burger burger "
+              data-target="navbar-burger-menu"
+              role="button"
+              type="button"
             >
-              <button
-                class="button is-outlined"
-                style="margin: 0.5rem 0.75rem;"
-                type="submit"
+              <span
+                aria-hidden="true"
+              />
+              <span
+                aria-hidden="true"
+              />
+              <span
+                aria-hidden="true"
+              />
+            </button>
+          </div>
+          <div
+            class="navbar-menu "
+            id="navbar-burger-menu"
+          >
+            <div
+              class="navbar-end"
+            >
+              <div
+                class="navbar-item"
               >
-                他の猫ちゃんを表示
-              </button>
+                <div
+                  class="buttons"
+                >
+                  <a
+                    class="button"
+                    href="/upload"
+                    style="margin: 0.5rem 0.75rem;"
+                  >
+                    <p
+                      class="has-text-gray"
+                    >
+                      猫ちゃん画像をアップロード
+                    </p>
+                  </a>
+                  <button
+                    class="button is-outlined"
+                    style="margin: 0.5rem 0.75rem;"
+                    type="submit"
+                  >
+                    他の猫ちゃんを表示
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
           <p

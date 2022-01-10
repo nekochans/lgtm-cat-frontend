@@ -1,19 +1,21 @@
 import React, { useCallback, useState } from 'react';
-import Image from 'next/image';
-import { LgtmImage } from '../domain/types/lgtmImage';
-import useClipboardMarkdown from '../hooks/useClipboardMarkdown';
 import { sendCopyMarkdownEvent } from '../infrastructures/utils/gtag';
+import useClipboardMarkdown from '../hooks/useClipboardMarkdown';
 
 type Props = {
-  image: LgtmImage;
+  imagePreviewUrl: string;
+  createdLgtmImageUrl: string;
 };
 
-const ImageContent: React.FC<Props> = ({ image }: Props) => {
+const CreatedLgtmImage: React.FC<Props> = ({
+  imagePreviewUrl,
+  createdLgtmImageUrl,
+}: Props) => {
   const [copied, setCopied] = useState(false);
   const [opacity, setOpacity] = useState('1');
 
   const onCopySuccess = useCallback(() => {
-    sendCopyMarkdownEvent('copy_markdown_button');
+    sendCopyMarkdownEvent('created_lgtm_image');
 
     setOpacity('1');
     setCopied(true);
@@ -22,27 +24,27 @@ const ImageContent: React.FC<Props> = ({ image }: Props) => {
     }, 1000);
   }, []);
 
-  const { imageContextRef } = useClipboardMarkdown(onCopySuccess, image.url);
+  const { imageContextRef } = useClipboardMarkdown(
+    onCopySuccess,
+    createdLgtmImageUrl,
+  );
 
   return (
-    <div className="column is-one-third" key={image.id} ref={imageContextRef}>
+    <div className="column" key={imagePreviewUrl} ref={imageContextRef}>
       <div
         style={{
-          height: '300px',
-          position: 'relative',
-          cursor: 'pointer',
           opacity,
         }}
         onMouseEnter={() => setOpacity('0.7')}
         onMouseLeave={() => setOpacity('1')}
       >
-        <Image src={image.url} layout="fill" objectFit="contain" />
+        <img src={imagePreviewUrl} alt="createdLgtmImage" />
         {copied && (
           <div
             style={{
               position: 'absolute',
               textAlign: 'center',
-              bottom: '10%',
+              bottom: '25%',
               left: '50%',
               color: 'white',
               transform: 'translate(-50%, 0)',
@@ -58,4 +60,5 @@ const ImageContent: React.FC<Props> = ({ image }: Props) => {
     </div>
   );
 };
-export default ImageContent;
+
+export default CreatedLgtmImage;

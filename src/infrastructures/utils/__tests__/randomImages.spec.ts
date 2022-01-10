@@ -1,7 +1,7 @@
 import extractRandomImages from '../randomImages';
-import { Image } from '../../../domain/types/image';
+import { LgtmImage } from '../../../domain/types/lgtmImage';
 
-const testImageList: Image[] = [
+const testImageList: LgtmImage[] = [
   {
     id: 1,
     url: '/cat.jpeg',
