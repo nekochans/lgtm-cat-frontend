@@ -1,3 +1,5 @@
+/* eslint-disable max-lines-per-function, max-statements */
+// TODO https://github.com/nekochans/lgtm-cat-frontend/issues/107 を実施する際にファイル先頭のESLintの制御コメントを削除する
 import React, { useState, ChangeEvent } from 'react';
 
 import {
