@@ -9,11 +9,13 @@ import FetchLgtmImagesInRandomError from '../../../../../../domain/errors/FetchL
 import { isSuccessResult } from '../../../../../../domain/repositories/repositoryResult';
 import { fetchLgtmImagesInRandomWithServer } from '../../imageRepository';
 
+// eslint-disable-next-line max-lines-per-function
 describe('imageRepository.ts fetchLgtmImagesInRandomWithServer TestCases', () => {
   beforeEach(() => {
     fetchMock.mockReset();
   });
 
+  // eslint-disable-next-line max-lines-per-function
   it('should be able to fetch LGTM Images', async () => {
     const fetchLgtmImagesMockBody = {
       lgtmImages: [

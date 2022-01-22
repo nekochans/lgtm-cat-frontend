@@ -5,6 +5,7 @@ import FetchLgtmImagesInRandomError from '../../../../../../domain/errors/FetchL
 import { isSuccessResult } from '../../../../../../domain/repositories/repositoryResult';
 import { fetchLgtmImagesInRandomWithClient } from '../../imageRepository';
 
+// eslint-disable-next-line max-lines-per-function
 describe('imageRepository.ts fetchLgtmImagesInRandomWithClient TestCases', () => {
   beforeEach(() => {
     fetchMock.mockReset();
