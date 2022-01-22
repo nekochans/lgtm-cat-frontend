@@ -16,7 +16,7 @@ type CognitoTokenResponseBody = {
   // eslint-disable-next-line camelcase
   access_token: string;
   // eslint-disable-next-line camelcase
-  expires_in: 3600;
+  expires_in: number;
   // eslint-disable-next-line camelcase
   token_type: 'Bearer';
 };

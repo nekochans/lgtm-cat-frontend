@@ -16,11 +16,13 @@ const ImageContent: React.FC<Props> = ({ image }: Props) => {
   const onCopySuccess = useCallback(() => {
     sendCopyMarkdownEvent('copy_markdown_button');
 
+    const messageDisplayTime = 1000;
+
     setOpacity('1');
     setCopied(true);
     setTimeout(() => {
       setCopied(false);
-    }, 1000);
+    }, messageDisplayTime);
   }, []);
 
   const { imageContextRef } = useClipboardMarkdown(onCopySuccess, image.url);

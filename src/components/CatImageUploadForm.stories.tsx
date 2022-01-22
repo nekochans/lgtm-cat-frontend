@@ -33,7 +33,9 @@ const mockSuccessUploadCatImage: UploadCatImage = async (_request) => {
       'https://lgtm-images.lgtmeow.com/2021/03/16/00/35afef75-2d6d-4ca1-ab00-fb37f8848fca.webp',
   };
 
-  await sleep(3000);
+  const sleepTime = 3000;
+
+  await sleep(sleepTime);
 
   return createSuccessResult<UploadedImage>(uploadedImage);
 };

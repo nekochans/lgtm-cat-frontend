@@ -18,11 +18,13 @@ const CreatedLgtmImage: React.FC<Props> = ({
   const onCopySuccess = useCallback(() => {
     sendCopyMarkdownEvent('created_lgtm_image');
 
+    const messageDisplayTime = 1000;
+
     setOpacity('1');
     setCopied(true);
     setTimeout(() => {
       setCopied(false);
-    }, 1000);
+    }, messageDisplayTime);
   }, []);
 
   const { imageContextRef } = useClipboardMarkdown(

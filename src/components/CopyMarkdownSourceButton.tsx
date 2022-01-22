@@ -13,10 +13,12 @@ const CopyMarkdownSourceButton: React.FC<Props> = ({ createdLgtmImageUrl }) => {
   const onCopySuccess = useCallback(() => {
     sendCopyMarkdownEvent('after_upload_copy_markdown_button');
 
+    const messageDisplayTime = 1000;
+
     setCopied(true);
     setTimeout(() => {
       setCopied(false);
-    }, 1000);
+    }, messageDisplayTime);
   }, []);
 
   const { imageContextRef } = useClipboardMarkdown(

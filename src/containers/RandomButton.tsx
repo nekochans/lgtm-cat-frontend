@@ -24,7 +24,9 @@ const RandomButtonContainer: React.FC = () => {
       setAppState({ lgtmImages: [], isFailedFetchLgtmImages: true });
     }
   };
-  const handleRandomThrottled = throttle(() => handleRandom(), 500);
+
+  const limitThreshold = 500;
+  const handleRandomThrottled = throttle(() => handleRandom(), limitThreshold);
 
   return <RandomButton handleRandom={handleRandomThrottled} />;
 };
