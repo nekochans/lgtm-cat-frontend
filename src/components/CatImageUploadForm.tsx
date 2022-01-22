@@ -70,8 +70,8 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
     event.preventDefault();
     // eslint-disable-next-line no-magic-numbers
     if (event.target.files && event.target.files.length > 0) {
-      // eslint-disable-next-line no-magic-numbers
-      const file = event.target.files[0];
+      const targetIndex = 0;
+      const file = event.target.files[targetIndex];
       setUploaded(false);
       const fileType = file.type;
       if (!isValidFileType(fileType)) {
@@ -153,10 +153,6 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
     return uploaded === true && imagePreviewUrl !== '';
   };
 
-  /*
-   * TODO 以下の課題で固定値ではなく、APIからの結果を渡すようにする
-   * https://github.com/nekochans/lgtm-cat-frontend/issues/76
-   */
   const createdLgtmImageProps = {
     imagePreviewUrl: imagePreviewUrl ?? '',
     createdLgtmImageUrl: createdLgtmImageUrl ?? '',
