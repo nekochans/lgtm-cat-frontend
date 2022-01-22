@@ -1,3 +1,4 @@
+import { httpStatusCode } from '../../../../constants/httpStatusCode';
 import { apiList, fetchLgtmImagesUrl } from '../../../../constants/url';
 import FetchLgtmImagesInRandomAuthError from '../../../../domain/errors/FetchLgtmImagesInRandomAuthError';
 import FetchLgtmImagesInRandomError from '../../../../domain/errors/FetchLgtmImagesInRandomError';
@@ -70,12 +71,12 @@ export const uploadCatImage: UploadCatImage = async (request) => {
 
   const response = await fetch(apiList.uploadCatImage, options);
 
-  if (response.status !== 202) {
+  if (response.status !== httpStatusCode.accepted) {
     /*
      * Vercelのpayloadサイズリミットに引っかかった場合
      * https://vercel.com/docs/platform/limits#serverless-function-payload-size-limit
      */
-    if (response.status !== 413) {
+    if (response.status !== httpStatusCode.payloadTooLarge) {
       return createFailureResult<UploadCatImageSizeTooLargeError>(
         new UploadCatImageSizeTooLargeError(),
       );

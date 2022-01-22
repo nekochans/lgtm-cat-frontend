@@ -1,3 +1,4 @@
+import { httpStatusCode } from '../../../../constants/httpStatusCode';
 import {
   cognitoClientId,
   cognitoClientSecret,
@@ -41,7 +42,10 @@ export const issueAccessToken: IssueAccessToken = async () => {
     const cognitoTokenResponseBody =
       (await response.json()) as CognitoTokenResponseBody;
 
-    if (response.status !== 200 || !cognitoTokenResponseBody.access_token) {
+    if (
+      response.status !== httpStatusCode.ok ||
+      !cognitoTokenResponseBody.access_token
+    ) {
       return createFailureResult<IssueAccessTokenError>(
         new IssueAccessTokenError(),
       );
