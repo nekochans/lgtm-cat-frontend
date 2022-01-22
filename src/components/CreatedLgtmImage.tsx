@@ -41,6 +41,7 @@ const CreatedLgtmImage: React.FC<Props> = ({
         onMouseEnter={() => setOpacity('0.7')}
         onMouseLeave={() => setOpacity('1')}
       >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={imagePreviewUrl} alt="createdLgtmImage" />
         {copied && (
           <div
