@@ -66,12 +66,12 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
     setBase64Image(btoa(binaryString));
   };
 
-  const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
+  const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
     // eslint-disable-next-line no-magic-numbers
-    if (e.target.files && e.target.files.length > 0) {
+    if (event.target.files && event.target.files.length > 0) {
       // eslint-disable-next-line no-magic-numbers
-      const file = e.target.files[0];
+      const file = event.target.files[0];
       setUploaded(false);
       const fileType = file.type;
       if (!isValidFileType(fileType)) {
