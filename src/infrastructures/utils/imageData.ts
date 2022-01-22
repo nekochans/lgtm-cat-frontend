@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { LgtmImage } from '../../domain/types/lgtmImage';
 
 const imageData: LgtmImage[] = [
