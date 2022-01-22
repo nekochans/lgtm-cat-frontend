@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
-import { sendCopyMarkdownEvent } from '../infrastructures/utils/gtag';
+
 import useClipboardMarkdown from '../hooks/useClipboardMarkdown';
+import { sendCopyMarkdownEvent } from '../infrastructures/utils/gtag';
 
 type Props = {
   createdLgtmImageUrl: string;

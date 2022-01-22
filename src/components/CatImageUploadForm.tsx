@@ -1,19 +1,21 @@
 import React, { useState, ChangeEvent } from 'react';
-import UploadCatImagePreview from './UploadCatImagePreview';
-import CatImageUploadDescription from './CatImageUploadDescription';
-import CatImageUploadError from './CatImageUploadError';
-import CatImageUploadSuccessMessage from './CatImageUploadSuccessMessage';
-import CreatedLgtmImage from './CreatedLgtmImage';
+
 import {
   AcceptedTypesImageExtension,
   UploadCatImage,
 } from '../domain/repositories/imageRepository';
 import { isSuccessResult } from '../domain/repositories/repositoryResult';
-import ProgressBar from './ProgressBar';
 import { sendUploadCatImage } from '../infrastructures/utils/gtag';
-import CopyMarkdownSourceButton from './CopyMarkdownSourceButton';
+
 import AfterUploadWarningMessage from './AfterUploadWarningMessage';
 import CatImageUploadConfirmModal from './CatImageUploadConfirmModal';
+import CatImageUploadDescription from './CatImageUploadDescription';
+import CatImageUploadError from './CatImageUploadError';
+import CatImageUploadSuccessMessage from './CatImageUploadSuccessMessage';
+import CopyMarkdownSourceButton from './CopyMarkdownSourceButton';
+import CreatedLgtmImage from './CreatedLgtmImage';
+import ProgressBar from './ProgressBar';
+import UploadCatImagePreview from './UploadCatImagePreview';
 
 // TODO acceptedTypesは定数化して分離する
 const acceptedTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg'];
@@ -149,8 +151,10 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
     return uploaded === true && imagePreviewUrl !== '';
   };
 
-  // TODO 以下の課題で固定値ではなく、APIからの結果を渡すようにする
-  // https://github.com/nekochans/lgtm-cat-frontend/issues/76
+  /*
+   * TODO 以下の課題で固定値ではなく、APIからの結果を渡すようにする
+   * https://github.com/nekochans/lgtm-cat-frontend/issues/76
+   */
   const createdLgtmImageProps = {
     imagePreviewUrl: imagePreviewUrl ?? '',
     createdLgtmImageUrl: createdLgtmImageUrl ?? '',

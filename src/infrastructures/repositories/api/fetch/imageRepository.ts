@@ -1,22 +1,23 @@
-import { LgtmImages, UploadedImage } from '../../../../domain/types/lgtmImage';
+import { apiList, fetchLgtmImagesUrl } from '../../../../constants/url';
+import FetchLgtmImagesInRandomAuthError from '../../../../domain/errors/FetchLgtmImagesInRandomAuthError';
+import FetchLgtmImagesInRandomError from '../../../../domain/errors/FetchLgtmImagesInRandomError';
+import UploadCatImageAuthError from '../../../../domain/errors/UploadCatImageAuthError';
+import UploadCatImageSizeTooLargeError from '../../../../domain/errors/UploadCatImageSizeTooLargeError';
+import UploadCatImageUnexpectedError from '../../../../domain/errors/UploadCatImageUnexpectedError';
+import UploadCatImageValidationError from '../../../../domain/errors/UploadCatImageValidationError';
 import {
   FetchLgtmImagesInRandom,
   UploadCatImage,
 } from '../../../../domain/repositories/imageRepository';
-import FetchLgtmImagesInRandomError from '../../../../domain/errors/FetchLgtmImagesInRandomError';
-import { apiList, fetchLgtmImagesUrl } from '../../../../constants/url';
-import { UploadedImageResponse } from '../../../../pages/api/lgtm/images';
 import {
   createFailureResult,
   createSuccessResult,
   isSuccessResult,
 } from '../../../../domain/repositories/repositoryResult';
-import UploadCatImageAuthError from '../../../../domain/errors/UploadCatImageAuthError';
-import UploadCatImageSizeTooLargeError from '../../../../domain/errors/UploadCatImageSizeTooLargeError';
-import UploadCatImageValidationError from '../../../../domain/errors/UploadCatImageValidationError';
-import UploadCatImageUnexpectedError from '../../../../domain/errors/UploadCatImageUnexpectedError';
+import { LgtmImages, UploadedImage } from '../../../../domain/types/lgtmImage';
+import { UploadedImageResponse } from '../../../../pages/api/lgtm/images';
+
 import { issueAccessToken } from './authTokenRepository';
-import FetchLgtmImagesInRandomAuthError from '../../../../domain/errors/FetchLgtmImagesInRandomAuthError';
 
 export const fetchLgtmImagesInRandomWithClient: FetchLgtmImagesInRandom =
   async () => {
@@ -70,8 +71,10 @@ export const uploadCatImage: UploadCatImage = async (request) => {
   const response = await fetch(apiList.uploadCatImage, options);
 
   if (response.status !== 202) {
-    // vercelのpayloadサイズリミットに引っかかった場合
-    // https://vercel.com/docs/platform/limits#serverless-function-payload-size-limit
+    /*
+     * Vercelのpayloadサイズリミットに引っかかった場合
+     * https://vercel.com/docs/platform/limits#serverless-function-payload-size-limit
+     */
     if (response.status !== 413) {
       return createFailureResult<UploadCatImageSizeTooLargeError>(
         new UploadCatImageSizeTooLargeError(),

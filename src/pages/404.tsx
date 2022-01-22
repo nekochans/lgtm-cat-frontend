@@ -1,10 +1,11 @@
-import React from 'react';
 import { NextPage } from 'next';
 import Link from 'next/link';
+import React from 'react';
+
 import Error from '../components/Error';
-import { pathList } from '../constants/url';
 import ErrorLayout from '../components/ErrorLayout';
 import { custom404title } from '../constants/metaTag';
+import { pathList } from '../constants/url';
 
 const Custom404: NextPage = () => (
   <ErrorLayout title={custom404title}>

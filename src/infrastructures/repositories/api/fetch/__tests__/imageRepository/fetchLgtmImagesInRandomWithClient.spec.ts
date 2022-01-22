@@ -1,8 +1,9 @@
 import fetchMock from 'fetch-mock-jest';
-import { fetchLgtmImagesInRandomWithClient } from '../../imageRepository';
+
+import { apiList } from '../../../../../../constants/url';
 import FetchLgtmImagesInRandomError from '../../../../../../domain/errors/FetchLgtmImagesInRandomError';
 import { isSuccessResult } from '../../../../../../domain/repositories/repositoryResult';
-import { apiList } from '../../../../../../constants/url';
+import { fetchLgtmImagesInRandomWithClient } from '../../imageRepository';
 
 describe('imageRepository.ts fetchLgtmImagesInRandomWithClient TestCases', () => {
   beforeEach(() => {

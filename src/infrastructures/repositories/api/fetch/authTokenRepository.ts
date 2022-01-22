@@ -1,10 +1,10 @@
-import { IssueAccessToken } from '../../../../domain/repositories/authTokenRepository';
-import { cognitoTokenEndpointUrl } from '../../../../constants/url';
 import {
   cognitoClientId,
   cognitoClientSecret,
 } from '../../../../constants/secret';
+import { cognitoTokenEndpointUrl } from '../../../../constants/url';
 import IssueAccessTokenError from '../../../../domain/errors/IssueAccessTokenError';
+import { IssueAccessToken } from '../../../../domain/repositories/authTokenRepository';
 import {
   createFailureResult,
   createSuccessResult,

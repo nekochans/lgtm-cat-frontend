@@ -1,10 +1,11 @@
-import { LgtmImages, UploadedImage } from '../types/lgtmImage';
-import { RepositoryResult } from './repositoryResult';
+import FetchLgtmImagesInRandomError from '../errors/FetchLgtmImagesInRandomError';
 import UploadCatImageAuthError from '../errors/UploadCatImageAuthError';
 import UploadCatImageSizeTooLargeError from '../errors/UploadCatImageSizeTooLargeError';
-import UploadCatImageValidationError from '../errors/UploadCatImageValidationError';
 import UploadCatImageUnexpectedError from '../errors/UploadCatImageUnexpectedError';
-import FetchLgtmImagesInRandomError from '../errors/FetchLgtmImagesInRandomError';
+import UploadCatImageValidationError from '../errors/UploadCatImageValidationError';
+import { LgtmImages, UploadedImage } from '../types/lgtmImage';
+
+import { RepositoryResult } from './repositoryResult';
 
 export type FetchLgtmImagesInRandom = () => Promise<
   RepositoryResult<LgtmImages, FetchLgtmImagesInRandomError>

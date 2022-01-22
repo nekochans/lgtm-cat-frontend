@@ -1,14 +1,15 @@
-import React, { useEffect } from 'react';
 import { GetStaticProps } from 'next';
-import DefaultLayout from '../layouts/DefaultLayout';
+import React, { useEffect } from 'react';
+
 import { metaTagList } from '../constants/metaTag';
-import { LgtmImages } from '../domain/types/lgtmImage';
-import { useSetAppState } from '../stores/contexts/AppStateContext';
 import ImageListContainer from '../containers/ImageLIst';
-import { fetchLgtmImagesInRandomWithServer } from '../infrastructures/repositories/api/fetch/imageRepository';
 import { isSuccessResult } from '../domain/repositories/repositoryResult';
-import extractRandomImages from '../infrastructures/utils/randomImages';
+import { LgtmImages } from '../domain/types/lgtmImage';
+import { fetchLgtmImagesInRandomWithServer } from '../infrastructures/repositories/api/fetch/imageRepository';
 import imageData from '../infrastructures/utils/imageData';
+import extractRandomImages from '../infrastructures/utils/randomImages';
+import DefaultLayout from '../layouts/DefaultLayout';
+import { useSetAppState } from '../stores/contexts/AppStateContext';
 
 type Props = LgtmImages;
 
@@ -36,9 +37,11 @@ export const getStaticProps: GetStaticProps = async () => {
     };
   }
 
-  // TODO ここに到達した場合、APIでエラーが起きているので通知を送るようにしたい
-  // APIから取得に失敗した場合は静的ファイルに記載されたデータを取得する
-  // 理由としてはエラー表示がCacheされる事を避ける為
+  /*
+   * TODO ここに到達した場合、APIでエラーが起きているので通知を送るようにしたい
+   * APIから取得に失敗した場合は静的ファイルに記載されたデータを取得する
+   * 理由としてはエラー表示がCacheされる事を避ける為
+   */
   const imageLength = 9;
   const lgtmImages = extractRandomImages(imageData, imageLength);
 

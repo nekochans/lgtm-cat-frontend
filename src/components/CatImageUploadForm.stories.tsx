@@ -1,15 +1,17 @@
 import React from 'react';
-import CatImageUploadForm from './CatImageUploadForm';
+
+import UploadCatImageAuthError from '../domain/errors/UploadCatImageAuthError';
+import UploadCatImageSizeTooLargeError from '../domain/errors/UploadCatImageSizeTooLargeError';
+import UploadCatImageUnexpectedError from '../domain/errors/UploadCatImageUnexpectedError';
+import UploadCatImageValidationError from '../domain/errors/UploadCatImageValidationError';
 import { UploadCatImage } from '../domain/repositories/imageRepository';
 import {
   createFailureResult,
   createSuccessResult,
 } from '../domain/repositories/repositoryResult';
 import { UploadedImage } from '../domain/types/lgtmImage';
-import UploadCatImageAuthError from '../domain/errors/UploadCatImageAuthError';
-import UploadCatImageSizeTooLargeError from '../domain/errors/UploadCatImageSizeTooLargeError';
-import UploadCatImageValidationError from '../domain/errors/UploadCatImageValidationError';
-import UploadCatImageUnexpectedError from '../domain/errors/UploadCatImageUnexpectedError';
+
+import CatImageUploadForm from './CatImageUploadForm';
 
 export default {
   title: 'src/components/CatImageUploadForm.tsx',

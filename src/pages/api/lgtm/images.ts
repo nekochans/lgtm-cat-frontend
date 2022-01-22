@@ -1,13 +1,14 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+
+import { fetchLgtmImagesUrl, uploadCatImageUrl } from '../../../constants/url';
+import { UploadCatImageRequest } from '../../../domain/repositories/imageRepository';
+import { isSuccessResult } from '../../../domain/repositories/repositoryResult';
 import {
   LgtmImage,
   LgtmImages,
   UploadedImage,
 } from '../../../domain/types/lgtmImage';
-import { UploadCatImageRequest } from '../../../domain/repositories/imageRepository';
-import { fetchLgtmImagesUrl, uploadCatImageUrl } from '../../../constants/url';
 import { issueAccessToken } from '../../../infrastructures/repositories/api/fetch/authTokenRepository';
-import { isSuccessResult } from '../../../domain/repositories/repositoryResult';
 
 type FetchLgtmImagesResponse = {
   lgtmImages?: LgtmImage[];

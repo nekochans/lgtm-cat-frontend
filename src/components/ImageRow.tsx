@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { LgtmImages } from '../domain/types/lgtmImage';
+
 import ImageContent from './ImageContent';
 
 type Props = LgtmImages;
