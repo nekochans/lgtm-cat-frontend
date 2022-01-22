@@ -10,6 +10,7 @@ import {
   createSuccessResult,
 } from '../domain/repositories/repositoryResult';
 import { UploadedImage } from '../domain/types/lgtmImage';
+import sleep from '../infrastructures/utils/sleep';
 
 import CatImageUploadForm from './CatImageUploadForm';
 
@@ -25,17 +26,15 @@ export default {
   ],
 };
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
 const mockSuccessUploadCatImage: UploadCatImage = async (_request) => {
   const uploadedImage = {
     imageUrl:
       'https://lgtm-images.lgtmeow.com/2021/03/16/00/35afef75-2d6d-4ca1-ab00-fb37f8848fca.webp',
   };
 
-  const sleepTime = 3000;
+  const waitSeconds = 3;
 
-  await sleep(sleepTime);
+  await sleep(waitSeconds);
 
   return createSuccessResult<UploadedImage>(uploadedImage);
 };
