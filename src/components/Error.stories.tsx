@@ -1,12 +1,13 @@
-import React from 'react';
-
 import Error from './Error';
+
+import type { ComponentStoryObj, Meta } from '@storybook/react';
 
 export default {
   title: 'src/components/Error.tsx',
   component: Error,
-  includeStories: ['showError'],
-};
+} as Meta<typeof Error>;
+
+type Story = ComponentStoryObj<typeof Error>;
 
 const style = {
   color: 'royalblue',
@@ -23,6 +24,6 @@ const props = {
   ),
 };
 
-export const showError = (): JSX.Element => (
-  <Error title={props.title} message={props.message} topLink={props.topLink} />
-);
+export const Default: Story = {
+  args: props,
+};

@@ -1,18 +1,19 @@
-import React from 'react';
-
 import RandomButton from './RandomButton';
+
+import type { ComponentStoryObj, Meta } from '@storybook/react';
 
 export default {
   title: 'src/components/RandomButton.tsx',
   component: RandomButton,
-  includeStories: ['showRandomButtonWithProps'],
-};
+} as Meta<typeof RandomButton>;
 
-export const testProps = {
+type Story = ComponentStoryObj<typeof RandomButton>;
+
+const props = {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   handleRandom: (): void => {},
 };
 
-export const showRandomButtonWithProps = (): JSX.Element => (
-  <RandomButton handleRandom={testProps.handleRandom} />
-);
+export const Default: Story = {
+  args: props,
+};

@@ -1,12 +1,13 @@
-import React from 'react';
-
 import MarkdownContents from './MarkdownContents';
+
+import type { ComponentStoryObj, Meta } from '@storybook/react';
 
 export default {
   title: 'src/components/MarkdownContents.tsx',
   component: MarkdownContents,
-  includeStories: ['showMarkdownContentsWithProps'],
-};
+} as Meta<typeof MarkdownContents>;
+
+type Story = ComponentStoryObj<typeof MarkdownContents>;
 
 const props = {
   markdown: `
@@ -18,6 +19,6 @@ const props = {
   `,
 };
 
-export const showMarkdownContentsWithProps = (): JSX.Element => (
-  <MarkdownContents markdown={props.markdown} />
-);
+export const Default: Story = {
+  args: props,
+};

@@ -1,5 +1,3 @@
-import React from 'react';
-
 import UploadCatImageAuthError from '../domain/errors/UploadCatImageAuthError';
 import UploadCatImageSizeTooLargeError from '../domain/errors/UploadCatImageSizeTooLargeError';
 import UploadCatImageUnexpectedError from '../domain/errors/UploadCatImageUnexpectedError';
@@ -14,17 +12,14 @@ import sleep from '../infrastructures/utils/sleep';
 
 import CatImageUploadForm from './CatImageUploadForm';
 
+import type { ComponentStoryObj, Meta } from '@storybook/react';
+
 export default {
   title: 'src/components/CatImageUploadForm.tsx',
-  component: Error,
-  includeStories: [
-    'showCatImageUploadForm',
-    'showCatImageUploadFormWithAuthError',
-    'showCatImageUploadFormWithImageSizeTooLargeError',
-    'showCatImageUploadFormWithValidationError',
-    'showCatImageUploadFormWithUnexpectedError',
-  ],
-};
+  component: CatImageUploadForm,
+} as Meta<typeof CatImageUploadForm>;
+
+type Story = ComponentStoryObj<typeof CatImageUploadForm>;
 
 const mockSuccessUploadCatImage: UploadCatImage = async (_request) => {
   const uploadedImage = {
@@ -65,23 +60,32 @@ const mockUploadCatImageUnexpectedError: UploadCatImage = (_request) =>
     ),
   );
 
-export const showCatImageUploadForm = (): JSX.Element => (
-  <CatImageUploadForm uploadCatImage={mockSuccessUploadCatImage} />
-);
+export const UploadWillBeSuccessful: Story = {
+  args: {
+    uploadCatImage: mockSuccessUploadCatImage,
+  },
+};
 
-export const showCatImageUploadFormWithAuthError = (): JSX.Element => (
-  <CatImageUploadForm uploadCatImage={mockUploadCatImageAuthError} />
-);
+export const UploadingWillResultInAnAuthError: Story = {
+  args: {
+    uploadCatImage: mockUploadCatImageAuthError,
+  },
+};
 
-export const showCatImageUploadFormWithImageSizeTooLargeError =
-  (): JSX.Element => (
-    <CatImageUploadForm uploadCatImage={mockUploadCatImageSizeTooLargeError} />
-  );
+export const UploadingWillResultInImageSizeTooLargeError: Story = {
+  args: {
+    uploadCatImage: mockUploadCatImageSizeTooLargeError,
+  },
+};
 
-export const showCatImageUploadFormWithValidationError = (): JSX.Element => (
-  <CatImageUploadForm uploadCatImage={mockUploadCatImageValidationError} />
-);
+export const UploadingWillResultInValidationError: Story = {
+  args: {
+    uploadCatImage: mockUploadCatImageValidationError,
+  },
+};
 
-export const showCatImageUploadFormWithUnexpectedError = (): JSX.Element => (
-  <CatImageUploadForm uploadCatImage={mockUploadCatImageUnexpectedError} />
-);
+export const UploadingWillResultInAnUnexpectedError: Story = {
+  args: {
+    uploadCatImage: mockUploadCatImageUnexpectedError,
+  },
+};
