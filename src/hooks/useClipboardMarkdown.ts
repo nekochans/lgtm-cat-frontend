@@ -1,5 +1,6 @@
-import { MutableRefObject, useEffect, useRef } from 'react';
 import Clipboard from 'clipboard';
+import { MutableRefObject, useEffect, useRef } from 'react';
+
 import { appBaseUrl } from '../constants/url';
 
 const useClipboardMarkdown = (

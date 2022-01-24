@@ -1,9 +1,9 @@
 /**
  * @jest-environment jsdom
  */
-import React from 'react';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { render } from '@testing-library/react';
+import React from 'react';
+
 import IndexPage from '../../pages';
 
 test('IndexPage Snapshot test', () => {

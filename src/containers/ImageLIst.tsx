@@ -1,9 +1,10 @@
-import React from 'react';
 import Link from 'next/link';
-import ImageList from '../components/ImageList';
-import { useAppState } from '../stores/contexts/AppStateContext';
+import React from 'react';
+
 import Error from '../components/Error';
+import ImageList from '../components/ImageList';
 import { pathList } from '../constants/url';
+import { useAppState } from '../stores/contexts/AppStateContext';
 
 const ImageListContainer: React.FC = () => {
   const state = useAppState();

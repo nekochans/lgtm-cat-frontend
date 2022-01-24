@@ -1,13 +1,15 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+
+import { httpStatusCode } from '../../../constants/httpStatusCode';
+import { fetchLgtmImagesUrl, uploadCatImageUrl } from '../../../constants/url';
+import { UploadCatImageRequest } from '../../../domain/repositories/imageRepository';
+import { isSuccessResult } from '../../../domain/repositories/repositoryResult';
 import {
   LgtmImage,
   LgtmImages,
   UploadedImage,
 } from '../../../domain/types/lgtmImage';
-import { UploadCatImageRequest } from '../../../domain/repositories/imageRepository';
-import { fetchLgtmImagesUrl, uploadCatImageUrl } from '../../../constants/url';
 import { issueAccessToken } from '../../../infrastructures/repositories/api/fetch/authTokenRepository';
-import { isSuccessResult } from '../../../domain/repositories/repositoryResult';
 
 type FetchLgtmImagesResponse = {
   lgtmImages?: LgtmImage[];
@@ -39,45 +41,63 @@ const fetchLgtmImages = async (
 
     const response = await fetch(fetchLgtmImagesUrl(), options);
     if (!response.ok) {
-      return res
-        .status(500)
-        .json({ error: { code: 500, message: 'Internal Server Error' } });
+      return res.status(httpStatusCode.internalServerError).json({
+        error: {
+          code: httpStatusCode.internalServerError,
+          message: 'Internal Server Error',
+        },
+      });
     }
 
     const lgtmImages = (await response.json()) as LgtmImages;
 
-    return res.status(200).json(lgtmImages);
+    return res.status(httpStatusCode.ok).json(lgtmImages);
   }
 
-  return res
-    .status(500)
-    .json({ error: { code: 500, message: 'IssueAccessTokenError' } });
+  return res.status(httpStatusCode.internalServerError).json({
+    error: {
+      code: httpStatusCode.internalServerError,
+      message: 'IssueAccessTokenError',
+    },
+  });
 };
 
 const uploadCatImageIssueAccessTokenErrorResponse = (
   res: NextApiResponse<UploadedImageResponse>,
 ) =>
-  res
-    .status(500)
-    .json({ error: { code: 500, message: 'IssueAccessTokenError' } });
+  res.status(httpStatusCode.internalServerError).json({
+    error: {
+      code: httpStatusCode.internalServerError,
+      message: 'IssueAccessTokenError',
+    },
+  });
 
 const createUploadCatImageErrorResponse = (
   res: NextApiResponse<UploadedImageResponse>,
   fetchResponse: Response,
 ) => {
   switch (fetchResponse.status) {
-    case 413:
-      return res.status(413).json({
-        error: { code: 413, message: 'UploadCatImageSizeTooLargeError' },
+    case httpStatusCode.payloadTooLarge:
+      return res.status(httpStatusCode.payloadTooLarge).json({
+        error: {
+          code: httpStatusCode.payloadTooLarge,
+          message: 'UploadCatImageSizeTooLargeError',
+        },
       });
-    case 422:
-      return res.status(422).json({
-        error: { code: 422, message: 'UploadCatImageValidationError' },
+    case httpStatusCode.unprocessableEntity:
+      return res.status(httpStatusCode.unprocessableEntity).json({
+        error: {
+          code: httpStatusCode.unprocessableEntity,
+          message: 'UploadCatImageValidationError',
+        },
       });
     default:
-      return res
-        .status(500)
-        .json({ error: { code: 500, message: 'Internal Server Error' } });
+      return res.status(httpStatusCode.internalServerError).json({
+        error: {
+          code: httpStatusCode.internalServerError,
+          message: 'Internal Server Error',
+        },
+      });
   }
 };
 
@@ -103,13 +123,15 @@ const uploadCatImage = async (
     };
 
     const response = await fetch(uploadCatImageUrl(), options);
-    if (response.status !== 202) {
+    if (response.status !== httpStatusCode.accepted) {
       return createUploadCatImageErrorResponse(res, response);
     }
 
     const responseBody = (await response.json()) as UploadedImage;
 
-    return res.status(202).json({ imageUrl: responseBody.imageUrl });
+    return res
+      .status(httpStatusCode.accepted)
+      .json({ imageUrl: responseBody.imageUrl });
   }
 
   return uploadCatImageIssueAccessTokenErrorResponse(res);
@@ -118,7 +140,12 @@ const uploadCatImage = async (
 const methodNotAllowedErrorResponse = (
   res: NextApiResponse<FetchLgtmImagesResponse | UploadedImageResponse>,
 ) =>
-  res.status(405).json({ error: { code: 405, message: 'Method Not Allowed' } });
+  res.status(httpStatusCode.methodNotAllowed).json({
+    error: {
+      code: httpStatusCode.methodNotAllowed,
+      message: 'Method Not Allowed',
+    },
+  });
 
 const handler: NextApiHandler = async (
   req: NextApiRequest,

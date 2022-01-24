@@ -1,7 +1,8 @@
 import fetchMock from 'fetch-mock-jest';
-import { issueAccessToken } from '../../authTokenRepository';
-import { isSuccessResult } from '../../../../../../domain/repositories/repositoryResult';
+
 import { cognitoTokenEndpointUrl } from '../../../../../../constants/url';
+import { isSuccessResult } from '../../../../../../domain/repositories/repositoryResult';
+import { issueAccessToken } from '../../authTokenRepository';
 
 describe('authTokenRepository.ts issueAccessToken TestCases', () => {
   beforeEach(() => {

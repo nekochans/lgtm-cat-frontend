@@ -1,5 +1,6 @@
-import React, { useCallback, useState } from 'react';
 import Image from 'next/image';
+import React, { useCallback, useState } from 'react';
+
 import { LgtmImage } from '../domain/types/lgtmImage';
 import useClipboardMarkdown from '../hooks/useClipboardMarkdown';
 import { sendCopyMarkdownEvent } from '../infrastructures/utils/gtag';
@@ -15,11 +16,13 @@ const ImageContent: React.FC<Props> = ({ image }: Props) => {
   const onCopySuccess = useCallback(() => {
     sendCopyMarkdownEvent('copy_markdown_button');
 
+    const messageDisplayTime = 1000;
+
     setOpacity('1');
     setCopied(true);
     setTimeout(() => {
       setCopied(false);
-    }, 1000);
+    }, messageDisplayTime);
   }, []);
 
   const { imageContextRef } = useClipboardMarkdown(onCopySuccess, image.url);
@@ -36,7 +39,13 @@ const ImageContent: React.FC<Props> = ({ image }: Props) => {
         onMouseEnter={() => setOpacity('0.7')}
         onMouseLeave={() => setOpacity('1')}
       >
-        <Image src={image.url} layout="fill" objectFit="contain" />
+        <Image
+          src={image.url}
+          layout="fill"
+          objectFit="contain"
+          alt="lgtm-cat-image"
+          priority={true}
+        />
         {copied && (
           <div
             style={{

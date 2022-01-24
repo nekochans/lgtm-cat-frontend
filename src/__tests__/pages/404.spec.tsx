@@ -1,9 +1,9 @@
 /**
  * @jest-environment jsdom
  */
-import React from 'react';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { render } from '@testing-library/react';
+import React from 'react';
+
 import Custom404 from '../../pages/404';
 
 test('Custom404 Snapshot test', () => {

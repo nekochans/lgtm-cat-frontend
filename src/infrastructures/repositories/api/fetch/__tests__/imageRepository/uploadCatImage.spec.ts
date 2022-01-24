@@ -1,8 +1,9 @@
 import fetchMock from 'fetch-mock-jest';
-import { uploadCatImage } from '../../imageRepository';
+
+import { apiList } from '../../../../../../constants/url';
 import { UploadCatImageRequest } from '../../../../../../domain/repositories/imageRepository';
 import { isSuccessResult } from '../../../../../../domain/repositories/repositoryResult';
-import { apiList } from '../../../../../../constants/url';
+import { uploadCatImage } from '../../imageRepository';
 
 describe('imageRepository.ts uploadCatImage TestCases', () => {
   beforeEach(() => {

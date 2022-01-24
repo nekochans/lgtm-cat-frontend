@@ -1,18 +1,21 @@
 import fetchMock from 'fetch-mock-jest';
-import { fetchLgtmImagesInRandomWithServer } from '../../imageRepository';
-import { isSuccessResult } from '../../../../../../domain/repositories/repositoryResult';
+
 import {
   cognitoTokenEndpointUrl,
   fetchLgtmImagesUrl,
 } from '../../../../../../constants/url';
-import FetchLgtmImagesInRandomError from '../../../../../../domain/errors/FetchLgtmImagesInRandomError';
 import FetchLgtmImagesInRandomAuthError from '../../../../../../domain/errors/FetchLgtmImagesInRandomAuthError';
+import FetchLgtmImagesInRandomError from '../../../../../../domain/errors/FetchLgtmImagesInRandomError';
+import { isSuccessResult } from '../../../../../../domain/repositories/repositoryResult';
+import { fetchLgtmImagesInRandomWithServer } from '../../imageRepository';
 
+// eslint-disable-next-line max-lines-per-function
 describe('imageRepository.ts fetchLgtmImagesInRandomWithServer TestCases', () => {
   beforeEach(() => {
     fetchMock.mockReset();
   });
 
+  // eslint-disable-next-line max-lines-per-function
   it('should be able to fetch LGTM Images', async () => {
     const fetchLgtmImagesMockBody = {
       lgtmImages: [

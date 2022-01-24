@@ -1,15 +1,18 @@
 import React from 'react';
-import CatImageUploadForm from './CatImageUploadForm';
+
+import UploadCatImageAuthError from '../domain/errors/UploadCatImageAuthError';
+import UploadCatImageSizeTooLargeError from '../domain/errors/UploadCatImageSizeTooLargeError';
+import UploadCatImageUnexpectedError from '../domain/errors/UploadCatImageUnexpectedError';
+import UploadCatImageValidationError from '../domain/errors/UploadCatImageValidationError';
 import { UploadCatImage } from '../domain/repositories/imageRepository';
 import {
   createFailureResult,
   createSuccessResult,
 } from '../domain/repositories/repositoryResult';
 import { UploadedImage } from '../domain/types/lgtmImage';
-import UploadCatImageAuthError from '../domain/errors/UploadCatImageAuthError';
-import UploadCatImageSizeTooLargeError from '../domain/errors/UploadCatImageSizeTooLargeError';
-import UploadCatImageValidationError from '../domain/errors/UploadCatImageValidationError';
-import UploadCatImageUnexpectedError from '../domain/errors/UploadCatImageUnexpectedError';
+import sleep from '../infrastructures/utils/sleep';
+
+import CatImageUploadForm from './CatImageUploadForm';
 
 export default {
   title: 'src/components/CatImageUploadForm.tsx',
@@ -23,15 +26,15 @@ export default {
   ],
 };
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
 const mockSuccessUploadCatImage: UploadCatImage = async (_request) => {
   const uploadedImage = {
     imageUrl:
       'https://lgtm-images.lgtmeow.com/2021/03/16/00/35afef75-2d6d-4ca1-ab00-fb37f8848fca.webp',
   };
 
-  await sleep(3000);
+  const waitSeconds = 3;
+
+  await sleep(waitSeconds);
 
   return createSuccessResult<UploadedImage>(uploadedImage);
 };

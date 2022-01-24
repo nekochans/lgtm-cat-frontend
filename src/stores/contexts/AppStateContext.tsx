@@ -1,4 +1,5 @@
 import React, { Dispatch, SetStateAction, useContext, useState } from 'react';
+
 import { LgtmImage } from '../../domain/types/lgtmImage';
 
 export type AppState = {

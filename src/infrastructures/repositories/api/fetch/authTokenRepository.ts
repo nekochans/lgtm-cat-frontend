@@ -1,10 +1,11 @@
-import { IssueAccessToken } from '../../../../domain/repositories/authTokenRepository';
-import { cognitoTokenEndpointUrl } from '../../../../constants/url';
+import { httpStatusCode } from '../../../../constants/httpStatusCode';
 import {
   cognitoClientId,
   cognitoClientSecret,
 } from '../../../../constants/secret';
+import { cognitoTokenEndpointUrl } from '../../../../constants/url';
 import IssueAccessTokenError from '../../../../domain/errors/IssueAccessTokenError';
+import { IssueAccessToken } from '../../../../domain/repositories/authTokenRepository';
 import {
   createFailureResult,
   createSuccessResult,
@@ -15,7 +16,7 @@ type CognitoTokenResponseBody = {
   // eslint-disable-next-line camelcase
   access_token: string;
   // eslint-disable-next-line camelcase
-  expires_in: 3600;
+  expires_in: number;
   // eslint-disable-next-line camelcase
   token_type: 'Bearer';
 };
@@ -41,7 +42,10 @@ export const issueAccessToken: IssueAccessToken = async () => {
     const cognitoTokenResponseBody =
       (await response.json()) as CognitoTokenResponseBody;
 
-    if (response.status !== 200 || !cognitoTokenResponseBody.access_token) {
+    if (
+      response.status !== httpStatusCode.ok ||
+      !cognitoTokenResponseBody.access_token
+    ) {
       return createFailureResult<IssueAccessTokenError>(
         new IssueAccessTokenError(),
       );

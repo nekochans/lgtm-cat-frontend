@@ -1,19 +1,23 @@
+/* eslint-disable max-lines-per-function, max-statements */
+// TODO https://github.com/nekochans/lgtm-cat-frontend/issues/107 を実施する際にファイル先頭のESLintの制御コメントを削除する
 import React, { useState, ChangeEvent } from 'react';
-import UploadCatImagePreview from './UploadCatImagePreview';
-import CatImageUploadDescription from './CatImageUploadDescription';
-import CatImageUploadError from './CatImageUploadError';
-import CatImageUploadSuccessMessage from './CatImageUploadSuccessMessage';
-import CreatedLgtmImage from './CreatedLgtmImage';
+
 import {
   AcceptedTypesImageExtension,
   UploadCatImage,
 } from '../domain/repositories/imageRepository';
 import { isSuccessResult } from '../domain/repositories/repositoryResult';
-import ProgressBar from './ProgressBar';
 import { sendUploadCatImage } from '../infrastructures/utils/gtag';
-import CopyMarkdownSourceButton from './CopyMarkdownSourceButton';
+
 import AfterUploadWarningMessage from './AfterUploadWarningMessage';
 import CatImageUploadConfirmModal from './CatImageUploadConfirmModal';
+import CatImageUploadDescription from './CatImageUploadDescription';
+import CatImageUploadError from './CatImageUploadError';
+import CatImageUploadSuccessMessage from './CatImageUploadSuccessMessage';
+import CopyMarkdownSourceButton from './CopyMarkdownSourceButton';
+import CreatedLgtmImage from './CreatedLgtmImage';
+import ProgressBar from './ProgressBar';
+import UploadCatImagePreview from './UploadCatImagePreview';
 
 // TODO acceptedTypesは定数化して分離する
 const acceptedTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg'];
@@ -64,10 +68,12 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
     setBase64Image(btoa(binaryString));
   };
 
-  const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
+  const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    // eslint-disable-next-line no-magic-numbers
+    if (event.target.files && event.target.files.length > 0) {
+      const targetIndex = 0;
+      const file = event.target.files[targetIndex];
       setUploaded(false);
       const fileType = file.type;
       if (!isValidFileType(fileType)) {
@@ -149,8 +155,6 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
     return uploaded === true && imagePreviewUrl !== '';
   };
 
-  // TODO 以下の課題で固定値ではなく、APIからの結果を渡すようにする
-  // https://github.com/nekochans/lgtm-cat-frontend/issues/76
   const createdLgtmImageProps = {
     imagePreviewUrl: imagePreviewUrl ?? '',
     createdLgtmImageUrl: createdLgtmImageUrl ?? '',

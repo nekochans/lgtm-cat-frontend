@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
-import { sendCopyMarkdownEvent } from '../infrastructures/utils/gtag';
+
 import useClipboardMarkdown from '../hooks/useClipboardMarkdown';
+import { sendCopyMarkdownEvent } from '../infrastructures/utils/gtag';
 
 type Props = {
   imagePreviewUrl: string;
@@ -17,11 +18,13 @@ const CreatedLgtmImage: React.FC<Props> = ({
   const onCopySuccess = useCallback(() => {
     sendCopyMarkdownEvent('created_lgtm_image');
 
+    const messageDisplayTime = 1000;
+
     setOpacity('1');
     setCopied(true);
     setTimeout(() => {
       setCopied(false);
-    }, 1000);
+    }, messageDisplayTime);
   }, []);
 
   const { imageContextRef } = useClipboardMarkdown(
@@ -38,6 +41,7 @@ const CreatedLgtmImage: React.FC<Props> = ({
         onMouseEnter={() => setOpacity('0.7')}
         onMouseLeave={() => setOpacity('1')}
       >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={imagePreviewUrl} alt="createdLgtmImage" />
         {copied && (
           <div

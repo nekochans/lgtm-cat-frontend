@@ -1,9 +1,11 @@
 import fetchMock from 'fetch-mock-jest';
-import { fetchLgtmImagesInRandomWithClient } from '../../imageRepository';
+
+import { apiList } from '../../../../../../constants/url';
 import FetchLgtmImagesInRandomError from '../../../../../../domain/errors/FetchLgtmImagesInRandomError';
 import { isSuccessResult } from '../../../../../../domain/repositories/repositoryResult';
-import { apiList } from '../../../../../../constants/url';
+import { fetchLgtmImagesInRandomWithClient } from '../../imageRepository';
 
+// eslint-disable-next-line max-lines-per-function
 describe('imageRepository.ts fetchLgtmImagesInRandomWithClient TestCases', () => {
   beforeEach(() => {
     fetchMock.mockReset();

@@ -1,5 +1,5 @@
-import extractRandomImages from '../randomImages';
 import { LgtmImage } from '../../../domain/types/lgtmImage';
+import extractRandomImages from '../randomImages';
 
 const testImageList: LgtmImage[] = [
   {
@@ -45,10 +45,10 @@ const testImageList: LgtmImage[] = [
 ];
 
 describe('randomImages.ts Functions TestCases', () => {
-  it('should return array of size 9 ', () => {
-    const result = extractRandomImages(testImageList, 9);
-    const expectedLength = 9;
+  it('should return array of size 9', () => {
+    const numberToExtract = 9;
+    const result = extractRandomImages(testImageList, numberToExtract);
 
-    expect(result.length).toStrictEqual(expectedLength);
+    expect(result.length).toStrictEqual(numberToExtract);
   });
 });

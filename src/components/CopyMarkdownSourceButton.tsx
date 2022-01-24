@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
-import { sendCopyMarkdownEvent } from '../infrastructures/utils/gtag';
+
 import useClipboardMarkdown from '../hooks/useClipboardMarkdown';
+import { sendCopyMarkdownEvent } from '../infrastructures/utils/gtag';
 
 type Props = {
   createdLgtmImageUrl: string;
@@ -12,10 +13,12 @@ const CopyMarkdownSourceButton: React.FC<Props> = ({ createdLgtmImageUrl }) => {
   const onCopySuccess = useCallback(() => {
     sendCopyMarkdownEvent('after_upload_copy_markdown_button');
 
+    const messageDisplayTime = 1000;
+
     setCopied(true);
     setTimeout(() => {
       setCopied(false);
-    }, 1000);
+    }, messageDisplayTime);
   }, []);
 
   const { imageContextRef } = useClipboardMarkdown(

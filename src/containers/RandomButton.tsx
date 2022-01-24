@@ -1,11 +1,11 @@
-import React from 'react';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import throttle from 'lodash/throttle';
-import { useSetAppState } from '../stores/contexts/AppStateContext';
-import { fetchLgtmImagesInRandomWithClient } from '../infrastructures/repositories/api/fetch/imageRepository';
+import React from 'react';
+
 import RandomButton from '../components/RandomButton';
-import { sendFetchRandomImages } from '../infrastructures/utils/gtag';
 import { isSuccessResult } from '../domain/repositories/repositoryResult';
+import { fetchLgtmImagesInRandomWithClient } from '../infrastructures/repositories/api/fetch/imageRepository';
+import { sendFetchRandomImages } from '../infrastructures/utils/gtag';
+import { useSetAppState } from '../stores/contexts/AppStateContext';
 
 const RandomButtonContainer: React.FC = () => {
   const setAppState = useSetAppState();
@@ -24,7 +24,9 @@ const RandomButtonContainer: React.FC = () => {
       setAppState({ lgtmImages: [], isFailedFetchLgtmImages: true });
     }
   };
-  const handleRandomThrottled = throttle(() => handleRandom(), 500);
+
+  const limitThreshold = 500;
+  const handleRandomThrottled = throttle(() => handleRandom(), limitThreshold);
 
   return <RandomButton handleRandom={handleRandomThrottled} />;
 };

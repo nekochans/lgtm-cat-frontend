@@ -1,5 +1,6 @@
 import React from 'react';
 import Modal from 'react-modal';
+
 import UploadCatImagePreview from './UploadCatImagePreview';
 
 type Props = {
