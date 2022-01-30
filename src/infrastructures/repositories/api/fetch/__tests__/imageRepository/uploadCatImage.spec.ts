@@ -9,6 +9,7 @@ import {
   apiList,
   cognitoTokenEndpointUrl,
 } from '../../../../../../constants/url';
+import UploadCatImageAuthError from '../../../../../../domain/errors/UploadCatImageAuthError';
 import UploadCatImageSizeTooLargeError from '../../../../../../domain/errors/UploadCatImageSizeTooLargeError';
 import UploadCatImageUnexpectedError from '../../../../../../domain/errors/UploadCatImageUnexpectedError';
 import UploadCatImageValidationError from '../../../../../../domain/errors/UploadCatImageValidationError';
@@ -17,6 +18,7 @@ import { isSuccessResult } from '../../../../../../domain/repositories/repositor
 import mockInternalServerError from '../../../../../../mocks/api/error/mockInternalServerError';
 import mockTokenEndpoint from '../../../../../../mocks/api/external/cognito/mockTokenEndpoint';
 import mockUploadCatImage from '../../../../../../mocks/api/lgtm/images/mockUploadCatImage';
+import mockUploadCatImageIssueAccessTokenError from '../../../../../../mocks/api/lgtm/images/mockUploadCatImageIssueAccessTokenError';
 import mockUploadCatImagePayloadTooLarge from '../../../../../../mocks/api/lgtm/images/mockUploadCatImagePayloadTooLarge';
 import mockUploadCatImageUnprocessableEntity from '../../../../../../mocks/api/lgtm/images/mockUploadCatImageUnprocessableEntity';
 import { uploadCatImage } from '../../imageRepository';
@@ -56,6 +58,27 @@ describe('imageRepository.ts uploadCatImage TestCases', () => {
     const uploadedImageResult = await uploadCatImage(request);
 
     expect(isSuccessResult(uploadedImageResult)).toBeTruthy();
+    expect(uploadedImageResult.value).toStrictEqual(expected);
+  });
+
+  it('should return an UploadCatImageAuthError because Failed to issueAccessToken', async () => {
+    mockServer.use(
+      rest.post(
+        apiList.uploadCatImage,
+        mockUploadCatImageIssueAccessTokenError,
+      ),
+    );
+
+    const expected = new UploadCatImageAuthError();
+
+    const request: UploadCatImageRequest = {
+      image: 'dummy image',
+      imageExtension: '.jpg',
+    };
+
+    const uploadedImageResult = await uploadCatImage(request);
+
+    expect(isSuccessResult(uploadedImageResult)).toBeFalsy();
     expect(uploadedImageResult.value).toStrictEqual(expected);
   });
 
