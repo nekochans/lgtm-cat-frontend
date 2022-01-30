@@ -7,10 +7,10 @@ import { setupServer } from 'msw/node';
 
 import { cognitoTokenEndpointUrl } from '../../../../../../constants/url';
 import { isSuccessResult } from '../../../../../../domain/repositories/repositoryResult';
-import tokenEndpoint from '../../../../../../mocks/api/external/cognito/tokenEndpoint';
+import mockTokenEndpoint from '../../../../../../mocks/api/external/cognito/mockTokenEndpoint';
 import { issueAccessToken } from '../../authTokenRepository';
 
-const mockHandlers = [rest.post(cognitoTokenEndpointUrl(), tokenEndpoint)];
+const mockHandlers = [rest.post(cognitoTokenEndpointUrl(), mockTokenEndpoint)];
 
 const mockServer = setupServer(...mockHandlers);
 

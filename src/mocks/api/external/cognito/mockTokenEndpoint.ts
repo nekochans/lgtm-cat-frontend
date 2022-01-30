@@ -2,7 +2,7 @@ import { ResponseResolver, MockedRequest, restContext } from 'msw';
 
 import { httpStatusCode } from '../../../../constants/httpStatusCode';
 
-const tokenEndpoint: ResponseResolver<MockedRequest, typeof restContext> = (
+const mockTokenEndpoint: ResponseResolver<MockedRequest, typeof restContext> = (
   _req,
   res,
   ctx,
@@ -17,4 +17,4 @@ const tokenEndpoint: ResponseResolver<MockedRequest, typeof restContext> = (
     }),
   );
 
-export default tokenEndpoint;
+export default mockTokenEndpoint;
