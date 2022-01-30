@@ -20,7 +20,7 @@ COGNITO_TOKEN_ENDPOINT=https://{CognitoUserPoolのドメイン名}.auth.ap-north
 LGTMEOW_API_URL=https://github.com/nekochans/lgtm-cat-api が稼働しているURLを指定
 ```
 
-テストコード内で以下の環境変数を参照するので、以下の2つは `.env` だけでなく環境変数として登録しておく事をオススメします。
+テストコード内で以下の環境変数を参照するので、以下の 2 つは `.env` だけでなく環境変数として登録しておく事をオススメします。
 
 [direnv](https://github.com/direnv/direnv) を使って `.envrc` を配置するのが簡単です。
 
@@ -29,7 +29,7 @@ export COGNITO_TOKEN_ENDPOINT=https://{CognitoUserPoolのドメイン名}.auth.a
 export LGTMEOW_API_URL=https://github.com/nekochans/lgtm-cat-api が稼働しているURLを指定
 ```
 
-なくてもテストが通りますが、Mock Service Workerに渡すURLが `undefined` になる為、Mock周りで何かトラブルがあった際にデバッグの妨げになる可能性があるので設定しておくのが無難です。
+なくてもテストが通りますが、Mock Service Worker に渡す URL が `undefined` になる為、Mock 周りで何かトラブルがあった際にデバッグの妨げになる可能性があるので設定しておくのが無難です。
 
 ## 依存 package のインストールと開発用アプリケーションサーバーの起動
 
