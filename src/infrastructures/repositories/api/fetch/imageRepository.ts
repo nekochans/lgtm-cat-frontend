@@ -76,7 +76,7 @@ export const uploadCatImage: UploadCatImage = async (request) => {
      * Vercelのpayloadサイズリミットに引っかかった場合
      * https://vercel.com/docs/platform/limits#serverless-function-payload-size-limit
      */
-    if (response.status !== httpStatusCode.payloadTooLarge) {
+    if (response.status === httpStatusCode.payloadTooLarge) {
       return createFailureResult<UploadCatImageSizeTooLargeError>(
         new UploadCatImageSizeTooLargeError(),
       );
