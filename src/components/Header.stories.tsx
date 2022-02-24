@@ -1,12 +1,13 @@
-import React from 'react';
-
 import Header from './Header';
+
+import type { ComponentStoryObj, Meta } from '@storybook/react';
 
 export default {
   title: 'src/components/Header.tsx',
   component: Header,
-  includeStories: ['showHeader'],
-};
+} as Meta<typeof Header>;
+
+type Story = ComponentStoryObj<typeof Header>;
 
 const props = {
   topLink: (
@@ -25,6 +26,6 @@ const props = {
   ),
 };
 
-export const showHeader = (): JSX.Element => (
-  <Header topLink={props.topLink} uploadLink={props.uploadLink} />
-);
+export const Default: Story = {
+  args: props,
+};
