@@ -5,3 +5,4 @@ coverage/
 .eslintrc.js
 next-env.d.ts
 *.config.js
+public/mockServiceWorker.js

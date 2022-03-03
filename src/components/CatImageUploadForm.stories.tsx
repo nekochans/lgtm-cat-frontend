@@ -1,14 +1,17 @@
-import UploadCatImageAuthError from '../domain/errors/UploadCatImageAuthError';
-import UploadCatImageSizeTooLargeError from '../domain/errors/UploadCatImageSizeTooLargeError';
-import UploadCatImageUnexpectedError from '../domain/errors/UploadCatImageUnexpectedError';
-import UploadCatImageValidationError from '../domain/errors/UploadCatImageValidationError';
+import { rest } from 'msw';
+
+import { apiList, cognitoTokenEndpointUrl } from '../constants/url';
 import { UploadCatImage } from '../domain/repositories/imageRepository';
-import {
-  createFailureResult,
-  createSuccessResult,
-} from '../domain/repositories/repositoryResult';
+import { createSuccessResult } from '../domain/repositories/repositoryResult';
 import { UploadedImage } from '../domain/types/lgtmImage';
+import { uploadCatImage } from '../infrastructures/repositories/api/fetch/imageRepository';
 import sleep from '../infrastructures/utils/sleep';
+import mockInternalServerError from '../mocks/api/error/mockInternalServerError';
+import mockTokenEndpoint from '../mocks/api/external/cognito/mockTokenEndpoint';
+import mockUploadCatImage from '../mocks/api/lgtm/images/mockUploadCatImage';
+import mockUploadCatImageIssueAccessTokenError from '../mocks/api/lgtm/images/mockUploadCatImageIssueAccessTokenError';
+import mockUploadCatImagePayloadTooLarge from '../mocks/api/lgtm/images/mockUploadCatImagePayloadTooLarge';
+import mockUploadCatImageUnprocessableEntity from '../mocks/api/lgtm/images/mockUploadCatImageUnprocessableEntity';
 
 import CatImageUploadForm from './CatImageUploadForm';
 
@@ -20,6 +23,20 @@ export default {
 } as Meta<typeof CatImageUploadForm>;
 
 type Story = ComponentStoryObj<typeof CatImageUploadForm>;
+
+export const UploadWillBeSuccessful: Story = {
+  args: {
+    uploadCatImage,
+  },
+  parameters: {
+    msw: {
+      handlers: [
+        rest.post(cognitoTokenEndpointUrl(), mockTokenEndpoint),
+        rest.post(apiList.uploadCatImage, mockUploadCatImage),
+      ],
+    },
+  },
+};
 
 const mockSuccessUploadCatImage: UploadCatImage = async (_request) => {
   const uploadedImage = {
@@ -34,33 +51,7 @@ const mockSuccessUploadCatImage: UploadCatImage = async (_request) => {
   return createSuccessResult<UploadedImage>(uploadedImage);
 };
 
-const mockUploadCatImageAuthError: UploadCatImage = (_request) =>
-  Promise.resolve(
-    createFailureResult<UploadCatImageAuthError>(new UploadCatImageAuthError()),
-  );
-
-const mockUploadCatImageSizeTooLargeError: UploadCatImage = (_request) =>
-  Promise.resolve(
-    createFailureResult<UploadCatImageSizeTooLargeError>(
-      new UploadCatImageSizeTooLargeError(),
-    ),
-  );
-
-const mockUploadCatImageValidationError: UploadCatImage = (_request) =>
-  Promise.resolve(
-    createFailureResult<UploadCatImageValidationError>(
-      new UploadCatImageValidationError(),
-    ),
-  );
-
-const mockUploadCatImageUnexpectedError: UploadCatImage = (_request) =>
-  Promise.resolve(
-    createFailureResult<UploadCatImageUnexpectedError>(
-      new UploadCatImageUnexpectedError(),
-    ),
-  );
-
-export const UploadWillBeSuccessful: Story = {
+export const UploadWillBeSuccessfulWithLoadingMessage: Story = {
   args: {
     uploadCatImage: mockSuccessUploadCatImage,
   },
@@ -68,24 +59,56 @@ export const UploadWillBeSuccessful: Story = {
 
 export const UploadingWillResultInAnAuthError: Story = {
   args: {
-    uploadCatImage: mockUploadCatImageAuthError,
+    uploadCatImage,
+  },
+  parameters: {
+    msw: {
+      handlers: [
+        rest.post(
+          apiList.uploadCatImage,
+          mockUploadCatImageIssueAccessTokenError,
+        ),
+      ],
+    },
   },
 };
 
 export const UploadingWillResultInImageSizeTooLargeError: Story = {
   args: {
-    uploadCatImage: mockUploadCatImageSizeTooLargeError,
+    uploadCatImage,
+  },
+  parameters: {
+    msw: {
+      handlers: [
+        rest.post(apiList.uploadCatImage, mockUploadCatImagePayloadTooLarge),
+      ],
+    },
   },
 };
 
 export const UploadingWillResultInValidationError: Story = {
   args: {
-    uploadCatImage: mockUploadCatImageValidationError,
+    uploadCatImage,
+  },
+  parameters: {
+    msw: {
+      handlers: [
+        rest.post(
+          apiList.uploadCatImage,
+          mockUploadCatImageUnprocessableEntity,
+        ),
+      ],
+    },
   },
 };
 
 export const UploadingWillResultInAnUnexpectedError: Story = {
   args: {
-    uploadCatImage: mockUploadCatImageUnexpectedError,
+    uploadCatImage,
+  },
+  parameters: {
+    msw: {
+      handlers: [rest.post(apiList.uploadCatImage, mockInternalServerError)],
+    },
   },
 };
