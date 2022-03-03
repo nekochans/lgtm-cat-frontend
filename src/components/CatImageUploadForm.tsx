@@ -7,7 +7,7 @@ import {
   UploadCatImage,
 } from '../domain/repositories/imageRepository';
 import { isSuccessResult } from '../domain/repositories/repositoryResult';
-import { sendUploadCatImage } from '../infrastructures/utils/gtag';
+import { sendUploadCatImage } from '../infrastructures/utils/gtm';
 
 import AfterUploadWarningMessage from './AfterUploadWarningMessage';
 import CatImageUploadConfirmModal from './CatImageUploadConfirmModal';
