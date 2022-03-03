@@ -15,7 +15,10 @@ export const pageview = (url: string): void => {
 };
 
 // Markdownソースがコピーされた際に実行する
-type SendCopyMarkdownEventLabel = 'copy_markdown_button';
+type SendCopyMarkdownEventLabel =
+  | 'copy_markdown_button'
+  | 'created_lgtm_image'
+  | 'after_upload_copy_markdown_button';
 
 export const sendCopyMarkdownEvent = (
   label: SendCopyMarkdownEventLabel,
@@ -35,5 +38,15 @@ export const sendFetchRandomImages = (
   window.dataLayer.push({
     event: 'fetch_random_images',
     fetch_random_images_trigger: label,
+  });
+};
+
+// ねこ画像がアップロードしLGTM画像を作成する機能が利用された際に実行する
+type SendUploadCatImageLabel = 'upload_cat_image_button';
+
+export const sendUploadCatImage = (label: SendUploadCatImageLabel): void => {
+  window.dataLayer.push({
+    event: 'upload_cat_image',
+    upload_cat_image_trigger: label,
   });
 };
