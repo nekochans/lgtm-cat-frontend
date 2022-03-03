@@ -1,11 +1,13 @@
-import React from 'react';
 import Header from './Header';
+
+import type { ComponentStoryObj, Meta } from '@storybook/react';
 
 export default {
   title: 'src/components/Header.tsx',
   component: Header,
-  includeStories: ['showHeader'],
-};
+} as Meta<typeof Header>;
+
+type Story = ComponentStoryObj<typeof Header>;
 
 const props = {
   topLink: (
@@ -13,6 +15,17 @@ const props = {
       <p className="is-size-4 has-text-black">LGTMeow</p>
     </a>
   ),
+  uploadLink: (
+    <a
+      className="navbar-item button"
+      style={{ margin: '0.5rem 0.75rem' }}
+      href="https://github.com/nekochans/lgtm-cat-frontend"
+    >
+      <p className="has-text-black">猫ちゃん画像をアップロード</p>
+    </a>
+  ),
 };
 
-export const showHeader = (): JSX.Element => <Header topLink={props.topLink} />;
+export const Default: Story = {
+  args: props,
+};

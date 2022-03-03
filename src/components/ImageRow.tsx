@@ -1,14 +1,14 @@
 import React from 'react';
-import { Image } from '../domain/types/image';
+
+import { LgtmImages } from '../domain/types/lgtmImage';
+
 import ImageContent from './ImageContent';
 
-type Props = {
-  imageList: Image[];
-};
+type Props = LgtmImages;
 
-const ImageRow: React.FC<Props> = ({ imageList }: Props) => (
+const ImageRow: React.FC<Props> = ({ lgtmImages }: Props) => (
   <div className="columns">
-    {imageList.map((image) => (
+    {lgtmImages.map((image) => (
       <ImageContent image={image} key={image.id} />
     ))}
   </div>

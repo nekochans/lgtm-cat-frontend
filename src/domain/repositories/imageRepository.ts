@@ -1,3 +1,31 @@
-import { ImageList } from '../types/image';
+import FetchLgtmImagesInRandomError from '../errors/FetchLgtmImagesInRandomError';
+import UploadCatImageAuthError from '../errors/UploadCatImageAuthError';
+import UploadCatImageSizeTooLargeError from '../errors/UploadCatImageSizeTooLargeError';
+import UploadCatImageUnexpectedError from '../errors/UploadCatImageUnexpectedError';
+import UploadCatImageValidationError from '../errors/UploadCatImageValidationError';
+import { LgtmImages, UploadedImage } from '../types/lgtmImage';
 
-export type FetchRandomImageList = () => Promise<ImageList>;
+import { RepositoryResult } from './repositoryResult';
+
+export type FetchLgtmImagesInRandom = () => Promise<
+  RepositoryResult<LgtmImages, FetchLgtmImagesInRandomError>
+>;
+
+export type AcceptedTypesImageExtension = '.png' | '.jpg' | '.jpeg';
+
+export type UploadCatImageRequest = {
+  image: string;
+  imageExtension: AcceptedTypesImageExtension;
+};
+
+export type UploadCatImage = (
+  request: UploadCatImageRequest,
+) => Promise<
+  RepositoryResult<
+    UploadedImage,
+    | UploadCatImageAuthError
+    | UploadCatImageSizeTooLargeError
+    | UploadCatImageValidationError
+    | UploadCatImageUnexpectedError
+  >
+>;

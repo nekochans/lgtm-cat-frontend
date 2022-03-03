@@ -1,10 +1,11 @@
-import React, { ReactNode } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import React, { ReactNode } from 'react';
+
 import Footer from '../components/Footer';
 import Header from '../components/Header';
-import { pathList } from '../constants/url';
 import { MetaTag } from '../constants/metaTag';
+import { pathList } from '../constants/url';
 
 type Props = {
   children: ReactNode;
@@ -30,6 +31,14 @@ const DefaultLayout: React.FC<Props> = ({ children, metaTag }: Props) => (
           {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
           <a className="navbar-item">
             <p className="is-size-4 has-text-black">LGTMeow</p>
+          </a>
+        </Link>
+      }
+      uploadLink={
+        <Link href={pathList.upload}>
+          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+          <a className="button" style={{ margin: '0.5rem 0.75rem' }}>
+            <p className="has-text-gray">猫ちゃん画像をアップロード</p>
           </a>
         </Link>
       }

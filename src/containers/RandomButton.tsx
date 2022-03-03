@@ -1,25 +1,32 @@
-import React from 'react';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import throttle from 'lodash/throttle';
-import { useSetAppState } from '../stores/contexts/AppStateContext';
-import { fetchRandomImageList } from '../infrastructures/repositories/api/fetch/ImageRepository';
+import React from 'react';
+
 import RandomButton from '../components/RandomButton';
+import { isSuccessResult } from '../domain/repositories/repositoryResult';
+import { fetchLgtmImagesInRandomWithClient } from '../infrastructures/repositories/api/fetch/imageRepository';
 import { sendFetchRandomImages } from '../infrastructures/utils/gtm';
+import { useSetAppState } from '../stores/contexts/AppStateContext';
 
 const RandomButtonContainer: React.FC = () => {
   const setAppState = useSetAppState();
 
   const handleRandom = async () => {
-    try {
-      const imageList = await fetchRandomImageList();
-      setAppState({ imageList: imageList.images, isFailedFetchImages: false });
+    const lgtmImagesResponse = await fetchLgtmImagesInRandomWithClient();
+
+    if (isSuccessResult(lgtmImagesResponse)) {
+      setAppState({
+        lgtmImages: lgtmImagesResponse.value.lgtmImages,
+        isFailedFetchLgtmImages: false,
+      });
 
       sendFetchRandomImages('fetch_random_images_button');
-    } catch (e) {
-      setAppState({ imageList: [], isFailedFetchImages: true });
+    } else {
+      setAppState({ lgtmImages: [], isFailedFetchLgtmImages: true });
     }
   };
-  const handleRandomThrottled = throttle(() => handleRandom(), 500);
+
+  const limitThreshold = 500;
+  const handleRandomThrottled = throttle(() => handleRandom(), limitThreshold);
 
   return <RandomButton handleRandom={handleRandomThrottled} />;
 };

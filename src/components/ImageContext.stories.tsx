@@ -1,19 +1,21 @@
-import React from 'react';
 import ImageContext from './ImageContent';
+
+import type { ComponentStoryObj, Meta } from '@storybook/react';
 
 export default {
   title: 'src/components/ImageContext.tsx',
   component: ImageContext,
-  includeStories: ['showImageContextWithProps'],
-};
+} as Meta<typeof ImageContext>;
 
-export const testProps = {
-  imageList: {
+type Story = ComponentStoryObj<typeof ImageContext>;
+
+const props = {
+  image: {
     id: 1,
     url: '/cat.jpeg',
   },
 };
 
-export const showImageContextWithProps = (): JSX.Element => (
-  <ImageContext image={testProps.imageList} />
-);
+export const Default: Story = {
+  args: props,
+};

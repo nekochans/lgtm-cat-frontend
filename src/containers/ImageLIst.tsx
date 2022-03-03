@@ -1,14 +1,15 @@
-import React from 'react';
 import Link from 'next/link';
-import ImageList from '../components/ImageList';
-import { useAppState } from '../stores/contexts/AppStateContext';
+import React from 'react';
+
 import Error from '../components/Error';
+import ImageList from '../components/ImageList';
 import { pathList } from '../constants/url';
+import { useAppState } from '../stores/contexts/AppStateContext';
 
 const ImageListContainer: React.FC = () => {
   const state = useAppState();
 
-  if (state.isFailedFetchImages) {
+  if (state.isFailedFetchLgtmImages) {
     return (
       <Error
         title="Error"
@@ -23,6 +24,6 @@ const ImageListContainer: React.FC = () => {
     );
   }
 
-  return <ImageList imageList={state.imageList} />;
+  return <ImageList lgtmImages={state.lgtmImages} />;
 };
 export default ImageListContainer;

@@ -1,9 +1,11 @@
 import fs from 'fs';
-import React from 'react';
+
 import { GetStaticProps, NextPage } from 'next';
-import SimpleLayout from '../layouts/SimpleLayout';
+import React from 'react';
+
 import MarkdownContents from '../components/MarkdownContents';
 import { metaTagList } from '../constants/metaTag';
+import SimpleLayout from '../layouts/SimpleLayout';
 
 type Props = {
   privacy: string;

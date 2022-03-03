@@ -1,11 +1,13 @@
-import React from 'react';
 import Footer from './Footer';
+
+import type { ComponentStoryObj, Meta } from '@storybook/react';
 
 export default {
   title: 'src/components/Footer.tsx',
   component: Footer,
-  includeStories: ['showFooterWithProps'],
-};
+} as Meta<typeof Footer>;
+
+type Story = ComponentStoryObj<typeof Footer>;
 
 const style = {
   color: 'royalblue',
@@ -24,6 +26,6 @@ const props = {
   ),
 };
 
-export const showFooterWithProps = (): JSX.Element => (
-  <Footer termsLink={props.termsLink} privacyLink={props.privacyLink} />
-);
+export const Default: Story = {
+  args: props,
+};

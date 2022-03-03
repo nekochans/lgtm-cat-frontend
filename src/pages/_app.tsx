@@ -1,10 +1,10 @@
 import '../../styles/styles.scss';
 import { AppProps } from 'next/app';
-import { googleTagManagerId } from '../infrastructures/utils/gtm';
+
 import GoogleTagManager, {
   GoogleTagManagerId,
 } from '../components/GoogleTagManager';
-
+import { googleTagManagerId } from '../infrastructures/utils/gtm';
 import { AppStateProvider } from '../stores/contexts/AppStateContext';
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => (

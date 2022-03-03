@@ -32,6 +32,12 @@ export const metaTagList = (): MetaTagList => ({
     appName,
     description: defaultDescription,
   },
+  upload: {
+    title: `${defaultTitle} 猫ちゃん画像アップロード`,
+    ogpImgUrl: urlList.ogpImg,
+    ogpTargetUrl: urlList.top,
+    appName,
+  },
   terms: {
     title: `${defaultTitle} 利用規約`,
     ogpImgUrl: urlList.ogpImg,
