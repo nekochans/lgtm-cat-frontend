@@ -3,7 +3,7 @@ import React, { useCallback, useState } from 'react';
 
 import { LgtmImage } from '../domain/types/lgtmImage';
 import useClipboardMarkdown from '../hooks/useClipboardMarkdown';
-import { sendCopyMarkdownEvent } from '../infrastructures/utils/gtag';
+import { sendCopyMarkdownEvent } from '../infrastructures/utils/gtm';
 
 type Props = {
   image: LgtmImage;

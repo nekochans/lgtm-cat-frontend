@@ -4,7 +4,7 @@ import React from 'react';
 import RandomButton from '../components/RandomButton';
 import { isSuccessResult } from '../domain/repositories/repositoryResult';
 import { fetchLgtmImagesInRandomWithClient } from '../infrastructures/repositories/api/fetch/imageRepository';
-import { sendFetchRandomImages } from '../infrastructures/utils/gtag';
+import { sendFetchRandomImages } from '../infrastructures/utils/gtm';
 import { useSetAppState } from '../stores/contexts/AppStateContext';
 
 const RandomButtonContainer: React.FC = () => {
