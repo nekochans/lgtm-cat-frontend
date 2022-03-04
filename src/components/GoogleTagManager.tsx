@@ -1,13 +1,14 @@
 import Script from 'next/script';
-import React from 'react';
 
-export type GoogleTagManagerId = `GTM-${string}`;
+import { GoogleTagManagerId } from '../infrastructures/utils/gtm';
+
+import type { VFC } from 'react';
 
 type Props = {
   googleTagManagerId: GoogleTagManagerId;
 };
 
-const GoogleTagManager: React.FC<Props> = ({ googleTagManagerId }) => (
+const GoogleTagManager: VFC<Props> = ({ googleTagManagerId }) => (
   <Script
     id="gtm"
     strategy="afterInteractive"
