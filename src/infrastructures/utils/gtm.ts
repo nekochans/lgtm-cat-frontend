@@ -26,13 +26,6 @@ declare global {
   }
 }
 
-export const pageview = (url: string): void => {
-  window.dataLayer.push({
-    event: 'pageview',
-    page: url,
-  });
-};
-
 // Markdownソースがコピーされた際に実行する
 type SendCopyMarkdownEventLabel =
   | 'copy_markdown_button'
