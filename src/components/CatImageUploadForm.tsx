@@ -17,7 +17,6 @@ import CatImageUploadSuccessMessage from './CatImageUploadSuccessMessage';
 import CopyMarkdownSourceButton from './CopyMarkdownSourceButton';
 import CreatedLgtmImage from './CreatedLgtmImage';
 import ProgressBar from './ProgressBar';
-import UploadCatImagePreview from './UploadCatImagePreview';
 
 // TODO acceptedTypesは定数化して分離する
 const acceptedTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg'];
@@ -98,6 +97,8 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
       const reader = new FileReader();
       reader.onload = handleReaderLoaded;
       reader.readAsBinaryString(file);
+
+      openModal();
     }
   };
 
@@ -198,11 +199,6 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
           )}
         </form>
         {isLoading ? <ProgressBar /> : ''}
-        {imagePreviewUrl && !uploaded ? (
-          <UploadCatImagePreview imagePreviewUrl={imagePreviewUrl} />
-        ) : (
-          ''
-        )}
         {errorMessage ? <CatImageUploadError message={errorMessage} /> : ''}
         {uploaded ? <CatImageUploadSuccessMessage /> : ''}
         {uploaded ? <AfterUploadWarningMessage /> : ''}
