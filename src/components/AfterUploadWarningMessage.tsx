@@ -8,7 +8,7 @@ const AfterUploadWarningMessage: React.FC = () => (
     </div>
     <div className="message-body">
       <p>
-        この画面から移動するとMarkdownソースをコピー出来なくなるのでご注意下さい。
+        このモーダルを閉じるとMarkdownソースをコピー出来なくなるのでご注意下さい。
       </p>
     </div>
   </article>
