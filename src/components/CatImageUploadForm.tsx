@@ -9,14 +9,9 @@ import {
 import { isSuccessResult } from '../domain/repositories/repositoryResult';
 import { sendUploadCatImage } from '../infrastructures/utils/gtm';
 
-import AfterUploadWarningMessage from './AfterUploadWarningMessage';
 import CatImageUploadConfirmModal from './CatImageUploadConfirmModal';
 import CatImageUploadDescription from './CatImageUploadDescription';
 import CatImageUploadError from './CatImageUploadError';
-import CatImageUploadSuccessMessage from './CatImageUploadSuccessMessage';
-import CopyMarkdownSourceButton from './CopyMarkdownSourceButton';
-import CreatedLgtmImage from './CreatedLgtmImage';
-import ProgressBar from './ProgressBar';
 
 // TODO acceptedTypesは定数化して分離する
 const acceptedTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg'];
@@ -123,8 +118,6 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
   };
 
   const onClickUpload = async () => {
-    closeModal();
-
     setIsLoading(true);
 
     const uploadCatResult = await uploadCatImage({
@@ -156,11 +149,6 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
     return uploaded === true && imagePreviewUrl !== '';
   };
 
-  const createdLgtmImageProps = {
-    imagePreviewUrl: imagePreviewUrl ?? '',
-    createdLgtmImageUrl: createdLgtmImageUrl ?? '',
-  };
-
   return (
     <>
       <div className="container">
@@ -190,32 +178,17 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
           >
             アップロードする
           </button>
-          {uploaded ? (
-            <CopyMarkdownSourceButton
-              createdLgtmImageUrl={createdLgtmImageProps.createdLgtmImageUrl}
-            />
-          ) : (
-            ''
-          )}
         </form>
-        {isLoading ? <ProgressBar /> : ''}
         {errorMessage ? <CatImageUploadError message={errorMessage} /> : ''}
-        {uploaded ? <CatImageUploadSuccessMessage /> : ''}
-        {uploaded ? <AfterUploadWarningMessage /> : ''}
-        {uploaded ? (
-          <CreatedLgtmImage
-            imagePreviewUrl={createdLgtmImageProps.imagePreviewUrl}
-            createdLgtmImageUrl={createdLgtmImageProps.createdLgtmImageUrl}
-          />
-        ) : (
-          ''
-        )}
       </div>
       <CatImageUploadConfirmModal
         isOpen={modalIsOpen}
         onClickCancel={closeModal}
         onClickUpload={onClickUpload}
+        isLoading={isLoading}
+        uploaded={uploaded}
         imagePreviewUrl={imagePreviewUrl}
+        createdLgtmImageUrl={createdLgtmImageUrl}
       />
     </>
   );
