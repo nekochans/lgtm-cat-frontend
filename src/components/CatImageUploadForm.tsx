@@ -187,6 +187,7 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
         onClickCancel={closeModal}
         onClickUpload={onClickUpload}
         isLoading={isLoading}
+        shouldDisableButton={shouldDisableButton}
         uploaded={uploaded}
         imagePreviewUrl={imagePreviewUrl}
         createdLgtmImageUrl={createdLgtmImageUrl}

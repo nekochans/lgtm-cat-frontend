@@ -13,6 +13,7 @@ type Props = {
   onClickCancel: () => void;
   onClickUpload: () => Promise<void>;
   isLoading: boolean;
+  shouldDisableButton: () => boolean;
   uploaded?: boolean;
   // TODO react/require-default-props のルールは無効化したほうが良いかも、Default値を持たせるにしても関数型Componentの場合は引数のDefault値で表現するべき
   // eslint-disable-next-line react/require-default-props
@@ -26,6 +27,7 @@ const CatImageUploadConfirmModal: React.FC<Props> = ({
   onClickCancel,
   onClickUpload,
   isLoading,
+  shouldDisableButton,
   uploaded,
   imagePreviewUrl,
   createdLgtmImageUrl,
@@ -71,6 +73,7 @@ const CatImageUploadConfirmModal: React.FC<Props> = ({
             type="button"
             className="button is-success"
             onClick={onClickUpload}
+            disabled={shouldDisableButton()}
           >
             アップロードする
           </button>
