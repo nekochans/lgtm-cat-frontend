@@ -9,15 +9,9 @@ import {
 import { isSuccessResult } from '../domain/repositories/repositoryResult';
 import { sendUploadCatImage } from '../infrastructures/utils/gtm';
 
-import AfterUploadWarningMessage from './AfterUploadWarningMessage';
 import CatImageUploadConfirmModal from './CatImageUploadConfirmModal';
 import CatImageUploadDescription from './CatImageUploadDescription';
 import CatImageUploadError from './CatImageUploadError';
-import CatImageUploadSuccessMessage from './CatImageUploadSuccessMessage';
-import CopyMarkdownSourceButton from './CopyMarkdownSourceButton';
-import CreatedLgtmImage from './CreatedLgtmImage';
-import ProgressBar from './ProgressBar';
-import UploadCatImagePreview from './UploadCatImagePreview';
 
 // TODO acceptedTypesは定数化して分離する
 const acceptedTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg'];
@@ -98,6 +92,8 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
       const reader = new FileReader();
       reader.onload = handleReaderLoaded;
       reader.readAsBinaryString(file);
+
+      openModal();
     }
   };
 
@@ -122,8 +118,6 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
   };
 
   const onClickUpload = async () => {
-    closeModal();
-
     setIsLoading(true);
 
     const uploadCatResult = await uploadCatImage({
@@ -142,6 +136,7 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
       setUploadImageExtension('');
       setCreatedLgtmImageUrl('');
       setIsLoading(false);
+      closeModal();
     }
 
     sendUploadCatImage('upload_cat_image_button');
@@ -153,11 +148,6 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
     }
 
     return uploaded === true && imagePreviewUrl !== '';
-  };
-
-  const createdLgtmImageProps = {
-    imagePreviewUrl: imagePreviewUrl ?? '',
-    createdLgtmImageUrl: createdLgtmImageUrl ?? '',
   };
 
   return (
@@ -189,37 +179,18 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
           >
             アップロードする
           </button>
-          {uploaded ? (
-            <CopyMarkdownSourceButton
-              createdLgtmImageUrl={createdLgtmImageProps.createdLgtmImageUrl}
-            />
-          ) : (
-            ''
-          )}
         </form>
-        {isLoading ? <ProgressBar /> : ''}
-        {imagePreviewUrl && !uploaded ? (
-          <UploadCatImagePreview imagePreviewUrl={imagePreviewUrl} />
-        ) : (
-          ''
-        )}
         {errorMessage ? <CatImageUploadError message={errorMessage} /> : ''}
-        {uploaded ? <CatImageUploadSuccessMessage /> : ''}
-        {uploaded ? <AfterUploadWarningMessage /> : ''}
-        {uploaded ? (
-          <CreatedLgtmImage
-            imagePreviewUrl={createdLgtmImageProps.imagePreviewUrl}
-            createdLgtmImageUrl={createdLgtmImageProps.createdLgtmImageUrl}
-          />
-        ) : (
-          ''
-        )}
       </div>
       <CatImageUploadConfirmModal
         isOpen={modalIsOpen}
         onClickCancel={closeModal}
         onClickUpload={onClickUpload}
+        isLoading={isLoading}
+        shouldDisableButton={shouldDisableButton}
+        uploaded={uploaded}
         imagePreviewUrl={imagePreviewUrl}
+        createdLgtmImageUrl={createdLgtmImageUrl}
       />
     </>
   );
