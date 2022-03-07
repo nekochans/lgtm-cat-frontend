@@ -136,6 +136,7 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
       setUploadImageExtension('');
       setCreatedLgtmImageUrl('');
       setIsLoading(false);
+      closeModal();
     }
 
     sendUploadCatImage('upload_cat_image_button');
