@@ -19,7 +19,8 @@
     "test:coverage": "jest --collect-coverage",
     "test:ci": "jest --runInBand --collect-coverage",
     "storybook": "start-storybook -s ./public -p 6006",
-    "build-storybook": "build-storybook -s public"
+    "build-storybook": "build-storybook -s public",
+    "chromatic": "chromatic --project-token=$CHROMATIC_PROJECT_TOKEN"
   },
   "dependencies": {
     "bulma": "^0.9.3",
