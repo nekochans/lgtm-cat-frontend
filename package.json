@@ -19,7 +19,7 @@
     "test:coverage": "jest --collect-coverage",
     "test:ci": "jest --runInBand --collect-coverage",
     "storybook": "start-storybook -s ./public -p 6006",
-    "build:storybook": "build-storybook -o build/storybook"
+    "build-storybook": "build-storybook -s public"
   },
   "dependencies": {
     "bulma": "^0.9.3",
