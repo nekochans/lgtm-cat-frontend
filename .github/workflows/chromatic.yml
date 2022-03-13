@@ -4,7 +4,9 @@ on: push
 
 jobs:
   chromatic-deployment:
+    name: Deploy Storybook to chromatic
     runs-on: ubuntu-latest
+    timeout-minutes: 7
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
