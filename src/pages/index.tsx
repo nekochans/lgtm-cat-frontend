@@ -9,15 +9,17 @@ import { fetchLgtmImagesInRandomWithServer } from '../infrastructures/repositori
 import imageData from '../infrastructures/utils/imageData';
 import extractRandomImages from '../infrastructures/utils/randomImages';
 import DefaultLayout from '../layouts/DefaultLayout';
-import { useSetAppState } from '../stores/contexts/AppStateContext';
+import {
+  updateIsFailedFetchLgtmImages,
+  updateLgtmImages,
+} from '../stores/valtio/lgtmImages';
 
 type Props = LgtmImages;
 
 const IndexPage: React.FC<Props> = ({ lgtmImages }: Props) => {
-  const setAppState = useSetAppState();
-
   useEffect(() => {
-    setAppState({ lgtmImages, isFailedFetchLgtmImages: false });
+    updateLgtmImages(lgtmImages);
+    updateIsFailedFetchLgtmImages(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

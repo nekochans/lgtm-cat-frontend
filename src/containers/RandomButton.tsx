@@ -5,23 +5,23 @@ import RandomButton from '../components/RandomButton';
 import { isSuccessResult } from '../domain/repositories/repositoryResult';
 import { fetchLgtmImagesInRandomWithClient } from '../infrastructures/repositories/api/fetch/imageRepository';
 import { sendFetchRandomImages } from '../infrastructures/utils/gtm';
-import { useSetAppState } from '../stores/contexts/AppStateContext';
+import {
+  updateIsFailedFetchLgtmImages,
+  updateLgtmImages,
+} from '../stores/valtio/lgtmImages';
 
 const RandomButtonContainer: React.FC = () => {
-  const setAppState = useSetAppState();
-
   const handleRandom = async () => {
     const lgtmImagesResponse = await fetchLgtmImagesInRandomWithClient();
 
     if (isSuccessResult(lgtmImagesResponse)) {
-      setAppState({
-        lgtmImages: lgtmImagesResponse.value.lgtmImages,
-        isFailedFetchLgtmImages: false,
-      });
+      updateLgtmImages(lgtmImagesResponse.value.lgtmImages);
+      updateIsFailedFetchLgtmImages(false);
 
       sendFetchRandomImages('fetch_random_images_button');
     } else {
-      setAppState({ lgtmImages: [], isFailedFetchLgtmImages: true });
+      updateLgtmImages([]);
+      updateIsFailedFetchLgtmImages(true);
     }
   };
 
