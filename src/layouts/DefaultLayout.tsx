@@ -1,10 +1,11 @@
-import React, { ReactNode } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import React, { ReactNode } from 'react';
+
 import Footer from '../components/Footer';
 import Header from '../components/Header';
-import { pathList } from '../constants/url';
 import { MetaTag } from '../constants/metaTag';
+import { pathList } from '../constants/url';
 
 type Props = {
   children: ReactNode;

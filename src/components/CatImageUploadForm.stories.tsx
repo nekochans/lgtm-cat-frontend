@@ -1,29 +1,42 @@
-import React from 'react';
-import CatImageUploadForm from './CatImageUploadForm';
+import { rest } from 'msw';
+
+import { apiList, cognitoTokenEndpointUrl } from '../constants/url';
 import { UploadCatImage } from '../domain/repositories/imageRepository';
-import {
-  createFailureResult,
-  createSuccessResult,
-} from '../domain/repositories/repositoryResult';
-import { UploadedImage } from '../domain/types/image';
-import UploadCatImageAuthError from '../domain/errors/UploadCatImageAuthError';
-import UploadCatImageSizeTooLargeError from '../domain/errors/UploadCatImageSizeTooLargeError';
-import UploadCatImageValidationError from '../domain/errors/UploadCatImageValidationError';
-import UploadCatImageUnexpectedError from '../domain/errors/UploadCatImageUnexpectedError';
+import { createSuccessResult } from '../domain/repositories/repositoryResult';
+import { UploadedImage } from '../domain/types/lgtmImage';
+import { uploadCatImage } from '../infrastructures/repositories/api/fetch/imageRepository';
+import sleep from '../infrastructures/utils/sleep';
+import mockInternalServerError from '../mocks/api/error/mockInternalServerError';
+import mockTokenEndpoint from '../mocks/api/external/cognito/mockTokenEndpoint';
+import mockUploadCatImage from '../mocks/api/lgtm/images/mockUploadCatImage';
+import mockUploadCatImageIssueAccessTokenError from '../mocks/api/lgtm/images/mockUploadCatImageIssueAccessTokenError';
+import mockUploadCatImagePayloadTooLarge from '../mocks/api/lgtm/images/mockUploadCatImagePayloadTooLarge';
+import mockUploadCatImageUnprocessableEntity from '../mocks/api/lgtm/images/mockUploadCatImageUnprocessableEntity';
+
+import CatImageUploadForm from './CatImageUploadForm';
+
+import type { ComponentStoryObj, Meta } from '@storybook/react';
 
 export default {
   title: 'src/components/CatImageUploadForm.tsx',
-  component: Error,
-  includeStories: [
-    'showCatImageUploadForm',
-    'showCatImageUploadFormWithAuthError',
-    'showCatImageUploadFormWithImageSizeTooLargeError',
-    'showCatImageUploadFormWithValidationError',
-    'showCatImageUploadFormWithUnexpectedError',
-  ],
-};
+  component: CatImageUploadForm,
+} as Meta<typeof CatImageUploadForm>;
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+type Story = ComponentStoryObj<typeof CatImageUploadForm>;
+
+export const UploadWillBeSuccessful: Story = {
+  args: {
+    uploadCatImage,
+  },
+  parameters: {
+    msw: {
+      handlers: [
+        rest.post(cognitoTokenEndpointUrl(), mockTokenEndpoint),
+        rest.post(apiList.uploadCatImage, mockUploadCatImage),
+      ],
+    },
+  },
+};
 
 const mockSuccessUploadCatImage: UploadCatImage = async (_request) => {
   const uploadedImage = {
@@ -31,54 +44,71 @@ const mockSuccessUploadCatImage: UploadCatImage = async (_request) => {
       'https://lgtm-images.lgtmeow.com/2021/03/16/00/35afef75-2d6d-4ca1-ab00-fb37f8848fca.webp',
   };
 
-  await sleep(3000);
+  const waitSeconds = 3;
+
+  await sleep(waitSeconds);
 
   return createSuccessResult<UploadedImage>(uploadedImage);
 };
 
-const mockUploadCatImageAuthError: UploadCatImage = (_request) =>
-  Promise.resolve(
-    createFailureResult<UploadCatImageAuthError>(new UploadCatImageAuthError()),
-  );
+export const UploadWillBeSuccessfulWithLoadingMessage: Story = {
+  args: {
+    uploadCatImage: mockSuccessUploadCatImage,
+  },
+};
 
-const mockUploadCatImageSizeTooLargeError: UploadCatImage = (_request) =>
-  Promise.resolve(
-    createFailureResult<UploadCatImageSizeTooLargeError>(
-      new UploadCatImageSizeTooLargeError(),
-    ),
-  );
+export const UploadingWillResultInAnAuthError: Story = {
+  args: {
+    uploadCatImage,
+  },
+  parameters: {
+    msw: {
+      handlers: [
+        rest.post(
+          apiList.uploadCatImage,
+          mockUploadCatImageIssueAccessTokenError,
+        ),
+      ],
+    },
+  },
+};
 
-const mockUploadCatImageValidationError: UploadCatImage = (_request) =>
-  Promise.resolve(
-    createFailureResult<UploadCatImageValidationError>(
-      new UploadCatImageValidationError(),
-    ),
-  );
+export const UploadingWillResultInImageSizeTooLargeError: Story = {
+  args: {
+    uploadCatImage,
+  },
+  parameters: {
+    msw: {
+      handlers: [
+        rest.post(apiList.uploadCatImage, mockUploadCatImagePayloadTooLarge),
+      ],
+    },
+  },
+};
 
-const mockUploadCatImageUnexpectedError: UploadCatImage = (_request) =>
-  Promise.resolve(
-    createFailureResult<UploadCatImageUnexpectedError>(
-      new UploadCatImageUnexpectedError(),
-    ),
-  );
+export const UploadingWillResultInValidationError: Story = {
+  args: {
+    uploadCatImage,
+  },
+  parameters: {
+    msw: {
+      handlers: [
+        rest.post(
+          apiList.uploadCatImage,
+          mockUploadCatImageUnprocessableEntity,
+        ),
+      ],
+    },
+  },
+};
 
-export const showCatImageUploadForm = (): JSX.Element => (
-  <CatImageUploadForm uploadCatImage={mockSuccessUploadCatImage} />
-);
-
-export const showCatImageUploadFormWithAuthError = (): JSX.Element => (
-  <CatImageUploadForm uploadCatImage={mockUploadCatImageAuthError} />
-);
-
-export const showCatImageUploadFormWithImageSizeTooLargeError =
-  (): JSX.Element => (
-    <CatImageUploadForm uploadCatImage={mockUploadCatImageSizeTooLargeError} />
-  );
-
-export const showCatImageUploadFormWithValidationError = (): JSX.Element => (
-  <CatImageUploadForm uploadCatImage={mockUploadCatImageValidationError} />
-);
-
-export const showCatImageUploadFormWithUnexpectedError = (): JSX.Element => (
-  <CatImageUploadForm uploadCatImage={mockUploadCatImageUnexpectedError} />
-);
+export const UploadingWillResultInAnUnexpectedError: Story = {
+  args: {
+    uploadCatImage,
+  },
+  parameters: {
+    msw: {
+      handlers: [rest.post(apiList.uploadCatImage, mockInternalServerError)],
+    },
+  },
+};

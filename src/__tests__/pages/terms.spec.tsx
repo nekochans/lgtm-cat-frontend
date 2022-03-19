@@ -1,10 +1,11 @@
 /**
  * @jest-environment jsdom
  */
-import React from 'react';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { render } from '@testing-library/react';
 import fs from 'fs';
+
+import { render } from '@testing-library/react';
+import React from 'react';
+
 import TermsPage from '../../pages/terms';
 
 test('TermsPage Snapshot test', async () => {

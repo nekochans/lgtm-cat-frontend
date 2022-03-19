@@ -1,14 +1,16 @@
-import React from 'react';
 import ImageList from './ImageList';
+
+import type { ComponentStoryObj, Meta } from '@storybook/react';
 
 export default {
   title: 'src/components/ImageList.tsx',
   component: ImageList,
-  includeStories: ['showImageListWithProps'],
-};
+} as Meta<typeof ImageList>;
 
-export const testProps = {
-  imageList: [
+type Story = ComponentStoryObj<typeof ImageList>;
+
+const props = {
+  lgtmImages: [
     {
       id: 1,
       url: '/cat.jpeg',
@@ -48,6 +50,6 @@ export const testProps = {
   ],
 };
 
-export const showImageListWithProps = (): JSX.Element => (
-  <ImageList imageList={testProps.imageList} />
-);
+export const Default: Story = {
+  args: props,
+};

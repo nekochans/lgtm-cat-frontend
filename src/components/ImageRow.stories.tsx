@@ -1,14 +1,16 @@
-import React from 'react';
 import ImageRow from './ImageRow';
+
+import type { ComponentStoryObj, Meta } from '@storybook/react';
 
 export default {
   title: 'src/components/ImageRow.tsx',
   component: ImageRow,
-  includeStories: ['showImageRowWithProps'],
-};
+} as Meta<typeof ImageRow>;
 
-export const testProps = {
-  imageList: [
+type Story = ComponentStoryObj<typeof ImageRow>;
+
+const props = {
+  lgtmImages: [
     {
       id: 1,
       url: '/cat.jpeg',
@@ -24,6 +26,6 @@ export const testProps = {
   ],
 };
 
-export const showImageRowWithProps = (): JSX.Element => (
-  <ImageRow imageList={testProps.imageList} />
-);
+export const Default: Story = {
+  args: props,
+};

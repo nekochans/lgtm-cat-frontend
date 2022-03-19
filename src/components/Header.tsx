@@ -1,5 +1,8 @@
 import React, { ReactNode } from 'react';
+
 import RandomButtonContainer from '../containers/RandomButton';
+
+import ServiceDescription from './ServiceDescription';
 
 type Props = {
   topLink: ReactNode;
@@ -57,17 +60,7 @@ const Header: React.FC<Props> = ({ topLink, uploadLink }: Props) => {
               </div>
             </div>
           </div>
-
-          <p
-            className="is-size-6 header-description-margin has-text-grey"
-            style={{
-              alignItems: 'center',
-              padding: '0 0.75rem',
-            }}
-          >
-            猫のLGTM画像を共有出来るサービスです。画像をクリックするとGitHub
-            Markdownがコピーされます。
-          </p>
+          <ServiceDescription />
         </div>
       </nav>
     </header>

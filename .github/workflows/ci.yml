@@ -27,7 +27,10 @@ jobs:
           npm run build
           npm run lint
           npm run test:ci
-          npm run build:storybook
+          npm run build-storybook
+        env:
+          COGNITO_TOKEN_ENDPOINT: ${{ secrets.COGNITO_TOKEN_ENDPOINT }}
+          LGTMEOW_API_URL: ${{ secrets.LGTMEOW_API_URL }}
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:

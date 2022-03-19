@@ -2,6 +2,7 @@
 
 [![ci](https://github.com/nekochans/lgtm-cat-frontend/actions/workflows/ci.yml/badge.svg)](https://github.com/nekochans/lgtm-cat-frontend/actions/workflows/ci.yml)
 [![Coverage Status](https://coveralls.io/repos/github/nekochans/lgtm-cat-frontend/badge.svg?branch=main)](https://coveralls.io/github/nekochans/lgtm-cat-frontend?branch=main)
+[![chromatic](https://github.com/nekochans/lgtm-cat-frontend/actions/workflows/chromatic.yml/badge.svg)](https://github.com/nekochans/lgtm-cat-frontend/actions/workflows/chromatic.yml)
 
 lgtm-cat（サービス名 LGTMeow https://lgtmeow.com のフロントエンド用プロジェクトです。
 
@@ -19,6 +20,20 @@ COGNITO_CLIENT_SECRET=CognitoUserPoolのクライアントシークレットを�
 COGNITO_TOKEN_ENDPOINT=https://{CognitoUserPoolのドメイン名}.auth.ap-northeast-1.amazoncognito.com/oauth2/token
 LGTMEOW_API_URL=https://github.com/nekochans/lgtm-cat-api が稼働しているURLを指定
 ```
+
+テストコード内で以下の環境変数を参照するので、以下の 2 つは `.env` だけでなく環境変数として登録しておく事をオススメします。
+
+[direnv](https://github.com/direnv/direnv) を使って `.envrc` を配置するのが簡単です。
+
+```
+export COGNITO_TOKEN_ENDPOINT=https://{CognitoUserPoolのドメイン名}.auth.ap-northeast-1.amazoncognito.com/oauth2/token
+export LGTMEOW_API_URL=https://github.com/nekochans/lgtm-cat-api が稼働しているURLを指定
+export CHROMATIC_PROJECT_TOKEN=Chromaticのトークンを指定
+```
+
+なくてもテストが通りますが、Mock Service Worker に渡す URL が `undefined` になる為、Mock 周りで何かトラブルがあった際にデバッグの妨げになる可能性があるので設定しておくのが無難です。
+
+`CHROMATIC_PROJECT_TOKEN` に関しては `npm run chromatic` を利用しない限りは設定不要です。
 
 ## 依存 package のインストールと開発用アプリケーションサーバーの起動
 
