@@ -3,13 +3,13 @@ import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import {
   HttpStatusCode,
   httpStatusCode,
-} from '../../../../constants/httpStatusCode';
+} from '../../../constants/httpStatusCode';
 import {
   cognitoClientId,
   cognitoClientSecret,
-} from '../../../../constants/secret';
-import { cognitoTokenEndpointUrl } from '../../../../constants/url';
-import { AccessToken } from '../../../../domain/types/authToken';
+} from '../../../constants/secret';
+import { cognitoTokenEndpointUrl } from '../../../constants/url';
+import { AccessToken } from '../../../domain/types/authToken';
 
 type CognitoTokenResponseBody = {
   // eslint-disable-next-line camelcase
