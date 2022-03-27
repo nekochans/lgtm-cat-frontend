@@ -10,6 +10,7 @@ export const urlList = {
 } as const;
 
 export const apiList = {
+  issueClientCredentialsAccessToken: '/api/oidc/token/access',
   fetchLgtmImages: '/api/lgtm/images',
   uploadCatImage: '/api/lgtm/images',
 };
