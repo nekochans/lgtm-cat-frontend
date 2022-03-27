@@ -1,5 +1,8 @@
 import { httpStatusCode } from '../../../../constants/httpStatusCode';
-import { apiList, fetchLgtmImagesUrl } from '../../../../constants/url';
+import {
+  fetchLgtmImagesUrl,
+  uploadCatImageUrl,
+} from '../../../../constants/url';
 import FetchLgtmImagesInRandomAuthError from '../../../../domain/errors/FetchLgtmImagesInRandomAuthError';
 import FetchLgtmImagesInRandomError from '../../../../domain/errors/FetchLgtmImagesInRandomError';
 import UploadCatImageAuthError from '../../../../domain/errors/UploadCatImageAuthError';
@@ -13,54 +16,38 @@ import {
 import {
   createFailureResult,
   createSuccessResult,
-  isSuccessResult,
 } from '../../../../domain/repositories/repositoryResult';
 import { LgtmImages, UploadedImage } from '../../../../domain/types/lgtmImage';
-import { UploadedImageResponse } from '../../../../pages/api/lgtm/images';
 
-import { issueAccessToken } from './authTokenRepository';
-
-export const fetchLgtmImagesInRandomWithClient: FetchLgtmImagesInRandom =
-  async () => {
-    const response = await fetch(apiList.fetchLgtmImages);
-
-    if (!response.ok) {
-      return createFailureResult(new FetchLgtmImagesInRandomError());
-    }
-
-    const lgtmImages = (await response.json()) as LgtmImages;
-
-    return createSuccessResult<LgtmImages>(lgtmImages);
+export const fetchLgtmImagesInRandom: FetchLgtmImagesInRandom = async (
+  request,
+) => {
+  const options = {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${request.accessToken.jwtString}`,
+    },
   };
 
-export const fetchLgtmImagesInRandomWithServer: FetchLgtmImagesInRandom =
-  async () => {
-    const accessTokenResult = await issueAccessToken();
-    if (isSuccessResult(accessTokenResult)) {
-      const options = {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${accessTokenResult.value.jwtString}`,
-        },
-      };
-
-      const response = await fetch(fetchLgtmImagesUrl(), options);
-      if (!response.ok) {
-        return createFailureResult(new FetchLgtmImagesInRandomError());
-      }
-
-      const lgtmImages = (await response.json()) as LgtmImages;
-
-      return createSuccessResult<LgtmImages>(lgtmImages);
+  const response = await fetch(fetchLgtmImagesUrl(), options);
+  if (!response.ok) {
+    if (response.status === httpStatusCode.unauthorized) {
+      return createFailureResult(new FetchLgtmImagesInRandomAuthError());
     }
 
-    return createFailureResult(new FetchLgtmImagesInRandomAuthError());
-  };
+    return createFailureResult(new FetchLgtmImagesInRandomError());
+  }
+
+  const lgtmImages = (await response.json()) as LgtmImages;
+
+  return createSuccessResult<LgtmImages>(lgtmImages);
+};
 
 export const uploadCatImage: UploadCatImage = async (request) => {
   const options = {
     method: 'POST',
     headers: {
+      Authorization: `Bearer ${request.accessToken.jwtString}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -69,32 +56,19 @@ export const uploadCatImage: UploadCatImage = async (request) => {
     }),
   };
 
-  const response = await fetch(apiList.uploadCatImage, options);
+  const response = await fetch(uploadCatImageUrl(), options);
 
   if (response.status !== httpStatusCode.accepted) {
-    /*
-     * Vercelのpayloadサイズリミットに引っかかった場合
-     * https://vercel.com/docs/platform/limits#serverless-function-payload-size-limit
-     */
-    if (response.status === httpStatusCode.payloadTooLarge) {
-      return createFailureResult<UploadCatImageSizeTooLargeError>(
-        new UploadCatImageSizeTooLargeError(),
-      );
-    }
-
-    const errorBody = (await response.json()) as UploadedImageResponse;
-
-    // TODO メッセージを型安全に取り出せるようにリファクタリングする
-    switch (errorBody.error?.message) {
-      case 'IssueAccessTokenError':
+    switch (response.status) {
+      case httpStatusCode.unauthorized:
         return createFailureResult<UploadCatImageAuthError>(
           new UploadCatImageAuthError(),
         );
-      case 'UploadCatImageSizeTooLargeError':
+      case httpStatusCode.payloadTooLarge:
         return createFailureResult<UploadCatImageSizeTooLargeError>(
           new UploadCatImageSizeTooLargeError(),
         );
-      case 'UploadCatImageValidationError':
+      case httpStatusCode.unprocessableEntity:
         return createFailureResult<UploadCatImageValidationError>(
           new UploadCatImageValidationError(),
         );

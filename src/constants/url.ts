@@ -10,7 +10,7 @@ export const urlList = {
 } as const;
 
 export const apiList = {
-  issueClientCredentialsAccessToken: '/api/oidc/token/access',
+  issueClientCredentialsAccessToken: '/api/oidc/token',
   fetchLgtmImages: '/api/lgtm/images',
   uploadCatImage: '/api/lgtm/images',
 };
@@ -30,7 +30,9 @@ export const cognitoTokenEndpointUrl = (): string =>
   process.env.COGNITO_TOKEN_ENDPOINT ? process.env.COGNITO_TOKEN_ENDPOINT : '';
 
 const lgtmeowApiUrl = (): string =>
-  process.env.LGTMEOW_API_URL ? process.env.LGTMEOW_API_URL : '';
+  process.env.NEXT_PUBLIC_LGTMEOW_API_URL
+    ? process.env.NEXT_PUBLIC_LGTMEOW_API_URL
+    : '';
 
 // この関数はサーバーサイドでしか動作しない
 export const uploadCatImageUrl = (): string => `${lgtmeowApiUrl()}/lgtm-images`;

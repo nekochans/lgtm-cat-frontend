@@ -7,6 +7,7 @@ import {
   UploadCatImage,
 } from '../domain/repositories/imageRepository';
 import { isSuccessResult } from '../domain/repositories/repositoryResult';
+import { issueAccessToken } from '../infrastructures/repositories/api/fetch/authTokenRepository';
 import { sendUploadCatImage } from '../infrastructures/utils/gtm';
 
 import CatImageUploadConfirmModal from './CatImageUploadConfirmModal';
@@ -120,7 +121,20 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
   const onClickUpload = async () => {
     setIsLoading(true);
 
+    const accessTokenResult = await issueAccessToken();
+    if (!isSuccessResult(accessTokenResult)) {
+      setErrorMessage(createDisplayErrorMessage(accessTokenResult.value));
+      setImagePreviewUrl('');
+      setUploadImageExtension('');
+      setCreatedLgtmImageUrl('');
+      setIsLoading(false);
+      closeModal();
+
+      return;
+    }
+
     const uploadCatResult = await uploadCatImage({
+      accessToken: accessTokenResult.value,
       image: base64Image,
       imageExtension: uploadImageExtension as AcceptedTypesImageExtension,
     });
