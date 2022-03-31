@@ -1,5 +1,5 @@
 import { httpStatusCode } from '../../../../constants/httpStatusCode';
-import { apiList } from '../../../../constants/url';
+import { apiList, appBaseUrl } from '../../../../constants/url';
 import IssueAccessTokenError from '../../../../domain/errors/IssueAccessTokenError';
 import { IssueAccessToken } from '../../../../domain/repositories/authTokenRepository';
 import {
@@ -16,7 +16,7 @@ export const issueAccessToken: IssueAccessToken = async () => {
     };
 
     const response = await fetch(
-      apiList.issueClientCredentialsAccessToken,
+      `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
       options,
     );
 
