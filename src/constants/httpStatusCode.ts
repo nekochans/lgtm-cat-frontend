@@ -2,7 +2,7 @@
 export const httpStatusCode = {
   ok: 200,
   accepted: 202,
-  unauthorized: 400,
+  unauthorized: 401,
   methodNotAllowed: 405,
   payloadTooLarge: 413,
   unprocessableEntity: 422,
