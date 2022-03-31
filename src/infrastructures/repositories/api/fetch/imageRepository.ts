@@ -22,8 +22,10 @@ import { LgtmImages, UploadedImage } from '../../../../domain/types/lgtmImage';
 export const fetchLgtmImagesInRandom: FetchLgtmImagesInRandom = async (
   request,
 ) => {
-  const options = {
+  const options: RequestInit = {
     method: 'GET',
+    mode: 'cors',
+    cache: 'no-cache',
     headers: {
       Authorization: `Bearer ${request.accessToken.jwtString}`,
     },
@@ -44,8 +46,10 @@ export const fetchLgtmImagesInRandom: FetchLgtmImagesInRandom = async (
 };
 
 export const uploadCatImage: UploadCatImage = async (request) => {
-  const options = {
+  const options: RequestInit = {
     method: 'POST',
+    mode: 'cors',
+    cache: 'no-cache',
     headers: {
       Authorization: `Bearer ${request.accessToken.jwtString}`,
       'Content-Type': 'application/json',
