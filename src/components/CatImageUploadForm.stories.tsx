@@ -1,6 +1,6 @@
 import { rest } from 'msw';
 
-import { apiList, uploadCatImageUrl } from '../constants/url';
+import { apiList, appBaseUrl, uploadCatImageUrl } from '../constants/url';
 import { UploadCatImage } from '../domain/repositories/imageRepository';
 import { createSuccessResult } from '../domain/repositories/repositoryResult';
 import { UploadedImage } from '../domain/types/lgtmImage';
@@ -31,7 +31,10 @@ export const UploadWillBeSuccessful: Story = {
   parameters: {
     msw: {
       handlers: [
-        rest.post(apiList.issueClientCredentialsAccessToken, mockTokenEndpoint),
+        rest.post(
+          `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
+          mockTokenEndpoint,
+        ),
         rest.post(uploadCatImageUrl(), mockUploadCatImage),
       ],
     },
@@ -58,7 +61,10 @@ export const UploadWillBeSuccessfulWithLoadingMessage: Story = {
   parameters: {
     msw: {
       handlers: [
-        rest.post(apiList.issueClientCredentialsAccessToken, mockTokenEndpoint),
+        rest.post(
+          `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
+          mockTokenEndpoint,
+        ),
       ],
     },
   },
@@ -71,7 +77,10 @@ export const UploadingWillResultInAnAuthError: Story = {
   parameters: {
     msw: {
       handlers: [
-        rest.post(apiList.issueClientCredentialsAccessToken, mockTokenEndpoint),
+        rest.post(
+          `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
+          mockTokenEndpoint,
+        ),
         rest.post(uploadCatImageUrl(), mockUploadCatImageAuthError),
       ],
     },
@@ -85,7 +94,10 @@ export const UploadingWillResultInImageSizeTooLargeError: Story = {
   parameters: {
     msw: {
       handlers: [
-        rest.post(apiList.issueClientCredentialsAccessToken, mockTokenEndpoint),
+        rest.post(
+          `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
+          mockTokenEndpoint,
+        ),
         rest.post(uploadCatImageUrl(), mockUploadCatImagePayloadTooLarge),
       ],
     },
@@ -99,7 +111,10 @@ export const UploadingWillResultInValidationError: Story = {
   parameters: {
     msw: {
       handlers: [
-        rest.post(apiList.issueClientCredentialsAccessToken, mockTokenEndpoint),
+        rest.post(
+          `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
+          mockTokenEndpoint,
+        ),
         rest.post(uploadCatImageUrl(), mockUploadCatImageUnprocessableEntity),
       ],
     },
@@ -113,7 +128,10 @@ export const UploadingWillResultInAnUnexpectedError: Story = {
   parameters: {
     msw: {
       handlers: [
-        rest.post(apiList.issueClientCredentialsAccessToken, mockTokenEndpoint),
+        rest.post(
+          `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
+          mockTokenEndpoint,
+        ),
         rest.post(uploadCatImageUrl(), mockInternalServerError),
       ],
     },
