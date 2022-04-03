@@ -15,10 +15,10 @@ lgtm-cat（サービス名 LGTMeow https://lgtmeow.com のフロントエンド�
 ```
 NEXT_PUBLIC_APP_URL=本アプリケーションのURL、ローカルの場合は http://localhost:2222
 NEXT_PUBLIC_GA_MEASUREMENT_ID=Google Analytics（次世代の4）の測定ID（G-から始まるID）を指定
+NEXT_PUBLIC_LGTMEOW_API_URL=https://github.com/nekochans/lgtm-cat-api が稼働しているURLを指定
 COGNITO_CLIENT_ID=CognitoUserPoolのクライアントIDを指定
 COGNITO_CLIENT_SECRET=CognitoUserPoolのクライアントシークレットを指定
 COGNITO_TOKEN_ENDPOINT=https://{CognitoUserPoolのドメイン名}.auth.ap-northeast-1.amazoncognito.com/oauth2/token
-LGTMEOW_API_URL=https://github.com/nekochans/lgtm-cat-api が稼働しているURLを指定
 ```
 
 テストコード内で以下の環境変数を参照するので、以下の 2 つは `.env` だけでなく環境変数として登録しておく事をオススメします。
@@ -27,7 +27,7 @@ LGTMEOW_API_URL=https://github.com/nekochans/lgtm-cat-api が稼働しているU
 
 ```
 export COGNITO_TOKEN_ENDPOINT=https://{CognitoUserPoolのドメイン名}.auth.ap-northeast-1.amazoncognito.com/oauth2/token
-export LGTMEOW_API_URL=https://github.com/nekochans/lgtm-cat-api が稼働しているURLを指定
+export NEXT_PUBLIC_LGTMEOW_API_URL=https://github.com/nekochans/lgtm-cat-api が稼働しているURLを指定
 export CHROMATIC_PROJECT_TOKEN=Chromaticのトークンを指定
 ```
 

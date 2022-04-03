@@ -5,12 +5,14 @@ import 'whatwg-fetch';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 
-import { cognitoTokenEndpointUrl } from '../../../../../../constants/url';
+import { apiList } from '../../../../../../constants/url';
 import { isSuccessResult } from '../../../../../../domain/repositories/repositoryResult';
 import mockTokenEndpoint from '../../../../../../mocks/api/external/cognito/mockTokenEndpoint';
 import { issueAccessToken } from '../../authTokenRepository';
 
-const mockHandlers = [rest.post(cognitoTokenEndpointUrl(), mockTokenEndpoint)];
+const mockHandlers = [
+  rest.post(apiList.issueClientCredentialsAccessToken, mockTokenEndpoint),
+];
 
 const mockServer = setupServer(...mockHandlers);
 

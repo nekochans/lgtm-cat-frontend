@@ -5,28 +5,22 @@ import 'whatwg-fetch';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 
-import {
-  cognitoTokenEndpointUrl,
-  fetchLgtmImagesUrl,
-} from '../../../../../../constants/url';
+import { fetchLgtmImagesUrl } from '../../../../../../constants/url';
 import FetchLgtmImagesInRandomAuthError from '../../../../../../domain/errors/FetchLgtmImagesInRandomAuthError';
 import FetchLgtmImagesInRandomError from '../../../../../../domain/errors/FetchLgtmImagesInRandomError';
 import { isSuccessResult } from '../../../../../../domain/repositories/repositoryResult';
 import mockInternalServerError from '../../../../../../mocks/api/error/mockInternalServerError';
-import mockTokenEndpoint from '../../../../../../mocks/api/external/cognito/mockTokenEndpoint';
+import mockUnauthorizedError from '../../../../../../mocks/api/error/mockUnauthorizedError';
 import mockFetchLgtmImages from '../../../../../../mocks/api/external/lgtmeow/mockFetchLgtmImages';
 import fetchLgtmImagesMockBody from '../../../../../../mocks/api/fetchLgtmImagesMockBody';
-import { fetchLgtmImagesInRandomWithServer } from '../../imageRepository';
+import { fetchLgtmImagesInRandom } from '../../imageRepository';
 
-const mockHandlers = [
-  rest.post(cognitoTokenEndpointUrl(), mockTokenEndpoint),
-  rest.get(fetchLgtmImagesUrl(), mockFetchLgtmImages),
-];
+const mockHandlers = [rest.get(fetchLgtmImagesUrl(), mockFetchLgtmImages)];
 
 const mockServer = setupServer(...mockHandlers);
 
 // eslint-disable-next-line max-lines-per-function
-describe('imageRepository.ts fetchLgtmImagesInRandomWithServer TestCases', () => {
+describe('imageRepository.ts fetchLgtmImagesInRandom TestCases', () => {
   beforeAll(() => {
     mockServer.listen();
   });
@@ -42,18 +36,20 @@ describe('imageRepository.ts fetchLgtmImagesInRandomWithServer TestCases', () =>
   // eslint-disable-next-line max-lines-per-function
   it('should be able to fetch LGTM Images', async () => {
     const expected = fetchLgtmImagesMockBody;
-    const lgtmImagesResponse = await fetchLgtmImagesInRandomWithServer();
+    const lgtmImagesResponse = await fetchLgtmImagesInRandom({
+      accessToken: { jwtString: '' },
+    });
 
     expect(isSuccessResult(lgtmImagesResponse)).toBeTruthy();
     expect(lgtmImagesResponse.value).toStrictEqual(expected);
   });
 
-  it('should return an FetchLgtmImagesInRandomAuthError because Failed to issueAccessToken', async () => {
-    mockServer.use(
-      rest.post(cognitoTokenEndpointUrl(), mockInternalServerError),
-    );
+  it('should return an FetchLgtmImagesInRandomAuthError because the accessToken is invalid', async () => {
+    mockServer.use(rest.get(fetchLgtmImagesUrl(), mockUnauthorizedError));
 
-    const lgtmImagesResponse = await fetchLgtmImagesInRandomWithServer();
+    const lgtmImagesResponse = await fetchLgtmImagesInRandom({
+      accessToken: { jwtString: '' },
+    });
 
     expect(isSuccessResult(lgtmImagesResponse)).toBeFalsy();
     expect(lgtmImagesResponse.value).toStrictEqual(
@@ -62,12 +58,11 @@ describe('imageRepository.ts fetchLgtmImagesInRandomWithServer TestCases', () =>
   });
 
   it('should return an FetchLgtmImagesInRandomError because Failed to fetch LGTM Images', async () => {
-    mockServer.use(
-      rest.post(cognitoTokenEndpointUrl(), mockTokenEndpoint),
-      rest.get(fetchLgtmImagesUrl(), mockInternalServerError),
-    );
+    mockServer.use(rest.get(fetchLgtmImagesUrl(), mockInternalServerError));
 
-    const lgtmImagesResponse = await fetchLgtmImagesInRandomWithServer();
+    const lgtmImagesResponse = await fetchLgtmImagesInRandom({
+      accessToken: { jwtString: '' },
+    });
 
     expect(isSuccessResult(lgtmImagesResponse)).toBeFalsy();
     expect(lgtmImagesResponse.value).toStrictEqual(

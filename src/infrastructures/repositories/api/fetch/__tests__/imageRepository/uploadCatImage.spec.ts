@@ -5,10 +5,7 @@ import 'whatwg-fetch';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 
-import {
-  apiList,
-  cognitoTokenEndpointUrl,
-} from '../../../../../../constants/url';
+import { uploadCatImageUrl } from '../../../../../../constants/url';
 import UploadCatImageAuthError from '../../../../../../domain/errors/UploadCatImageAuthError';
 import UploadCatImageSizeTooLargeError from '../../../../../../domain/errors/UploadCatImageSizeTooLargeError';
 import UploadCatImageUnexpectedError from '../../../../../../domain/errors/UploadCatImageUnexpectedError';
@@ -16,17 +13,13 @@ import UploadCatImageValidationError from '../../../../../../domain/errors/Uploa
 import { UploadCatImageRequest } from '../../../../../../domain/repositories/imageRepository';
 import { isSuccessResult } from '../../../../../../domain/repositories/repositoryResult';
 import mockInternalServerError from '../../../../../../mocks/api/error/mockInternalServerError';
-import mockTokenEndpoint from '../../../../../../mocks/api/external/cognito/mockTokenEndpoint';
 import mockUploadCatImage from '../../../../../../mocks/api/lgtm/images/mockUploadCatImage';
-import mockUploadCatImageIssueAccessTokenError from '../../../../../../mocks/api/lgtm/images/mockUploadCatImageIssueAccessTokenError';
+import mockUploadCatImageAuthError from '../../../../../../mocks/api/lgtm/images/mockUploadCatImageAuthError';
 import mockUploadCatImagePayloadTooLarge from '../../../../../../mocks/api/lgtm/images/mockUploadCatImagePayloadTooLarge';
 import mockUploadCatImageUnprocessableEntity from '../../../../../../mocks/api/lgtm/images/mockUploadCatImageUnprocessableEntity';
 import { uploadCatImage } from '../../imageRepository';
 
-const mockHandlers = [
-  rest.post(cognitoTokenEndpointUrl(), mockTokenEndpoint),
-  rest.post(apiList.uploadCatImage, mockUploadCatImage),
-];
+const mockHandlers = [rest.post(uploadCatImageUrl(), mockUploadCatImage)];
 
 const mockServer = setupServer(...mockHandlers);
 
@@ -51,6 +44,7 @@ describe('imageRepository.ts uploadCatImage TestCases', () => {
     };
 
     const request: UploadCatImageRequest = {
+      accessToken: { jwtString: '' },
       image: '',
       imageExtension: '.jpg',
     };
@@ -61,17 +55,13 @@ describe('imageRepository.ts uploadCatImage TestCases', () => {
     expect(uploadedImageResult.value).toStrictEqual(expected);
   });
 
-  it('should return an UploadCatImageAuthError because Failed to issueAccessToken', async () => {
-    mockServer.use(
-      rest.post(
-        apiList.uploadCatImage,
-        mockUploadCatImageIssueAccessTokenError,
-      ),
-    );
+  it('should return an UploadCatImageAuthError because the accessToken is invalid', async () => {
+    mockServer.use(rest.post(uploadCatImageUrl(), mockUploadCatImageAuthError));
 
     const expected = new UploadCatImageAuthError();
 
     const request: UploadCatImageRequest = {
+      accessToken: { jwtString: '' },
       image: 'dummy image',
       imageExtension: '.jpg',
     };
@@ -84,12 +74,13 @@ describe('imageRepository.ts uploadCatImage TestCases', () => {
 
   it('should return an UploadCatImageSizeTooLargeError because the size of the image is too large', async () => {
     mockServer.use(
-      rest.post(apiList.uploadCatImage, mockUploadCatImagePayloadTooLarge),
+      rest.post(uploadCatImageUrl(), mockUploadCatImagePayloadTooLarge),
     );
 
     const expected = new UploadCatImageSizeTooLargeError();
 
     const request: UploadCatImageRequest = {
+      accessToken: { jwtString: '' },
       image: 'dummy large image',
       imageExtension: '.jpg',
     };
@@ -102,12 +93,13 @@ describe('imageRepository.ts uploadCatImage TestCases', () => {
 
   it('should return an UploadCatImageValidationError because image extensions are not allowed', async () => {
     mockServer.use(
-      rest.post(apiList.uploadCatImage, mockUploadCatImageUnprocessableEntity),
+      rest.post(uploadCatImageUrl(), mockUploadCatImageUnprocessableEntity),
     );
 
     const expected = new UploadCatImageValidationError();
 
     const request: UploadCatImageRequest = {
+      accessToken: { jwtString: '' },
       image: 'dummy image',
       // 型定義によって間違えた型を渡す事が出来ないがMockで422を返すようになっているのでテストは意図した通りに動作する
       imageExtension: '.jpg',
@@ -120,11 +112,12 @@ describe('imageRepository.ts uploadCatImage TestCases', () => {
   });
 
   it('should return an UploadCatImageUnexpectedError because the API will return unexpected error', async () => {
-    mockServer.use(rest.post(apiList.uploadCatImage, mockInternalServerError));
+    mockServer.use(rest.post(uploadCatImageUrl(), mockInternalServerError));
 
     const expected = new UploadCatImageUnexpectedError();
 
     const request: UploadCatImageRequest = {
+      accessToken: { jwtString: '' },
       image: 'dummy image',
       imageExtension: '.jpg',
     };
