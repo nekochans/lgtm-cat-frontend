@@ -104,7 +104,7 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
     // TODO errorNameを型安全に取り出せるようにリファクタリングする
     switch (errorName) {
       case 'UploadCatImageSizeTooLargeError':
-        return '画像サイズが大きすぎます。お手数ですが2MB以下の画像を利用して下さい。';
+        return '画像サイズが大きすぎます。お手数ですが4MB以下の画像を利用して下さい。';
       case 'UploadCatImageValidationError':
         return '画像フォーマットが不正です。お手数ですが別の画像を利用して下さい。';
       default:
