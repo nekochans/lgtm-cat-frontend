@@ -101,6 +101,8 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
   const createDisplayErrorMessage = (error: Error) => {
     const errorName = error.name;
 
+    console.log(errorName);
+
     // TODO errorNameを型安全に取り出せるようにリファクタリングする
     switch (errorName) {
       case 'UploadCatImageSizeTooLargeError':
