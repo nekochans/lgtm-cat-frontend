@@ -50,7 +50,7 @@ Markdown 形式で管理したいドキュメントを格納します。
 
 ビジネス上意味のあるエラーオブジェクトを定義します。
 
-TypeScript の汎用エラーは使わずに、`extensible-custom-error` 利用して何のエラーなのか分かりやすい名前をつけます。
+TypeScript の汎用エラーは使わずに何のエラーなのか分かりやすい名前をつけます。
 
 ### domain/repositories
 
