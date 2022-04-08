@@ -141,6 +141,8 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
       imageExtension: uploadImageExtension as AcceptedTypesImageExtension,
     });
 
+    console.log(uploadCatResult.value);
+
     if (isSuccessResult(uploadCatResult)) {
       setUploaded(true);
       setErrorMessage('');
