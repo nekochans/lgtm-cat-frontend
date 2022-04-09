@@ -2,6 +2,8 @@
 // TODO https://github.com/nekochans/lgtm-cat-frontend/issues/107 を実施する際にファイル先頭のESLintの制御コメントを削除する
 import React, { useState, ChangeEvent } from 'react';
 
+import UploadCatImageSizeTooLargeError from '../domain/errors/UploadCatImageSizeTooLargeError';
+import UploadCatImageValidationError from '../domain/errors/UploadCatImageValidationError';
 import {
   AcceptedTypesImageExtension,
   UploadCatImage,
@@ -99,19 +101,15 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
   };
 
   const createDisplayErrorMessage = (error: Error) => {
-    const errorName = error.name;
-
-    console.log(errorName);
-
-    // TODO errorNameを型安全に取り出せるようにリファクタリングする
-    switch (errorName) {
-      case 'UploadCatImageSizeTooLargeError':
-        return '画像サイズが大きすぎます。お手数ですが4MB以下の画像を利用して下さい。';
-      case 'UploadCatImageValidationError':
-        return '画像フォーマットが不正です。お手数ですが別の画像を利用して下さい。';
-      default:
-        return 'アップロード中に予期せぬエラーが発生しました。お手数ですが、しばらく時間が経ってからお試し下さい。';
+    if (error instanceof UploadCatImageSizeTooLargeError) {
+      return '画像サイズが大きすぎます。お手数ですが4MB以下の画像を利用して下さい。';
     }
+
+    if (error instanceof UploadCatImageValidationError) {
+      return '画像フォーマットが不正です。お手数ですが別の画像を利用して下さい。';
+    }
+
+    return 'アップロード中に予期せぬエラーが発生しました。お手数ですが、しばらく時間が経ってからお試し下さい。';
   };
 
   const handleOnSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -140,8 +138,6 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
       image: base64Image,
       imageExtension: uploadImageExtension as AcceptedTypesImageExtension,
     });
-
-    console.log(uploadCatResult.value);
 
     if (isSuccessResult(uploadCatResult)) {
       setUploaded(true);
