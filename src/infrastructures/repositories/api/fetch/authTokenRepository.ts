@@ -33,10 +33,8 @@ export const issueAccessToken: IssueAccessToken = async () => {
     // TODO このブロックに入った時は原因不明なエラーなのでSlack等に通知を送信したい
     const newError =
       error instanceof Error
-        ? new IssueAccessTokenError(error)
-        : new IssueAccessTokenError(
-            new Error('issueAccessToken Unexpected error'),
-          );
+        ? new IssueAccessTokenError(error.message)
+        : new IssueAccessTokenError('issueAccessToken Unexpected error');
 
     return createFailureResult<IssueAccessTokenError>(newError);
   }

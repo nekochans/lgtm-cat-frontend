@@ -1,3 +1,10 @@
-import ExtensibleCustomError from 'extensible-custom-error';
+export default class UploadCatImageAuthError extends Error {
+  constructor(error?: string) {
+    super(error);
+    this.name = new.target.name;
 
-export default class UploadCatImageAuthError extends ExtensibleCustomError {}
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, this.constructor);
+    }
+  }
+}

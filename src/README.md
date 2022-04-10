@@ -50,7 +50,7 @@ Markdown 形式で管理したいドキュメントを格納します。
 
 ビジネス上意味のあるエラーオブジェクトを定義します。
 
-TypeScript の汎用エラーは使わずに、`extensible-custom-error` 利用して何のエラーなのか分かりやすい名前をつけます。
+TypeScript の汎用エラーは使わずに何のエラーなのか分かりやすい名前をつけます。
 
 ### domain/repositories
 
@@ -110,7 +110,7 @@ Next.js に依存する処理以外は極力書かずに、その他の層に処
 
 Redux などの状態管理ライブラリに依存する関数群が実装されます。
 
-現状は ReactContext を使った State 管理用の関数群が格納されています。
+現状は [Valtio](https://github.com/pmndrs/valtio) を使った State 管理用の関数群が格納されています。
 
 ## その他
 
