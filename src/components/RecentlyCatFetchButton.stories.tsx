@@ -11,7 +11,7 @@ type Story = ComponentStoryObj<typeof RecentlyCatFetchButton>;
 
 const props = {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onClick: (): void => {},
+  handleOnClick: (): void => {},
 };
 
 export const Default: Story = {
