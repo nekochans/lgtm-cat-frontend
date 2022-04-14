@@ -1,10 +1,10 @@
-import type { VFC } from 'react';
+import React from 'react';
 
 type Props = {
   handleOnClick: () => void;
 };
 
-const RecentlyCatFetchButton: VFC<Props> = ({ handleOnClick }) => (
+const RecentlyCatFetchButton: React.VFC<Props> = ({ handleOnClick }) => (
   <button
     className="button is-outlined"
     style={{ margin: '0.5rem 0.75rem' }}

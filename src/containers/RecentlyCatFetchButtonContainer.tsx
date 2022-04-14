@@ -1,4 +1,5 @@
 import throttle from 'lodash/throttle';
+import React, { VFC } from 'react';
 
 import RecentlyCatFetchButton from '../components/RecentlyCatFetchButton';
 import { isSuccessResult } from '../domain/repositories/repositoryResult';
@@ -9,8 +10,6 @@ import {
   updateIsFailedFetchLgtmImages,
   updateLgtmImages,
 } from '../stores/valtio/lgtmImages';
-
-import type { VFC } from 'react';
 
 const RecentlyCatFetchButtonContainer: VFC = () => {
   const handleOnClick = async () => {
