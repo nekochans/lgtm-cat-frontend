@@ -4,7 +4,7 @@ import React, { VFC } from 'react';
 import RecentlyCatFetchButton from '../components/RecentlyCatFetchButton';
 import { isSuccessResult } from '../domain/repositories/repositoryResult';
 import { issueAccessToken } from '../infrastructures/repositories/api/fetch/authTokenRepository';
-import { fetchLgtmImagesInRandom } from '../infrastructures/repositories/api/fetch/imageRepository';
+import { fetchLgtmImagesInRecentlyCreated } from '../infrastructures/repositories/api/fetch/imageRepository';
 import { sendFetchRandomImages } from '../infrastructures/utils/gtm';
 import {
   updateIsFailedFetchLgtmImages,
@@ -21,7 +21,7 @@ const RecentlyCatFetchButtonContainer: VFC = () => {
       return;
     }
 
-    const lgtmImagesResponse = await fetchLgtmImagesInRandom({
+    const lgtmImagesResponse = await fetchLgtmImagesInRecentlyCreated({
       accessToken: { jwtString: issueAccessTokenResult.value.jwtString },
     });
 

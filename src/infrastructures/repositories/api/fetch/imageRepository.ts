@@ -1,16 +1,20 @@
 import { httpStatusCode } from '../../../../constants/httpStatusCode';
 import {
+  fetchLgtmImagesInRecentlyCreatedUrl,
   fetchLgtmImagesUrl,
   uploadCatImageUrl,
 } from '../../../../constants/url';
 import FetchLgtmImagesInRandomAuthError from '../../../../domain/errors/FetchLgtmImagesInRandomAuthError';
 import FetchLgtmImagesInRandomError from '../../../../domain/errors/FetchLgtmImagesInRandomError';
+import FetchLgtmImagesInRecentlyCreatedAuthError from '../../../../domain/errors/FetchLgtmImagesInRecentlyCreatedAuthError';
+import FetchLgtmImagesInRecentlyCreatedError from '../../../../domain/errors/FetchLgtmImagesInRecentlyCreatedError';
 import UploadCatImageAuthError from '../../../../domain/errors/UploadCatImageAuthError';
 import UploadCatImageSizeTooLargeError from '../../../../domain/errors/UploadCatImageSizeTooLargeError';
 import UploadCatImageUnexpectedError from '../../../../domain/errors/UploadCatImageUnexpectedError';
 import UploadCatImageValidationError from '../../../../domain/errors/UploadCatImageValidationError';
 import {
   FetchLgtmImagesInRandom,
+  FetchLgtmImagesInRecentlyCreated,
   UploadCatImage,
 } from '../../../../domain/repositories/imageRepository';
 import {
@@ -44,6 +48,36 @@ export const fetchLgtmImagesInRandom: FetchLgtmImagesInRandom = async (
 
   return createSuccessResult<LgtmImages>(lgtmImages);
 };
+
+export const fetchLgtmImagesInRecentlyCreated: FetchLgtmImagesInRecentlyCreated =
+  async (request) => {
+    const options: RequestInit = {
+      method: 'GET',
+      mode: 'cors',
+      cache: 'no-cache',
+      headers: {
+        Authorization: `Bearer ${request.accessToken.jwtString}`,
+      },
+    };
+
+    const response = await fetch(
+      fetchLgtmImagesInRecentlyCreatedUrl(),
+      options,
+    );
+    if (!response.ok) {
+      if (response.status === httpStatusCode.unauthorized) {
+        return createFailureResult(
+          new FetchLgtmImagesInRecentlyCreatedAuthError(),
+        );
+      }
+
+      return createFailureResult(new FetchLgtmImagesInRecentlyCreatedError());
+    }
+
+    const lgtmImages = (await response.json()) as LgtmImages;
+
+    return createSuccessResult<LgtmImages>(lgtmImages);
+  };
 
 export const uploadCatImage: UploadCatImage = async (request) => {
   const options: RequestInit = {
