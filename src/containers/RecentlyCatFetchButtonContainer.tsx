@@ -5,7 +5,7 @@ import RecentlyCatFetchButton from '../components/RecentlyCatFetchButton';
 import { isSuccessResult } from '../domain/repositories/repositoryResult';
 import { issueAccessToken } from '../infrastructures/repositories/api/fetch/authTokenRepository';
 import { fetchLgtmImagesInRecentlyCreated } from '../infrastructures/repositories/api/fetch/imageRepository';
-import { sendFetchRandomImages } from '../infrastructures/utils/gtm';
+import { sendFetchRecentlyCreatedImages } from '../infrastructures/utils/gtm';
 import {
   updateIsFailedFetchLgtmImages,
   updateLgtmImages,
@@ -34,7 +34,7 @@ const RecentlyCatFetchButtonContainer: VFC = () => {
 
     updateLgtmImages(lgtmImagesResponse.value.lgtmImages);
     updateIsFailedFetchLgtmImages(false);
-    sendFetchRandomImages('fetch_random_images_button');
+    sendFetchRecentlyCreatedImages('fetch_recently_created_images_button');
   };
 
   const limitThreshold = 500;
