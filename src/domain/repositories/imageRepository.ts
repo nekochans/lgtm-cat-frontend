@@ -1,4 +1,5 @@
 import FetchLgtmImagesInRandomError from '../errors/FetchLgtmImagesInRandomError';
+import FetchLgtmImagesInRecentlyCreatedAuthError from '../errors/FetchLgtmImagesInRecentlyCreatedAuthError';
 import FetchLgtmImagesInRecentlyCreatedError from '../errors/FetchLgtmImagesInRecentlyCreatedError';
 import UploadCatImageAuthError from '../errors/UploadCatImageAuthError';
 import UploadCatImageSizeTooLargeError from '../errors/UploadCatImageSizeTooLargeError';
@@ -20,7 +21,11 @@ export type FetchLgtmImagesInRandom = (
 export type FetchLgtmImagesInRecentlyCreated = (
   request: FetchLgtmImagesRequest,
 ) => Promise<
-  RepositoryResult<LgtmImages, FetchLgtmImagesInRecentlyCreatedError>
+  RepositoryResult<
+    LgtmImages,
+    | FetchLgtmImagesInRecentlyCreatedAuthError
+    | FetchLgtmImagesInRecentlyCreatedError
+  >
 >;
 
 export type AcceptedTypesImageExtension = '.png' | '.jpg' | '.jpeg';
