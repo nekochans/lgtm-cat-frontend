@@ -53,6 +53,18 @@ export const sendFetchRandomImages = (
   });
 };
 
+type SendFetchRecentlyCreatedImagesLabel =
+  'fetch_recently_created_images_button';
+
+export const sendFetchRecentlyCreatedImages = (
+  label: SendFetchRecentlyCreatedImagesLabel,
+): void => {
+  window.dataLayer.push({
+    event: 'fetch_recently_created_images',
+    fetch_recently_created_images_trigger: label,
+  });
+};
+
 // ねこ画像がアップロードしLGTM画像を作成する機能が利用された際に実行する
 type SendUploadCatImageLabel = 'upload_cat_image_button';
 

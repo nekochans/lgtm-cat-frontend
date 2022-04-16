@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react';
 
 import RandomButtonContainer from '../containers/RandomButton';
+import RecentlyCatFetchButtonContainer from '../containers/RecentlyCatFetchButtonContainer';
 
 import ServiceDescription from './ServiceDescription';
 
@@ -56,6 +57,7 @@ const Header: React.FC<Props> = ({ topLink, uploadLink }: Props) => {
                 <div className="buttons">
                   {uploadLink}
                   <RandomButtonContainer />
+                  <RecentlyCatFetchButtonContainer />
                 </div>
               </div>
             </div>
