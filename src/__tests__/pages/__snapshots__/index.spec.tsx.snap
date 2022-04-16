@@ -84,7 +84,7 @@ exports[`IndexPage Snapshot test 1`] = `
                     style="margin: 0.5rem 0.75rem;"
                     type="submit"
                   >
-                    新しい猫ちゃんを表示
+                    新着の猫ちゃんを表示
                   </button>
                 </div>
               </div>

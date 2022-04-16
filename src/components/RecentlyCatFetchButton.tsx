@@ -11,7 +11,7 @@ const RecentlyCatFetchButton: React.VFC<Props> = ({ handleOnClick }) => (
     type="submit"
     onClick={() => handleOnClick()}
   >
-    新しい猫ちゃんを表示
+    新着の猫ちゃんを表示
   </button>
 );
 
