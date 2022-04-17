@@ -2,7 +2,7 @@ import { GetStaticProps } from 'next';
 import React, { useEffect } from 'react';
 
 import { metaTagList } from '../constants/metaTag';
-import ImageListContainer from '../containers/ImageLIst';
+import ImageListContainer from '../containers/ImageListContainer';
 import { isSuccessResult } from '../domain/repositories/repositoryResult';
 import { LgtmImages } from '../domain/types/lgtmImage';
 import { issueAccessToken } from '../infrastructures/repositories/api/fetch/authTokenRepository';
