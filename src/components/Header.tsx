@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 
-import RandomButtonContainer from '../containers/RandomButton';
+import RandomCatFetchButtonContainer from '../containers/RandomCatFetchButtonContainer';
 import RecentlyCatFetchButtonContainer from '../containers/RecentlyCatFetchButtonContainer';
 
 import ServiceDescription from './ServiceDescription';
@@ -56,7 +56,7 @@ const Header: React.FC<Props> = ({ topLink, uploadLink }: Props) => {
               <div className="navbar-item">
                 <div className="buttons">
                   {uploadLink}
-                  <RandomButtonContainer />
+                  <RandomCatFetchButtonContainer />
                   <RecentlyCatFetchButtonContainer />
                 </div>
               </div>

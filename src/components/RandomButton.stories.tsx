@@ -3,7 +3,7 @@ import RandomButton from './RandomButton';
 import type { ComponentStoryObj, Meta } from '@storybook/react';
 
 export default {
-  title: 'src/components/RandomButton.tsx',
+  title: 'src/components/RandomCatFetchButtonContainer.tsx',
   component: RandomButton,
 } as Meta<typeof RandomButton>;
 

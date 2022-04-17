@@ -11,7 +11,7 @@ import {
   updateLgtmImages,
 } from '../stores/valtio/lgtmImages';
 
-const RandomButtonContainer: React.FC = () => {
+const RandomCatFetchButtonContainer: React.FC = () => {
   const handleRandom = async () => {
     const issueAccessTokenResult = await issueAccessToken();
     if (!isSuccessResult(issueAccessTokenResult)) {
@@ -43,4 +43,4 @@ const RandomButtonContainer: React.FC = () => {
   return <Button text="他の猫ちゃんを表示" onClick={handleRandomThrottled} />;
 };
 
-export default RandomButtonContainer;
+export default RandomCatFetchButtonContainer;
