@@ -1,7 +1,7 @@
 import throttle from 'lodash/throttle';
 import React, { VFC } from 'react';
 
-import RecentlyCatFetchButton from '../components/RecentlyCatFetchButton';
+import Button from '../components/Button';
 import { isSuccessResult } from '../domain/repositories/repositoryResult';
 import { issueAccessToken } from '../infrastructures/repositories/api/fetch/authTokenRepository';
 import { fetchLgtmImagesInRecentlyCreated } from '../infrastructures/repositories/api/fetch/imageRepository';
@@ -43,7 +43,9 @@ const RecentlyCatFetchButtonContainer: VFC = () => {
     limitThreshold,
   );
 
-  return <RecentlyCatFetchButton handleOnClick={handleOnClickThrottled} />;
+  return (
+    <Button text="新着の猫ちゃんを表示" onClick={handleOnClickThrottled} />
+  );
 };
 
 export default RecentlyCatFetchButtonContainer;

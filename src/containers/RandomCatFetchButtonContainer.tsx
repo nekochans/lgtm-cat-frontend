@@ -1,7 +1,7 @@
 import throttle from 'lodash/throttle';
 import React from 'react';
 
-import RandomButton from '../components/RandomButton';
+import Button from '../components/Button';
 import { isSuccessResult } from '../domain/repositories/repositoryResult';
 import { issueAccessToken } from '../infrastructures/repositories/api/fetch/authTokenRepository';
 import { fetchLgtmImagesInRandom } from '../infrastructures/repositories/api/fetch/imageRepository';
@@ -11,7 +11,7 @@ import {
   updateLgtmImages,
 } from '../stores/valtio/lgtmImages';
 
-const RandomButtonContainer: React.FC = () => {
+const RandomCatFetchButtonContainer: React.FC = () => {
   const handleRandom = async () => {
     const issueAccessTokenResult = await issueAccessToken();
     if (!isSuccessResult(issueAccessTokenResult)) {
@@ -40,7 +40,7 @@ const RandomButtonContainer: React.FC = () => {
   const limitThreshold = 500;
   const handleRandomThrottled = throttle(() => handleRandom(), limitThreshold);
 
-  return <RandomButton handleRandom={handleRandomThrottled} />;
+  return <Button text="他の猫ちゃんを表示" onClick={handleRandomThrottled} />;
 };
 
-export default RandomButtonContainer;
+export default RandomCatFetchButtonContainer;
