@@ -6,8 +6,8 @@ import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 
 import { fetchLgtmImagesUrl } from '../../../../../../constants/url';
-import FetchLgtmImagesInRandomAuthError from '../../../../../../domain/errors/FetchLgtmImagesInRandomAuthError';
-import FetchLgtmImagesInRandomError from '../../../../../../domain/errors/FetchLgtmImagesInRandomError';
+import FetchLgtmImagesAuthError from '../../../../../../domain/errors/FetchLgtmImagesAuthError';
+import FetchLgtmImagesError from '../../../../../../domain/errors/FetchLgtmImagesError';
 import { isSuccessResult } from '../../../../../../domain/repositories/repositoryResult';
 import mockInternalServerError from '../../../../../../mocks/api/error/mockInternalServerError';
 import mockUnauthorizedError from '../../../../../../mocks/api/error/mockUnauthorizedError';
@@ -44,7 +44,7 @@ describe('imageRepository.ts fetchLgtmImagesInRandom TestCases', () => {
     expect(lgtmImagesResponse.value).toStrictEqual(expected);
   });
 
-  it('should return an FetchLgtmImagesInRandomAuthError because the accessToken is invalid', async () => {
+  it('should return an FetchLgtmImagesAuthError because the accessToken is invalid', async () => {
     mockServer.use(rest.get(fetchLgtmImagesUrl(), mockUnauthorizedError));
 
     const lgtmImagesResponse = await fetchLgtmImagesInRandom({
@@ -53,11 +53,11 @@ describe('imageRepository.ts fetchLgtmImagesInRandom TestCases', () => {
 
     expect(isSuccessResult(lgtmImagesResponse)).toBeFalsy();
     expect(lgtmImagesResponse.value).toStrictEqual(
-      new FetchLgtmImagesInRandomAuthError(),
+      new FetchLgtmImagesAuthError(),
     );
   });
 
-  it('should return an FetchLgtmImagesInRandomError because Failed to fetch LGTM Images', async () => {
+  it('should return an FetchLgtmImagesError because Failed to fetch LGTM Images', async () => {
     mockServer.use(rest.get(fetchLgtmImagesUrl(), mockInternalServerError));
 
     const lgtmImagesResponse = await fetchLgtmImagesInRandom({
@@ -65,8 +65,6 @@ describe('imageRepository.ts fetchLgtmImagesInRandom TestCases', () => {
     });
 
     expect(isSuccessResult(lgtmImagesResponse)).toBeFalsy();
-    expect(lgtmImagesResponse.value).toStrictEqual(
-      new FetchLgtmImagesInRandomError(),
-    );
+    expect(lgtmImagesResponse.value).toStrictEqual(new FetchLgtmImagesError());
   });
 });

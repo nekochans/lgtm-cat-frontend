@@ -1,6 +1,5 @@
-import FetchLgtmImagesInRandomError from '../errors/FetchLgtmImagesInRandomError';
-import FetchLgtmImagesInRecentlyCreatedAuthError from '../errors/FetchLgtmImagesInRecentlyCreatedAuthError';
-import FetchLgtmImagesInRecentlyCreatedError from '../errors/FetchLgtmImagesInRecentlyCreatedError';
+import FetchLgtmImagesAuthError from '../errors/FetchLgtmImagesAuthError';
+import FetchLgtmImagesError from '../errors/FetchLgtmImagesError';
 import UploadCatImageAuthError from '../errors/UploadCatImageAuthError';
 import UploadCatImageSizeTooLargeError from '../errors/UploadCatImageSizeTooLargeError';
 import UploadCatImageUnexpectedError from '../errors/UploadCatImageUnexpectedError';
@@ -14,18 +13,10 @@ export type FetchLgtmImagesRequest = {
   accessToken: AccessToken;
 };
 
-export type FetchLgtmImagesInRandom = (
-  request: FetchLgtmImagesRequest,
-) => Promise<RepositoryResult<LgtmImages, FetchLgtmImagesInRandomError>>;
-
-export type FetchLgtmImagesInRecentlyCreated = (
+export type FetchLgtmImages = (
   request: FetchLgtmImagesRequest,
 ) => Promise<
-  RepositoryResult<
-    LgtmImages,
-    | FetchLgtmImagesInRecentlyCreatedAuthError
-    | FetchLgtmImagesInRecentlyCreatedError
-  >
+  RepositoryResult<LgtmImages, FetchLgtmImagesError | FetchLgtmImagesAuthError>
 >;
 
 export type AcceptedTypesImageExtension = '.png' | '.jpg' | '.jpeg';
