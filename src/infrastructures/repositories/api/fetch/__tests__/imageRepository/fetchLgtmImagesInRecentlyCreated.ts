@@ -5,7 +5,7 @@ import 'whatwg-fetch';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 
-import { fetchLgtmImagesUrl } from '../../../../../../constants/url';
+import { fetchLgtmImagesInRecentlyCreatedUrl } from '../../../../../../constants/url';
 import FetchLgtmImagesAuthError from '../../../../../../domain/errors/FetchLgtmImagesAuthError';
 import FetchLgtmImagesError from '../../../../../../domain/errors/FetchLgtmImagesError';
 import { isSuccessResult } from '../../../../../../domain/repositories/repositoryResult';
@@ -13,14 +13,16 @@ import mockInternalServerError from '../../../../../../mocks/api/error/mockInter
 import mockUnauthorizedError from '../../../../../../mocks/api/error/mockUnauthorizedError';
 import mockFetchLgtmImages from '../../../../../../mocks/api/external/lgtmeow/mockFetchLgtmImages';
 import fetchLgtmImagesMockBody from '../../../../../../mocks/api/fetchLgtmImagesMockBody';
-import { fetchLgtmImagesInRandom } from '../../imageRepository';
+import { fetchLgtmImagesInRecentlyCreated } from '../../imageRepository';
 
-const mockHandlers = [rest.get(fetchLgtmImagesUrl(), mockFetchLgtmImages)];
+const mockHandlers = [
+  rest.get(fetchLgtmImagesInRecentlyCreatedUrl(), mockFetchLgtmImages),
+];
 
 const mockServer = setupServer(...mockHandlers);
 
 // eslint-disable-next-line max-lines-per-function
-describe('imageRepository.ts fetchLgtmImagesInRandom TestCases', () => {
+describe('imageRepository.ts fetchLgtmImagesInRecentlyCreated TestCases', () => {
   beforeAll(() => {
     mockServer.listen();
   });
@@ -36,7 +38,7 @@ describe('imageRepository.ts fetchLgtmImagesInRandom TestCases', () => {
   // eslint-disable-next-line max-lines-per-function
   it('should be able to fetch LGTM Images', async () => {
     const expected = fetchLgtmImagesMockBody;
-    const lgtmImagesResponse = await fetchLgtmImagesInRandom({
+    const lgtmImagesResponse = await fetchLgtmImagesInRecentlyCreated({
       accessToken: { jwtString: '' },
     });
 
@@ -45,9 +47,11 @@ describe('imageRepository.ts fetchLgtmImagesInRandom TestCases', () => {
   });
 
   it('should return an FetchLgtmImagesAuthError because the accessToken is invalid', async () => {
-    mockServer.use(rest.get(fetchLgtmImagesUrl(), mockUnauthorizedError));
+    mockServer.use(
+      rest.get(fetchLgtmImagesInRecentlyCreatedUrl(), mockUnauthorizedError),
+    );
 
-    const lgtmImagesResponse = await fetchLgtmImagesInRandom({
+    const lgtmImagesResponse = await fetchLgtmImagesInRecentlyCreated({
       accessToken: { jwtString: '' },
     });
 
@@ -58,9 +62,11 @@ describe('imageRepository.ts fetchLgtmImagesInRandom TestCases', () => {
   });
 
   it('should return an FetchLgtmImagesError because Failed to fetch LGTM Images', async () => {
-    mockServer.use(rest.get(fetchLgtmImagesUrl(), mockInternalServerError));
+    mockServer.use(
+      rest.get(fetchLgtmImagesInRecentlyCreatedUrl(), mockInternalServerError),
+    );
 
-    const lgtmImagesResponse = await fetchLgtmImagesInRandom({
+    const lgtmImagesResponse = await fetchLgtmImagesInRecentlyCreated({
       accessToken: { jwtString: '' },
     });
 
