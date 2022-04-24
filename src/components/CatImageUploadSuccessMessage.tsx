@@ -10,9 +10,6 @@ const CatImageUploadSuccessMessage: React.FC = () => (
       <p>
         「Markdownソースをコピー」ボタンか以下の画像をクリックするとMarkdownソースがコピーされます。
       </p>
-      <p>
-        審査に合格していれば、コピーされたMarkdownソースで生成されたLGTM画像を確認出来ます。
-      </p>
     </div>
   </article>
 );

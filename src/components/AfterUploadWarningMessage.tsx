@@ -1,6 +1,5 @@
 import React from 'react';
 
-// TODO このComponentは https://github.com/nekochans/lgtm-cat/issues/15 の開発が終了した時点で削除する
 const AfterUploadWarningMessage: React.FC = () => (
   <article className="message is-warning">
     <div className="message-header">
@@ -8,7 +7,7 @@ const AfterUploadWarningMessage: React.FC = () => (
     </div>
     <div className="message-body">
       <p>
-        このモーダルを閉じるとMarkdownソースをコピー出来なくなるのでご注意下さい。
+        このモーダルを閉じてしまった場合はトップページの「新着の猫ちゃんを表示」を押下して探してみてください。
       </p>
     </div>
   </article>
