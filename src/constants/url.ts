@@ -44,3 +44,11 @@ export const fetchLgtmImagesUrl = (): string =>
 // この関数はサーバーサイドでしか動作しない
 export const fetchLgtmImagesInRecentlyCreatedUrl = (): string =>
   `${lgtmeowApiUrl()}/lgtm-images/recently-created`;
+
+export const imageRecognitionApiUrl = (): string =>
+  process.env.NEXT_PUBLIC_IMAGE_RECOGNITION_API_URL
+    ? process.env.NEXT_PUBLIC_IMAGE_RECOGNITION_API_URL
+    : '';
+
+export const isAcceptableCatImageUrl = (): string =>
+  `${imageRecognitionApiUrl()}/cat-images/validation-results`;
