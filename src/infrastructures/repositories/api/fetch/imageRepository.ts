@@ -2,16 +2,21 @@ import { httpStatusCode } from '../../../../constants/httpStatusCode';
 import {
   fetchLgtmImagesInRecentlyCreatedUrl,
   fetchLgtmImagesUrl,
+  isAcceptableCatImageUrl,
   uploadCatImageUrl,
 } from '../../../../constants/url';
 import FetchLgtmImagesAuthError from '../../../../domain/errors/FetchLgtmImagesAuthError';
 import FetchLgtmImagesError from '../../../../domain/errors/FetchLgtmImagesError';
+import IsAcceptableCatImageAuthError from '../../../../domain/errors/IsAcceptableCatImageAuthError';
+import IsAcceptableCatImageError from '../../../../domain/errors/IsAcceptableCatImageError';
 import UploadCatImageAuthError from '../../../../domain/errors/UploadCatImageAuthError';
 import UploadCatImageSizeTooLargeError from '../../../../domain/errors/UploadCatImageSizeTooLargeError';
 import UploadCatImageUnexpectedError from '../../../../domain/errors/UploadCatImageUnexpectedError';
 import UploadCatImageValidationError from '../../../../domain/errors/UploadCatImageValidationError';
 import {
   FetchLgtmImages,
+  IsAcceptableCatImage,
+  IsAcceptableCatImageResponse,
   UploadCatImage,
 } from '../../../../domain/repositories/imageRepository';
 import {
@@ -111,4 +116,40 @@ export const uploadCatImage: UploadCatImage = async (request) => {
   const uploadedImage = (await response.json()) as UploadedImage;
 
   return createSuccessResult<UploadedImage>(uploadedImage);
+};
+
+export const isAcceptableCatImage: IsAcceptableCatImage = async (request) => {
+  const options: RequestInit = {
+    method: 'POST',
+    mode: 'cors',
+    cache: 'no-cache',
+    headers: {
+      Authorization: `Bearer ${request.accessToken.jwtString}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      image: request.image,
+      imageExtension: request.imageExtension,
+    }),
+  };
+
+  const response = await fetch(isAcceptableCatImageUrl(), options);
+  if (response.status !== httpStatusCode.ok) {
+    if (response.status === httpStatusCode.unauthorized) {
+      return createFailureResult<IsAcceptableCatImageAuthError>(
+        new IsAcceptableCatImageAuthError(),
+      );
+    }
+
+    return createFailureResult<IsAcceptableCatImageError>(
+      new IsAcceptableCatImageError(),
+    );
+  }
+
+  const isAcceptableCatImageResponse =
+    (await response.json()) as IsAcceptableCatImageResponse;
+
+  return createSuccessResult<IsAcceptableCatImageResponse>(
+    isAcceptableCatImageResponse,
+  );
 };
