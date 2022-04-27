@@ -1,9 +1,9 @@
 import React from 'react';
 
-const AfterUploadWarningMessage: React.FC = () => (
-  <article className="message is-warning">
+const AfterUploadInfoMessage: React.FC = () => (
+  <article className="message is-info">
     <div className="message-header">
-      <p>注意 🐱！</p>
+      <p>お知らせ 🐱</p>
     </div>
     <div className="message-body">
       <p>
@@ -13,4 +13,4 @@ const AfterUploadWarningMessage: React.FC = () => (
   </article>
 );
 
-export default AfterUploadWarningMessage;
+export default AfterUploadInfoMessage;
