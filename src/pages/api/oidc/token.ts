@@ -58,7 +58,7 @@ const issueClientCredentialsAccessToken = async (
       'Content-Type': 'application/x-www-form-urlencoded',
       Authorization: `Basic ${authorization}`,
     },
-    body: 'grant_type=client_credentials&scope=api.lgtmeow/all',
+    body: 'grant_type=client_credentials&scope=api.lgtmeow/all image-recognition-api.lgtmeow/all',
   };
 
   const response = await fetch(cognitoTokenEndpointUrl(), options);

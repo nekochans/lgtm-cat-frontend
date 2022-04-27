@@ -1,7 +1,7 @@
 import React from 'react';
 import Modal from 'react-modal';
 
-import AfterUploadWarningMessage from './AfterUploadWarningMessage';
+import AfterUploadInfoMessage from './AfterUploadInfoMessage';
 import CatImageUploadSuccessMessage from './CatImageUploadSuccessMessage';
 import CopyMarkdownSourceButton from './CopyMarkdownSourceButton';
 import CreatedLgtmImage from './CreatedLgtmImage';
@@ -64,7 +64,7 @@ const CatImageUploadConfirmModal: React.FC<Props> = ({
             )}
             {isLoading ? <ProgressBar /> : ''}
             {uploaded ? <CatImageUploadSuccessMessage /> : ''}
-            {uploaded ? <AfterUploadWarningMessage /> : ''}
+            {uploaded ? <AfterUploadInfoMessage /> : ''}
             {imagePreviewUrl && !uploaded ? (
               <UploadCatImagePreview imagePreviewUrl={imagePreviewUrl} />
             ) : (

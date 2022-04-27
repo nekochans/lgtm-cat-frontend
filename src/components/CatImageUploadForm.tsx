@@ -6,10 +6,13 @@ import UploadCatImageSizeTooLargeError from '../domain/errors/UploadCatImageSize
 import UploadCatImageValidationError from '../domain/errors/UploadCatImageValidationError';
 import {
   AcceptedTypesImageExtension,
+  IsAcceptableCatImageNotAcceptableReason,
   UploadCatImage,
 } from '../domain/repositories/imageRepository';
 import { isSuccessResult } from '../domain/repositories/repositoryResult';
 import { issueAccessToken } from '../infrastructures/repositories/api/fetch/authTokenRepository';
+import { isAcceptableCatImage } from '../infrastructures/repositories/api/fetch/imageRepository';
+import assertNever from '../infrastructures/utils/assertNever';
 import { sendUploadCatImage } from '../infrastructures/utils/gtm';
 
 import CatImageUploadConfirmModal from './CatImageUploadConfirmModal';
@@ -112,6 +115,25 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
     return 'アップロード中に予期せぬエラーが発生しました。お手数ですが、しばらく時間が経ってからお試し下さい。';
   };
 
+  const createDisplayErrorMessageFromNotAcceptableReason = (
+    notAcceptableReason: IsAcceptableCatImageNotAcceptableReason,
+  ): string => {
+    switch (notAcceptableReason) {
+      case 'not an allowed image extension':
+        return 'png, jpg, jpeg の画像のみアップロード出来ます。';
+      case 'not moderation image':
+        return 'この画像は不適切なものが写っているので利用出来ません。';
+      case 'person face in the image':
+        return '申し訳ありませんが人の顔が写っていない画像をご利用ください。';
+      case 'not cat image':
+        return '申し訳ありませんがはっきりと猫が写っている画像をご利用ください。';
+      case 'an error has occurred':
+        return '予期せぬエラーが発生しました。お手数ですが、しばらく時間が経ってからお試し下さい。';
+      default:
+        return assertNever(notAcceptableReason);
+    }
+  };
+
   const handleOnSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -124,6 +146,40 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
     const accessTokenResult = await issueAccessToken();
     if (!isSuccessResult(accessTokenResult)) {
       setErrorMessage(createDisplayErrorMessage(accessTokenResult.value));
+      setImagePreviewUrl('');
+      setUploadImageExtension('');
+      setCreatedLgtmImageUrl('');
+      setIsLoading(false);
+      closeModal();
+
+      return;
+    }
+
+    const isAcceptableCatImageResult = await isAcceptableCatImage({
+      accessToken: accessTokenResult.value,
+      image: base64Image,
+      imageExtension: uploadImageExtension as AcceptedTypesImageExtension,
+    });
+
+    if (isSuccessResult(isAcceptableCatImageResult)) {
+      if (!isAcceptableCatImageResult.value.isAcceptableCatImage) {
+        setErrorMessage(
+          createDisplayErrorMessageFromNotAcceptableReason(
+            isAcceptableCatImageResult.value.notAcceptableReason,
+          ),
+        );
+        setImagePreviewUrl('');
+        setUploadImageExtension('');
+        setCreatedLgtmImageUrl('');
+        setIsLoading(false);
+        closeModal();
+
+        return;
+      }
+    } else {
+      setErrorMessage(
+        createDisplayErrorMessage(isAcceptableCatImageResult.value),
+      );
       setImagePreviewUrl('');
       setUploadImageExtension('');
       setCreatedLgtmImageUrl('');

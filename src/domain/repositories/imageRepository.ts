@@ -1,5 +1,7 @@
 import FetchLgtmImagesAuthError from '../errors/FetchLgtmImagesAuthError';
 import FetchLgtmImagesError from '../errors/FetchLgtmImagesError';
+import IsAcceptableCatImageAuthError from '../errors/IsAcceptableCatImageAuthError';
+import IsAcceptableCatImageError from '../errors/IsAcceptableCatImageError';
 import UploadCatImageAuthError from '../errors/UploadCatImageAuthError';
 import UploadCatImageSizeTooLargeError from '../errors/UploadCatImageSizeTooLargeError';
 import UploadCatImageUnexpectedError from '../errors/UploadCatImageUnexpectedError';
@@ -36,5 +38,28 @@ export type UploadCatImage = (
     | UploadCatImageSizeTooLargeError
     | UploadCatImageValidationError
     | UploadCatImageUnexpectedError
+  >
+>;
+
+export type IsAcceptableCatImageRequest = UploadCatImageRequest;
+
+export type IsAcceptableCatImageNotAcceptableReason =
+  | 'not an allowed image extension'
+  | 'not moderation image'
+  | 'person face in the image'
+  | 'not cat image'
+  | 'an error has occurred';
+
+export type IsAcceptableCatImageResponse = {
+  isAcceptableCatImage: boolean;
+  notAcceptableReason: IsAcceptableCatImageNotAcceptableReason;
+};
+
+export type IsAcceptableCatImage = (
+  request: IsAcceptableCatImageRequest,
+) => Promise<
+  RepositoryResult<
+    IsAcceptableCatImageResponse,
+    IsAcceptableCatImageError | IsAcceptableCatImageAuthError
   >
 >;
