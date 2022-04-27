@@ -126,7 +126,7 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
       case 'person face in the image':
         return '申し訳ありませんが人の顔が写っていない画像をご利用ください。';
       case 'not cat image':
-        return '申し訳ありませんがはっきりとねこが写っている画像をご利用ください。';
+        return '申し訳ありませんがはっきりと猫が写っている画像をご利用ください。';
       case 'an error has occurred':
         return '予期せぬエラーが発生しました。お手数ですが、しばらく時間が経ってからお試し下さい。';
       default:
