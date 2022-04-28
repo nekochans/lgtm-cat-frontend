@@ -22,6 +22,13 @@ const RecentlyCatFetchButtonContainer: VFC = () => {
       return;
     }
 
+    // TODO デバッグ用のコードなので用事が終わったら削除する
+    if (issueAccessTokenResult.value.jwtString) {
+      throw new FetchLgtmImagesError(
+        'fetch_recently_created_images_button custom Error',
+      );
+    }
+
     const lgtmImagesResponse = await fetchLgtmImagesInRecentlyCreated({
       accessToken: { jwtString: issueAccessTokenResult.value.jwtString },
     });
@@ -36,10 +43,6 @@ const RecentlyCatFetchButtonContainer: VFC = () => {
     updateLgtmImages(lgtmImagesResponse.value.lgtmImages);
     updateIsFailedFetchLgtmImages(false);
     sendFetchRecentlyCreatedImages('fetch_recently_created_images_button');
-
-    throw new FetchLgtmImagesError(
-      'fetch_recently_created_images_button custom Error',
-    );
   };
 
   const limitThreshold = 500;
