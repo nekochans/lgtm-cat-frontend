@@ -2,7 +2,7 @@ import Link from 'next/link';
 import React from 'react';
 import { useSnapshot } from 'valtio';
 
-import Error from '../components/Error';
+import ErrorContent from '../components/ErrorContent';
 import ImageList from '../components/ImageList';
 import { pathList } from '../constants/url';
 import { LgtmImage } from '../domain/types/lgtmImage';
@@ -13,7 +13,7 @@ const ImageListContainer: React.FC = () => {
 
   if (snap.isFailedFetchLgtmImages) {
     return (
-      <Error
+      <ErrorContent
         title="Error"
         message="エラーが発生しました。お手数ですが、時間がたってから再度お試し下さい。"
         topLink={
