@@ -24,7 +24,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: |
           npm ci
-          npm run build
           npm run lint
           npm run test:ci
           npm run build-storybook
