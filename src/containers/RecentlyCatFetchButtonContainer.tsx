@@ -2,6 +2,7 @@ import throttle from 'lodash/throttle';
 import React, { VFC } from 'react';
 
 import Button from '../components/Button';
+import FetchLgtmImagesError from '../domain/errors/FetchLgtmImagesError';
 import { isSuccessResult } from '../domain/repositories/repositoryResult';
 import { issueAccessToken } from '../infrastructures/repositories/api/fetch/authTokenRepository';
 import { fetchLgtmImagesInRecentlyCreated } from '../infrastructures/repositories/api/fetch/imageRepository';
@@ -35,6 +36,10 @@ const RecentlyCatFetchButtonContainer: VFC = () => {
     updateLgtmImages(lgtmImagesResponse.value.lgtmImages);
     updateIsFailedFetchLgtmImages(false);
     sendFetchRecentlyCreatedImages('fetch_recently_created_images_button');
+
+    throw new FetchLgtmImagesError(
+      'fetch_recently_created_images_button custom Error',
+    );
   };
 
   const limitThreshold = 500;

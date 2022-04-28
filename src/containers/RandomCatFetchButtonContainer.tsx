@@ -35,6 +35,8 @@ const RandomCatFetchButtonContainer: React.FC = () => {
     updateLgtmImages(lgtmImagesResponse.value.lgtmImages);
     updateIsFailedFetchLgtmImages(false);
     sendFetchRandomImages('fetch_random_images_button');
+
+    throw new Error('fetch_random_images_button Error!!!!');
   };
 
   const limitThreshold = 500;
