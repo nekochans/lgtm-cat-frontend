@@ -23,6 +23,7 @@
     "chromatic": "chromatic --project-token=$CHROMATIC_PROJECT_TOKEN"
   },
   "dependencies": {
+    "@sentry/nextjs": "^6.19.7",
     "bulma": "^0.9.3",
     "clipboard": "^2.0.8",
     "lodash.throttle": "^4.1.1",
