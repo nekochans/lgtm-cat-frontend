@@ -2,7 +2,6 @@ import throttle from 'lodash/throttle';
 import React, { VFC } from 'react';
 
 import Button from '../components/Button';
-import FetchLgtmImagesError from '../domain/errors/FetchLgtmImagesError';
 import { isSuccessResult } from '../domain/repositories/repositoryResult';
 import { issueAccessToken } from '../infrastructures/repositories/api/fetch/authTokenRepository';
 import { fetchLgtmImagesInRecentlyCreated } from '../infrastructures/repositories/api/fetch/imageRepository';
@@ -20,13 +19,6 @@ const RecentlyCatFetchButtonContainer: VFC = () => {
       updateIsFailedFetchLgtmImages(true);
 
       return;
-    }
-
-    // TODO デバッグ用のコードなので用事が終わったら削除する
-    if (issueAccessTokenResult.value.jwtString) {
-      throw new FetchLgtmImagesError(
-        'fetch_recently_created_images_button custom Error',
-      );
     }
 
     const lgtmImagesResponse = await fetchLgtmImagesInRecentlyCreated({

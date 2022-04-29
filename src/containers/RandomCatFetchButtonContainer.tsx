@@ -2,7 +2,6 @@ import throttle from 'lodash/throttle';
 import React from 'react';
 
 import Button from '../components/Button';
-import FetchLgtmImagesAuthError from '../domain/errors/FetchLgtmImagesAuthError';
 import { isSuccessResult } from '../domain/repositories/repositoryResult';
 import { issueAccessToken } from '../infrastructures/repositories/api/fetch/authTokenRepository';
 import { fetchLgtmImagesInRandom } from '../infrastructures/repositories/api/fetch/imageRepository';
@@ -20,11 +19,6 @@ const RandomCatFetchButtonContainer: React.FC = () => {
       updateIsFailedFetchLgtmImages(true);
 
       return;
-    }
-
-    // TODO デバッグ用のコードなので用事が終わったら削除する
-    if (issueAccessTokenResult.value.jwtString) {
-      throw new FetchLgtmImagesAuthError('fetch_random_images_button Error!!!');
     }
 
     const lgtmImagesResponse = await fetchLgtmImagesInRandom({
