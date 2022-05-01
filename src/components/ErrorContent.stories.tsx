@@ -1,13 +1,13 @@
-import Error from './Error';
+import ErrorContent from './ErrorContent';
 
 import type { ComponentStoryObj, Meta } from '@storybook/react';
 
 export default {
-  title: 'src/components/Error.tsx',
-  component: Error,
-} as Meta<typeof Error>;
+  title: 'src/components/ErrorContent.tsx',
+  component: ErrorContent,
+} as Meta<typeof ErrorContent>;
 
-type Story = ComponentStoryObj<typeof Error>;
+type Story = ComponentStoryObj<typeof ErrorContent>;
 
 const style = {
   color: 'royalblue',

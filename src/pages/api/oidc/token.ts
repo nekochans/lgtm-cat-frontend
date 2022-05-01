@@ -1,3 +1,4 @@
+import { withSentry } from '@sentry/nextjs';
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 
 import {
@@ -97,4 +98,4 @@ const handler: NextApiHandler = async (
   }
 };
 
-export default handler;
+export default withSentry(handler);

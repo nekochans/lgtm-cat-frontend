@@ -6,7 +6,7 @@ type Props = {
   topLink: ReactNode;
 };
 
-const Error: React.FC<Props> = ({ title, message, topLink }: Props) => (
+const ErrorContent: React.FC<Props> = ({ title, message, topLink }: Props) => (
   <main>
     <div className="container has-text-centered">
       <h1 className="title">{title}</h1>
@@ -16,4 +16,4 @@ const Error: React.FC<Props> = ({ title, message, topLink }: Props) => (
   </main>
 );
 
-export default Error;
+export default ErrorContent;

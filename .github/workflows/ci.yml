@@ -24,13 +24,13 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: |
           npm ci
-          npm run build
           npm run lint
           npm run test:ci
           npm run build-storybook
         env:
           COGNITO_TOKEN_ENDPOINT: ${{ secrets.COGNITO_TOKEN_ENDPOINT }}
-          LGTMEOW_API_URL: ${{ secrets.LGTMEOW_API_URL }}
+          NEXT_PUBLIC_LGTMEOW_API_URL: ${{ secrets.NEXT_PUBLIC_LGTMEOW_API_URL }}
+          NEXT_PUBLIC_IMAGE_RECOGNITION_API_URL: ${{ secrets.NEXT_PUBLIC_IMAGE_RECOGNITION_API_URL }}
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:
