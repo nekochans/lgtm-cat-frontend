@@ -1,14 +1,14 @@
 import * as Sentry from '@sentry/nextjs';
-import { NextPage, NextPageContext } from 'next';
 import NextErrorComponent from 'next/error';
 import Link from 'next/link';
-import React from 'react';
 
 import ErrorContent from '../components/ErrorContent';
 import ErrorLayout from '../components/ErrorLayout';
 import { httpStatusCode, HttpStatusCode } from '../constants/httpStatusCode';
 import { customErrorTitle } from '../constants/metaTag';
 import { pathList } from '../constants/url';
+
+import type { NextPage, NextPageContext } from 'next';
 
 type Props = {
   statusCode: HttpStatusCode;

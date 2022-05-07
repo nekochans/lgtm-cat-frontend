@@ -1,6 +1,6 @@
-import { GetServerSidePropsContext } from 'next';
-
 import generateSitemapXml from '../infrastructures/utils/generateSitemapXml';
+
+import type { GetServerSidePropsContext } from 'next';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const getServerSideProps = async ({
