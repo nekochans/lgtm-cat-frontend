@@ -118,10 +118,6 @@ Redux などの状態管理ライブラリに依存する関数群が実装さ�
 
 各ディレクトリの同階層に `__tests__` ディレクトリを作成し、その中にテストコード用のファイルを作成します。
 
-ただし Next.js の pagesComponent（`src/pages/index.tsx` 等の事）のスナップショットテストは同階層に `__tests__` を作ると `next build` が失敗してしまいます。
-
-その為、例外的に `src/__tests__/pages/` に定義してあります。
-
 ### Storybook
 
 「Component 名」 + `.stories.tsx` で命名します。
