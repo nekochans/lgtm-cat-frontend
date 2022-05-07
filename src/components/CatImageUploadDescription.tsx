@@ -1,6 +1,6 @@
-import React from 'react';
+import type { VFC } from 'react';
 
-const CatImageUploadDescription: React.FC = () => (
+const CatImageUploadDescription: VFC = () => (
   <div className="content">
     <h1>猫ちゃん画像をアップロード</h1>
     <p>

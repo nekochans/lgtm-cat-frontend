@@ -1,6 +1,6 @@
-import React from 'react';
+import type { VFC } from 'react';
 
-const ServiceDescription: React.VFC = () => (
+const ServiceDescription: VFC = () => (
   <p
     className="is-size-6 header-description-margin has-text-grey"
     style={{

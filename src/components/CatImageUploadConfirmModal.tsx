@@ -1,4 +1,3 @@
-import React from 'react';
 import Modal from 'react-modal';
 
 import AfterUploadInfoMessage from './AfterUploadInfoMessage';
@@ -7,6 +6,8 @@ import CopyMarkdownSourceButton from './CopyMarkdownSourceButton';
 import CreatedLgtmImage from './CreatedLgtmImage';
 import ProgressBar from './ProgressBar';
 import UploadCatImagePreview from './UploadCatImagePreview';
+
+import type { VFC, MouseEvent } from 'react';
 
 type Props = {
   isOpen: boolean;
@@ -22,7 +23,7 @@ type Props = {
 };
 
 // eslint-disable-next-line max-lines-per-function
-const CatImageUploadConfirmModal: React.FC<Props> = ({
+const CatImageUploadConfirmModal: VFC<Props> = ({
   isOpen,
   onClickCancel,
   onClickUpload,
@@ -32,7 +33,7 @@ const CatImageUploadConfirmModal: React.FC<Props> = ({
   imagePreviewUrl,
   createdLgtmImageUrl,
 }) => {
-  const onClickOutSideModal = (event: React.MouseEvent<HTMLDivElement>) => {
+  const onClickOutSideModal = (event: MouseEvent<HTMLDivElement>) => {
     if (event.target === event.currentTarget) {
       onClickCancel();
     }

@@ -1,18 +1,19 @@
 import Head from 'next/head';
 import Link from 'next/link';
-import React, { ReactNode } from 'react';
 
 import { pathList } from '../constants/url';
 
 import Footer from './Footer';
 import SimpleHeader from './SimpleHeader';
 
+import type { VFC, ReactNode } from 'react';
+
 type Props = {
   children: ReactNode;
   title: string;
 };
 
-const ErrorLayout: React.FC<Props> = ({ children, title }: Props) => (
+const ErrorLayout: VFC<Props> = ({ children, title }) => (
   <div className="hero is-fullheight">
     <Head>
       <title>{title}</title>

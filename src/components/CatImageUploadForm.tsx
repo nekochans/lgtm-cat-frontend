@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function, max-statements */
 // TODO https://github.com/nekochans/lgtm-cat-frontend/issues/107 を実施する際にファイル先頭のESLintの制御コメントを削除する
-import React, { useState, ChangeEvent } from 'react';
+import { useState } from 'react';
 
 import UploadCatImageSizeTooLargeError from '../domain/errors/UploadCatImageSizeTooLargeError';
 import UploadCatImageValidationError from '../domain/errors/UploadCatImageValidationError';
@@ -19,6 +19,10 @@ import CatImageUploadConfirmModal from './CatImageUploadConfirmModal';
 import CatImageUploadDescription from './CatImageUploadDescription';
 import CatImageUploadError from './CatImageUploadError';
 
+// TODO 以下の制御コメントは https://github.com/nekochans/lgtm-cat-frontend/issues/166#issuecomment-1120215152 で TypeScript 4.5 にアップグレードしたタイミングで修正する
+// eslint-disable-next-line no-duplicate-imports
+import type { VFC, ChangeEvent, FormEvent } from 'react';
+
 // TODO acceptedTypesは定数化して分離する
 const acceptedTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg'];
 
@@ -26,7 +30,7 @@ type Props = {
   uploadCatImage: UploadCatImage;
 };
 
-const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
+const CatImageUploadForm: VFC<Props> = ({ uploadCatImage }) => {
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>();
   const [base64Image, setBase64Image] = useState<string>('');
   const [uploadImageExtension, setUploadImageExtension] = useState<
@@ -36,7 +40,7 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
   const [errorMessage, setErrorMessage] = useState<string>();
   const [uploaded, setUploaded] = useState<boolean>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [modalIsOpen, setModalIsOpen] = React.useState(false);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -134,7 +138,7 @@ const CatImageUploadForm: React.FC<Props> = ({ uploadCatImage }) => {
     }
   };
 
-  const handleOnSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleOnSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     openModal();

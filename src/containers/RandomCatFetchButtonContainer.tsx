@@ -1,5 +1,4 @@
 import throttle from 'lodash/throttle';
-import React from 'react';
 
 import Button from '../components/Button';
 import { isSuccessResult } from '../domain/repositories/repositoryResult';
@@ -11,7 +10,9 @@ import {
   updateLgtmImages,
 } from '../stores/valtio/lgtmImages';
 
-const RandomCatFetchButtonContainer: React.FC = () => {
+import type { VFC } from 'react';
+
+const RandomCatFetchButtonContainer: VFC = () => {
   const handleRandom = async () => {
     const issueAccessTokenResult = await issueAccessToken();
     if (!isSuccessResult(issueAccessTokenResult)) {

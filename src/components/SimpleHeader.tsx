@@ -1,9 +1,10 @@
-import React, { ReactNode } from 'react';
+import type { VFC, ReactNode } from 'react';
 
 type Props = {
   topLink: ReactNode;
 };
-const SimpleHeader: React.FC<Props> = ({ topLink }: Props) => (
+
+const SimpleHeader: VFC<Props> = ({ topLink }) => (
   <header>
     <nav className="navbar navbar-padding">
       <div className="container" style={{ display: 'block' }}>
