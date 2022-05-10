@@ -1,6 +1,6 @@
-import React from 'react';
+import type { VFC } from 'react';
 
-const ProgressBar: React.FC = () => (
+const ProgressBar: VFC = () => (
   <>
     <p>通信中です</p>
     <progress className="progress is-large is-primary" max="100">

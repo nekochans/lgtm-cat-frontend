@@ -1,11 +1,11 @@
-import React, { ReactNode } from 'react';
+import type { VFC, ReactNode } from 'react';
 
 type Props = {
   termsLink: ReactNode;
   privacyLink: ReactNode;
 };
 
-const Footer: React.FC<Props> = ({ termsLink, privacyLink }: Props) => (
+const Footer: VFC<Props> = ({ termsLink, privacyLink }) => (
   <footer className="footer">
     <div className="container">
       <nav className="level">

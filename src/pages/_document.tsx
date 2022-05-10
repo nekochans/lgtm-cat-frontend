@@ -6,7 +6,6 @@ import Document, {
   NextScript,
   DocumentInitialProps,
 } from 'next/document';
-import React from 'react';
 
 export default class CustomDocument extends Document {
   static async getInitialProps(

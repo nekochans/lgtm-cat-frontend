@@ -1,11 +1,10 @@
 import fs from 'fs';
 
-import { GetStaticProps, NextPage } from 'next';
-import React from 'react';
-
 import MarkdownContents from '../components/MarkdownContents';
 import { metaTagList } from '../constants/metaTag';
 import SimpleLayout from '../layouts/SimpleLayout';
+
+import type { GetStaticProps, NextPage } from 'next';
 
 type Props = {
   terms: string;

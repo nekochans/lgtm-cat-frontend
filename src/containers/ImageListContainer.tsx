@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import React from 'react';
 import { useSnapshot } from 'valtio';
 
 import ErrorContent from '../components/ErrorContent';
@@ -8,7 +7,9 @@ import { pathList } from '../constants/url';
 import { LgtmImage } from '../domain/types/lgtmImage';
 import { lgtmImageStateSelector } from '../stores/valtio/lgtmImages';
 
-const ImageListContainer: React.FC = () => {
+import type { VFC } from 'react';
+
+const ImageListContainer: VFC = () => {
   const snap = useSnapshot(lgtmImageStateSelector());
 
   if (snap.isFailedFetchLgtmImages) {
@@ -28,4 +29,5 @@ const ImageListContainer: React.FC = () => {
 
   return <ImageList lgtmImages={snap.lgtmImages as LgtmImage[]} />;
 };
+
 export default ImageListContainer;

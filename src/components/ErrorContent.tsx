@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import type { VFC, ReactNode } from 'react';
 
 type Props = {
   title: string;
@@ -6,7 +6,7 @@ type Props = {
   topLink: ReactNode;
 };
 
-const ErrorContent: React.FC<Props> = ({ title, message, topLink }: Props) => (
+const ErrorContent: VFC<Props> = ({ title, message, topLink }) => (
   <main>
     <div className="container has-text-centered">
       <h1 className="title">{title}</h1>

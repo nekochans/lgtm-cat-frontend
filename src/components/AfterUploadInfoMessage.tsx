@@ -1,6 +1,6 @@
-import React from 'react';
+import type { VFC } from 'react';
 
-const AfterUploadInfoMessage: React.FC = () => (
+const AfterUploadInfoMessage: VFC = () => (
   <article className="message is-info">
     <div className="message-header">
       <p>お知らせ 🐱</p>

@@ -1,5 +1,4 @@
-import { GetStaticProps } from 'next';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 import { metaTagList } from '../constants/metaTag';
 import ImageListContainer from '../containers/ImageListContainer';
@@ -15,9 +14,11 @@ import {
   updateLgtmImages,
 } from '../stores/valtio/lgtmImages';
 
+import type { GetStaticProps, NextPage } from 'next';
+
 type Props = LgtmImages;
 
-const IndexPage: React.FC<Props> = ({ lgtmImages }: Props) => {
+const IndexPage: NextPage<Props> = ({ lgtmImages }) => {
   useEffect(() => {
     updateLgtmImages(lgtmImages);
     updateIsFailedFetchLgtmImages(false);

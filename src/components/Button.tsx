@@ -1,11 +1,11 @@
-import React from 'react';
+import type { VFC } from 'react';
 
 type Props = {
   text: string;
   onClick?: () => void;
 };
 
-const Button: React.VFC<Props> = ({ text, onClick }) => (
+const Button: VFC<Props> = ({ text, onClick }) => (
   <button
     className="button is-outlined"
     style={{ margin: '0.5rem 0.75rem' }}

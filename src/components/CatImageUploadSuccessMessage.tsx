@@ -1,6 +1,6 @@
-import React from 'react';
+import type { VFC } from 'react';
 
-const CatImageUploadSuccessMessage: React.FC = () => (
+const CatImageUploadSuccessMessage: VFC = () => (
   <article className="message is-success">
     <div className="message-header">
       <p>アップロードに成功しました🐱！</p>

@@ -1,12 +1,12 @@
-import React from 'react';
-
 import { LgtmImages } from '../domain/types/lgtmImage';
 
 import ImageRow from './ImageRow';
 
+import type { VFC } from 'react';
+
 type Props = LgtmImages;
 
-const ImageList: React.FC<Props> = ({ lgtmImages }: Props) => (
+const ImageList: VFC<Props> = ({ lgtmImages }) => (
   <section>
     <div className="container">
       {/* eslint-disable-next-line no-magic-numbers */}
@@ -18,4 +18,5 @@ const ImageList: React.FC<Props> = ({ lgtmImages }: Props) => (
     </div>
   </section>
 );
+
 export default ImageList;

@@ -1,10 +1,10 @@
-import React from 'react';
+import type { VFC } from 'react';
 
 type Props = {
   imagePreviewUrl: string;
 };
 
-const UploadCatImagePreview: React.FC<Props> = ({ imagePreviewUrl }: Props) => (
+const UploadCatImagePreview: VFC<Props> = ({ imagePreviewUrl }) => (
   <figure className="image">
     {/* eslint-disable-next-line @next/next/no-img-element */}
     <img src={imagePreviewUrl} alt="uploadImagePreview" />
