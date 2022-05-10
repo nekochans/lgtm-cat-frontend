@@ -1,13 +1,9 @@
 import Image from 'next/image';
-import { useCallback, useState } from 'react';
+import { useCallback, useState, type VFC } from 'react';
 
 import { LgtmImage } from '../domain/types/lgtmImage';
 import useClipboardMarkdown from '../hooks/useClipboardMarkdown';
 import { sendCopyMarkdownEvent } from '../infrastructures/utils/gtm';
-
-// TODO 以下の制御コメントは https://github.com/nekochans/lgtm-cat-frontend/issues/166#issuecomment-1120215152 で TypeScript 4.5 にアップグレードしたタイミングで修正する
-// eslint-disable-next-line no-duplicate-imports
-import type { VFC } from 'react';
 
 type Props = {
   image: LgtmImage;
