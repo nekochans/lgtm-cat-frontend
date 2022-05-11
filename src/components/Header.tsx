@@ -1,13 +1,9 @@
-import { useState } from 'react';
+import { useState, type VFC, ReactNode } from 'react';
 
 import RandomCatFetchButtonContainer from '../containers/RandomCatFetchButtonContainer';
 import RecentlyCatFetchButtonContainer from '../containers/RecentlyCatFetchButtonContainer';
 
 import ServiceDescription from './ServiceDescription';
-
-// TODO 以下の制御コメントは https://github.com/nekochans/lgtm-cat-frontend/issues/166#issuecomment-1120215152 で TypeScript 4.5 にアップグレードしたタイミングで修正する
-// eslint-disable-next-line no-duplicate-imports
-import type { VFC, ReactNode } from 'react';
 
 type Props = {
   topLink: ReactNode;
