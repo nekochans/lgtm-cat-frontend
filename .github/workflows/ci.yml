@@ -15,13 +15,14 @@ jobs:
     timeout-minutes: 10
     strategy:
       matrix:
-        node-version: [14.x, 15.x]
+        node-version: [16.x, 18.x]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'npm'
       - run: |
           npm ci
           npm run lint
@@ -31,7 +32,3 @@ jobs:
           COGNITO_TOKEN_ENDPOINT: ${{ secrets.COGNITO_TOKEN_ENDPOINT }}
           NEXT_PUBLIC_LGTMEOW_API_URL: ${{ secrets.NEXT_PUBLIC_LGTMEOW_API_URL }}
           NEXT_PUBLIC_IMAGE_RECOGNITION_API_URL: ${{ secrets.NEXT_PUBLIC_IMAGE_RECOGNITION_API_URL }}
-      - name: Coveralls
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
