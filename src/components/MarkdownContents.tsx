@@ -9,7 +9,7 @@ type Props = {
 const MarkdownContents: VFC<Props> = ({ markdown }) => (
   <div className="container" style={{ display: 'block' }}>
     <div className="content mb-6 mx-3">
-      <ReactMarkdown source={markdown} />
+      <ReactMarkdown>{markdown}</ReactMarkdown>
     </div>
   </div>
 );
