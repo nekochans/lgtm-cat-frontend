@@ -3,6 +3,7 @@
 import { useState, type VFC, ChangeEvent, FormEvent } from 'react';
 
 import UploadCatImageSizeTooLargeError from '../domain/errors/UploadCatImageSizeTooLargeError';
+import UploadCatImageUnexpectedError from '../domain/errors/UploadCatImageUnexpectedError';
 import UploadCatImageValidationError from '../domain/errors/UploadCatImageValidationError';
 import {
   AcceptedTypesImageExtension,
@@ -18,7 +19,6 @@ import { sendUploadCatImage } from '../infrastructures/utils/gtm';
 import CatImageUploadConfirmModal from './CatImageUploadConfirmModal';
 import CatImageUploadDescription from './CatImageUploadDescription';
 import CatImageUploadError from './CatImageUploadError';
-import UploadCatImageUnexpectedError from '../domain/errors/UploadCatImageUnexpectedError';
 
 // TODO acceptedTypesは定数化して分離する
 const acceptedTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg'];
