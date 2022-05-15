@@ -9,10 +9,12 @@ import FetchLgtmImagesAuthError from '../../../../domain/errors/FetchLgtmImagesA
 import FetchLgtmImagesError from '../../../../domain/errors/FetchLgtmImagesError';
 import IsAcceptableCatImageAuthError from '../../../../domain/errors/IsAcceptableCatImageAuthError';
 import IsAcceptableCatImageError from '../../../../domain/errors/IsAcceptableCatImageError';
-import UploadCatImageAuthError from '../../../../domain/errors/UploadCatImageAuthError';
-import UploadCatImageSizeTooLargeError from '../../../../domain/errors/UploadCatImageSizeTooLargeError';
+/*
+ * Import UploadCatImageAuthError from '../../../../domain/errors/UploadCatImageAuthError';
+ * import UploadCatImageSizeTooLargeError from '../../../../domain/errors/UploadCatImageSizeTooLargeError';
+ */
 import UploadCatImageUnexpectedError from '../../../../domain/errors/UploadCatImageUnexpectedError';
-import UploadCatImageValidationError from '../../../../domain/errors/UploadCatImageValidationError';
+// Import UploadCatImageValidationError from '../../../../domain/errors/UploadCatImageValidationError';
 import {
   FetchLgtmImages,
   IsAcceptableCatImage,
@@ -92,23 +94,8 @@ export const uploadCatImage: UploadCatImage = async (request) => {
 
   const response = await fetch(uploadCatImageUrl(), options);
 
-  if (response.status !== httpStatusCode.accepted) {
-    switch (response.status) {
-      case httpStatusCode.unauthorized:
-        return createFailureResult<UploadCatImageAuthError>(
-          new UploadCatImageAuthError(),
-        );
-      case httpStatusCode.payloadTooLarge:
-        return createFailureResult<UploadCatImageSizeTooLargeError>(
-          new UploadCatImageSizeTooLargeError(),
-        );
-      case httpStatusCode.unprocessableEntity:
-        return createFailureResult<UploadCatImageValidationError>(
-          new UploadCatImageValidationError(),
-        );
-      default:
-        throw new UploadCatImageUnexpectedError(response.statusText);
-    }
+  if (response.status === httpStatusCode.accepted) {
+    throw new UploadCatImageUnexpectedError(response.statusText);
   }
 
   const uploadedImage = (await response.json()) as UploadedImage;
