@@ -142,31 +142,43 @@ const CatImageUploadForm: VFC<Props> = ({ uploadCatImage }) => {
 
   const onClickUpload = async () => {
     setIsLoading(true);
+    try {
+      const accessTokenResult = await issueAccessToken();
+      if (!isSuccessResult(accessTokenResult)) {
+        setErrorMessage(createDisplayErrorMessage(accessTokenResult.value));
+        setImagePreviewUrl('');
+        setUploadImageExtension('');
+        setCreatedLgtmImageUrl('');
+        setIsLoading(false);
+        closeModal();
 
-    const accessTokenResult = await issueAccessToken();
-    if (!isSuccessResult(accessTokenResult)) {
-      setErrorMessage(createDisplayErrorMessage(accessTokenResult.value));
-      setImagePreviewUrl('');
-      setUploadImageExtension('');
-      setCreatedLgtmImageUrl('');
-      setIsLoading(false);
-      closeModal();
+        return;
+      }
 
-      return;
-    }
+      const isAcceptableCatImageResult = await isAcceptableCatImage({
+        accessToken: accessTokenResult.value,
+        image: base64Image,
+        imageExtension: uploadImageExtension as AcceptedTypesImageExtension,
+      });
 
-    const isAcceptableCatImageResult = await isAcceptableCatImage({
-      accessToken: accessTokenResult.value,
-      image: base64Image,
-      imageExtension: uploadImageExtension as AcceptedTypesImageExtension,
-    });
+      if (isSuccessResult(isAcceptableCatImageResult)) {
+        if (!isAcceptableCatImageResult.value.isAcceptableCatImage) {
+          setErrorMessage(
+            createDisplayErrorMessageFromNotAcceptableReason(
+              isAcceptableCatImageResult.value.notAcceptableReason,
+            ),
+          );
+          setImagePreviewUrl('');
+          setUploadImageExtension('');
+          setCreatedLgtmImageUrl('');
+          setIsLoading(false);
+          closeModal();
 
-    if (isSuccessResult(isAcceptableCatImageResult)) {
-      if (!isAcceptableCatImageResult.value.isAcceptableCatImage) {
+          return;
+        }
+      } else {
         setErrorMessage(
-          createDisplayErrorMessageFromNotAcceptableReason(
-            isAcceptableCatImageResult.value.notAcceptableReason,
-          ),
+          createDisplayErrorMessage(isAcceptableCatImageResult.value),
         );
         setImagePreviewUrl('');
         setUploadImageExtension('');
@@ -176,40 +188,42 @@ const CatImageUploadForm: VFC<Props> = ({ uploadCatImage }) => {
 
         return;
       }
-    } else {
-      setErrorMessage(
-        createDisplayErrorMessage(isAcceptableCatImageResult.value),
-      );
+
+      const uploadCatResult = await uploadCatImage({
+        accessToken: accessTokenResult.value,
+        image: base64Image,
+        imageExtension: uploadImageExtension as AcceptedTypesImageExtension,
+      });
+
+      if (isSuccessResult(uploadCatResult)) {
+        setUploaded(true);
+        setErrorMessage('');
+        setCreatedLgtmImageUrl(uploadCatResult.value.imageUrl);
+        setIsLoading(false);
+      } else {
+        setErrorMessage(createDisplayErrorMessage(uploadCatResult.value));
+        setImagePreviewUrl('');
+        setUploadImageExtension('');
+        setCreatedLgtmImageUrl('');
+        setIsLoading(false);
+        closeModal();
+      }
+
+      sendUploadCatImage('upload_cat_image_button');
+    } catch (error) {
+      const newError =
+        error instanceof Error
+          ? error
+          : new Error('onClickUpload Unexpected error');
+      setErrorMessage(createDisplayErrorMessage(newError));
       setImagePreviewUrl('');
       setUploadImageExtension('');
       setCreatedLgtmImageUrl('');
       setIsLoading(false);
       closeModal();
 
-      return;
+      throw newError;
     }
-
-    const uploadCatResult = await uploadCatImage({
-      accessToken: accessTokenResult.value,
-      image: base64Image,
-      imageExtension: uploadImageExtension as AcceptedTypesImageExtension,
-    });
-
-    if (isSuccessResult(uploadCatResult)) {
-      setUploaded(true);
-      setErrorMessage('');
-      setCreatedLgtmImageUrl(uploadCatResult.value.imageUrl);
-      setIsLoading(false);
-    } else {
-      setErrorMessage(createDisplayErrorMessage(uploadCatResult.value));
-      setImagePreviewUrl('');
-      setUploadImageExtension('');
-      setCreatedLgtmImageUrl('');
-      setIsLoading(false);
-      closeModal();
-    }
-
-    sendUploadCatImage('upload_cat_image_button');
   };
 
   const shouldDisableButton = (): boolean => {
