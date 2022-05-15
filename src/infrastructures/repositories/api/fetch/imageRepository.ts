@@ -41,7 +41,7 @@ export const fetchLgtmImagesInRandom: FetchLgtmImages = async (request) => {
       return createFailureResult(new FetchLgtmImagesAuthError());
     }
 
-    return createFailureResult(new FetchLgtmImagesError());
+    throw new FetchLgtmImagesError(response.statusText);
   }
 
   const lgtmImages = (await response.json()) as LgtmImages;
@@ -67,7 +67,7 @@ export const fetchLgtmImagesInRecentlyCreated: FetchLgtmImages = async (
       return createFailureResult(new FetchLgtmImagesAuthError());
     }
 
-    return createFailureResult(new FetchLgtmImagesError());
+    throw new FetchLgtmImagesError(response.statusText);
   }
 
   const lgtmImages = (await response.json()) as LgtmImages;
@@ -107,9 +107,7 @@ export const uploadCatImage: UploadCatImage = async (request) => {
           new UploadCatImageValidationError(),
         );
       default:
-        return createFailureResult<UploadCatImageUnexpectedError>(
-          new UploadCatImageUnexpectedError(),
-        );
+        throw new UploadCatImageUnexpectedError(response.statusText);
     }
   }
 
@@ -141,9 +139,7 @@ export const isAcceptableCatImage: IsAcceptableCatImage = async (request) => {
       );
     }
 
-    return createFailureResult<IsAcceptableCatImageError>(
-      new IsAcceptableCatImageError(),
-    );
+    throw new IsAcceptableCatImageError(response.statusText);
   }
 
   const isAcceptableCatImageResponse =

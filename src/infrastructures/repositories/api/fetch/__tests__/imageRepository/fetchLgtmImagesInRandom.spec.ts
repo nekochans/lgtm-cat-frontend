@@ -57,14 +57,13 @@ describe('imageRepository.ts fetchLgtmImagesInRandom TestCases', () => {
     );
   });
 
-  it('should return an FetchLgtmImagesError because Failed to fetch LGTM Images', async () => {
+  it('should throw a FetchLgtmImagesError because Failed to fetch LGTM Images', async () => {
     mockServer.use(rest.get(fetchLgtmImagesUrl(), mockInternalServerError));
 
-    const lgtmImagesResponse = await fetchLgtmImagesInRandom({
-      accessToken: { jwtString: '' },
-    });
+    const request = { accessToken: { jwtString: '' } };
 
-    expect(isSuccessResult(lgtmImagesResponse)).toBeFalsy();
-    expect(lgtmImagesResponse.value).toStrictEqual(new FetchLgtmImagesError());
+    await expect(fetchLgtmImagesInRandom(request)).rejects.toStrictEqual(
+      new FetchLgtmImagesError('Internal Server Error'),
+    );
   });
 });

@@ -6,7 +6,9 @@ import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 
 import { apiList } from '../../../../../../constants/url';
+import IssueAccessTokenError from '../../../../../../domain/errors/IssueAccessTokenError';
 import { isSuccessResult } from '../../../../../../domain/repositories/repositoryResult';
+import mockInternalServerError from '../../../../../../mocks/api/error/mockInternalServerError';
 import mockTokenEndpoint from '../../../../../../mocks/api/external/cognito/mockTokenEndpoint';
 import { issueAccessToken } from '../../authTokenRepository';
 
@@ -41,5 +43,16 @@ describe('authTokenRepository.ts issueAccessToken TestCases', () => {
     expect(accessTokenResult.value).toStrictEqual(expectedValue);
   });
 
-  // TODO 異常系のテストケースを実装する
+  it('should throw an IssueAccessTokenError because the API will return internalServer error', async () => {
+    mockServer.use(
+      rest.post(
+        apiList.issueClientCredentialsAccessToken,
+        mockInternalServerError,
+      ),
+    );
+
+    const expectedValue = new IssueAccessTokenError('Internal Server Error');
+
+    await expect(issueAccessToken()).rejects.toStrictEqual(expectedValue);
+  });
 });

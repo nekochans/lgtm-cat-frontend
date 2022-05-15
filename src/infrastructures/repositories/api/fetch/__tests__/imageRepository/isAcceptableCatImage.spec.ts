@@ -206,7 +206,7 @@ describe('imageRepository.ts isAcceptableCatImage TestCases', () => {
       rest.post(isAcceptableCatImageUrl(), mockInternalServerError),
     );
 
-    const expected = new IsAcceptableCatImageError();
+    const expected = new IsAcceptableCatImageError('Internal Server Error');
 
     const request: IsAcceptableCatImageRequest = {
       accessToken: { jwtString: '' },
@@ -214,9 +214,6 @@ describe('imageRepository.ts isAcceptableCatImage TestCases', () => {
       imageExtension: '.jpg',
     };
 
-    const uploadedImageResult = await isAcceptableCatImage(request);
-
-    expect(isSuccessResult(uploadedImageResult)).toBeFalsy();
-    expect(uploadedImageResult.value).toStrictEqual(expected);
+    await expect(isAcceptableCatImage(request)).rejects.toStrictEqual(expected);
   });
 });
