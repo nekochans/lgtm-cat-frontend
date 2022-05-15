@@ -18,6 +18,7 @@ import { sendUploadCatImage } from '../infrastructures/utils/gtm';
 import CatImageUploadConfirmModal from './CatImageUploadConfirmModal';
 import CatImageUploadDescription from './CatImageUploadDescription';
 import CatImageUploadError from './CatImageUploadError';
+import UploadCatImageUnexpectedError from '../domain/errors/UploadCatImageUnexpectedError';
 
 // TODO acceptedTypesは定数化して分離する
 const acceptedTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg'];
@@ -211,18 +212,16 @@ const CatImageUploadForm: VFC<Props> = ({ uploadCatImage }) => {
 
       sendUploadCatImage('upload_cat_image_button');
     } catch (error) {
-      const newError =
-        error instanceof Error
-          ? error
-          : new Error('onClickUpload Unexpected error');
-      setErrorMessage(createDisplayErrorMessage(newError));
-      setImagePreviewUrl('');
-      setUploadImageExtension('');
-      setCreatedLgtmImageUrl('');
-      setIsLoading(false);
-      closeModal();
+      if (error instanceof UploadCatImageUnexpectedError) {
+        setErrorMessage(createDisplayErrorMessage(error));
+        setImagePreviewUrl('');
+        setUploadImageExtension('');
+        setCreatedLgtmImageUrl('');
+        setIsLoading(false);
+        closeModal();
 
-      throw newError;
+        throw error;
+      }
     }
   };
 
