@@ -24,6 +24,7 @@ import {
   createSuccessResult,
 } from '../../../../domain/repositories/repositoryResult';
 import { LgtmImages, UploadedImage } from '../../../../domain/types/lgtmImage';
+import { mightSetRequestIdToSentry } from '../../../utils/sentry';
 
 export const fetchLgtmImagesInRandom: FetchLgtmImages = async (request) => {
   const options: RequestInit = {
@@ -40,6 +41,8 @@ export const fetchLgtmImagesInRandom: FetchLgtmImages = async (request) => {
     if (response.status === httpStatusCode.unauthorized) {
       return createFailureResult(new FetchLgtmImagesAuthError());
     }
+
+    await mightSetRequestIdToSentry(response);
 
     throw new FetchLgtmImagesError(response.statusText);
   }
@@ -66,6 +69,8 @@ export const fetchLgtmImagesInRecentlyCreated: FetchLgtmImages = async (
     if (response.status === httpStatusCode.unauthorized) {
       return createFailureResult(new FetchLgtmImagesAuthError());
     }
+
+    await mightSetRequestIdToSentry(response);
 
     throw new FetchLgtmImagesError(response.statusText);
   }
@@ -107,6 +112,7 @@ export const uploadCatImage: UploadCatImage = async (request) => {
           new UploadCatImageValidationError(),
         );
       default:
+        await mightSetRequestIdToSentry(response);
         throw new UploadCatImageUnexpectedError(response.statusText);
     }
   }
@@ -138,6 +144,8 @@ export const isAcceptableCatImage: IsAcceptableCatImage = async (request) => {
         new IsAcceptableCatImageAuthError(),
       );
     }
+
+    await mightSetRequestIdToSentry(response);
 
     throw new IsAcceptableCatImageError(response.statusText);
   }
