@@ -111,10 +111,10 @@ describe('imageRepository.ts uploadCatImage TestCases', () => {
     expect(uploadedImageResult.value).toStrictEqual(expected);
   });
 
-  it('should return an UploadCatImageUnexpectedError because the API will return unexpected error', async () => {
+  it('should throw a UploadCatImageUnexpectedError because the API will return unexpected error', async () => {
     mockServer.use(rest.post(uploadCatImageUrl(), mockInternalServerError));
 
-    const expected = new UploadCatImageUnexpectedError();
+    const expected = new UploadCatImageUnexpectedError('Internal Server Error');
 
     const request: UploadCatImageRequest = {
       accessToken: { jwtString: '' },
@@ -122,9 +122,6 @@ describe('imageRepository.ts uploadCatImage TestCases', () => {
       imageExtension: '.jpg',
     };
 
-    const uploadedImageResult = await uploadCatImage(request);
-
-    expect(isSuccessResult(uploadedImageResult)).toBeFalsy();
-    expect(uploadedImageResult.value).toStrictEqual(expected);
+    await expect(uploadCatImage(request)).rejects.toStrictEqual(expected);
   });
 });
