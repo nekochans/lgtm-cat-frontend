@@ -2,6 +2,7 @@
 // TODO https://github.com/nekochans/lgtm-cat-frontend/issues/107 を実施する際にファイル先頭のESLintの制御コメントを削除する
 import { useState, type VFC, ChangeEvent, FormEvent } from 'react';
 
+import IsAcceptableCatImageError from '../domain/errors/IsAcceptableCatImageError';
 import UploadCatImageSizeTooLargeError from '../domain/errors/UploadCatImageSizeTooLargeError';
 import UploadCatImageUnexpectedError from '../domain/errors/UploadCatImageUnexpectedError';
 import UploadCatImageValidationError from '../domain/errors/UploadCatImageValidationError';
@@ -212,7 +213,10 @@ const CatImageUploadForm: VFC<Props> = ({ uploadCatImage }) => {
 
       sendUploadCatImage('upload_cat_image_button');
     } catch (error) {
-      if (error instanceof UploadCatImageUnexpectedError) {
+      if (
+        error instanceof UploadCatImageUnexpectedError ||
+        error instanceof IsAcceptableCatImageError
+      ) {
         setErrorMessage(createDisplayErrorMessage(error));
         setImagePreviewUrl('');
         setUploadImageExtension('');
