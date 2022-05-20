@@ -63,6 +63,10 @@ export SENTRY_AUTH_TOKEN=Sentryのトークン（Vercel上の値を参照）
 
 `http://localhost:2222` でアクセス可能です。
 
+## メンテナンスモードについて
+
+`IS_IN_MAINTENANCE` が `1` の場合はメンテナンスページを強制的に表示します。
+
 ## 開発でよく使うコマンド
 
 ### `npm run lint`
