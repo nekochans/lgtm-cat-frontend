@@ -50,4 +50,10 @@ export const metaTagList = (): MetaTagList => ({
     ogpTargetUrl: urlList.privacy,
     appName,
   },
+  maintenance: {
+    title: `${defaultTitle} メンテナンス`,
+    ogpImgUrl: urlList.ogpImg,
+    ogpTargetUrl: urlList.privacy,
+    appName,
+  },
 });

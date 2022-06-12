@@ -21,9 +21,15 @@ export const pathList = {
   terms: '/terms',
   privacy: '/privacy',
   error: '/error',
+  maintenance: '/maintenance',
 } as const;
 
-export type AppPathName = 'top' | 'upload' | 'terms' | 'privacy';
+export type AppPathName =
+  | 'top'
+  | 'upload'
+  | 'terms'
+  | 'privacy'
+  | 'maintenance';
 
 // この関数はサーバーサイドでしか動作しない
 export const cognitoTokenEndpointUrl = (): string =>
