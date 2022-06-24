@@ -12,7 +12,7 @@ import {
 import { cognitoTokenEndpointUrl } from '../../../constants/url';
 import { AccessToken } from '../../../domain/types/authToken';
 
-type CognitoTokenResponseBody = {
+export type CognitoTokenResponseBody = {
   // eslint-disable-next-line camelcase
   access_token: string;
   // eslint-disable-next-line camelcase
