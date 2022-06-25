@@ -24,7 +24,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - run: |
-          npm ci
+          npm ci --legacy-peer-deps
           npm run lint
           npm run test:ci
         env:

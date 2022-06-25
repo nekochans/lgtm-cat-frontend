@@ -4,7 +4,7 @@ import { metaTagList } from '../constants/metaTag';
 import ImageListContainer from '../containers/ImageListContainer';
 import { isSuccessResult } from '../domain/repositories/repositoryResult';
 import { LgtmImages } from '../domain/types/lgtmImage';
-import { issueAccessToken } from '../infrastructures/repositories/api/fetch/authTokenRepository';
+import { issueAccessTokenOnServer } from '../infrastructures/repositories/api/fetch/authTokenRepository';
 import { fetchLgtmImagesInRandom } from '../infrastructures/repositories/api/fetch/imageRepository';
 import imageData from '../infrastructures/utils/imageData';
 import extractRandomImages from '../infrastructures/utils/randomImages';
@@ -33,7 +33,7 @@ const IndexPage: NextPage<Props> = ({ lgtmImages }) => {
 };
 
 export const getStaticProps: GetStaticProps = async () => {
-  const issueAccessTokenResult = await issueAccessToken();
+  const issueAccessTokenResult = await issueAccessTokenOnServer();
   if (isSuccessResult(issueAccessTokenResult)) {
     const lgtmImagesResult = await fetchLgtmImagesInRandom({
       accessToken: { jwtString: issueAccessTokenResult.value.jwtString },
