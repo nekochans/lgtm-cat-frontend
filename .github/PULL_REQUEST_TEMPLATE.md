@@ -10,7 +10,7 @@
 
 [required]
 
-# スクリーンショット
+# Storybook の URL もしくはスクリーンショット
 
 [optional] ただし UI 変更の時は [required]
 
