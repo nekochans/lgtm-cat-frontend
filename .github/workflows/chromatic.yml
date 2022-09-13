@@ -6,14 +6,22 @@ jobs:
   chromatic-deployment:
     name: Deploy Storybook to chromatic
     runs-on: ubuntu-latest
-    timeout-minutes: 7
+    timeout-minutes: 10
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          registry-url: 'https://npm.pkg.github.com'
+          cache: 'npm'
+          scope: '@nekochans'
+      - run: npm ci --legacy-peer-deps
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.AUTH_TOKEN_FOR_GITHUB_PACKAGES }}
       - name: Publish to Chromatic
         uses: chromaui/action@v1
         with:
