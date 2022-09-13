@@ -1,14 +1,23 @@
-import CatImageUploadForm from '../components/CatImageUploadForm';
-import { metaTagList } from '../constants/metaTag';
-import { uploadCatImage } from '../infrastructures/repositories/api/fetch/imageRepository';
-import SimpleLayout from '../layouts/SimpleLayout';
+import { convertLocaleToLanguage, type Language } from '../features';
+import { UploadTemplate } from '../templates';
 
-import type { NextPage } from 'next';
+import type { GetStaticProps, NextPage } from 'next';
 
-const UploadPage: NextPage = () => (
-  <SimpleLayout metaTag={metaTagList().top}>
-    <CatImageUploadForm uploadCatImage={uploadCatImage} />
-  </SimpleLayout>
+type Props = {
+  language: Language;
+};
+
+const UploadPage: NextPage<Props> = ({ language }) => (
+  <UploadTemplate language={language} />
 );
+
+export const getStaticProps: GetStaticProps = (context) => {
+  const { locale } = context;
+  const language = convertLocaleToLanguage(locale);
+
+  return {
+    props: { language },
+  };
+};
 
 export default UploadPage;

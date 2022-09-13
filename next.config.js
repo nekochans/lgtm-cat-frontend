@@ -1,13 +1,19 @@
 const { withSentryConfig } = require('@sentry/nextjs');
 
-/**
- * @type {import('next').NextConfig}
- */
+/** @type {import('next').NextConfig} */
 const moduleExports = {
+  reactStrictMode: true,
   images: {
     domains: ['lgtm-images.lgtmeow.com', 'stg-lgtm-images.lgtmeow.com'],
   },
-  swcMinify: true,
+  compiler: {
+    styledComponents: true,
+  },
+  i18n: {
+    locales: ['ja', 'en'],
+    defaultLocale: 'ja',
+    localeDetection: false,
+  },
 };
 
 const sentryWebpackPluginOptions = {

@@ -1,4 +1,4 @@
-const fetchLgtmImagesMockBody = {
+export const fetchLgtmImagesMockBody = {
   lgtmImages: [
     {
       id: 1,
@@ -38,5 +38,3 @@ const fetchLgtmImagesMockBody = {
     },
   ],
 };
-
-export default fetchLgtmImagesMockBody;

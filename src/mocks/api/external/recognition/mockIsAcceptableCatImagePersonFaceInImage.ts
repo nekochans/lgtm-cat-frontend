@@ -1,19 +1,15 @@
 import { ResponseResolver, MockedRequest, restContext } from 'msw';
 
-import { httpStatusCode } from '../../../../constants/httpStatusCode';
-import { IsAcceptableCatImageNotAcceptableReason } from '../../../../domain/repositories/imageRepository';
+import { httpStatusCode } from '../../../../constants';
 
-const mockIsAcceptableCatImagePersonFaceInImage: ResponseResolver<
+export const mockIsAcceptableCatImagePersonFaceInImage: ResponseResolver<
   MockedRequest,
   typeof restContext
-> = (_req, res, ctx) =>
+> = (req, res, ctx) =>
   res(
     ctx.status(httpStatusCode.ok),
     ctx.json({
       isAcceptableCatImage: false,
-      notAcceptableReason:
-        'person face in the image' as IsAcceptableCatImageNotAcceptableReason,
+      notAcceptableReason: 'person face in the image',
     }),
   );
-
-export default mockIsAcceptableCatImagePersonFaceInImage;

@@ -1,16 +1,14 @@
 import { ResponseResolver, MockedRequest, restContext } from 'msw';
 
-import { httpStatusCode } from '../../../../constants/httpStatusCode';
+import { httpStatusCode } from '../../../../constants';
 
-const mockIsAcceptableCatImage: ResponseResolver<
+export const mockIsAcceptableCatImage: ResponseResolver<
   MockedRequest,
   typeof restContext
-> = (_req, res, ctx) =>
+> = (req, res, ctx) =>
   res(
     ctx.status(httpStatusCode.ok),
     ctx.json({
       isAcceptableCatImage: true,
     }),
   );
-
-export default mockIsAcceptableCatImage;

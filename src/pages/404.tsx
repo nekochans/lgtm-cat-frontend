@@ -1,30 +1,24 @@
-import { NextPage } from 'next';
-import Link from 'next/link';
+import { httpStatusCode } from '../constants';
+import { convertLocaleToLanguage, type Language } from '../features';
+import { ErrorTemplate } from '../templates';
 
-import ErrorContent from '../components/ErrorContent';
-import ErrorLayout from '../components/ErrorLayout';
-import { custom404title } from '../constants/metaTag';
-import { pathList } from '../constants/url';
+import type { GetStaticProps, NextPage } from 'next';
 
-const Custom404: NextPage = () => (
-  <ErrorLayout title={custom404title}>
-    <ErrorContent
-      title="404"
-      message={
-        <p>
-          お探しのページが見つかりません。
-          <br />
-          URLが間違っている、もしくは移動または削除された可能性があります。
-        </p>
-      }
-      topLink={
-        <Link href={pathList.top}>
-          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-          <a>TOPページへ</a>
-        </Link>
-      }
-    />
-  </ErrorLayout>
+type Props = {
+  language: Language;
+};
+
+const Custom404: NextPage<Props> = ({ language }) => (
+  <ErrorTemplate type={httpStatusCode.notFound} language={language} />
 );
+
+export const getStaticProps: GetStaticProps = (context) => {
+  const { locale } = context;
+  const language = convertLocaleToLanguage(locale);
+
+  return {
+    props: { language },
+  };
+};
 
 export default Custom404;

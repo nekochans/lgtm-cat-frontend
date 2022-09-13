@@ -13,8 +13,8 @@ module.exports = {
     'plugin:jsx-a11y/recommended',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
-    'plugin:storybook/recommended',
     'next/core-web-vitals',
+    'plugin:storybook/recommended',
     'prettier',
   ],
   parser: '@typescript-eslint/parser',
@@ -37,6 +37,8 @@ module.exports = {
   ],
   root: true,
   rules: {
+    'multiline-comment-style': 'off',
+    'capitalized-comments': 'off',
     // occur error in `import React from 'react'` with react-scripts 4.0.1
     'no-use-before-define': 'off',
     '@typescript-eslint/no-use-before-define': ['error'],
@@ -134,8 +136,6 @@ module.exports = {
     'sort-keys': 'off',
     'no-ternary': 'off',
     'class-methods-use-this': 'off',
-    'max-statements': ['error', 15],
-    'max-lines-per-function': ['error', 60],
   },
   overrides: [
     {

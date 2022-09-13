@@ -1,0 +1,1 @@
+export { TermsOrPrivacyTemplate } from './TermsOrPrivacyTemplate';

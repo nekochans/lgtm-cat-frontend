@@ -1,24 +1,24 @@
-import { NextPage } from 'next';
-import Link from 'next/link';
+import { httpStatusCode } from '../constants';
+import { convertLocaleToLanguage, type Language } from '../features';
+import { ErrorTemplate } from '../templates';
 
-import ErrorContent from '../components/ErrorContent';
-import ErrorLayout from '../components/ErrorLayout';
-import { metaTagList } from '../constants/metaTag';
-import { pathList } from '../constants/url';
+import type { GetStaticProps, NextPage } from 'next';
 
-const MaintenancePage: NextPage = () => (
-  <ErrorLayout title={metaTagList().maintenance.title}>
-    <ErrorContent
-      title="システムメンテナンス"
-      message="メンテナンス中です。申し訳ありませんがしばらく時間がたってからお試しください。"
-      topLink={
-        <Link href={pathList.top}>
-          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-          <a>TOPページへ</a>
-        </Link>
-      }
-    />
-  </ErrorLayout>
+type Props = {
+  language: Language;
+};
+
+const MaintenancePage: NextPage<Props> = ({ language }) => (
+  <ErrorTemplate type={httpStatusCode.serviceUnavailable} language={language} />
 );
+
+export const getStaticProps: GetStaticProps = (context) => {
+  const { locale } = context;
+  const language = convertLocaleToLanguage(locale);
+
+  return {
+    props: { language },
+  };
+};
 
 export default MaintenancePage;

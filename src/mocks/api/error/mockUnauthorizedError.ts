@@ -1,11 +1,11 @@
 import { ResponseResolver, MockedRequest, restContext } from 'msw';
 
-import { httpStatusCode } from '../../../constants/httpStatusCode';
+import { httpStatusCode } from '../../../constants';
 
-const mockUnauthorizedError: ResponseResolver<
+export const mockUnauthorizedError: ResponseResolver<
   MockedRequest,
   typeof restContext
-> = (_req, res, ctx) =>
+> = (req, res, ctx) =>
   res(
     ctx.status(httpStatusCode.unauthorized),
     ctx.json({
@@ -13,5 +13,3 @@ const mockUnauthorizedError: ResponseResolver<
       message: 'Unauthorized',
     }),
   );
-
-export default mockUnauthorizedError;
