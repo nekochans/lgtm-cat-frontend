@@ -14,7 +14,6 @@ export const DefaultLayout: FC<Props> = ({ metaTag, children }) => (
       <title>{metaTag.title}</title>
       <meta charSet="utf-8" />
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      <meta name="robots" content="noindex , nofollow" />
       <meta property="og:title" content={metaTag.title} />
       <meta property="og:description" content={metaTag.description} />
       <meta property="og:type" content="website" />
