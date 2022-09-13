@@ -6,6 +6,10 @@
 
 lgtm-cat（サービス名 LGTMeow https://lgtmeow.com のフロントエンド用プロジェクトです。
 
+2022 年 9 月に新デザインバージョンをリリースしました。
+
+[tomoshige](https://twitter.com/ooopetiteooo) さんに Figma で作成して頂きました。 [tomoshige](https://twitter.com/ooopetiteooo) さん、ありがとうございます 🐱
+
 # Getting Started
 
 ## 環境変数の設定
