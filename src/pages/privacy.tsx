@@ -1,32 +1,46 @@
 import fs from 'fs';
 
-import MarkdownContents from '../components/MarkdownContents';
-import { metaTagList } from '../constants/metaTag';
-import SimpleLayout from '../layouts/SimpleLayout';
+import { convertLocaleToLanguage, type Language } from '../features';
+import { TermsOrPrivacyTemplate } from '../templates';
 
 import type { GetStaticProps, NextPage } from 'next';
 
 type Props = {
-  privacy: string;
+  language: Language;
+  privacyJa: string;
+  privacyEn: string;
 };
 
-const PrivacyPage: NextPage<Props> = ({ privacy }) => (
-  <SimpleLayout metaTag={metaTagList().privacy}>
-    <MarkdownContents markdown={privacy} />
-  </SimpleLayout>
+const PrivacyPage: NextPage<Props> = ({ language, privacyJa, privacyEn }) => (
+  <TermsOrPrivacyTemplate
+    type="privacy"
+    language={language}
+    jaMarkdown={privacyJa}
+    enMarkdown={privacyEn}
+  />
 );
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getStaticProps: GetStaticProps = async (context) => {
   const fsPromise = fs.promises;
 
-  const privacy = await fsPromise.readFile(
-    `${process.cwd()}/src/docs/privacy.md`,
+  const privacyJa = await fsPromise.readFile(
+    `${process.cwd()}/src/docs/privacy.ja.md`,
     {
       encoding: 'utf8',
     },
   );
 
-  return { props: { privacy } };
+  const privacyEn = await fsPromise.readFile(
+    `${process.cwd()}/src/docs/privacy.en.md`,
+    {
+      encoding: 'utf8',
+    },
+  );
+
+  const { locale } = context;
+  const language = convertLocaleToLanguage(locale);
+
+  return { props: { language, privacyJa, privacyEn } };
 };
 
 export default PrivacyPage;

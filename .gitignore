@@ -29,17 +29,26 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 .env.production.local
-.env
-.envrc
 
 # vercel
 .vercel
 
-.idea
+# env files
+.env
+.envrc
 
 # Storybook
 storybook-static
 build-storybook.log
 
+# npm
+.npmrc
+
+# ESLint
+.eslintcache
+
 # Sentry
 .sentryclirc
+
+# IntelliJ IDEA
+.idea

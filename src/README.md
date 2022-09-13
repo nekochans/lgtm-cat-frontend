@@ -1,3 +1,9 @@
+# 基本方針
+
+UI Component は [@nekochans/lgtm-cat-ui](https://github.com/nekochans/lgtm-cat-ui) で開発します。
+
+よって本アプリケーションには UI Component はほとんど実装されずにビジネスロジックの実装が中心となります。
+
 # ディレクトリ構成について
 
 各ディレクトリの役割について記載します。
@@ -7,6 +13,25 @@
 まだまだ発展途上のアプリケーションなので、今後もより良い形にリファクタリングを継続していきます。
 
 # `src` 以下のディレクトリ
+
+## `index.ts` の作成について
+
+各ディレクトリ毎に `index.ts` を作成して、そこから外のディレクトリに公開したい関数や型定義だけを export するようにします。
+
+これは export の範囲を限定可する事でリファクタリング時の影響範囲を小さくする事が主な目的です。
+
+ただし例外的に `src/pages/` に関しては Next.js のルール上、ここに置かれた物がそのままルーティングとして解釈されてしまうので `index.ts` の配置は行いません。
+
+（例）`src/features/imageData.ts` は `features/` 内でのみ利用したいが外には export したくない。
+
+## `export default` について
+
+以下の記事にもありますが、主にリファクタリング面や IDE のサポート面で不利になる可能性があるので `export default` を利用しない方針とします。
+
+- [なぜ default export を使うべきではないのか？](https://engineering.linecorp.com/ja/blog/you-dont-need-default-export/)
+- [Avoid Export Default](https://typescript-jp.gitbook.io/deep-dive/main-1/defaultisbad)
+
+ただし例外的に `src/pages/` に関しては Next.js のルール上 `export default` を利用する必要があるので `src/pages/` では `export default` を利用します。
 
 ## components
 
@@ -18,6 +43,14 @@ Component の内部で React hooks を利用する事は問題ありません。
 
 一部 `next/image` に依存しているものがありますが、将来的にこれは別のディレクトリに移動させるかもしれません。
 
+基本方針のところにも書きましたが、基本的に UI Component は [@nekochans/lgtm-cat-ui](https://github.com/nekochans/lgtm-cat-ui) で開発します。
+
+そのため、本アプリケーションには Component が実装される事はあまりないと思います。
+
+[@nekochans/lgtm-cat-ui](https://github.com/nekochans/lgtm-cat-ui) にも ReactNode を渡す Component がいくつか存在するので、そのような Component はここで実装する事になります。
+
+また `GoogleTagManager` などの UI の役割を持たない Component もここで定義する事になります。
+
 ## constants
 
 アプリケーション全体で利用する定数を格納します。
@@ -25,12 +58,6 @@ Component の内部で React hooks を利用する事は問題ありません。
 定数なので演算処理などを入れないようにします。
 
 また外部ライブラリには依存せずに、順数な TypeScript のオブジェクト、または関数として実装します。
-
-## containers
-
-他リソースへの依存が含まれる React Component を格納します。
-
-現状だと ReactContext、Redux に接続しているものが該当します。
 
 ## docs
 
@@ -40,63 +67,57 @@ Markdown 形式で管理したいドキュメントを格納します。
 
 [react-markdown](https://github.com/remarkjs/react-markdown) 等のライブラリを用いてレンダリングされます。
 
-## domain
+## edge
 
-コアとなるビジネスロジックを格納する為のディレクトリです。
+Edge Runtime 上で実行されるファイルを格納します。
+
+`src/middleware.ts` からはここに定義されているファイルだけに依存するようにして下さい。
+
+Node.js の API は利用出来ないので以下のドキュメントを参照しながら実装して下さい。
+
+- https://edge-runtime.vercel.sh/features/available-apis
+
+## features
+
+[bulletproof-react](https://github.com/alan2207/bulletproof-react) のように `features` の配下に `components` や `api` などをまとめる設計もありますが、本プリケーションはそれほど機能が多い訳ではないので、本アプリケーションにおける `features` の役割はあくまでも コアとなるビジネスロジックを格納する為のディレクトリです。
 
 ドメイン駆動設計のパターンを全て踏襲している訳ではありません。
 
-### domain/errors
+`src/api/` で実装する API 接続用関数のインターフェースやビジネスロジック上重要な関数や型定義などを実装します。
+
+また外部ライブラリには依存せずに、順数な TypeScript のオブジェクト、または関数として実装します。
+
+ただし例外的に [@nekochans/lgtm-cat-ui](https://github.com/nekochans/lgtm-cat-ui) に定義している型定義や関数に依存している箇所があります。
+
+[@nekochans/lgtm-cat-ui](https://github.com/nekochans/lgtm-cat-ui) は自作 Package なので例外的にこれを認めています。
+
+### features/errors
 
 ビジネス上意味のあるエラーオブジェクトを定義します。
 
 TypeScript の汎用エラーは使わずに何のエラーなのか分かりやすい名前をつけます。
 
-### domain/repositories
+## api
 
-ドメイン駆動設計でよく出てくる、Repository パターンのインターフェースを格納する為のディレクトリです。
+API に通信を行う関数を格納します。
 
-API に通信を行い、ビジネスロジック上重要なデータを取得するインターフェースなどが定義されます。
+現状は `src/api/fetch/` しか存在しませんが `fetch` の部分には HTTP クライアントが入ります。
 
-`type` を使って定義します。
+実装する際は `features/` 配下に関数のインターフェースを実装して、それを利用する形で実装します。
 
-### domain/types
-
-TypeScript の型定義はビジネスロジックそのものを表す事が多いので、ここに定義します。
-
-### domain/functions
-
-ビジネスロジック上重要な操作を定義します。
-
-純粋な TypeScript の関数として定義し、外部ライブラリには依存しないようにします。
-
-もしも外部ライブラリに依存する場合は Repository パターンの利用を検討して下さい。
-
-### hooks
+## hooks
 
 独自定義した Custom Hooks を格納します。
-
-## infrastructures
-
-ドメイン駆動設計に出てくる infrastructure から言葉を借りています。
-
-技術的な問題を解決する為の層なのでビジネスロジックは `domain` に定義します。
-
-### infrastructures/repositories
-
-`domain/repositories` で定義された Repository の実装が格納されます。
-
-ここでは外部ライブラリに依存して問題ありません。
-
-### infrastructures/utils
-
-どのような Web アプリケーションを運用する上でも、利用する汎用的な関数を実装します。
-
-例えば、サイトマップの作成や Google Analytics の設定用関数が格納されます。
 
 ## layouts
 
 レイアウト用の Component を格納します。
+
+## mocks
+
+[msw](https://mswjs.io/) 用の Mock 用関数を格納します。
+
+Storybook やテストコードで利用します。
 
 ## pages
 
@@ -104,13 +125,33 @@ Next.js の page 用 Component を格納します。
 
 Next.js に依存する処理以外は極力書かずに、その他の層に処理を移譲するように意識します。
 
-## stores
+## styles
 
-アプリケーション用の State 管理を行う為の関数群を定義します。
+大部分の Component を [@nekochans/lgtm-cat-ui](https://github.com/nekochans/lgtm-cat-ui) で開発しているので、CSS はほとんど登場しません。
 
-Redux などの状態管理ライブラリに依存する関数群が実装されます。
+例外的に Markdown をスタイリングする為の CSS がここに格納されています。
 
-現状は [Valtio](https://github.com/pmndrs/valtio) を使った State 管理用の関数群が格納されています。
+## templates
+
+アトミックデザインで言うところの `Templates` が格納されます。
+
+大部分の Component を [@nekochans/lgtm-cat-ui](https://github.com/nekochans/lgtm-cat-ui) で開発しているので、本アプリケーションで作成する Component のほとんどは `Templates` になります。
+
+ここでは [@nekochans/lgtm-cat-ui](https://github.com/nekochans/lgtm-cat-ui) で作成した `Templates` Component を export して利用しています。
+
+アトミックデザインから用語を拝借しましたが、本プロジェクトではアトミックデザインに準拠している訳ではありません。
+
+`pages` からはここに定義されている `Templates` Component を利用します。
+
+## types
+
+汎用的な型定義を格納します。
+
+## utils
+
+ドメイン駆動設計に出てくる infrastructure のような役割です。
+
+ここでは外部ライブラリに依存して問題ありません。
 
 ## その他
 
@@ -121,5 +162,3 @@ Redux などの状態管理ライブラリに依存する関数群が実装さ�
 ### Storybook
 
 「Component 名」 + `.stories.tsx` で命名します。
-
-components 配下の Component のみ Storybook を作成しています。

@@ -4,5 +4,8 @@ build/
 coverage/
 .eslintrc.js
 next-env.d.ts
+test/setupTests.ts
 *.config.js
+__mocks__
+storybook-static/
 public/mockServiceWorker.js
