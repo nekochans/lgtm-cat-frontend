@@ -1,8 +1,0 @@
-node_modules/
-.next/
-build/
-coverage/
-.eslintrc.js
-next-env.d.ts
-*.config.js
-public/mockServiceWorker.js

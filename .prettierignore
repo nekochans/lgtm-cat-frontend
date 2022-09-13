@@ -1,5 +1,0 @@
-package.json
-.next/
-build/
-coverage/
-public/mockServiceWorker.js
