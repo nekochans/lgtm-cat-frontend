@@ -59,6 +59,25 @@ export SENTRY_AUTH_TOKEN=Sentryのトークン（Vercel上の値を参照）
 - `NEXT_PUBLIC_SENTRY_DSN`
 - `SENTRY_AUTH_TOKEN`
 
+## `.npmrc` の追加
+
+GitHub Packages 内の private package を利用しているので、プロジェクトルートに `.npmrc` が必要です。
+
+[こちら](https://docs.github.com/ja/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) を参考に Personal Access Token を発行します。
+
+権限は `read:packages` があれば問題ありません。以下は作成例です。
+
+![personal-access-token](https://user-images.githubusercontent.com/11032365/189850906-6008cb05-1705-409f-beec-4910f9175c90.jpg)
+
+Personal Access Token を発行したら以下の内容で`.npmrc` を作成します。
+
+`ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx` の部分は発行した Personal Access Token に置き換えて下さい。
+
+```
+@nekochans:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
 ## 依存 package のインストールと開発用アプリケーションサーバーの起動
 
 `npm ci` で依存 package をインストールします。
