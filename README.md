@@ -17,12 +17,15 @@ lgtm-cat（サービス名 LGTMeow https://lgtmeow.com のフロントエンド�
 https://vercel.com/docs/cli#commands/dev/when-to-use-this-command
 
 ```
+NEXT_PUBLIC_APP_ENV=local
 NEXT_PUBLIC_APP_URL=本アプリケーションのURL、ローカルの場合は http://localhost:2222
 NEXT_PUBLIC_GA_MEASUREMENT_ID=Google Analytics（次世代の4）の測定ID（G-から始まるID）を指定
 NEXT_PUBLIC_LGTMEOW_API_URL=https://github.com/nekochans/lgtm-cat-api が稼働しているURLを指定
+NEXT_PUBLIC_IMAGE_RECOGNITION_API_URL=https://github.com/nekochans/lgtm-cat-image-recognition のねこ画像APIが稼働しているURLを指定
 COGNITO_CLIENT_ID=CognitoUserPoolのクライアントIDを指定
 COGNITO_CLIENT_SECRET=CognitoUserPoolのクライアントシークレットを指定
 COGNITO_TOKEN_ENDPOINT=https://{CognitoUserPoolのドメイン名}.auth.ap-northeast-1.amazoncognito.com/oauth2/token
+IS_IN_MAINTENANCE=0
 ```
 
 以下の環境変数はテストコード実行時や Build 時に参照されるので [direnv](https://github.com/direnv/direnv) を使って `.envrc` を配置するのが良いです。
@@ -33,6 +36,7 @@ export NEXT_PUBLIC_LGTMEOW_API_URL=https://github.com/nekochans/lgtm-cat-api が
 export NEXT_PUBLIC_IMAGE_RECOGNITION_API_URL=ねこ画像判定APIが稼働しているURLを指定
 export CHROMATIC_PROJECT_TOKEN=Chromaticのトークンを指定
 export NEXT_PUBLIC_APP_ENV=local
+export NEXT_PUBLIC_APP_URL=http://localhost:2222
 export SENTRY_ORG=Sentryの組織を指定（Vercel上の値を参照）
 export SENTRY_PROJECT=Sentryのプロジェクト名（Vercel上の値を参照）
 export NEXT_PUBLIC_SENTRY_DSN=SentryのDNS（Vercel上の値を参照）

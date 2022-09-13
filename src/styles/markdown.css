@@ -1,0 +1,14 @@
+.markdown h1,
+h2,
+h3 {
+  font-size: 20px;
+  line-height: 2.5;
+}
+
+.markdown p,
+li,
+dt,
+dd {
+  font-size: 15px;
+  line-height: 1.8;
+}
