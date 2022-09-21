@@ -8,8 +8,8 @@ import { MarkdownContents } from '../../components';
 import {
   metaTagList,
   languages,
-  type Language,
   i18nUrlList,
+  type Language,
 } from '../../features';
 import { useSaveSettingLanguage } from '../../hooks';
 import { DefaultLayout } from '../../layouts';

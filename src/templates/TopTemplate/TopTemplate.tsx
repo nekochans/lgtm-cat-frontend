@@ -5,9 +5,9 @@ import {
   metaTagList,
   appBaseUrl,
   languages,
+  i18nUrlList,
   type Language,
   LgtmImage,
-  i18nUrlList,
 } from '../../features';
 import { useSaveSettingLanguage, useCatImagesFetcher } from '../../hooks';
 import { DefaultLayout } from '../../layouts';

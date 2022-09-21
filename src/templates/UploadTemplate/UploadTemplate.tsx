@@ -5,8 +5,8 @@ import {
   metaTagList,
   appBaseUrl,
   languages,
-  type Language,
   i18nUrlList,
+  type Language,
 } from '../../features';
 import {
   useSaveSettingLanguage,
