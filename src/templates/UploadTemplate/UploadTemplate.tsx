@@ -4,9 +4,9 @@ import Image from 'next/image';
 import {
   metaTagList,
   appBaseUrl,
-  appUrlList,
   languages,
   type Language,
+  i18nUrlList,
 } from '../../features';
 import {
   useSaveSettingLanguage,
@@ -28,13 +28,10 @@ const CatImage = () => (
   <Image src={cat.src} width="302px" height="302px" alt="Cat" priority={true} />
 );
 
-const canonicalLink = `${appUrlList.upload}/` as const;
+const canonicalLink = i18nUrlList.upload?.ja;
 
 const alternateUrls = languages.map((hreflang) => {
-  const link =
-    hreflang === 'ja'
-      ? canonicalLink
-      : (`${canonicalLink}${hreflang}/` as const);
+  const link = hreflang === 'ja' ? canonicalLink : i18nUrlList.upload?.en;
 
   return { link, hreflang };
 });

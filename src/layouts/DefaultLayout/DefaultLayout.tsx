@@ -5,20 +5,20 @@ import type { FC, ReactNode } from 'react';
 
 type Props = {
   metaTag: MetaTag;
-  canonicalLink: Url;
-  alternateUrls: {
-    link: Url;
-    hreflang: Language;
-  }[];
   children: ReactNode;
+  canonicalLink?: Url;
+  alternateUrls?: {
+    hreflang: Language;
+    link?: Url;
+  }[];
 };
 
 // eslint-disable-next-line max-lines-per-function
 export const DefaultLayout: FC<Props> = ({
   metaTag,
+  children,
   canonicalLink,
   alternateUrls,
-  children,
 }) => (
   <>
     <Head>
@@ -52,8 +52,8 @@ export const DefaultLayout: FC<Props> = ({
       <meta name="msapplication-TileColor" content="#da532c" />
       <meta name="msapplication-config" content="/favicons/browserconfig.xml" />
       <meta name="theme-color" content="#ffffff" />
-      <link rel="canonical" href={canonicalLink} />
-      {alternateUrls.map((alternateUrl, index) => (
+      {canonicalLink ? <link rel="canonical" href={canonicalLink} /> : ''}
+      {alternateUrls?.map((alternateUrl, index) => (
         <link
           rel="alternate"
           hrefLang={alternateUrl.hreflang}

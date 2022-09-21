@@ -7,9 +7,9 @@ import {
 import { MarkdownContents } from '../../components';
 import {
   metaTagList,
-  appUrlList,
   languages,
   type Language,
+  i18nUrlList,
 } from '../../features';
 import { useSaveSettingLanguage } from '../../hooks';
 import { DefaultLayout } from '../../layouts';
@@ -49,15 +49,15 @@ export const TermsOrPrivacyTemplate: FC<Props> = ({
       : metaTagList(language).privacy;
 
   const canonicalLink =
-    type === 'terms'
-      ? (`${appUrlList.terms}/` as const)
-      : (`${appUrlList.privacy}/` as const);
+    type === 'terms' ? i18nUrlList.terms?.ja : i18nUrlList.privacy?.ja;
 
   const alternateUrls = languages.map((hreflang) => {
+    if (hreflang === 'ja') {
+      return { link: canonicalLink, hreflang };
+    }
+
     const link =
-      hreflang === 'ja'
-        ? canonicalLink
-        : (`${canonicalLink}${hreflang}/` as const);
+      type === 'terms' ? i18nUrlList.terms?.en : i18nUrlList.privacy?.en;
 
     return { link, hreflang };
   });

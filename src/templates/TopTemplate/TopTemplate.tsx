@@ -5,9 +5,9 @@ import {
   metaTagList,
   appBaseUrl,
   languages,
-  appUrlList,
   type Language,
   LgtmImage,
+  i18nUrlList,
 } from '../../features';
 import { useSaveSettingLanguage, useCatImagesFetcher } from '../../hooks';
 import { DefaultLayout } from '../../layouts';
@@ -25,13 +25,10 @@ const fetchRandomCatImagesCallback = sendClickTopFetchRandomCatButton;
 
 const fetchNewArrivalCatImagesCallback = sendClickTopFetchNewArrivalCatButton;
 
-const canonicalLink = `${appUrlList.top}/` as const;
+const canonicalLink = i18nUrlList.top?.ja;
 
 const alternateUrls = languages.map((hreflang) => {
-  const link =
-    hreflang === 'ja'
-      ? canonicalLink
-      : (`${canonicalLink}${hreflang}/` as const);
+  const link = hreflang === 'ja' ? canonicalLink : i18nUrlList.top?.en;
 
   return { link, hreflang };
 });

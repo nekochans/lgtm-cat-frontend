@@ -1,3 +1,5 @@
+import { Language } from './language';
+
 export type Url = `http://localhost${string}` | `https://${string}`;
 
 export const isUrl = (value: unknown): value is Url => {
@@ -51,6 +53,31 @@ export const appUrlList = {
   privacy: `${appBaseUrl()}${appPathList.privacy}` as const,
   maintenance: `${appBaseUrl()}${appPathList.maintenance}` as const,
 } as const;
+
+type I18nUrlList = {
+  [key in AppPathName]?: {
+    [childrenKey in Language]: Url;
+  };
+};
+
+export const i18nUrlList: I18nUrlList = {
+  top: {
+    ja: `${appUrlList.top}/`,
+    en: `${appBaseUrl()}/en/`,
+  },
+  upload: {
+    ja: `${appUrlList.upload}/`,
+    en: `${appBaseUrl()}/en${appPathList.upload}/`,
+  },
+  terms: {
+    ja: `${appUrlList.terms}/`,
+    en: `${appBaseUrl()}/en${appPathList.terms}/`,
+  },
+  privacy: {
+    ja: `${appUrlList.privacy}/`,
+    en: `${appBaseUrl()}/en${appPathList.privacy}/`,
+  },
+};
 
 export type AppUrl = typeof appUrlList[keyof typeof appUrlList];
 
