@@ -1,14 +1,25 @@
 import Head from 'next/head';
 
-import type { MetaTag } from '../../features';
+import type { Language, MetaTag, Url } from '../../features';
 import type { FC, ReactNode } from 'react';
 
 type Props = {
   metaTag: MetaTag;
+  canonicalLink: Url;
+  alternateUrls: {
+    link: Url;
+    hreflang: Language;
+  }[];
   children: ReactNode;
 };
 
-export const DefaultLayout: FC<Props> = ({ metaTag, children }) => (
+// eslint-disable-next-line max-lines-per-function
+export const DefaultLayout: FC<Props> = ({
+  metaTag,
+  canonicalLink,
+  alternateUrls,
+  children,
+}) => (
   <>
     <Head>
       <title>{metaTag.title}</title>
@@ -41,6 +52,15 @@ export const DefaultLayout: FC<Props> = ({ metaTag, children }) => (
       <meta name="msapplication-TileColor" content="#da532c" />
       <meta name="msapplication-config" content="/favicons/browserconfig.xml" />
       <meta name="theme-color" content="#ffffff" />
+      <link rel="canonical" href={canonicalLink} />
+      {alternateUrls.map((alternateUrl, index) => (
+        <link
+          rel="alternate"
+          hrefLang={alternateUrl.hreflang}
+          href={alternateUrl.link}
+          key={index}
+        />
+      ))}
     </Head>
     {children}
   </>

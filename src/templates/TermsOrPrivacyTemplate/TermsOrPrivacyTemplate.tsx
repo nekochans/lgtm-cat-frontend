@@ -5,7 +5,12 @@ import {
 } from '@nekochans/lgtm-cat-ui';
 
 import { MarkdownContents } from '../../components';
-import { metaTagList, type Language } from '../../features';
+import {
+  metaTagList,
+  appUrlList,
+  languages,
+  type Language,
+} from '../../features';
 import { useSaveSettingLanguage } from '../../hooks';
 import { DefaultLayout } from '../../layouts';
 
@@ -18,6 +23,7 @@ type Props = {
   enMarkdown: string;
 };
 
+// eslint-disable-next-line max-lines-per-function
 export const TermsOrPrivacyTemplate: FC<Props> = ({
   type,
   language,
@@ -42,8 +48,26 @@ export const TermsOrPrivacyTemplate: FC<Props> = ({
       ? metaTagList(language).terms
       : metaTagList(language).privacy;
 
+  const canonicalLink =
+    type === 'terms'
+      ? (`${appUrlList.terms}/` as const)
+      : (`${appUrlList.privacy}/` as const);
+
+  const alternateUrls = languages.map((hreflang) => {
+    const link =
+      hreflang === 'ja'
+        ? canonicalLink
+        : (`${canonicalLink}${hreflang}/` as const);
+
+    return { link, hreflang };
+  });
+
   return (
-    <DefaultLayout metaTag={metaTag}>
+    <DefaultLayout
+      metaTag={metaTag}
+      canonicalLink={canonicalLink}
+      alternateUrls={alternateUrls}
+    >
       <OrgTermsOrPrivacyTemplate
         type={type}
         language={selectedLanguage}
