@@ -1,7 +1,13 @@
 import { UploadTemplate as OrgUploadTemplate } from '@nekochans/lgtm-cat-ui';
 import Image from 'next/image';
 
-import { metaTagList, appBaseUrl, type Language } from '../../features';
+import {
+  metaTagList,
+  appBaseUrl,
+  languages,
+  i18nUrlList,
+  type Language,
+} from '../../features';
 import {
   useSaveSettingLanguage,
   useCatImageValidator,
@@ -22,6 +28,14 @@ const CatImage = () => (
   <Image src={cat.src} width="302px" height="302px" alt="Cat" priority={true} />
 );
 
+const canonicalLink = i18nUrlList.upload?.ja;
+
+const alternateUrls = languages.map((hreflang) => {
+  const link = hreflang === 'ja' ? canonicalLink : i18nUrlList.upload?.en;
+
+  return { link, hreflang };
+});
+
 type Props = {
   language: Language;
 };
@@ -36,7 +50,11 @@ export const UploadTemplate: FC<Props> = ({ language }) => {
   const { imageUploader } = useCatImageUploader(language);
 
   return (
-    <DefaultLayout metaTag={metaTag}>
+    <DefaultLayout
+      metaTag={metaTag}
+      canonicalLink={canonicalLink}
+      alternateUrls={alternateUrls}
+    >
       <OrgUploadTemplate
         language={language}
         imageValidator={imageValidator}
