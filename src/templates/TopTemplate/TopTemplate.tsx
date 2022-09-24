@@ -14,6 +14,7 @@ import { DefaultLayout } from '../../layouts';
 import {
   sendClickTopFetchNewArrivalCatButton,
   sendClickTopFetchRandomCatButton,
+  sendCopyMarkdownFromRandomButton,
   sendCopyMarkdownFromTopImages,
 } from '../../utils';
 
@@ -24,6 +25,8 @@ const clipboardMarkdownCallback = sendCopyMarkdownFromTopImages;
 const fetchRandomCatImagesCallback = sendClickTopFetchRandomCatButton;
 
 const fetchNewArrivalCatImagesCallback = sendClickTopFetchNewArrivalCatButton;
+
+const catRandomCopyCallback = sendCopyMarkdownFromRandomButton;
 
 const canonicalLink = i18nUrlList.top?.ja;
 
@@ -63,6 +66,7 @@ export const TopTemplate: FC<Props> = ({ language, lgtmImages }) => {
         fetchNewArrivalCatImagesCallback={fetchNewArrivalCatImagesCallback}
         clipboardMarkdownCallback={clipboardMarkdownCallback}
         changeLanguageCallback={saveSettingLanguage}
+        catRandomCopyCallback={catRandomCopyCallback}
       />
     </DefaultLayout>
   );

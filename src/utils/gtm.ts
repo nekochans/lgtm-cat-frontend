@@ -73,3 +73,9 @@ export const sendCopyMarkdownFromCopyButton = (): void => {
     event: 'CopyMarkdownFromCopyButton',
   });
 };
+
+export const sendCopyMarkdownFromRandomButton = (): void => {
+  window.dataLayer.push({
+    event: 'CopyMarkdownFromRandomButton',
+  });
+};
