@@ -8,11 +8,7 @@ import {
   i18nUrlList,
   type Language,
 } from '../../features';
-import {
-  useSaveSettingLanguage,
-  useCatImageValidator,
-  useCatImageUploader,
-} from '../../hooks';
+import { useCatImageValidator, useCatImageUploader } from '../../hooks';
 import { DefaultLayout } from '../../layouts';
 import {
   sendUploadedCatImage,
@@ -43,24 +39,17 @@ type Props = {
 export const UploadTemplate: FC<Props> = ({ language }) => {
   const metaTag = metaTagList(language).upload;
 
-  const { saveSettingLanguage } = useSaveSettingLanguage();
-
   const { imageValidator } = useCatImageValidator(language);
 
   const { imageUploader } = useCatImageUploader(language);
 
   return (
-    <DefaultLayout
-      metaTag={metaTag}
-      canonicalLink={canonicalLink}
-      alternateUrls={alternateUrls}
-    >
+    <DefaultLayout metaTag={metaTag} alternateUrls={alternateUrls}>
       <OrgUploadTemplate
         language={language}
         imageValidator={imageValidator}
         imageUploader={imageUploader}
         catImage={<CatImage />}
-        changeLanguageCallback={saveSettingLanguage}
         uploadCallback={sendUploadedCatImage}
         onClickCreatedLgtmImage={sendCopyMarkdownFromCreatedImage}
         onClickMarkdownSourceCopyButton={sendCopyMarkdownFromCopyButton}

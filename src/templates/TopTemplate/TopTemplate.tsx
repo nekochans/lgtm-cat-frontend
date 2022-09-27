@@ -9,7 +9,7 @@ import {
   type Language,
   LgtmImage,
 } from '../../features';
-import { useSaveSettingLanguage, useCatImagesFetcher } from '../../hooks';
+import { useCatImagesFetcher } from '../../hooks';
 import { DefaultLayout } from '../../layouts';
 import {
   sendClickTopFetchNewArrivalCatButton,
@@ -44,17 +44,11 @@ type Props = {
 export const TopTemplate: FC<Props> = ({ language, lgtmImages }) => {
   const metaTag = metaTagList(language).top;
 
-  const { saveSettingLanguage } = useSaveSettingLanguage();
-
   const { randomCatImagesFetcher, newArrivalCatImagesFetcher } =
     useCatImagesFetcher();
 
   return (
-    <DefaultLayout
-      metaTag={metaTag}
-      canonicalLink={canonicalLink}
-      alternateUrls={alternateUrls}
-    >
+    <DefaultLayout metaTag={metaTag} alternateUrls={alternateUrls}>
       <OrgTopTemplate
         language={language}
         lgtmImages={lgtmImages}
@@ -65,7 +59,6 @@ export const TopTemplate: FC<Props> = ({ language, lgtmImages }) => {
         fetchRandomCatImagesCallback={fetchRandomCatImagesCallback}
         fetchNewArrivalCatImagesCallback={fetchNewArrivalCatImagesCallback}
         clipboardMarkdownCallback={clipboardMarkdownCallback}
-        changeLanguageCallback={saveSettingLanguage}
         catRandomCopyCallback={catRandomCopyCallback}
       />
     </DefaultLayout>

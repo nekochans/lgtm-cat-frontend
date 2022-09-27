@@ -2,6 +2,7 @@ import {
   ErrorTemplate as OrgErrorTemplate,
   type ErrorType,
 } from '@nekochans/lgtm-cat-ui';
+import { useRouter } from 'next/router';
 
 import {
   InternalServerErrorImage,
@@ -17,7 +18,6 @@ import {
   errorMetaTag,
   type Language,
 } from '../../features';
-import { useSaveSettingLanguage } from '../../hooks';
 import { ErrorLayout } from '../../layouts';
 import { assertNever } from '../../utils';
 
@@ -68,9 +68,11 @@ const getMetaTag = (type: ErrorType, language: Language) => {
 };
 
 export const ErrorTemplate: FC<Props> = ({ type, language }) => {
-  const { saveSettingLanguage } = useSaveSettingLanguage();
-
   const metaTag = getMetaTag(type, language);
+
+  const router = useRouter();
+
+  const currentUrlPath = router.pathname;
 
   return (
     <ErrorLayout title={pageTitle(type, language)} metaTag={metaTag}>
@@ -79,7 +81,7 @@ export const ErrorTemplate: FC<Props> = ({ type, language }) => {
         language={language}
         catImage={catImage(type)}
         shouldDisplayBackToTopButton={true}
-        changeLanguageCallback={saveSettingLanguage}
+        currentUrlPath={currentUrlPath}
       />
     </ErrorLayout>
   );

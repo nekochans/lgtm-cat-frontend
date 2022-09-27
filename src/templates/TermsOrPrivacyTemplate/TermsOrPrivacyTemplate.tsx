@@ -11,7 +11,6 @@ import {
   i18nUrlList,
   type Language,
 } from '../../features';
-import { useSaveSettingLanguage } from '../../hooks';
 import { DefaultLayout } from '../../layouts';
 
 import type { FC } from 'react';
@@ -30,18 +29,10 @@ export const TermsOrPrivacyTemplate: FC<Props> = ({
   jaMarkdown,
   enMarkdown,
 }) => {
-  const { saveSettingLanguage } = useSaveSettingLanguage();
+  const { isLanguageMenuDisplayed, onClickLanguageButton, onClickOutSideMenu } =
+    useSwitchLanguage();
 
-  const {
-    isLanguageMenuDisplayed,
-    selectedLanguage,
-    onClickEn,
-    onClickJa,
-    onClickLanguageButton,
-    onClickOutSideMenu,
-  } = useSwitchLanguage(language, saveSettingLanguage);
-
-  const termsMarkdown = selectedLanguage === 'ja' ? jaMarkdown : enMarkdown;
+  const termsMarkdown = language === 'ja' ? jaMarkdown : enMarkdown;
 
   const metaTag =
     type === 'terms'
@@ -63,17 +54,11 @@ export const TermsOrPrivacyTemplate: FC<Props> = ({
   });
 
   return (
-    <DefaultLayout
-      metaTag={metaTag}
-      canonicalLink={canonicalLink}
-      alternateUrls={alternateUrls}
-    >
+    <DefaultLayout metaTag={metaTag} alternateUrls={alternateUrls}>
       <OrgTermsOrPrivacyTemplate
         type={type}
-        language={selectedLanguage}
+        language={language}
         isLanguageMenuDisplayed={isLanguageMenuDisplayed}
-        onClickEn={onClickEn}
-        onClickJa={onClickJa}
         onClickLanguageButton={onClickLanguageButton}
         onClickOutSideMenu={onClickOutSideMenu}
       >
