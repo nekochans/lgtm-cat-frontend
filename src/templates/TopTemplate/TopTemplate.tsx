@@ -48,11 +48,7 @@ export const TopTemplate: FC<Props> = ({ language, lgtmImages }) => {
     useCatImagesFetcher();
 
   return (
-    <DefaultLayout
-      metaTag={metaTag}
-      canonicalLink={canonicalLink}
-      alternateUrls={alternateUrls}
-    >
+    <DefaultLayout metaTag={metaTag} alternateUrls={alternateUrls}>
       <OrgTopTemplate
         language={language}
         lgtmImages={lgtmImages}

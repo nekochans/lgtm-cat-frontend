@@ -54,11 +54,7 @@ export const TermsOrPrivacyTemplate: FC<Props> = ({
   });
 
   return (
-    <DefaultLayout
-      metaTag={metaTag}
-      canonicalLink={canonicalLink}
-      alternateUrls={alternateUrls}
-    >
+    <DefaultLayout metaTag={metaTag} alternateUrls={alternateUrls}>
       <OrgTermsOrPrivacyTemplate
         type={type}
         language={language}

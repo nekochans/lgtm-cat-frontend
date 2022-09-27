@@ -44,11 +44,7 @@ export const UploadTemplate: FC<Props> = ({ language }) => {
   const { imageUploader } = useCatImageUploader(language);
 
   return (
-    <DefaultLayout
-      metaTag={metaTag}
-      canonicalLink={canonicalLink}
-      alternateUrls={alternateUrls}
-    >
+    <DefaultLayout metaTag={metaTag} alternateUrls={alternateUrls}>
       <OrgUploadTemplate
         language={language}
         imageValidator={imageValidator}
