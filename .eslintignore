@@ -2,7 +2,7 @@ node_modules/
 .next/
 build/
 coverage/
-.eslintrc.js
+.eslintrc.json
 next-env.d.ts
 test/setupTests.ts
 *.config.js
