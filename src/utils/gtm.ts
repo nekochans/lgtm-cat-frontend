@@ -22,7 +22,7 @@ export const googleTagManagerId = (): GoogleTagManagerId => {
 
 declare global {
   interface Window {
-    dataLayer: Record<string, unknown>[];
+    dataLayer: Array<Record<string, unknown>>;
   }
 }
 

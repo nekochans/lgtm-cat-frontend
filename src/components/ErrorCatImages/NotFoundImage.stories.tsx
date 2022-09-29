@@ -1,6 +1,5 @@
-import { NotFoundImage } from '.';
-
 import type { ComponentStoryObj, Meta } from '@storybook/react';
+import { NotFoundImage } from '.';
 
 export default {
   title: 'src/components/ErrorCatImages/NotFoundImage.tsx',

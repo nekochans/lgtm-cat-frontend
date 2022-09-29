@@ -1,3 +1,4 @@
+import type { FC } from 'react';
 import {
   ErrorTemplate as OrgErrorTemplate,
   type ErrorType,
@@ -20,8 +21,6 @@ import {
 } from '../../features';
 import { ErrorLayout } from '../../layouts';
 import { assertNever } from '../../utils';
-
-import type { FC } from 'react';
 
 type Props = {
   type: ErrorType;

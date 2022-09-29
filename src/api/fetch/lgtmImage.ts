@@ -25,15 +25,15 @@ import {
 import { mightSetRequestIdToSentry } from '../../utils';
 
 type FetchImageResponseBody = {
-  lgtmImages: {
+  lgtmImages: Array<{
     id: number;
     url: string;
-  }[];
+  }>;
 };
 
 // eslint-disable-next-line max-statements
 const isFetchImageResponseBody = (
-  value: unknown,
+  value: unknown
 ): value is FetchImageResponseBody => {
   if (Object.prototype.toString.call(value) !== '[object Object]') {
     return false;
@@ -65,7 +65,7 @@ const isFetchImageResponseBody = (
 // eslint-disable-next-line max-statements
 const fetchLgtmImages = async (
   dto: FetchLgtmImagesDto,
-  fetchUrl: Url,
+  fetchUrl: Url
 ): Promise<LgtmImage[]> => {
   const options: RequestInit = {
     method: 'GET',
@@ -100,11 +100,11 @@ const fetchLgtmImages = async (
 
 // eslint-disable-next-line require-await
 export const fetchLgtmImagesInRandom: FetchLgtmImages = async (dto) =>
-  fetchLgtmImages(dto, fetchLgtmImagesUrl());
+  await fetchLgtmImages(dto, fetchLgtmImagesUrl());
 
 // eslint-disable-next-line require-await
 export const fetchLgtmImagesInRecentlyCreated: FetchLgtmImages = async (dto) =>
-  fetchLgtmImages(dto, fetchLgtmImagesInRecentlyCreatedUrl());
+  await fetchLgtmImages(dto, fetchLgtmImagesInRecentlyCreatedUrl());
 
 export const isAcceptableCatImage: IsAcceptableCatImage = async (dto) => {
   const options: RequestInit = {
@@ -126,7 +126,7 @@ export const isAcceptableCatImage: IsAcceptableCatImage = async (dto) => {
   if (response.status !== httpStatusCode.ok) {
     if (response.status === httpStatusCode.payloadTooLarge) {
       return createFailureResult<UploadCatImageSizeTooLargeError>(
-        new UploadCatImageSizeTooLargeError(),
+        new UploadCatImageSizeTooLargeError()
       );
     }
 
@@ -139,7 +139,7 @@ export const isAcceptableCatImage: IsAcceptableCatImage = async (dto) => {
     (await response.json()) as IsAcceptableCatImageResponse;
 
   return createSuccessResult<IsAcceptableCatImageResponse>(
-    isAcceptableCatImageResponse,
+    isAcceptableCatImageResponse
   );
 };
 
@@ -148,7 +148,7 @@ type UploadCatImageResponseBody = {
 };
 
 const isUploadCatImageResponseBody = (
-  value: unknown,
+  value: unknown
 ): value is UploadCatImageResponseBody => {
   if (Object.prototype.toString.call(value) !== '[object Object]') {
     return false;
@@ -183,11 +183,11 @@ export const uploadCatImage: UploadCatImage = async (dto) => {
     switch (response.status) {
       case httpStatusCode.payloadTooLarge:
         return createFailureResult<UploadCatImageSizeTooLargeError>(
-          new UploadCatImageSizeTooLargeError(),
+          new UploadCatImageSizeTooLargeError()
         );
       case httpStatusCode.unprocessableEntity:
         return createFailureResult<UploadCatImageValidationError>(
-          new UploadCatImageValidationError(),
+          new UploadCatImageValidationError()
         );
       default:
         await mightSetRequestIdToSentry(response);

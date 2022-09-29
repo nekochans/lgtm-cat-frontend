@@ -1,3 +1,4 @@
+import type { FC } from 'react';
 import { UploadTemplate as OrgUploadTemplate } from '@nekochans/lgtm-cat-ui';
 import Image from 'next/image';
 
@@ -17,8 +18,6 @@ import {
 } from '../../utils';
 
 import cat from './images/cat.webp';
-
-import type { FC } from 'react';
 
 const CatImage = () => (
   <Image src={cat.src} width="302px" height="302px" alt="Cat" priority={true} />

@@ -1,3 +1,4 @@
+import type { GetStaticProps, NextPage } from 'next';
 import { issueAccessTokenOnServer, fetchLgtmImagesInRandom } from '../api';
 import {
   convertLocaleToLanguage,
@@ -6,8 +7,6 @@ import {
   LgtmImage,
 } from '../features';
 import { TopTemplate } from '../templates';
-
-import type { GetStaticProps, NextPage } from 'next';
 
 type Props = {
   language: Language;

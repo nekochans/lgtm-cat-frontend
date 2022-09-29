@@ -1,6 +1,5 @@
-import { ServiceUnavailableImage } from '.';
-
 import type { ComponentStoryObj, Meta } from '@storybook/react';
+import { ServiceUnavailableImage } from '.';
 
 export default {
   title: 'src/components/ErrorCatImages/ServiceUnavailableImage.tsx',

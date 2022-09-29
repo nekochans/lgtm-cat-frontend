@@ -1,3 +1,4 @@
+import React from 'react';
 import Document, {
   DocumentContext,
   DocumentInitialProps,
@@ -6,12 +7,11 @@ import Document, {
   Main,
   NextScript,
 } from 'next/document';
-import React from 'react';
 import { ServerStyleSheet } from 'styled-components';
 
 export default class CustomDocument extends Document {
   static async getInitialProps(
-    ctx: DocumentContext,
+    ctx: DocumentContext
   ): Promise<DocumentInitialProps> {
     const sheet = new ServerStyleSheet();
     const originalRenderPage = ctx.renderPage;

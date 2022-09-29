@@ -1,7 +1,7 @@
+import type { AppProps } from 'next/app';
 import { GoogleTagManager } from '../components';
 import { googleTagManagerId } from '../utils';
 
-import type { AppProps } from 'next/app';
 import 'ress/ress.css';
 import '../styles/markdown.css';
 
