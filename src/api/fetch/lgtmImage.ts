@@ -78,7 +78,7 @@ const fetchLgtmImages = async (
 
   const response = await fetch(fetchUrl, options);
   if (!response.ok) {
-    await mightSetRequestIdToSentry(response);
+    mightSetRequestIdToSentry(response);
 
     throw new FetchLgtmImagesError(response.statusText);
   }
@@ -130,7 +130,7 @@ export const isAcceptableCatImage: IsAcceptableCatImage = async (dto) => {
       );
     }
 
-    await mightSetRequestIdToSentry(response);
+    mightSetRequestIdToSentry(response);
 
     throw new IsAcceptableCatImageError(response.statusText);
   }
@@ -190,7 +190,7 @@ export const uploadCatImage: UploadCatImage = async (dto) => {
           new UploadCatImageValidationError()
         );
       default:
-        await mightSetRequestIdToSentry(response);
+        mightSetRequestIdToSentry(response);
 
         throw new UploadCatImageError(response.statusText);
     }
@@ -205,7 +205,7 @@ export const uploadCatImage: UploadCatImage = async (dto) => {
     });
   }
 
-  await mightSetRequestIdToSentry(response);
+  mightSetRequestIdToSentry(response);
 
   throw new UploadCatImageError(response.statusText);
 };
