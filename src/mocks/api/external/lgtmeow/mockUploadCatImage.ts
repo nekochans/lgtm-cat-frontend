@@ -11,5 +11,5 @@ export const mockUploadCatImage: ResponseResolver<
     ctx.json({
       imageUrl:
         'https://lgtm-images.lgtmeow.com/2021/03/16/22/ff92782d-fae7-4a7a-b042-adbfccf64826.webp',
-    }),
+    })
   );

@@ -20,7 +20,7 @@ export const issueAccessToken: IssueAccessToken = async () => {
 
   const response = await fetch(
     `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-    options,
+    options
   );
 
   const responseBody = (await response.json()) as AccessToken;
@@ -39,7 +39,7 @@ export const issueAccessToken: IssueAccessToken = async () => {
  */
 export const issueAccessTokenOnServer: IssueAccessToken = async () => {
   const authorization = Buffer.from(
-    `${cognitoClientId()}:${cognitoClientSecret()}`,
+    `${cognitoClientId()}:${cognitoClientSecret()}`
   ).toString('base64');
 
   const options = {
