@@ -1,6 +1,7 @@
 import type { ComponentStoryObj } from '@storybook/react';
 import { MarkdownContents } from './.';
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default {
   component: MarkdownContents,
 };
