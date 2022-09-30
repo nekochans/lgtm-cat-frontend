@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextMiddleware, NextRequest, NextResponse } from 'next/server';
 
 import { isBanCountry, isInMaintenance } from './edge';
 
@@ -6,7 +6,7 @@ export const config = {
   matcher: ['/', '/upload', '/terms', '/privacy', '/maintenance'],
 };
 
-export const middleware = (req: NextRequest) => {
+export const middleware: NextMiddleware = (req: NextRequest) => {
   const { nextUrl } = req;
 
   if (isBanCountry(req)) {

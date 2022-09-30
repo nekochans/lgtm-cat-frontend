@@ -2,6 +2,9 @@ import type {
   AcceptedTypesImageExtension as OrgAcceptedTypesImageExtension,
   LgtmImage as OrgLgtmImage,
   LgtmImageUrl as OrgLgtmImageUrl,
+  ImageUploader as OrgImageUploader,
+  ImageValidator as OrgImageValidator,
+  CatImagesFetcher as OrgCatImagesFetcher,
 } from '@nekochans/lgtm-cat-ui';
 import type { AccessToken } from './authToken';
 import {
@@ -65,6 +68,12 @@ export type UploadCatImage = (
     | UploadCatImageError
   >
 >;
+
+export type CatImagesFetcher = OrgCatImagesFetcher;
+
+export type ImageValidator = OrgImageValidator;
+
+export type ImageUploader = OrgImageUploader;
 
 export const isLgtmImages = (value: unknown): value is LgtmImage[] => {
   if (Array.isArray(value)) {

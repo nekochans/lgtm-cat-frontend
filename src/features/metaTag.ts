@@ -132,14 +132,14 @@ export const metaTagList = (language: Language): MetaTagList => ({
   },
 });
 
-export const notFoundMetaTag = (language: Language) => ({
+export const notFoundMetaTag = (language: Language): MetaTag => ({
   title: custom404title(language),
   ogpImgUrl: appUrlList.ogpImg,
   ogpTargetUrl: appUrlList.top,
   appName,
 });
 
-export const errorMetaTag = (language: Language) => ({
+export const errorMetaTag = (language: Language): MetaTag => ({
   title: customErrorTitle(language),
   ogpImgUrl: appUrlList.ogpImg,
   ogpTargetUrl: appUrlList.top,

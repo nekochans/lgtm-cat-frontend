@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/nextjs';
 
-export const mightSetRequestIdToSentry = (response: Response) => {
+export const mightSetRequestIdToSentry = (response: Response): void => {
   const xRequestId = response.headers.get('x-request-id');
   if (xRequestId != null) {
     Sentry.configureScope((scope) => {

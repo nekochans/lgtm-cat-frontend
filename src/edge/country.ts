@@ -34,7 +34,7 @@ const bannedCountryCodeList = [
   'SE',
 ];
 
-export const isBanCountry = (req: NextRequest) => {
+export const isBanCountry = (req: NextRequest): boolean => {
   const country = req.geo?.country?.toUpperCase();
   if (country != null) {
     return bannedCountryCodeList.includes(country);

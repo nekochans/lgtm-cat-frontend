@@ -1,6 +1,8 @@
 import { Language } from '../features';
 
-export const createCatImageSizeTooLargeErrorMessages = (language: Language) =>
+export const createCatImageSizeTooLargeErrorMessages = (
+  language: Language
+): string[] =>
   language === 'en'
     ? ['Image size is too large.', 'Please use images under 4MB.']
     : [
@@ -8,7 +10,7 @@ export const createCatImageSizeTooLargeErrorMessages = (language: Language) =>
         'お手数ですが4MB以下の画像を利用して下さい。',
       ];
 
-export const createUnexpectedErrorMessages = (language: Language) =>
+export const createUnexpectedErrorMessages = (language: Language): string[] =>
   language === 'en'
     ? [
         'An unexpected Error occurred.',
