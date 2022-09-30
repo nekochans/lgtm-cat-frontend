@@ -4,21 +4,28 @@
 import 'whatwg-fetch';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-
-import { IssueAccessTokenError } from '../../features/errors/IssueAccessTokenError';
-import { UploadCatImageError } from '../../features/errors/UploadCatImageError';
-import { apiList, appBaseUrl, uploadCatImageUrl } from '../../features/url';
-import { mockInternalServerError } from '../../mocks/api/error/mockInternalServerError';
-import { mockTokenEndpoint } from '../../mocks/api/external/cognito/mockTokenEndpoint';
-import { mockUploadCatImage } from '../../mocks/api/external/lgtmeow/mockUploadCatImage';
-import { mockUploadCatImagePayloadTooLarge } from '../../mocks/api/external/lgtmeow/mockUploadCatImagePayloadTooLarge';
-import { mockUploadCatImageUnprocessableEntity } from '../../mocks/api/external/lgtmeow/mockUploadCatImageUnprocessableEntity';
+import {
+  IssueAccessTokenError,
+  UploadCatImageError,
+  apiList,
+  appBaseUrl,
+  uploadCatImageUrl,
+  type AcceptedTypesImageExtension,
+  Language,
+} from '../../features';
+import {
+  mockInternalServerError,
+  mockTokenEndpoint,
+  mockUploadCatImage,
+  mockUploadCatImagePayloadTooLarge,
+  mockUploadCatImageUnprocessableEntity,
+} from '../../mocks';
 import { useCatImageUploader } from '../useCatImageUploader';
 
 const mockHandlers = [
   rest.post(
     `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-    mockTokenEndpoint,
+    mockTokenEndpoint
   ),
   rest.post(uploadCatImageUrl(), mockUploadCatImage),
 ];
@@ -53,19 +60,26 @@ describe('useCatImageUploader TestCases', () => {
       'https://lgtm-images.lgtmeow.com/2021/03/16/22/ff92782d-fae7-4a7a-b042-adbfccf64826.webp',
   };
 
+  type TestTable = {
+    language: Language;
+    image: string;
+    imageExtension: AcceptedTypesImageExtension;
+    expected: typeof dummySuccessResponse | UploadCatImageError;
+  };
+
   it.each`
     language  | image         | imageExtension         | expected
     ${langJa} | ${dummyImage} | ${dummyImageExtension} | ${dummySuccessResponse}
     ${langEn} | ${dummyImage} | ${dummyImageExtension} | ${dummySuccessResponse}
   `(
     'should return createdLgtmImageUrl. language: $language',
-    async ({ language, image, imageExtension, expected }) => {
+    async ({ language, image, imageExtension, expected }: TestTable) => {
       const { imageUploader } = useCatImageUploader(language);
 
       const imageUploadResult = await imageUploader(image, imageExtension);
 
       expect(imageUploadResult.value).toStrictEqual(expected);
-    },
+    }
   );
 
   it.each`
@@ -74,21 +88,21 @@ describe('useCatImageUploader TestCases', () => {
     ${langEn} | ${dummyImage} | ${dummyImageExtension} | ${{ displayErrorMessages: ['Image size is too large.', 'Please use images under 4MB.'] }}
   `(
     'should return a list of error messages, because the image is too large. language: $language',
-    async ({ language, image, imageExtension, expected }) => {
+    async ({ language, image, imageExtension, expected }: TestTable) => {
       const { imageUploader } = useCatImageUploader(language);
 
       mockServer.use(
         rest.post(
           `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-          mockTokenEndpoint,
+          mockTokenEndpoint
         ),
-        rest.post(uploadCatImageUrl(), mockUploadCatImagePayloadTooLarge),
+        rest.post(uploadCatImageUrl(), mockUploadCatImagePayloadTooLarge)
       );
 
       const imageUploadResult = await imageUploader(image, imageExtension);
 
       expect(imageUploadResult.value).toStrictEqual(expected);
-    },
+    }
   );
 
   it.each`
@@ -97,21 +111,21 @@ describe('useCatImageUploader TestCases', () => {
     ${langEn} | ${dummyImage} | ${dummyImageExtension} | ${{ displayErrorMessages: ['Invalid image format.', 'Sorry, please use another image.'] }}
   `(
     'should return a list of error messages, because the image file format is incorrect. language: $language',
-    async ({ language, image, imageExtension, expected }) => {
+    async ({ language, image, imageExtension, expected }: TestTable) => {
       const { imageUploader } = useCatImageUploader(language);
 
       mockServer.use(
         rest.post(
           `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-          mockTokenEndpoint,
+          mockTokenEndpoint
         ),
-        rest.post(uploadCatImageUrl(), mockUploadCatImageUnprocessableEntity),
+        rest.post(uploadCatImageUrl(), mockUploadCatImageUnprocessableEntity)
       );
 
       const imageUploadResult = await imageUploader(image, imageExtension);
 
       expect(imageUploadResult.value).toStrictEqual(expected);
-    },
+    }
   );
 
   it.each`
@@ -120,21 +134,21 @@ describe('useCatImageUploader TestCases', () => {
     ${langEn} | ${dummyImage} | ${dummyImageExtension} | ${new UploadCatImageError('Internal Server Error')}
   `(
     'should UploadCatImageError Throw, because an error has occurred. language: $language',
-    async ({ language, image, imageExtension, expected }) => {
+    async ({ language, image, imageExtension, expected }: TestTable) => {
       const { imageUploader } = useCatImageUploader(language);
 
       mockServer.use(
         rest.post(
           `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-          mockTokenEndpoint,
+          mockTokenEndpoint
         ),
-        rest.post(uploadCatImageUrl(), mockInternalServerError),
+        rest.post(uploadCatImageUrl(), mockInternalServerError)
       );
 
       await expect(imageUploader(image, imageExtension)).rejects.toStrictEqual(
-        expected,
+        expected
       );
-    },
+    }
   );
 
   it.each`
@@ -143,19 +157,19 @@ describe('useCatImageUploader TestCases', () => {
     ${langEn} | ${dummyImage} | ${dummyImageExtension} | ${new IssueAccessTokenError('Internal Server Error')}
   `(
     'should IssueAccessTokenError Throw, because accessToken issuance failed. language: $language',
-    async ({ language, image, imageExtension, expected }) => {
+    async ({ language, image, imageExtension, expected }: TestTable) => {
       const { imageUploader } = useCatImageUploader(language);
 
       mockServer.use(
         rest.post(
           `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-          mockInternalServerError,
-        ),
+          mockInternalServerError
+        )
       );
 
       await expect(imageUploader(image, imageExtension)).rejects.toStrictEqual(
-        expected,
+        expected
       );
-    },
+    }
   );
 });
