@@ -83,7 +83,7 @@ const fetchLgtmImages = async (
     throw new FetchLgtmImagesError(response.statusText);
   }
 
-  const responseBody = await response.json();
+  const responseBody = (await response.json()) as FetchImageResponseBody;
   if (isFetchImageResponseBody(responseBody)) {
     const lgtmImages = responseBody.lgtmImages.map((value) => ({
       id: Number(value.id),
@@ -196,7 +196,8 @@ export const uploadCatImage: UploadCatImage = async (dto) => {
     }
   }
 
-  const uploadCatImageResponseBody = await response.json();
+  const uploadCatImageResponseBody =
+    (await response.json()) as UploadCatImageResponseBody;
 
   if (isUploadCatImageResponseBody(uploadCatImageResponseBody)) {
     return createSuccessResult({
