@@ -31,7 +31,7 @@ const methodNotAllowedErrorResponse = (
   res: NextApiResponse<
     | IssueClientCredentialsAccessTokenResponse
     | IssueClientCredentialsAccessTokenErrorResponse
-  >,
+  >
 ) =>
   res.status(httpStatusCode.methodNotAllowed).json({
     error: {
@@ -44,10 +44,10 @@ const issueClientCredentialsAccessToken = async (
   res: NextApiResponse<
     | IssueClientCredentialsAccessTokenResponse
     | IssueClientCredentialsAccessTokenErrorResponse
-  >,
+  >
 ) => {
   const authorization = Buffer.from(
-    `${cognitoClientId()}:${cognitoClientSecret()}`,
+    `${cognitoClientId()}:${cognitoClientSecret()}`
   ).toString('base64');
 
   const options = {
@@ -81,7 +81,7 @@ const handler: NextApiHandler = async (
   res: NextApiResponse<
     | IssueClientCredentialsAccessTokenResponse
     | IssueClientCredentialsAccessTokenErrorResponse
-  >,
+  >
 ): Promise<void> => {
   switch (req.method) {
     case 'POST': {

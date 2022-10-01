@@ -1,11 +1,10 @@
+import type { ComponentStoryObj } from '@storybook/react';
 import { MarkdownContents } from './.';
 
-import type { ComponentStoryObj, Meta } from '@storybook/react';
-
+// eslint-disable-next-line import/no-anonymous-default-export
 export default {
-  title: 'src/components/MarkdownContents/MarkdownContents.tsx',
   component: MarkdownContents,
-} as Meta<typeof MarkdownContents>;
+};
 
 type Story = ComponentStoryObj<typeof MarkdownContents>;
 

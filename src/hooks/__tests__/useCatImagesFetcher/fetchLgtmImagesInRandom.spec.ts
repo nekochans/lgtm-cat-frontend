@@ -17,7 +17,7 @@ import { useCatImagesFetcher } from '../../useCatImagesFetcher';
 const mockHandlers = [
   rest.post(
     `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-    mockTokenEndpoint,
+    mockTokenEndpoint
   ),
   rest.get(fetchLgtmImagesUrl(), mockFetchLgtmImages),
 ];
@@ -53,12 +53,12 @@ describe('useCatImagesFetcher.ts randomCatImagesFetcher TestCases', () => {
     mockServer.use(
       rest.post(
         `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-        mockInternalServerError,
-      ),
+        mockInternalServerError
+      )
     );
 
     await expect(
-      useCatImagesFetcher().randomCatImagesFetcher(),
+      useCatImagesFetcher().randomCatImagesFetcher()
     ).rejects.toStrictEqual(new IssueAccessTokenError('Internal Server Error'));
   });
 
@@ -66,13 +66,13 @@ describe('useCatImagesFetcher.ts randomCatImagesFetcher TestCases', () => {
     mockServer.use(
       rest.post(
         `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-        mockTokenEndpoint,
+        mockTokenEndpoint
       ),
-      rest.get(fetchLgtmImagesUrl(), mockInternalServerError),
+      rest.get(fetchLgtmImagesUrl(), mockInternalServerError)
     );
 
     await expect(
-      useCatImagesFetcher().randomCatImagesFetcher(),
+      useCatImagesFetcher().randomCatImagesFetcher()
     ).rejects.toStrictEqual(new FetchLgtmImagesError('Internal Server Error'));
   });
 });

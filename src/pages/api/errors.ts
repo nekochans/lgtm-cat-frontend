@@ -1,6 +1,9 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 
-export const handler = (req: NextApiRequest, res: NextApiResponse) => {
+export const handler: NextApiHandler = (
+  req: NextApiRequest,
+  res: NextApiResponse
+) => {
   res.statusCode = 403;
   res.end('Not available from your region.');
 };

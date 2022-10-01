@@ -11,5 +11,5 @@ export const mockIsAcceptableCatImagePersonFaceInImage: ResponseResolver<
     ctx.json({
       isAcceptableCatImage: false,
       notAcceptableReason: 'person face in the image',
-    }),
+    })
   );

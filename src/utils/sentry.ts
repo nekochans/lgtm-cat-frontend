@@ -1,15 +1,15 @@
 import * as Sentry from '@sentry/nextjs';
 
-export const mightSetRequestIdToSentry = async (response: Response) => {
-  const xRequestId = await response.headers.get('x-request-id');
-  if (xRequestId) {
+export const mightSetRequestIdToSentry = (response: Response): void => {
+  const xRequestId = response.headers.get('x-request-id');
+  if (xRequestId != null) {
     Sentry.configureScope((scope) => {
       scope.setTag('x_request_id', xRequestId);
     });
   }
 
-  const lambdaRequestId = await response.headers.get('x-lambda-request-id');
-  if (lambdaRequestId) {
+  const lambdaRequestId = response.headers.get('x-lambda-request-id');
+  if (lambdaRequestId != null) {
     Sentry.configureScope((scope) => {
       scope.setTag('x_lambda_request_id', lambdaRequestId);
     });

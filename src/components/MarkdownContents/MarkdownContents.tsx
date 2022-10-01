@@ -1,7 +1,6 @@
+import type { FC } from 'react';
 import ReactMarkdown from 'react-markdown';
 import styled from 'styled-components';
-
-import type { FC } from 'react';
 
 const Wrapper = styled.div`
   display: flex;

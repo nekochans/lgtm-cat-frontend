@@ -1,15 +1,15 @@
+import type { FC, ReactNode } from 'react';
 import Head from 'next/head';
 
 import type { Language, MetaTag, Url } from '../../features';
-import type { FC, ReactNode } from 'react';
 
 type Props = {
   metaTag: MetaTag;
   children: ReactNode;
-  alternateUrls?: {
+  alternateUrls?: Array<{
     hreflang: Language;
     link?: Url;
-  }[];
+  }>;
 };
 
 // eslint-disable-next-line max-lines-per-function

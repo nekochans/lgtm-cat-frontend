@@ -1,8 +1,7 @@
+import type { GetStaticProps, NextPage } from 'next';
 import { httpStatusCode } from '../constants';
 import { convertLocaleToLanguage, type Language } from '../features';
 import { ErrorTemplate } from '../templates';
-
-import type { GetStaticProps, NextPage } from 'next';
 
 type Props = {
   language: Language;

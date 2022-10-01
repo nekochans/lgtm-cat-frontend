@@ -11,5 +11,5 @@ export const mockIsAcceptableCatImageNotAllowedImageExtension: ResponseResolver<
     ctx.json({
       isAcceptableCatImage: false,
       notAcceptableReason: 'not an allowed image extension',
-    }),
+    })
   );

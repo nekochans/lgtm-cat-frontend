@@ -1,8 +1,7 @@
+import type { FC } from 'react';
 import Image from 'next/image';
 
 import serviceUnavailable from './images/service_unavailable.webp';
-
-import type { FC } from 'react';
 
 export const ServiceUnavailableImage: FC = () => (
   <Image

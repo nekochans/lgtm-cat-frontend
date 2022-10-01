@@ -1,11 +1,10 @@
+import type { ComponentStoryObj } from '@storybook/react';
 import { ServiceUnavailableImage } from '.';
 
-import type { ComponentStoryObj, Meta } from '@storybook/react';
-
+// eslint-disable-next-line import/no-anonymous-default-export
 export default {
-  title: 'src/components/ErrorCatImages/ServiceUnavailableImage.tsx',
   component: ServiceUnavailableImage,
-} as Meta<typeof ServiceUnavailableImage>;
+};
 
 type Story = ComponentStoryObj<typeof ServiceUnavailableImage>;
 

@@ -1,11 +1,10 @@
+import type { ComponentStoryObj } from '@storybook/react';
 import { NotFoundImage } from '.';
 
-import type { ComponentStoryObj, Meta } from '@storybook/react';
-
+// eslint-disable-next-line import/no-anonymous-default-export
 export default {
-  title: 'src/components/ErrorCatImages/NotFoundImage.tsx',
   component: NotFoundImage,
-} as Meta<typeof NotFoundImage>;
+};
 
 type Story = ComponentStoryObj<typeof NotFoundImage>;
 

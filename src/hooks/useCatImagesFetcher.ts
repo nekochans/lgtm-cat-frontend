@@ -6,29 +6,34 @@ import {
   fetchLgtmImagesInRecentlyCreated,
 } from '../api';
 
-import type { LgtmImage } from '../features';
+import type { CatImagesFetcher, LgtmImage } from '../features';
 
 const randomCatImagesFetcher = async (): Promise<LgtmImage[]> => {
   const accessToken = await issueAccessToken();
 
-  return fetchLgtmImagesInRandom({ accessToken });
+  return await fetchLgtmImagesInRandom({ accessToken });
 };
 
 const newArrivalCatImagesFetcher = async (): Promise<LgtmImage[]> => {
   const accessToken = await issueAccessToken();
 
-  return fetchLgtmImagesInRecentlyCreated({ accessToken });
+  return await fetchLgtmImagesInRecentlyCreated({ accessToken });
 };
 
 const limitThreshold = 1000;
 
-export const useCatImagesFetcher = () => ({
+type UseCatImagesFetcherResponse = {
+  randomCatImagesFetcher: CatImagesFetcher;
+  newArrivalCatImagesFetcher: CatImagesFetcher;
+};
+
+export const useCatImagesFetcher = (): UseCatImagesFetcherResponse => ({
   randomCatImagesFetcher: throttle<typeof randomCatImagesFetcher>(
-    () => randomCatImagesFetcher(),
-    limitThreshold,
+    async () => await randomCatImagesFetcher(),
+    limitThreshold
   ) as typeof randomCatImagesFetcher,
   newArrivalCatImagesFetcher: throttle<typeof newArrivalCatImagesFetcher>(
-    () => newArrivalCatImagesFetcher(),
-    limitThreshold,
+    async () => await newArrivalCatImagesFetcher(),
+    limitThreshold
   ) as typeof newArrivalCatImagesFetcher,
 });

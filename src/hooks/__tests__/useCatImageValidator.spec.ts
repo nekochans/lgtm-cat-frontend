@@ -4,30 +4,33 @@
 import 'whatwg-fetch';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-
-import { IsAcceptableCatImageError } from '../../features/errors/IsAcceptableCatImageError';
-import { IssueAccessTokenError } from '../../features/errors/IssueAccessTokenError';
-import { isSuccessResult } from '../../features/result';
 import {
+  IsAcceptableCatImageError,
+  IssueAccessTokenError,
+  isSuccessResult,
   apiList,
   appBaseUrl,
   isAcceptableCatImageUrl,
-} from '../../features/url';
-import { mockInternalServerError } from '../../mocks/api/error/mockInternalServerError';
-import { mockTokenEndpoint } from '../../mocks/api/external/cognito/mockTokenEndpoint';
-import { mockIsAcceptableCatImage } from '../../mocks/api/external/recognition/mockIsAcceptableCatImage';
-import { mockIsAcceptableCatImageError } from '../../mocks/api/external/recognition/mockIsAcceptableCatImageError';
-import { mockIsAcceptableCatImageNotAllowedImageExtension } from '../../mocks/api/external/recognition/mockIsAcceptableCatImageNotAllowedImageExtension';
-import { mockIsAcceptableCatImageNotCatImage } from '../../mocks/api/external/recognition/mockIsAcceptableCatImageNotCatImage';
-import { mockIsAcceptableCatImageNotModerationImage } from '../../mocks/api/external/recognition/mockIsAcceptableCatImageNotModerationImage';
-import { mockIsAcceptableCatImagePayloadTooLargeError } from '../../mocks/api/external/recognition/mockIsAcceptableCatImagePayloadTooLargeError';
-import { mockIsAcceptableCatImagePersonFaceInImage } from '../../mocks/api/external/recognition/mockIsAcceptableCatImagePersonFaceInImage';
+  type AcceptedTypesImageExtension,
+  Language,
+} from '../../features';
+import {
+  mockInternalServerError,
+  mockTokenEndpoint,
+  mockIsAcceptableCatImage,
+  mockIsAcceptableCatImageError,
+  mockIsAcceptableCatImageNotAllowedImageExtension,
+  mockIsAcceptableCatImageNotCatImage,
+  mockIsAcceptableCatImageNotModerationImage,
+  mockIsAcceptableCatImagePayloadTooLargeError,
+  mockIsAcceptableCatImagePersonFaceInImage,
+} from '../../mocks';
 import { useCatImageValidator } from '../useCatImageValidator';
 
 const mockHandlers = [
   rest.post(
     `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-    mockTokenEndpoint,
+    mockTokenEndpoint
   ),
   rest.post(isAcceptableCatImageUrl(), mockIsAcceptableCatImage),
 ];
@@ -56,23 +59,32 @@ describe('useCatImageValidator TestCases', () => {
 
   const dummyImageExtension = '.jpg';
 
+  type TestTable = {
+    language: Language;
+    image: string;
+    imageExtension: AcceptedTypesImageExtension;
+    expected:
+      | { isAcceptableCatImage: boolean; notAcceptableReason: string[] }
+      | Error;
+  };
+
   it.each`
     language  | image         | imageExtension         | expected
     ${langJa} | ${dummyImage} | ${dummyImageExtension} | ${{ isAcceptableCatImage: true, notAcceptableReason: [] }}
     ${langEn} | ${dummyImage} | ${dummyImageExtension} | ${{ isAcceptableCatImage: true, notAcceptableReason: [] }}
   `(
     'should be true for isAcceptableCatImage. language: $language',
-    async ({ language, image, imageExtension, expected }) => {
+    async ({ language, image, imageExtension, expected }: TestTable) => {
       const { imageValidator } = useCatImageValidator(language);
 
       const isAcceptableCatImageResult = await imageValidator(
         image,
-        imageExtension,
+        imageExtension
       );
 
       expect(isSuccessResult(isAcceptableCatImageResult)).toBeTruthy();
       expect(isAcceptableCatImageResult.value).toStrictEqual(expected);
-    },
+    }
   );
 
   it.each`
@@ -81,28 +93,28 @@ describe('useCatImageValidator TestCases', () => {
     ${langEn} | ${dummyImage} | ${dummyImageExtension} | ${{ isAcceptableCatImage: false, notAcceptableReason: ['Sorry, only png, jpg, jpeg images can be uploaded.'] }}
   `(
     'should result in isAcceptableCatImage being false, because not an allowed image extension. language: $language',
-    async ({ language, image, imageExtension, expected }) => {
+    async ({ language, image, imageExtension, expected }: TestTable) => {
       const { imageValidator } = useCatImageValidator(language);
 
       mockServer.use(
         rest.post(
           `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-          mockTokenEndpoint,
+          mockTokenEndpoint
         ),
         rest.post(
           isAcceptableCatImageUrl(),
-          mockIsAcceptableCatImageNotAllowedImageExtension,
-        ),
+          mockIsAcceptableCatImageNotAllowedImageExtension
+        )
       );
 
       const isAcceptableCatImageResult = await imageValidator(
         image,
-        imageExtension,
+        imageExtension
       );
 
       expect(isSuccessResult(isAcceptableCatImageResult)).toBeTruthy();
       expect(isAcceptableCatImageResult.value).toStrictEqual(expected);
-    },
+    }
   );
 
   it.each`
@@ -111,28 +123,28 @@ describe('useCatImageValidator TestCases', () => {
     ${langEn} | ${dummyImage} | ${dummyImageExtension} | ${{ isAcceptableCatImage: false, notAcceptableReason: ['Sorry, This image is not available because it shows something inappropriate.'] }}
   `(
     'should result in isAcceptableCatImage being false, because not moderation image. language: $language',
-    async ({ language, image, imageExtension, expected }) => {
+    async ({ language, image, imageExtension, expected }: TestTable) => {
       const { imageValidator } = useCatImageValidator(language);
 
       mockServer.use(
         rest.post(
           `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-          mockTokenEndpoint,
+          mockTokenEndpoint
         ),
         rest.post(
           isAcceptableCatImageUrl(),
-          mockIsAcceptableCatImageNotModerationImage,
-        ),
+          mockIsAcceptableCatImageNotModerationImage
+        )
       );
 
       const isAcceptableCatImageResult = await imageValidator(
         image,
-        imageExtension,
+        imageExtension
       );
 
       expect(isSuccessResult(isAcceptableCatImageResult)).toBeTruthy();
       expect(isAcceptableCatImageResult.value).toStrictEqual(expected);
-    },
+    }
   );
 
   it.each`
@@ -141,28 +153,28 @@ describe('useCatImageValidator TestCases', () => {
     ${langEn} | ${dummyImage} | ${dummyImageExtension} | ${{ isAcceptableCatImage: false, notAcceptableReason: ["Sorry, please use images that do not show people's faces."] }}
   `(
     'should result in isAcceptableCatImage being false, because person face in the image. language: $language',
-    async ({ language, image, imageExtension, expected }) => {
+    async ({ language, image, imageExtension, expected }: TestTable) => {
       const { imageValidator } = useCatImageValidator(language);
 
       mockServer.use(
         rest.post(
           `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-          mockTokenEndpoint,
+          mockTokenEndpoint
         ),
         rest.post(
           isAcceptableCatImageUrl(),
-          mockIsAcceptableCatImagePersonFaceInImage,
-        ),
+          mockIsAcceptableCatImagePersonFaceInImage
+        )
       );
 
       const isAcceptableCatImageResult = await imageValidator(
         image,
-        imageExtension,
+        imageExtension
       );
 
       expect(isSuccessResult(isAcceptableCatImageResult)).toBeTruthy();
       expect(isAcceptableCatImageResult.value).toStrictEqual(expected);
-    },
+    }
   );
 
   it.each`
@@ -171,28 +183,28 @@ describe('useCatImageValidator TestCases', () => {
     ${langEn} | ${dummyImage} | ${dummyImageExtension} | ${{ isAcceptableCatImage: false, notAcceptableReason: ['Sorry, but please use images that clearly show the cat.'] }}
   `(
     'should result in isAcceptableCatImage being false, because not cat image. language: $language',
-    async ({ language, image, imageExtension, expected }) => {
+    async ({ language, image, imageExtension, expected }: TestTable) => {
       const { imageValidator } = useCatImageValidator(language);
 
       mockServer.use(
         rest.post(
           `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-          mockTokenEndpoint,
+          mockTokenEndpoint
         ),
         rest.post(
           isAcceptableCatImageUrl(),
-          mockIsAcceptableCatImageNotCatImage,
-        ),
+          mockIsAcceptableCatImageNotCatImage
+        )
       );
 
       const isAcceptableCatImageResult = await imageValidator(
         image,
-        imageExtension,
+        imageExtension
       );
 
       expect(isSuccessResult(isAcceptableCatImageResult)).toBeTruthy();
       expect(isAcceptableCatImageResult.value).toStrictEqual(expected);
-    },
+    }
   );
 
   it.each`
@@ -201,28 +213,28 @@ describe('useCatImageValidator TestCases', () => {
     ${langEn} | ${dummyImage} | ${dummyImageExtension} | ${{ isAcceptableCatImage: false, notAcceptableReason: ['Image size is too large.', 'Please use images under 4MB.'] }}
   `(
     'should result in isAcceptableCatImage being false, because the image is too large. language: $language',
-    async ({ language, image, imageExtension, expected }) => {
+    async ({ language, image, imageExtension, expected }: TestTable) => {
       const { imageValidator } = useCatImageValidator(language);
 
       mockServer.use(
         rest.post(
           `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-          mockTokenEndpoint,
+          mockTokenEndpoint
         ),
         rest.post(
           isAcceptableCatImageUrl(),
-          mockIsAcceptableCatImagePayloadTooLargeError,
-        ),
+          mockIsAcceptableCatImagePayloadTooLargeError
+        )
       );
 
       const isAcceptableCatImageResult = await imageValidator(
         image,
-        imageExtension,
+        imageExtension
       );
 
       expect(isSuccessResult(isAcceptableCatImageResult)).toBeTruthy();
       expect(isAcceptableCatImageResult.value).toStrictEqual(expected);
-    },
+    }
   );
 
   it.each`
@@ -231,25 +243,25 @@ describe('useCatImageValidator TestCases', () => {
     ${langEn} | ${dummyImage} | ${dummyImageExtension} | ${{ isAcceptableCatImage: false, notAcceptableReason: ['An unexpected Error occurred.', 'Sorry, please try again after some time has passed.'] }}
   `(
     'should result in isAcceptableCatImage being false, because an error has occurred. language: $language',
-    async ({ language, image, imageExtension, expected }) => {
+    async ({ language, image, imageExtension, expected }: TestTable) => {
       const { imageValidator } = useCatImageValidator(language);
 
       mockServer.use(
         rest.post(
           `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-          mockTokenEndpoint,
+          mockTokenEndpoint
         ),
-        rest.post(isAcceptableCatImageUrl(), mockIsAcceptableCatImageError),
+        rest.post(isAcceptableCatImageUrl(), mockIsAcceptableCatImageError)
       );
 
       const isAcceptableCatImageResult = await imageValidator(
         image,
-        imageExtension,
+        imageExtension
       );
 
       expect(isSuccessResult(isAcceptableCatImageResult)).toBeTruthy();
       expect(isAcceptableCatImageResult.value).toStrictEqual(expected);
-    },
+    }
   );
 
   it.each`
@@ -258,21 +270,21 @@ describe('useCatImageValidator TestCases', () => {
     ${langEn} | ${dummyImage} | ${dummyImageExtension} | ${new IsAcceptableCatImageError('Internal Server Error')}
   `(
     'should return an IsAcceptableCatImageError, because the API will return internalServer error. language: $language',
-    async ({ language, image, imageExtension, expected }) => {
+    async ({ language, image, imageExtension, expected }: TestTable) => {
       const { imageValidator } = useCatImageValidator(language);
 
       mockServer.use(
         rest.post(
           `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-          mockTokenEndpoint,
+          mockTokenEndpoint
         ),
-        rest.post(isAcceptableCatImageUrl(), mockInternalServerError),
+        rest.post(isAcceptableCatImageUrl(), mockInternalServerError)
       );
 
       await expect(imageValidator(image, imageExtension)).rejects.toStrictEqual(
-        expected,
+        expected
       );
-    },
+    }
   );
 
   it.each`
@@ -281,19 +293,19 @@ describe('useCatImageValidator TestCases', () => {
     ${langEn} | ${dummyImage} | ${dummyImageExtension} | ${new IssueAccessTokenError('Internal Server Error')}
   `(
     'should IssueAccessTokenError Throw, because accessToken issuance failed. language: $language',
-    async ({ language, image, imageExtension, expected }) => {
+    async ({ language, image, imageExtension, expected }: TestTable) => {
       const { imageValidator } = useCatImageValidator(language);
 
       mockServer.use(
         rest.post(
           `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-          mockInternalServerError,
-        ),
+          mockInternalServerError
+        )
       );
 
       await expect(imageValidator(image, imageExtension)).rejects.toStrictEqual(
-        expected,
+        expected
       );
-    },
+    }
   );
 });

@@ -1,3 +1,4 @@
+import type { FC } from 'react';
 import {
   TermsOrPrivacyTemplate as OrgTermsOrPrivacyTemplate,
   useSwitchLanguage,
@@ -12,8 +13,6 @@ import {
   type Language,
 } from '../../features';
 import { DefaultLayout } from '../../layouts';
-
-import type { FC } from 'react';
 
 type Props = {
   type: TemplateType;

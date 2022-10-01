@@ -1,11 +1,10 @@
+import type { ComponentStoryObj } from '@storybook/react';
 import { InternalServerErrorImage } from '.';
 
-import type { ComponentStoryObj, Meta } from '@storybook/react';
-
+// eslint-disable-next-line import/no-anonymous-default-export
 export default {
-  title: 'src/components/ErrorCatImages/InternalServerErrorImage.tsx',
   component: InternalServerErrorImage,
-} as Meta<typeof InternalServerErrorImage>;
+};
 
 type Story = ComponentStoryObj<typeof InternalServerErrorImage>;
 

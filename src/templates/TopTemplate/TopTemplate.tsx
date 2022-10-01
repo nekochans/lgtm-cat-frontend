@@ -1,3 +1,4 @@
+import type { FC } from 'react';
 import { TopTemplate as OrgTopTemplate } from '@nekochans/lgtm-cat-ui';
 
 import { InternalServerErrorImage } from '../../components';
@@ -17,8 +18,6 @@ import {
   sendCopyMarkdownFromRandomButton,
   sendCopyMarkdownFromTopImages,
 } from '../../utils';
-
-import type { FC } from 'react';
 
 const clipboardMarkdownCallback = sendCopyMarkdownFromTopImages;
 

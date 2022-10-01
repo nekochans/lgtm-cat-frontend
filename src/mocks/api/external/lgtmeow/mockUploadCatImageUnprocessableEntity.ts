@@ -13,5 +13,5 @@ export const mockUploadCatImageUnprocessableEntity: ResponseResolver<
         code: httpStatusCode.unprocessableEntity,
         message: 'UploadCatImageValidationError',
       },
-    }),
+    })
   );
