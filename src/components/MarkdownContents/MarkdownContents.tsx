@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import ReactMarkdown from 'react-markdown';
 import styled from 'styled-components';
 
-const Wrapper = styled.div`
+const _Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -24,7 +24,7 @@ export type Props = {
 };
 
 export const MarkdownContents: FC<Props> = ({ markdown }) => (
-  <Wrapper className="markdown">
+  <_Wrapper className="markdown">
     <ReactMarkdown>{markdown}</ReactMarkdown>
-  </Wrapper>
+  </_Wrapper>
 );

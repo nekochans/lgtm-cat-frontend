@@ -65,6 +65,7 @@
     "eslint-plugin-react": "^7.31.8",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-storybook": "^0.6.4",
+    "eslint-plugin-styled-components-varname": "^1.0.1",
     "jest": "^29.0.3",
     "jest-environment-jsdom": "^29.0.3",
     "jest-fetch-mock": "^3.0.3",
