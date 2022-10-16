@@ -5,6 +5,16 @@ const moduleExports = {
   reactStrictMode: true,
   images: {
     domains: ['lgtm-images.lgtmeow.com', 'stg-lgtm-images.lgtmeow.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'lgtm-images.lgtmeow.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'stg-lgtm-images.lgtmeow.com',
+      },
+    ],
   },
   compiler: {
     styledComponents: true,

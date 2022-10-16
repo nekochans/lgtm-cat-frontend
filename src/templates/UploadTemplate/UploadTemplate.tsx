@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { UploadTemplate as OrgUploadTemplate } from '@nekochans/lgtm-cat-ui';
-import Image from 'next/image';
+import Image from 'next/future/image';
 
 import {
   metaTagList,
@@ -20,7 +20,7 @@ import {
 import cat from './images/cat.webp';
 
 const CatImage = () => (
-  <Image src={cat.src} width="302px" height="302px" alt="Cat" priority={true} />
+  <Image src={cat.src} width={302} height={302} alt="Cat" priority={true} />
 );
 
 const canonicalLink = i18nUrlList.upload?.ja;
