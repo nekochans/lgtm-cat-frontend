@@ -24,6 +24,7 @@ const moduleExports = {
     defaultLocale: 'ja',
     localeDetection: false,
   },
+  swcMinify: true,
 };
 
 const sentryWebpackPluginOptions = {
