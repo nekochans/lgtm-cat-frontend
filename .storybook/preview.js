@@ -65,7 +65,7 @@ const customViewports = {
 
 // https://github.com/RyanClementsHax/storybook-addon-next/issues/99#issuecomment-1247073410 に記載してある暫定対応を実施
 // https://github.com/RyanClementsHax/storybook-addon-next/pull/121 がマージされたら不要になるハズ
-import Image from 'next/future/image';
+import Image from 'next/image';
 
 const OriginalImage = Image.default;
 Object.defineProperty(Image, 'default', {
