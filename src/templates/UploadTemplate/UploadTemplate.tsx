@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { UploadTemplate as OrgUploadTemplate } from '@nekochans/lgtm-cat-ui';
-import Image from 'next/future/image';
+import Image from 'next/image';
 
 import {
   metaTagList,

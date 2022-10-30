@@ -41,7 +41,7 @@ UI Component は [@nekochans/lgtm-cat-ui](https://github.com/nekochans/lgtm-cat-
 
 Component の内部で React hooks を利用する事は問題ありません。
 
-一部 `next/future/image` に依存しているものがありますが、将来的にこれは別のディレクトリに移動させるかもしれません。
+一部 `next/image` に依存しているものがありますが、将来的にこれは別のディレクトリに移動させるかもしれません。
 
 基本方針のところにも書きましたが、基本的に UI Component は [@nekochans/lgtm-cat-ui](https://github.com/nekochans/lgtm-cat-ui) で開発します。
 
