@@ -31,6 +31,17 @@ export const customErrorTitle = (language: Language): string => {
   }
 };
 
+const topPageTitle = (language: Language): string => {
+  switch (language) {
+    case 'ja':
+      return `${defaultTitle} 猫好きのためのLGTM画像共有サービス`;
+    case 'en':
+      return `${defaultTitle} | LGTM image share service for cat lovers`;
+    default:
+      return assertNever(language);
+  }
+};
+
 const uploadPageTitle = (language: Language): string => {
   switch (language) {
     case 'ja':
@@ -100,7 +111,7 @@ type MetaTagList = {
 
 export const metaTagList = (language: Language): MetaTagList => ({
   top: {
-    title: `${defaultTitle} | LGTM image share service for cat lovers`,
+    title: topPageTitle(language),
     ogpImgUrl: appUrlList.ogpImg,
     ogpTargetUrl: appUrlList.top,
     appName,
