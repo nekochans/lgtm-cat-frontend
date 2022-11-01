@@ -23,6 +23,11 @@ export const DefaultLayout: FC<Props> = ({
       <title>{metaTag.title}</title>
       <meta charSet="utf-8" />
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      {metaTag.description != null ? (
+        <meta name="description" content={metaTag.description} />
+      ) : (
+        ''
+      )}
       <meta property="og:title" content={metaTag.title} />
       <meta property="og:description" content={metaTag.description} />
       <meta property="og:type" content="website" />
