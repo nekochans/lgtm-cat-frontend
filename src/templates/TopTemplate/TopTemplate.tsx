@@ -27,10 +27,8 @@ const fetchNewArrivalCatImagesCallback = sendClickTopFetchNewArrivalCatButton;
 
 const catRandomCopyCallback = sendCopyMarkdownFromRandomButton;
 
-const canonicalLink = i18nUrlList.top?.ja;
-
 const alternateUrls = languages.map((hreflang) => {
-  const link = hreflang === 'ja' ? canonicalLink : i18nUrlList.top?.en;
+  const link = hreflang === 'ja' ? i18nUrlList.top?.ja : i18nUrlList.top?.en;
 
   return { link, hreflang };
 });
@@ -43,11 +41,18 @@ type Props = {
 export const TopTemplate: FC<Props> = ({ language, lgtmImages }) => {
   const metaTag = metaTagList(language).top;
 
+  const canonicalLink =
+    language === 'en' ? i18nUrlList.top?.en : i18nUrlList.top?.ja;
+
   const { randomCatImagesFetcher, newArrivalCatImagesFetcher } =
     useCatImagesFetcher();
 
   return (
-    <DefaultLayout metaTag={metaTag} alternateUrls={alternateUrls}>
+    <DefaultLayout
+      metaTag={metaTag}
+      canonicalLink={canonicalLink}
+      alternateUrls={alternateUrls}
+    >
       <OrgTopTemplate
         language={language}
         lgtmImages={lgtmImages}
