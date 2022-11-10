@@ -6,6 +6,7 @@ import type { Language, MetaTag, Url } from '../../features';
 type Props = {
   metaTag: MetaTag;
   children: ReactNode;
+  canonicalLink?: Url;
   alternateUrls?: Array<{
     hreflang: Language;
     link?: Url;
@@ -16,6 +17,7 @@ type Props = {
 export const DefaultLayout: FC<Props> = ({
   metaTag,
   children,
+  canonicalLink,
   alternateUrls,
 }) => (
   <>
@@ -55,6 +57,11 @@ export const DefaultLayout: FC<Props> = ({
       <meta name="msapplication-TileColor" content="#da532c" />
       <meta name="msapplication-config" content="/favicons/browserconfig.xml" />
       <meta name="theme-color" content="#ffffff" />
+      {canonicalLink != null ? (
+        <link rel="canonical" href={canonicalLink} />
+      ) : (
+        ''
+      )}
       {alternateUrls?.map((alternateUrl, index) => (
         <link
           rel="alternate"
