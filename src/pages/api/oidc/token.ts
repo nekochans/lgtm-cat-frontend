@@ -5,9 +5,12 @@ import {
   cognitoClientId,
   cognitoClientSecret,
   httpStatusCode,
-  type HttpStatusCode,
 } from '../../../constants';
-import { cognitoTokenEndpointUrl, type AccessToken } from '../../../features';
+import {
+  cognitoTokenEndpointUrl,
+  IssueAccessTokenError,
+  type AccessToken,
+} from '../../../features';
 
 export type CognitoTokenResponseBody = {
   // eslint-disable-next-line camelcase
@@ -21,10 +24,9 @@ export type CognitoTokenResponseBody = {
 export type IssueClientCredentialsAccessTokenResponse = AccessToken;
 
 export type IssueClientCredentialsAccessTokenErrorResponse = {
-  error?: {
-    code: HttpStatusCode;
-    message: string;
-  };
+  type: 'MethodNotAllowed';
+  title: 'This method is not allowed.';
+  status: 405;
 };
 
 const methodNotAllowedErrorResponse = (
@@ -34,10 +36,9 @@ const methodNotAllowedErrorResponse = (
   >
 ) =>
   res.status(httpStatusCode.methodNotAllowed).json({
-    error: {
-      code: httpStatusCode.methodNotAllowed,
-      message: 'Method Not Allowed',
-    },
+    type: 'MethodNotAllowed',
+    title: 'This method is not allowed.',
+    status: httpStatusCode.methodNotAllowed,
   });
 
 const issueClientCredentialsAccessToken = async (
@@ -61,12 +62,7 @@ const issueClientCredentialsAccessToken = async (
 
   const response = await fetch(cognitoTokenEndpointUrl(), options);
   if (!response.ok) {
-    return res.status(httpStatusCode.internalServerError).json({
-      error: {
-        code: httpStatusCode.internalServerError,
-        message: 'Internal Server Error',
-      },
-    });
+    throw new IssueAccessTokenError(response.statusText);
   }
 
   const responseBody = (await response.json()) as CognitoTokenResponseBody;
