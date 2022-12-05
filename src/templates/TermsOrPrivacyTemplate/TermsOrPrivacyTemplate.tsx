@@ -13,12 +13,49 @@ import {
   type Language,
 } from '../../features';
 import { DefaultLayout } from '../../layouts';
+import { assertNever } from '../../utils';
 
 type Props = {
   type: TemplateType;
   language: Language;
   jaMarkdown: string;
   enMarkdown: string;
+};
+
+const createCanonicalLink = (type: TemplateType, language: Language) => {
+  switch (type) {
+    case 'terms':
+      return language === 'en' ? i18nUrlList.terms?.en : i18nUrlList.terms?.ja;
+    case 'privacy':
+      return language === 'en'
+        ? i18nUrlList.privacy?.en
+        : i18nUrlList.privacy?.ja;
+    default:
+      return assertNever(type);
+  }
+};
+
+const createAlternateUrls = (type: TemplateType) => {
+  switch (type) {
+    case 'terms':
+      return languages.map((hreflang) => {
+        if (hreflang === 'en') {
+          return { link: i18nUrlList.terms?.en, hreflang };
+        }
+
+        return { link: i18nUrlList.terms?.ja, hreflang };
+      });
+    case 'privacy':
+      return languages.map((hreflang) => {
+        if (hreflang === 'en') {
+          return { link: i18nUrlList.privacy?.en, hreflang };
+        }
+
+        return { link: i18nUrlList.privacy?.ja, hreflang };
+      });
+    default:
+      return assertNever(type);
+  }
 };
 
 // eslint-disable-next-line max-lines-per-function
@@ -38,22 +75,16 @@ export const TermsOrPrivacyTemplate: FC<Props> = ({
       ? metaTagList(language).terms
       : metaTagList(language).privacy;
 
-  const canonicalLink =
-    type === 'terms' ? i18nUrlList.terms?.ja : i18nUrlList.privacy?.ja;
+  const canonicalLink = createCanonicalLink(type, language);
 
-  const alternateUrls = languages.map((hreflang) => {
-    if (hreflang === 'ja') {
-      return { link: canonicalLink, hreflang };
-    }
-
-    const link =
-      type === 'terms' ? i18nUrlList.terms?.en : i18nUrlList.privacy?.en;
-
-    return { link, hreflang };
-  });
+  const alternateUrls = createAlternateUrls(type);
 
   return (
-    <DefaultLayout metaTag={metaTag} alternateUrls={alternateUrls}>
+    <DefaultLayout
+      metaTag={metaTag}
+      canonicalLink={canonicalLink}
+      alternateUrls={alternateUrls}
+    >
       <OrgTermsOrPrivacyTemplate
         type={type}
         language={language}

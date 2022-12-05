@@ -23,14 +23,6 @@ const CatImage = () => (
   <Image src={cat.src} width={302} height={302} alt="Cat" priority={true} />
 );
 
-const canonicalLink = i18nUrlList.upload?.ja;
-
-const alternateUrls = languages.map((hreflang) => {
-  const link = hreflang === 'ja' ? canonicalLink : i18nUrlList.upload?.en;
-
-  return { link, hreflang };
-});
-
 type Props = {
   language: Language;
 };
@@ -38,12 +30,26 @@ type Props = {
 export const UploadTemplate: FC<Props> = ({ language }) => {
   const metaTag = metaTagList(language).upload;
 
+  const canonicalLink =
+    language === 'en' ? i18nUrlList.upload?.en : i18nUrlList.upload?.ja;
+
+  const alternateUrls = languages.map((hreflang) => {
+    const link =
+      hreflang === 'en' ? i18nUrlList.upload?.en : i18nUrlList.upload?.ja;
+
+    return { link, hreflang };
+  });
+
   const { imageValidator } = useCatImageValidator(language);
 
   const { imageUploader } = useCatImageUploader(language);
 
   return (
-    <DefaultLayout metaTag={metaTag} alternateUrls={alternateUrls}>
+    <DefaultLayout
+      metaTag={metaTag}
+      canonicalLink={canonicalLink}
+      alternateUrls={alternateUrls}
+    >
       <OrgUploadTemplate
         language={language}
         imageValidator={imageValidator}
