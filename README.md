@@ -82,6 +82,20 @@ Personal Access Token を発行したら以下の内容で`.npmrc` を作成し�
 //npm.pkg.github.com/:_authToken=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
+## Node.js のインストール
+
+18 系の最新を利用して下さい。
+
+複数プロジェクトで異なる Node.js のバージョンを利用する可能性があるので、Node.js 自体をバージョン管理出来るようにしておくのが無難です。
+
+以下は [asdf](https://asdf-vm.com/) を使った設定例です。
+
+```bash
+asdf install nodejs 18.12.1
+
+asdf local nodejs 18.12.1
+```
+
 ## 依存 package のインストールと開発用アプリケーションサーバーの起動
 
 `npm ci` で依存 package をインストールします。
