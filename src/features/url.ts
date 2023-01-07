@@ -79,7 +79,7 @@ export const i18nUrlList: I18nUrlList = {
   },
 };
 
-export type AppUrl = typeof appUrlList[keyof typeof appUrlList];
+export type AppUrl = (typeof appUrlList)[keyof typeof appUrlList];
 
 const defaultUrl = 'http://localhost:2222/api';
 
