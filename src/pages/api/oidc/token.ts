@@ -34,12 +34,13 @@ const methodNotAllowedErrorResponse = (
     | IssueClientCredentialsAccessTokenResponse
     | IssueClientCredentialsAccessTokenErrorResponse
   >
-) =>
+) => {
   res.status(httpStatusCode.methodNotAllowed).json({
     type: 'MethodNotAllowed',
     title: 'This method is not allowed.',
     status: httpStatusCode.methodNotAllowed,
   });
+};
 
 const issueClientCredentialsAccessToken = async (
   res: NextApiResponse<
@@ -67,7 +68,7 @@ const issueClientCredentialsAccessToken = async (
 
   const responseBody = (await response.json()) as CognitoTokenResponseBody;
 
-  return res.status(httpStatusCode.ok).json({
+  res.status(httpStatusCode.ok).json({
     jwtString: responseBody.access_token,
   });
 };
@@ -81,12 +82,13 @@ const handler: NextApiHandler = async (
 ): Promise<void> => {
   switch (req.method) {
     case 'POST': {
+      // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
       const response = await issueClientCredentialsAccessToken(res);
 
       return response;
     }
     default: {
-      return methodNotAllowedErrorResponse(res);
+      methodNotAllowedErrorResponse(res);
     }
   }
 };

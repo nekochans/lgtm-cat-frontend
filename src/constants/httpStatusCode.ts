@@ -11,4 +11,5 @@ export const httpStatusCode = {
   serviceUnavailable: 503,
 } as const;
 
-export type HttpStatusCode = typeof httpStatusCode[keyof typeof httpStatusCode];
+export type HttpStatusCode =
+  (typeof httpStatusCode)[keyof typeof httpStatusCode];
