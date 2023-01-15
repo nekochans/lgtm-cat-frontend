@@ -100,12 +100,20 @@ const lgtmeowApiUrl = (): Url => {
   return defaultUrl;
 };
 
+const bffUrl = (): Url => {
+  if (isUrl(process.env.NEXT_PUBLIC_LGTMEOW_BFF_URL)) {
+    return process.env.NEXT_PUBLIC_LGTMEOW_BFF_URL;
+  }
+
+  return 'http://localhost:8787';
+};
+
 export const uploadCatImageUrl = (): Url => `${lgtmeowApiUrl()}/lgtm-images`;
 
-export const fetchLgtmImagesUrl = (): Url => `${lgtmeowApiUrl()}/lgtm-images`;
+export const fetchLgtmImagesUrl = (): Url => `${bffUrl()}/lgtm-images`;
 
 export const fetchLgtmImagesInRecentlyCreatedUrl = (): Url =>
-  `${lgtmeowApiUrl()}/lgtm-images/recently-created`;
+  `${bffUrl()}/lgtm-images/recently-created`;
 
 const imageRecognitionApiUrl = (): Url => {
   if (isUrl(process.env.NEXT_PUBLIC_IMAGE_RECOGNITION_API_URL)) {
