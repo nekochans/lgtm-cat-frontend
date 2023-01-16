@@ -4,23 +4,15 @@
 import 'whatwg-fetch';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-
-import { FetchLgtmImagesError } from '../../../features/errors/FetchLgtmImagesError';
-import { IssueAccessTokenError } from '../../../features/errors/IssueAccessTokenError';
-import { fetchLgtmImagesUrl, apiList, appBaseUrl } from '../../../features/url';
-import { mockInternalServerError } from '../../../mocks/api/error/mockInternalServerError';
-import { mockTokenEndpoint } from '../../../mocks/api/external/cognito/mockTokenEndpoint';
-import { mockFetchLgtmImages } from '../../../mocks/api/external/lgtmeow/mockFetchLgtmImages';
-import { fetchLgtmImagesMockBody } from '../../../mocks/api/fetchLgtmImagesMockBody';
+import { fetchLgtmImagesUrl, FetchLgtmImagesError } from '../../../features';
+import {
+  mockInternalServerError,
+  mockFetchLgtmImages,
+  fetchLgtmImagesMockBody,
+} from '../../../mocks';
 import { useCatImagesFetcher } from '../../useCatImagesFetcher';
 
-const mockHandlers = [
-  rest.post(
-    `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-    mockTokenEndpoint
-  ),
-  rest.get(fetchLgtmImagesUrl(), mockFetchLgtmImages),
-];
+const mockHandlers = [rest.get(fetchLgtmImagesUrl(), mockFetchLgtmImages)];
 
 const mockServer = setupServer(...mockHandlers);
 
@@ -41,7 +33,7 @@ describe('useCatImagesFetcher.ts randomCatImagesFetcher TestCases', () => {
   it('should be able to fetch LGTM Images', async () => {
     const expected = fetchLgtmImagesMockBody.lgtmImages.map((value) => ({
       id: value.id,
-      imageUrl: value.url,
+      imageUrl: value.imageUrl,
     }));
 
     const lgtmImages = await useCatImagesFetcher().randomCatImagesFetcher();
@@ -49,27 +41,8 @@ describe('useCatImagesFetcher.ts randomCatImagesFetcher TestCases', () => {
     expect(lgtmImages).toStrictEqual(expected);
   });
 
-  it('should IssueAccessTokenError Throw, because accessToken issuance failed', async () => {
-    mockServer.use(
-      rest.post(
-        `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-        mockInternalServerError
-      )
-    );
-
-    await expect(
-      useCatImagesFetcher().randomCatImagesFetcher()
-    ).rejects.toStrictEqual(new IssueAccessTokenError('Internal Server Error'));
-  });
-
   it('should FetchLgtmImagesError Throw, because Failed to fetch LGTM Images', async () => {
-    mockServer.use(
-      rest.post(
-        `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-        mockTokenEndpoint
-      ),
-      rest.get(fetchLgtmImagesUrl(), mockInternalServerError)
-    );
+    mockServer.use(rest.get(fetchLgtmImagesUrl(), mockInternalServerError));
 
     await expect(
       useCatImagesFetcher().randomCatImagesFetcher()

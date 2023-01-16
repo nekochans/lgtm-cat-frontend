@@ -14,7 +14,6 @@ import {
   uploadCatImageUrl,
   isUrl,
   type FetchLgtmImages,
-  FetchLgtmImagesDto,
   LgtmImage,
   IsAcceptableCatImage,
   IsAcceptableCatImageResponse,
@@ -27,7 +26,7 @@ import { mightSetRequestIdToSentry } from '../../utils';
 type FetchImageResponseBody = {
   lgtmImages: Array<{
     id: number;
-    url: string;
+    imageUrl: string;
   }>;
 };
 
@@ -56,24 +55,20 @@ const isFetchImageResponseBody = (
       return false;
     }
 
-    return Object.hasOwn(lgtmImage, 'id') && Object.hasOwn(lgtmImage, 'url');
+    return (
+      Object.hasOwn(lgtmImage, 'id') && Object.hasOwn(lgtmImage, 'imageUrl')
+    );
   }
 
   return false;
 };
 
 // eslint-disable-next-line max-statements
-const fetchLgtmImages = async (
-  dto: FetchLgtmImagesDto,
-  fetchUrl: Url
-): Promise<LgtmImage[]> => {
+const fetchLgtmImages = async (fetchUrl: Url): Promise<LgtmImage[]> => {
   const options: RequestInit = {
     method: 'GET',
     mode: 'cors',
     cache: 'no-cache',
-    headers: {
-      Authorization: `Bearer ${dto.accessToken.jwtString}`,
-    },
   };
 
   const response = await fetch(fetchUrl, options);
@@ -87,7 +82,7 @@ const fetchLgtmImages = async (
   if (isFetchImageResponseBody(responseBody)) {
     const lgtmImages = responseBody.lgtmImages.map((value) => ({
       id: Number(value.id),
-      imageUrl: value.url,
+      imageUrl: value.imageUrl,
     }));
 
     if (isLgtmImages(lgtmImages)) {
@@ -99,12 +94,12 @@ const fetchLgtmImages = async (
 };
 
 // eslint-disable-next-line require-await
-export const fetchLgtmImagesInRandom: FetchLgtmImages = async (dto) =>
-  await fetchLgtmImages(dto, fetchLgtmImagesUrl());
+export const fetchLgtmImagesInRandom: FetchLgtmImages = async () =>
+  await fetchLgtmImages(fetchLgtmImagesUrl());
 
 // eslint-disable-next-line require-await
-export const fetchLgtmImagesInRecentlyCreated: FetchLgtmImages = async (dto) =>
-  await fetchLgtmImages(dto, fetchLgtmImagesInRecentlyCreatedUrl());
+export const fetchLgtmImagesInRecentlyCreated: FetchLgtmImages = async () =>
+  await fetchLgtmImages(fetchLgtmImagesInRecentlyCreatedUrl());
 
 export const isAcceptableCatImage: IsAcceptableCatImage = async (dto) => {
   const options: RequestInit = {

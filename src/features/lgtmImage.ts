@@ -20,11 +20,7 @@ export type LgtmImage = OrgLgtmImage;
 
 export type AcceptedTypesImageExtension = OrgAcceptedTypesImageExtension;
 
-export type FetchLgtmImagesDto = {
-  accessToken: AccessToken;
-};
-
-export type FetchLgtmImages = (dto: FetchLgtmImagesDto) => Promise<LgtmImage[]>;
+export type FetchLgtmImages = () => Promise<LgtmImage[]>;
 
 export type IsAcceptableCatImageDto = {
   accessToken: AccessToken;

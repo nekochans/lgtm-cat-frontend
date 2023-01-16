@@ -1,5 +1,5 @@
 import type { GetStaticProps, NextPage } from 'next';
-import { issueAccessTokenOnServer, fetchLgtmImagesInRandom } from '../api';
+import { fetchLgtmImagesInRandom } from '../api';
 import {
   convertLocaleToLanguage,
   extractRandomImages,
@@ -25,9 +25,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const language = convertLocaleToLanguage(locale);
 
   try {
-    const accessToken = await issueAccessTokenOnServer();
-
-    const lgtmImages = await fetchLgtmImagesInRandom({ accessToken });
+    const lgtmImages = await fetchLgtmImagesInRandom();
 
     return {
       props: { language, lgtmImages },
