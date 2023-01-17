@@ -1,4 +1,4 @@
-import { issueAccessToken, uploadCatImage } from '../api';
+import { uploadCatImage } from '../api';
 import {
   UploadCatImageSizeTooLargeError,
   UploadCatImageValidationError,
@@ -43,10 +43,7 @@ const createDisplayErrorMessages = (
 const createCatImageUploader =
   (language: Language) =>
   async (image: string, imageExtension: AcceptedTypesImageExtension) => {
-    const accessToken = await issueAccessToken();
-
     const uploadCatImageResult = await uploadCatImage({
-      accessToken,
       image,
       imageExtension,
     });

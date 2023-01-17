@@ -5,30 +5,20 @@ import 'whatwg-fetch';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import {
-  IssueAccessTokenError,
   UploadCatImageError,
-  apiList,
-  appBaseUrl,
   uploadCatImageUrl,
   type AcceptedTypesImageExtension,
   Language,
 } from '../../features';
 import {
   mockInternalServerError,
-  mockTokenEndpoint,
   mockUploadCatImage,
   mockUploadCatImagePayloadTooLarge,
   mockUploadCatImageUnprocessableEntity,
 } from '../../mocks';
 import { useCatImageUploader } from '../useCatImageUploader';
 
-const mockHandlers = [
-  rest.post(
-    `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-    mockTokenEndpoint
-  ),
-  rest.post(uploadCatImageUrl(), mockUploadCatImage),
-];
+const mockHandlers = [rest.post(uploadCatImageUrl(), mockUploadCatImage)];
 
 const mockServer = setupServer(...mockHandlers);
 
@@ -92,10 +82,6 @@ describe('useCatImageUploader TestCases', () => {
       const { imageUploader } = useCatImageUploader(language);
 
       mockServer.use(
-        rest.post(
-          `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-          mockTokenEndpoint
-        ),
         rest.post(uploadCatImageUrl(), mockUploadCatImagePayloadTooLarge)
       );
 
@@ -115,10 +101,6 @@ describe('useCatImageUploader TestCases', () => {
       const { imageUploader } = useCatImageUploader(language);
 
       mockServer.use(
-        rest.post(
-          `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-          mockTokenEndpoint
-        ),
         rest.post(uploadCatImageUrl(), mockUploadCatImageUnprocessableEntity)
       );
 
@@ -137,35 +119,7 @@ describe('useCatImageUploader TestCases', () => {
     async ({ language, image, imageExtension, expected }: TestTable) => {
       const { imageUploader } = useCatImageUploader(language);
 
-      mockServer.use(
-        rest.post(
-          `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-          mockTokenEndpoint
-        ),
-        rest.post(uploadCatImageUrl(), mockInternalServerError)
-      );
-
-      await expect(imageUploader(image, imageExtension)).rejects.toStrictEqual(
-        expected
-      );
-    }
-  );
-
-  it.each`
-    language  | image         | imageExtension         | expected
-    ${langJa} | ${dummyImage} | ${dummyImageExtension} | ${new IssueAccessTokenError('Internal Server Error')}
-    ${langEn} | ${dummyImage} | ${dummyImageExtension} | ${new IssueAccessTokenError('Internal Server Error')}
-  `(
-    'should IssueAccessTokenError Throw, because accessToken issuance failed. language: $language',
-    async ({ language, image, imageExtension, expected }: TestTable) => {
-      const { imageUploader } = useCatImageUploader(language);
-
-      mockServer.use(
-        rest.post(
-          `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-          mockInternalServerError
-        )
-      );
+      mockServer.use(rest.post(uploadCatImageUrl(), mockInternalServerError));
 
       await expect(imageUploader(image, imageExtension)).rejects.toStrictEqual(
         expected

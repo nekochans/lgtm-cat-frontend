@@ -6,7 +6,6 @@ import type {
   ImageValidator as OrgImageValidator,
   CatImagesFetcher as OrgCatImagesFetcher,
 } from '@nekochans/lgtm-cat-ui';
-import type { AccessToken } from './authToken';
 import {
   UploadCatImageError,
   UploadCatImageSizeTooLargeError,
@@ -23,7 +22,6 @@ export type AcceptedTypesImageExtension = OrgAcceptedTypesImageExtension;
 export type FetchLgtmImages = () => Promise<LgtmImage[]>;
 
 export type IsAcceptableCatImageDto = {
-  accessToken: AccessToken;
   image: string;
   imageExtension: AcceptedTypesImageExtension;
 };

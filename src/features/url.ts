@@ -92,14 +92,6 @@ export const cognitoTokenEndpointUrl = (): Url => {
   return defaultUrl;
 };
 
-const lgtmeowApiUrl = (): Url => {
-  if (isUrl(process.env.NEXT_PUBLIC_LGTMEOW_API_URL)) {
-    return process.env.NEXT_PUBLIC_LGTMEOW_API_URL;
-  }
-
-  return defaultUrl;
-};
-
 const bffUrl = (): Url => {
   if (isUrl(process.env.NEXT_PUBLIC_LGTMEOW_BFF_URL)) {
     return process.env.NEXT_PUBLIC_LGTMEOW_BFF_URL;
@@ -108,20 +100,12 @@ const bffUrl = (): Url => {
   return 'http://localhost:8787';
 };
 
-export const uploadCatImageUrl = (): Url => `${lgtmeowApiUrl()}/lgtm-images`;
+export const uploadCatImageUrl = (): Url => `${bffUrl()}/lgtm-images`;
 
 export const fetchLgtmImagesUrl = (): Url => `${bffUrl()}/lgtm-images`;
 
 export const fetchLgtmImagesInRecentlyCreatedUrl = (): Url =>
   `${bffUrl()}/lgtm-images/recently-created`;
 
-const imageRecognitionApiUrl = (): Url => {
-  if (isUrl(process.env.NEXT_PUBLIC_IMAGE_RECOGNITION_API_URL)) {
-    return process.env.NEXT_PUBLIC_IMAGE_RECOGNITION_API_URL;
-  }
-
-  return defaultUrl;
-};
-
 export const isAcceptableCatImageUrl = (): Url =>
-  `${imageRecognitionApiUrl()}/cat-images/validation-results`;
+  `${bffUrl()}/cat-images/validation-results`;
