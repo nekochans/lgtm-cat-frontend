@@ -6,17 +6,13 @@ import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import {
   IsAcceptableCatImageError,
-  IssueAccessTokenError,
   isSuccessResult,
-  apiList,
-  appBaseUrl,
   isAcceptableCatImageUrl,
   type AcceptedTypesImageExtension,
   Language,
 } from '../../features';
 import {
   mockInternalServerError,
-  mockTokenEndpoint,
   mockIsAcceptableCatImage,
   mockIsAcceptableCatImageError,
   mockIsAcceptableCatImageNotAllowedImageExtension,
@@ -28,10 +24,6 @@ import {
 import { useCatImageValidator } from '../useCatImageValidator';
 
 const mockHandlers = [
-  rest.post(
-    `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-    mockTokenEndpoint
-  ),
   rest.post(isAcceptableCatImageUrl(), mockIsAcceptableCatImage),
 ];
 
@@ -98,10 +90,6 @@ describe('useCatImageValidator TestCases', () => {
 
       mockServer.use(
         rest.post(
-          `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-          mockTokenEndpoint
-        ),
-        rest.post(
           isAcceptableCatImageUrl(),
           mockIsAcceptableCatImageNotAllowedImageExtension
         )
@@ -127,10 +115,6 @@ describe('useCatImageValidator TestCases', () => {
       const { imageValidator } = useCatImageValidator(language);
 
       mockServer.use(
-        rest.post(
-          `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-          mockTokenEndpoint
-        ),
         rest.post(
           isAcceptableCatImageUrl(),
           mockIsAcceptableCatImageNotModerationImage
@@ -158,10 +142,6 @@ describe('useCatImageValidator TestCases', () => {
 
       mockServer.use(
         rest.post(
-          `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-          mockTokenEndpoint
-        ),
-        rest.post(
           isAcceptableCatImageUrl(),
           mockIsAcceptableCatImagePersonFaceInImage
         )
@@ -187,10 +167,6 @@ describe('useCatImageValidator TestCases', () => {
       const { imageValidator } = useCatImageValidator(language);
 
       mockServer.use(
-        rest.post(
-          `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-          mockTokenEndpoint
-        ),
         rest.post(
           isAcceptableCatImageUrl(),
           mockIsAcceptableCatImageNotCatImage
@@ -218,10 +194,6 @@ describe('useCatImageValidator TestCases', () => {
 
       mockServer.use(
         rest.post(
-          `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-          mockTokenEndpoint
-        ),
-        rest.post(
           isAcceptableCatImageUrl(),
           mockIsAcceptableCatImagePayloadTooLargeError
         )
@@ -247,10 +219,6 @@ describe('useCatImageValidator TestCases', () => {
       const { imageValidator } = useCatImageValidator(language);
 
       mockServer.use(
-        rest.post(
-          `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-          mockTokenEndpoint
-        ),
         rest.post(isAcceptableCatImageUrl(), mockIsAcceptableCatImageError)
       );
 
@@ -274,33 +242,7 @@ describe('useCatImageValidator TestCases', () => {
       const { imageValidator } = useCatImageValidator(language);
 
       mockServer.use(
-        rest.post(
-          `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-          mockTokenEndpoint
-        ),
         rest.post(isAcceptableCatImageUrl(), mockInternalServerError)
-      );
-
-      await expect(imageValidator(image, imageExtension)).rejects.toStrictEqual(
-        expected
-      );
-    }
-  );
-
-  it.each`
-    language  | image         | imageExtension         | expected
-    ${langJa} | ${dummyImage} | ${dummyImageExtension} | ${new IssueAccessTokenError('Internal Server Error')}
-    ${langEn} | ${dummyImage} | ${dummyImageExtension} | ${new IssueAccessTokenError('Internal Server Error')}
-  `(
-    'should IssueAccessTokenError Throw, because accessToken issuance failed. language: $language',
-    async ({ language, image, imageExtension, expected }: TestTable) => {
-      const { imageValidator } = useCatImageValidator(language);
-
-      mockServer.use(
-        rest.post(
-          `${appBaseUrl()}${apiList.issueClientCredentialsAccessToken}`,
-          mockInternalServerError
-        )
       );
 
       await expect(imageValidator(image, imageExtension)).rejects.toStrictEqual(

@@ -23,12 +23,6 @@ export const appBaseUrl = (): Url => {
   return 'https://lgtmeow.com';
 };
 
-export const apiList = {
-  issueClientCredentialsAccessToken: '/api/oidc/token',
-  fetchLgtmImages: '/api/lgtm/images',
-  uploadCatImage: '/api/lgtm/images',
-};
-
 export const appPathList = {
   top: '/',
   upload: '/upload',
@@ -81,39 +75,20 @@ export const i18nUrlList: I18nUrlList = {
 
 export type AppUrl = (typeof appUrlList)[keyof typeof appUrlList];
 
-const defaultUrl = 'http://localhost:2222/api';
-
-// この関数はサーバーサイドでしか動作しない
-export const cognitoTokenEndpointUrl = (): Url => {
-  if (isUrl(process.env.COGNITO_TOKEN_ENDPOINT)) {
-    return process.env.COGNITO_TOKEN_ENDPOINT;
+const bffUrl = (): Url => {
+  if (isUrl(process.env.NEXT_PUBLIC_LGTMEOW_BFF_URL)) {
+    return process.env.NEXT_PUBLIC_LGTMEOW_BFF_URL;
   }
 
-  return defaultUrl;
+  return 'http://localhost:8787';
 };
 
-const lgtmeowApiUrl = (): Url => {
-  if (isUrl(process.env.NEXT_PUBLIC_LGTMEOW_API_URL)) {
-    return process.env.NEXT_PUBLIC_LGTMEOW_API_URL;
-  }
+export const uploadCatImageUrl = (): Url => `${bffUrl()}/lgtm-images`;
 
-  return defaultUrl;
-};
-
-export const uploadCatImageUrl = (): Url => `${lgtmeowApiUrl()}/lgtm-images`;
-
-export const fetchLgtmImagesUrl = (): Url => `${lgtmeowApiUrl()}/lgtm-images`;
+export const fetchLgtmImagesUrl = (): Url => `${bffUrl()}/lgtm-images`;
 
 export const fetchLgtmImagesInRecentlyCreatedUrl = (): Url =>
-  `${lgtmeowApiUrl()}/lgtm-images/recently-created`;
-
-const imageRecognitionApiUrl = (): Url => {
-  if (isUrl(process.env.NEXT_PUBLIC_IMAGE_RECOGNITION_API_URL)) {
-    return process.env.NEXT_PUBLIC_IMAGE_RECOGNITION_API_URL;
-  }
-
-  return defaultUrl;
-};
+  `${bffUrl()}/lgtm-images/recently-created`;
 
 export const isAcceptableCatImageUrl = (): Url =>
-  `${imageRecognitionApiUrl()}/cat-images/validation-results`;
+  `${bffUrl()}/cat-images/validation-results`;
