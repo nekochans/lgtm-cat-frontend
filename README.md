@@ -23,24 +23,19 @@ https://vercel.com/docs/cli#commands/dev/when-to-use-this-command
 ```
 NEXT_PUBLIC_APP_ENV=local
 NEXT_PUBLIC_APP_URL=本アプリケーションのURL、ローカルの場合は http://localhost:2222
-NEXT_PUBLIC_GA_MEASUREMENT_ID=Google Analytics（次世代の4）の測定ID（G-から始まるID）を指定
-NEXT_PUBLIC_LGTMEOW_API_URL=https://github.com/nekochans/lgtm-cat-api が稼働しているURLを指定
-NEXT_PUBLIC_IMAGE_RECOGNITION_API_URL=https://github.com/nekochans/lgtm-cat-image-recognition のねこ画像APIが稼働しているURLを指定
-COGNITO_CLIENT_ID=CognitoUserPoolのクライアントIDを指定
-COGNITO_CLIENT_SECRET=CognitoUserPoolのクライアントシークレットを指定
-COGNITO_TOKEN_ENDPOINT=https://{CognitoUserPoolのドメイン名}.auth.ap-northeast-1.amazoncognito.com/oauth2/token
+NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID=GTM-から始まるGoogle Tag ManagerのIDを指定
+NEXT_PUBLIC_LGTMEOW_BFF_URL=https://github.com/nekochans/lgtm-cat-bff が稼働しているURLを指定
 IS_IN_MAINTENANCE=0
 ```
 
 以下の環境変数はテストコード実行時や Build 時に参照されるので [direnv](https://github.com/direnv/direnv) を使って `.envrc` を配置するのが良いです。
 
 ```
-export COGNITO_TOKEN_ENDPOINT=https://{CognitoUserPoolのドメイン名}.auth.ap-northeast-1.amazoncognito.com/oauth2/token
-export NEXT_PUBLIC_LGTMEOW_API_URL=https://github.com/nekochans/lgtm-cat-api が稼働しているURLを指定
-export NEXT_PUBLIC_IMAGE_RECOGNITION_API_URL=ねこ画像判定APIが稼働しているURLを指定
+export NEXT_PUBLIC_LGTMEOW_BFF_URL=https://github.com/nekochans/lgtm-cat-bff が稼働しているURLを指定
 export CHROMATIC_PROJECT_TOKEN=Chromaticのトークンを指定
 export NEXT_PUBLIC_APP_ENV=local
 export NEXT_PUBLIC_APP_URL=http://localhost:2222
+export NEXT_PUBLIC_LGTMEOW_BFF_URL=https://github.com/nekochans/lgtm-cat-bff が稼働しているURLを指定
 export SENTRY_ORG=Sentryの組織を指定（Vercel上の値を参照）
 export SENTRY_PROJECT=Sentryのプロジェクト名（Vercel上の値を参照）
 export NEXT_PUBLIC_SENTRY_DSN=SentryのDNS（Vercel上の値を参照）
@@ -49,9 +44,7 @@ export SENTRY_AUTH_TOKEN=Sentryのトークン（Vercel上の値を参照）
 
 以下の環境変数はなくてもテストが通りますが、Mock Service Worker に渡す URL が `undefined` になる為、Mock 周りで何かトラブルがあった際にデバッグの妨げになる可能性があるので設定しておくのが無難です。
 
-- `COGNITO_TOKEN_ENDPOINT`
-- `NEXT_PUBLIC_LGTMEOW_API_URL`
-- `NEXT_PUBLIC_IMAGE_RECOGNITION_API_URL`
+- `NEXT_PUBLIC_LGTMEOW_BFF_URL`
 
 `CHROMATIC_PROJECT_TOKEN` に関しては `npm run chromatic` を利用しない限りは設定不要です。
 
