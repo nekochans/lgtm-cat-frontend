@@ -107,7 +107,6 @@ export const isAcceptableCatImage: IsAcceptableCatImage = async (dto) => {
     mode: 'cors',
     cache: 'no-cache',
     headers: {
-      Authorization: `Bearer ${dto.accessToken.jwtString}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -139,7 +138,7 @@ export const isAcceptableCatImage: IsAcceptableCatImage = async (dto) => {
 };
 
 type UploadCatImageResponseBody = {
-  imageUrl: LgtmImageUrl;
+  createdLgtmImageUrl: LgtmImageUrl;
 };
 
 const isUploadCatImageResponseBody = (
@@ -150,11 +149,11 @@ const isUploadCatImageResponseBody = (
   }
 
   const uploadCatImageResponseBody = value as UploadCatImageResponseBody;
-  if (!Object.hasOwn(uploadCatImageResponseBody, 'imageUrl')) {
+  if (!Object.hasOwn(uploadCatImageResponseBody, 'createdLgtmImageUrl')) {
     return false;
   }
 
-  return isUrl(uploadCatImageResponseBody.imageUrl);
+  return isUrl(uploadCatImageResponseBody.createdLgtmImageUrl);
 };
 
 export const uploadCatImage: UploadCatImage = async (dto) => {
@@ -163,7 +162,6 @@ export const uploadCatImage: UploadCatImage = async (dto) => {
     mode: 'cors',
     cache: 'no-cache',
     headers: {
-      Authorization: `Bearer ${dto.accessToken.jwtString}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -196,7 +194,7 @@ export const uploadCatImage: UploadCatImage = async (dto) => {
 
   if (isUploadCatImageResponseBody(uploadCatImageResponseBody)) {
     return createSuccessResult({
-      createdLgtmImageUrl: uploadCatImageResponseBody.imageUrl,
+      createdLgtmImageUrl: uploadCatImageResponseBody.createdLgtmImageUrl,
     });
   }
 

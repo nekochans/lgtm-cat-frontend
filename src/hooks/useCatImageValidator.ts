@@ -1,4 +1,4 @@
-import { issueAccessToken, isAcceptableCatImage } from '../api';
+import { isAcceptableCatImage } from '../api';
 import {
   createSuccessResult,
   isFailureResult,
@@ -47,10 +47,7 @@ const createNotAcceptableReasons = (
 const createImageValidator =
   (language: Language) =>
   async (image: string, imageExtension: AcceptedTypesImageExtension) => {
-    const accessToken = await issueAccessToken();
-
     const isAcceptableCatImageResult = await isAcceptableCatImage({
-      accessToken,
       image,
       imageExtension,
     });
