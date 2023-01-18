@@ -23,12 +23,6 @@ export const appBaseUrl = (): Url => {
   return 'https://lgtmeow.com';
 };
 
-export const apiList = {
-  issueClientCredentialsAccessToken: '/api/oidc/token',
-  fetchLgtmImages: '/api/lgtm/images',
-  uploadCatImage: '/api/lgtm/images',
-};
-
 export const appPathList = {
   top: '/',
   upload: '/upload',
@@ -80,17 +74,6 @@ export const i18nUrlList: I18nUrlList = {
 };
 
 export type AppUrl = (typeof appUrlList)[keyof typeof appUrlList];
-
-const defaultUrl = 'http://localhost:2222/api';
-
-// この関数はサーバーサイドでしか動作しない
-export const cognitoTokenEndpointUrl = (): Url => {
-  if (isUrl(process.env.COGNITO_TOKEN_ENDPOINT)) {
-    return process.env.COGNITO_TOKEN_ENDPOINT;
-  }
-
-  return defaultUrl;
-};
 
 const bffUrl = (): Url => {
   if (isUrl(process.env.NEXT_PUBLIC_LGTMEOW_BFF_URL)) {
