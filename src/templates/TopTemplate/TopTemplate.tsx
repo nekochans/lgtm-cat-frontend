@@ -8,7 +8,7 @@ import {
   languages,
   i18nUrlList,
   type Language,
-  LgtmImage,
+  type LgtmImage,
 } from '../../features';
 import { useCatImagesFetcher } from '../../hooks';
 import { DefaultLayout } from '../../layouts';

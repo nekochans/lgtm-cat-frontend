@@ -4,7 +4,7 @@ import {
   convertLocaleToLanguage,
   extractRandomImages,
   type Language,
-  LgtmImage,
+  type LgtmImage,
 } from '../features';
 import { TopTemplate } from '../templates';
 

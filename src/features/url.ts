@@ -1,4 +1,4 @@
-import { Language } from './language';
+import { type Language } from './language';
 
 export type Url = `http://localhost${string}` | `https://${string}`;
 

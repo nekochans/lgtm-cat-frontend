@@ -9,7 +9,7 @@ import {
   isSuccessResult,
   isAcceptableCatImageUrl,
   type AcceptedTypesImageExtension,
-  Language,
+  type Language,
 } from '../../features';
 import {
   mockInternalServerError,

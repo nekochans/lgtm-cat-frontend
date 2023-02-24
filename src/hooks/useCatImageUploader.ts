@@ -5,8 +5,8 @@ import {
   createSuccessResult,
   isFailureResult,
   type Language,
-  AcceptedTypesImageExtension,
-  ImageUploader,
+  type AcceptedTypesImageExtension,
+  type ImageUploader,
 } from '../features';
 
 import {

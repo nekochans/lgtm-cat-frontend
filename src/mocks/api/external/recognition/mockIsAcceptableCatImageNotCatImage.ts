@@ -1,4 +1,8 @@
-import { ResponseResolver, MockedRequest, restContext } from 'msw';
+import {
+  type ResponseResolver,
+  type MockedRequest,
+  type restContext,
+} from 'msw';
 
 import { httpStatusCode } from '../../../../constants';
 

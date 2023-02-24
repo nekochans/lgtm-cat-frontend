@@ -1,4 +1,8 @@
-import { NextMiddleware, NextRequest, NextResponse } from 'next/server';
+import {
+  type NextMiddleware,
+  type NextRequest,
+  NextResponse,
+} from 'next/server';
 
 import { isBanCountry, isInMaintenance } from './edge';
 
