@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import Script from 'next/script';
 
-import { GoogleTagManagerId } from '../../utils';
+import { type GoogleTagManagerId } from '../../utils';
 
 type Props = {
   googleTagManagerId: GoogleTagManagerId;

@@ -1,7 +1,7 @@
 import { assertNever } from '../utils';
 
 import type { Language } from './language';
-import { appUrlList, type AppPathName, AppUrl } from './url';
+import { appUrlList, type AppPathName, type AppUrl } from './url';
 
 type AppName = 'LGTMeow';
 

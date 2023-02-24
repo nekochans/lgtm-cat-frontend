@@ -14,12 +14,12 @@ import {
   uploadCatImageUrl,
   isUrl,
   type FetchLgtmImages,
-  LgtmImage,
-  IsAcceptableCatImage,
-  IsAcceptableCatImageResponse,
-  UploadCatImage,
-  LgtmImageUrl,
-  Url,
+  type LgtmImage,
+  type IsAcceptableCatImage,
+  type IsAcceptableCatImageResponse,
+  type UploadCatImage,
+  type LgtmImageUrl,
+  type Url,
 } from '../../features';
 import { mightSetRequestIdToSentry } from '../../utils';
 

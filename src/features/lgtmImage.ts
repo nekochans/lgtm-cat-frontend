@@ -7,9 +7,9 @@ import type {
   CatImagesFetcher as OrgCatImagesFetcher,
 } from '@nekochans/lgtm-cat-ui';
 import {
-  UploadCatImageError,
-  UploadCatImageSizeTooLargeError,
-  UploadCatImageValidationError,
+  type UploadCatImageError,
+  type UploadCatImageSizeTooLargeError,
+  type UploadCatImageValidationError,
 } from './errors';
 import { imageData } from './imageData';
 

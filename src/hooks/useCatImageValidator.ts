@@ -3,9 +3,9 @@ import {
   createSuccessResult,
   isFailureResult,
   type Language,
-  AcceptedTypesImageExtension,
-  IsAcceptableCatImageNotAcceptableReason,
-  ImageValidator,
+  type AcceptedTypesImageExtension,
+  type IsAcceptableCatImageNotAcceptableReason,
+  type ImageValidator,
 } from '../features';
 import { assertNever } from '../utils';
 
