@@ -9,4 +9,5 @@ import { httpStatusCode } from '../../../../constants';
 export const mockIsAcceptableCatImagePayloadTooLargeError: ResponseResolver<
   MockedRequest,
   typeof restContext
-> = async (req, res, ctx) => await res(ctx.status(httpStatusCode.payloadTooLarge));
+> = async (req, res, ctx) =>
+  await res(ctx.status(httpStatusCode.payloadTooLarge));
