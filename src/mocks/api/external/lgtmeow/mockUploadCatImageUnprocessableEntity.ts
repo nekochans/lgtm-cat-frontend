@@ -9,8 +9,8 @@ import { httpStatusCode } from '../../../../constants';
 export const mockUploadCatImageUnprocessableEntity: ResponseResolver<
   MockedRequest,
   typeof restContext
-> = (_req, res, ctx) =>
-  res(
+> = async (_req, res, ctx) =>
+  await res(
     ctx.status(httpStatusCode.unprocessableEntity),
     ctx.json({
       error: {

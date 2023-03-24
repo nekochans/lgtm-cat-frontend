@@ -9,8 +9,8 @@ import { httpStatusCode } from '../../../constants';
 export const mockUnauthorizedError: ResponseResolver<
   MockedRequest,
   typeof restContext
-> = (req, res, ctx) =>
-  res(
+> = async (req, res, ctx) =>
+  await res(
     ctx.status(httpStatusCode.unauthorized),
     ctx.json({
       code: httpStatusCode.unauthorized,

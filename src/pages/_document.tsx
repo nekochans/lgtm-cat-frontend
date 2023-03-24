@@ -17,8 +17,8 @@ export default class CustomDocument extends Document {
     const originalRenderPage = ctx.renderPage;
 
     try {
-      ctx.renderPage = () =>
-        originalRenderPage({
+      ctx.renderPage = async () =>
+        await originalRenderPage({
           enhanceApp: (App) => (props) =>
             // eslint-disable-next-line react/jsx-props-no-spreading
             sheet.collectStyles(<App {...props} />),
