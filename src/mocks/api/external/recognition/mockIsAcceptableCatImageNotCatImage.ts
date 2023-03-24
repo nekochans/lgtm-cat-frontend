@@ -9,8 +9,8 @@ import { httpStatusCode } from '../../../../constants';
 export const mockIsAcceptableCatImageNotCatImage: ResponseResolver<
   MockedRequest,
   typeof restContext
-> = (req, res, ctx) =>
-  res(
+> = async (req, res, ctx) =>
+  await res(
     ctx.status(httpStatusCode.ok),
     ctx.json({
       isAcceptableCatImage: false,
