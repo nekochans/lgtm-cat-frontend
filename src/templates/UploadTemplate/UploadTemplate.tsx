@@ -8,14 +8,14 @@ import {
   languages,
   i18nUrlList,
   type Language,
-} from '../../features';
-import { useCatImageValidator, useCatImageUploader } from '../../hooks';
-import { DefaultLayout } from '../../layouts';
+} from '@/features';
+import { useCatImageValidator, useCatImageUploader } from '@/hooks';
+import { DefaultLayout } from '@/layouts';
 import {
   sendUploadedCatImage,
   sendCopyMarkdownFromCreatedImage,
   sendCopyMarkdownFromCopyButton,
-} from '../../utils';
+} from '@/utils';
 
 import cat from './images/cat.webp';
 

@@ -5,15 +5,10 @@ import {
   type TemplateType,
 } from '@nekochans/lgtm-cat-ui';
 
-import { MarkdownContents } from '../../components';
-import {
-  metaTagList,
-  languages,
-  i18nUrlList,
-  type Language,
-} from '../../features';
-import { DefaultLayout } from '../../layouts';
-import { assertNever } from '../../utils';
+import { MarkdownContents } from '@/components';
+import { metaTagList, languages, i18nUrlList, type Language } from '@/features';
+import { DefaultLayout } from '@/layouts';
+import { assertNever } from '@/utils';
 
 type Props = {
   type: TemplateType;

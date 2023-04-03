@@ -1,7 +1,7 @@
 import type { FC, ReactNode } from 'react';
 import Head from 'next/head';
 
-import type { MetaTag } from '../../features';
+import type { MetaTag } from '@/features';
 
 type Props = {
   title: string;

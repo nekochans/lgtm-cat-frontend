@@ -1,4 +1,4 @@
-import { httpStatusCode } from '../../constants';
+import { httpStatusCode } from '@/constants';
 import {
   FetchLgtmImagesError,
   IsAcceptableCatImageError,
@@ -20,8 +20,8 @@ import {
   type UploadCatImage,
   type LgtmImageUrl,
   type Url,
-} from '../../features';
-import { mightSetRequestIdToSentry } from '../../utils';
+} from '@/features';
+import { mightSetRequestIdToSentry } from '@/utils';
 
 type FetchImageResponseBody = {
   lgtmImages: Array<{

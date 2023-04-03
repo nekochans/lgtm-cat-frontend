@@ -4,13 +4,13 @@
 import 'whatwg-fetch';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import { fetchLgtmImagesUrl, FetchLgtmImagesError } from '../../../features';
+import { fetchLgtmImagesUrl, FetchLgtmImagesError } from '@/features';
+import { useCatImagesFetcher } from '@/hooks/useCatImagesFetcher';
 import {
   mockInternalServerError,
   mockFetchLgtmImages,
   fetchLgtmImagesMockBody,
-} from '../../../mocks';
-import { useCatImagesFetcher } from '../../useCatImagesFetcher';
+} from '@/mocks';
 
 const mockHandlers = [rest.get(fetchLgtmImagesUrl(), mockFetchLgtmImages)];
 

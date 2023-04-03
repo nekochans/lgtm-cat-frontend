@@ -4,8 +4,8 @@ import {
   type restContext,
 } from 'msw';
 
-import { httpStatusCode } from '../../../../constants';
-import { fetchLgtmImagesMockBody } from '../../fetchLgtmImagesMockBody';
+import { httpStatusCode } from '@/constants';
+import { fetchLgtmImagesMockBody } from '@/mocks';
 
 export const mockFetchLgtmImages: ResponseResolver<
   MockedRequest,

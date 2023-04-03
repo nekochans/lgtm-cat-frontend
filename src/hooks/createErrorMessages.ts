@@ -1,4 +1,4 @@
-import { type Language } from '../features';
+import { type Language } from '@/features';
 
 export const createCatImageSizeTooLargeErrorMessages = (
   language: Language

@@ -7,13 +7,13 @@ import { setupServer } from 'msw/node';
 import {
   fetchLgtmImagesInRecentlyCreatedUrl,
   FetchLgtmImagesError,
-} from '../../../features';
+} from '@/features';
+import { useCatImagesFetcher } from '@/hooks/useCatImagesFetcher';
 import {
   mockInternalServerError,
   mockFetchLgtmImages,
   fetchLgtmImagesMockBody,
-} from '../../../mocks';
-import { useCatImagesFetcher } from '../../useCatImagesFetcher';
+} from '@/mocks';
 
 const mockHandlers = [
   rest.get(fetchLgtmImagesInRecentlyCreatedUrl(), mockFetchLgtmImages),

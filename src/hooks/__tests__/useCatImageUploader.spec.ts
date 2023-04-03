@@ -9,14 +9,14 @@ import {
   uploadCatImageUrl,
   type AcceptedTypesImageExtension,
   type Language,
-} from '../../features';
+} from '@/features';
+import { useCatImageUploader } from '@/hooks/useCatImageUploader';
 import {
   mockInternalServerError,
   mockUploadCatImage,
   mockUploadCatImagePayloadTooLarge,
   mockUploadCatImageUnprocessableEntity,
-} from '../../mocks';
-import { useCatImageUploader } from '../useCatImageUploader';
+} from '@/mocks';
 
 const mockHandlers = [rest.post(uploadCatImageUrl(), mockUploadCatImage)];
 

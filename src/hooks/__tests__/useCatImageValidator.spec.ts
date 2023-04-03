@@ -10,7 +10,8 @@ import {
   isAcceptableCatImageUrl,
   type AcceptedTypesImageExtension,
   type Language,
-} from '../../features';
+} from '@/features';
+import { useCatImageValidator } from '@/hooks/useCatImageValidator';
 import {
   mockInternalServerError,
   mockIsAcceptableCatImage,
@@ -20,8 +21,7 @@ import {
   mockIsAcceptableCatImageNotModerationImage,
   mockIsAcceptableCatImagePayloadTooLargeError,
   mockIsAcceptableCatImagePersonFaceInImage,
-} from '../../mocks';
-import { useCatImageValidator } from '../useCatImageValidator';
+} from '@/mocks';
 
 const mockHandlers = [
   rest.post(isAcceptableCatImageUrl(), mockIsAcceptableCatImage),

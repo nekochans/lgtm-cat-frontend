@@ -1,4 +1,4 @@
-import { isAcceptableCatImage } from '../api';
+import { isAcceptableCatImage } from '@/api';
 import {
   createSuccessResult,
   isFailureResult,
@@ -6,8 +6,8 @@ import {
   type AcceptedTypesImageExtension,
   type IsAcceptableCatImageNotAcceptableReason,
   type ImageValidator,
-} from '../features';
-import { assertNever } from '../utils';
+} from '@/features';
+import { assertNever } from '@/utils';
 
 import {
   createCatImageSizeTooLargeErrorMessages,
