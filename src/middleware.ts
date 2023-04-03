@@ -4,7 +4,7 @@ import {
   NextResponse,
 } from 'next/server';
 
-import { isBanCountry, isInMaintenance } from './edge';
+import { isBanCountry, isInMaintenance } from '@/edge';
 
 export const config = {
   matcher: ['/', '/upload', '/terms', '/privacy', '/maintenance'],

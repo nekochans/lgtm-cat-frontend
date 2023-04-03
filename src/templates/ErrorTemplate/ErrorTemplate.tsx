@@ -9,8 +9,8 @@ import {
   InternalServerErrorImage,
   NotFoundImage,
   ServiceUnavailableImage,
-} from '../../components';
-import { httpStatusCode } from '../../constants';
+} from '@/components';
+import { httpStatusCode } from '@/constants';
 import {
   custom404title,
   customErrorTitle,
@@ -18,9 +18,9 @@ import {
   notFoundMetaTag,
   errorMetaTag,
   type Language,
-} from '../../features';
-import { ErrorLayout } from '../../layouts';
-import { assertNever } from '../../utils';
+} from '@/features';
+import { ErrorLayout } from '@/layouts';
+import { assertNever } from '@/utils';
 
 type Props = {
   type: ErrorType;

@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { TopTemplate as OrgTopTemplate } from '@nekochans/lgtm-cat-ui';
 
-import { InternalServerErrorImage } from '../../components';
+import { InternalServerErrorImage } from '@/components';
 import {
   metaTagList,
   appBaseUrl,
@@ -9,15 +9,15 @@ import {
   i18nUrlList,
   type Language,
   type LgtmImage,
-} from '../../features';
-import { useCatImagesFetcher } from '../../hooks';
-import { DefaultLayout } from '../../layouts';
+} from '@/features';
+import { useCatImagesFetcher } from '@/hooks';
+import { DefaultLayout } from '@/layouts';
 import {
   sendClickTopFetchNewArrivalCatButton,
   sendClickTopFetchRandomCatButton,
   sendCopyMarkdownFromRandomButton,
   sendCopyMarkdownFromTopImages,
-} from '../../utils';
+} from '@/utils';
 
 const clipboardMarkdownCallback = sendCopyMarkdownFromTopImages;
 

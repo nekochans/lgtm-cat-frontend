@@ -1,4 +1,4 @@
-import { uploadCatImage } from '../api';
+import { uploadCatImage } from '@/api';
 import {
   UploadCatImageSizeTooLargeError,
   UploadCatImageValidationError,
@@ -7,7 +7,7 @@ import {
   type Language,
   type AcceptedTypesImageExtension,
   type ImageUploader,
-} from '../features';
+} from '@/features';
 
 import {
   createCatImageSizeTooLargeErrorMessages,

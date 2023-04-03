@@ -4,7 +4,7 @@ import {
   type restContext,
 } from 'msw';
 
-import { httpStatusCode } from '../../../../constants';
+import { httpStatusCode } from '@/constants';
 
 export const mockIsAcceptableCatImageError: ResponseResolver<
   MockedRequest,

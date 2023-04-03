@@ -1,6 +1,6 @@
 import type { GetStaticProps, NextPage } from 'next';
-import { convertLocaleToLanguage, type Language } from '../features';
-import { UploadTemplate } from '../templates';
+import { convertLocaleToLanguage, type Language } from '@/features';
+import { UploadTemplate } from '@/templates';
 
 type Props = {
   language: Language;
