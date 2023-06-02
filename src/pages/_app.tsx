@@ -4,6 +4,7 @@ import { googleTagManagerId } from '@/utils';
 
 import 'ress/ress.css';
 import '../styles/markdown.css';
+import '@nekochans/lgtm-cat-ui/style.css';
 
 const CustomApp = ({ Component, pageProps }: AppProps): JSX.Element => (
   <>
