@@ -31,8 +31,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-markdown": "^8.0.6",
-    "ress": "^5.0.2",
-    "styled-components": "^5.3.9"
+    "ress": "^5.0.2"
   },
   "devDependencies": {
     "@storybook/addon-a11y": "^6.5.16",
@@ -51,7 +50,6 @@
     "@types/lodash.throttle": "^4.1.7",
     "@types/prettier": "^2.7.2",
     "@types/react": "18.0.28",
-    "@types/styled-components": "^5.1.26",
     "@typescript-eslint/eslint-plugin": "^5.56.0",
     "chromatic": "^6.17.2",
     "eslint": "^8.36.0",
