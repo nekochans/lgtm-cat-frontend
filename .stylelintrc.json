@@ -1,0 +1,15 @@
+{
+  "extends": [
+    "stylelint-config-standard",
+    "stylelint-config-recess-order",
+    "stylelint-config-prettier"
+  ],
+  "ignoreFiles": [
+    "**/node_modules/**",
+    "**/.next/**",
+    "**/build/**",
+    "**/coverage/**",
+    "**/storybook-static/**"
+  ],
+  "plugins": ["stylelint-order"]
+}

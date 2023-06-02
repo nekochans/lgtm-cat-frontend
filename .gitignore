@@ -52,3 +52,6 @@ build-storybook.log
 
 # IntelliJ IDEA
 .idea
+
+# Stylelint
+.stylelintcache
