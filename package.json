@@ -19,7 +19,7 @@
     "test:coverage": "jest --collect-coverage",
     "test:ci": "jest --runInBand --collect-coverage",
     "generate:css-types": "hcm 'src/**/*.module.{css,scss}'",
-    "storybook": "storybook dev -p 6008 -s ./public",
+    "storybook": "storybook dev -p 6008",
     "build-storybook": "storybook build",
     "chromatic": "chromatic --project-token=$CHROMATIC_PROJECT_TOKEN"
   },
