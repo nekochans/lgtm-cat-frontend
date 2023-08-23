@@ -15,5 +15,5 @@ export const mockIsAcceptableCatImageError: ResponseResolver<
     ctx.json({
       isAcceptableCatImage: false,
       notAcceptableReason: 'an error has occurred',
-    })
+    }),
   );

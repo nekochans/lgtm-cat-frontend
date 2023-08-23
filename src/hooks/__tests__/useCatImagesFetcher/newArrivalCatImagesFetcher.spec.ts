@@ -48,11 +48,11 @@ describe('useCatImagesFetcher.ts newArrivalCatImagesFetcher TestCases', () => {
 
   it('should FetchLgtmImagesError Throw, because Failed to fetch LGTM Images', async () => {
     mockServer.use(
-      rest.get(fetchLgtmImagesInRecentlyCreatedUrl(), mockInternalServerError)
+      rest.get(fetchLgtmImagesInRecentlyCreatedUrl(), mockInternalServerError),
     );
 
     await expect(
-      useCatImagesFetcher().newArrivalCatImagesFetcher()
+      useCatImagesFetcher().newArrivalCatImagesFetcher(),
     ).rejects.toStrictEqual(new FetchLgtmImagesError('Internal Server Error'));
   });
 });

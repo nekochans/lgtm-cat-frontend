@@ -26,14 +26,14 @@ export const getStaticProps: GetStaticProps = async (context) => {
     `${process.cwd()}/src/docs/terms.ja.md`,
     {
       encoding: 'utf8',
-    }
+    },
   );
 
   const termsEn = await fsPromise.readFile(
     `${process.cwd()}/src/docs/terms.en.md`,
     {
       encoding: 'utf8',
-    }
+    },
   );
 
   const { locale } = context;

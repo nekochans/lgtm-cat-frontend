@@ -16,7 +16,7 @@ import {
 
 const createDisplayErrorMessages = (
   error: Error,
-  language: Language
+  language: Language,
 ): string[] => {
   if (
     error instanceof UploadCatImageSizeTooLargeError ||
@@ -51,7 +51,7 @@ const createCatImageUploader =
       return createSuccessResult({
         displayErrorMessages: createDisplayErrorMessages(
           uploadCatImageResult.value,
-          language
+          language,
         ),
       });
     }
@@ -63,7 +63,7 @@ const createCatImageUploader =
   };
 
 export const useCatImageUploader = (
-  language: Language
+  language: Language,
 ): { imageUploader: ImageUploader } => ({
   imageUploader: createCatImageUploader(language),
 });

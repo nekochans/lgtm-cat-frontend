@@ -17,5 +17,5 @@ export const mockUploadCatImagePayloadTooLarge: ResponseResolver<
         code: httpStatusCode.payloadTooLarge,
         message: 'UploadCatImageSizeTooLargeError',
       },
-    })
+    }),
   );

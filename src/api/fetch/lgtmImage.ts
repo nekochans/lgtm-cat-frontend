@@ -32,7 +32,7 @@ type FetchImageResponseBody = {
 
 // eslint-disable-next-line max-statements
 const isFetchImageResponseBody = (
-  value: unknown
+  value: unknown,
 ): value is FetchImageResponseBody => {
   if (Object.prototype.toString.call(value) !== '[object Object]') {
     return false;
@@ -120,7 +120,7 @@ export const isAcceptableCatImage: IsAcceptableCatImage = async (dto) => {
   if (response.status !== httpStatusCode.ok) {
     if (response.status === httpStatusCode.payloadTooLarge) {
       return createFailureResult<UploadCatImageSizeTooLargeError>(
-        new UploadCatImageSizeTooLargeError()
+        new UploadCatImageSizeTooLargeError(),
       );
     }
 
@@ -133,7 +133,7 @@ export const isAcceptableCatImage: IsAcceptableCatImage = async (dto) => {
     (await response.json()) as IsAcceptableCatImageResponse;
 
   return createSuccessResult<IsAcceptableCatImageResponse>(
-    isAcceptableCatImageResponse
+    isAcceptableCatImageResponse,
   );
 };
 
@@ -142,7 +142,7 @@ type UploadCatImageResponseBody = {
 };
 
 const isUploadCatImageResponseBody = (
-  value: unknown
+  value: unknown,
 ): value is UploadCatImageResponseBody => {
   if (Object.prototype.toString.call(value) !== '[object Object]') {
     return false;
@@ -176,11 +176,11 @@ export const uploadCatImage: UploadCatImage = async (dto) => {
     switch (response.status) {
       case httpStatusCode.payloadTooLarge:
         return createFailureResult<UploadCatImageSizeTooLargeError>(
-          new UploadCatImageSizeTooLargeError()
+          new UploadCatImageSizeTooLargeError(),
         );
       case httpStatusCode.unprocessableEntity:
         return createFailureResult<UploadCatImageValidationError>(
-          new UploadCatImageValidationError()
+          new UploadCatImageValidationError(),
         );
       default:
         mightSetRequestIdToSentry(response);

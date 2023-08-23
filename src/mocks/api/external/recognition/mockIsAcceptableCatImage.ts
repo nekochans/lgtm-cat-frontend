@@ -14,5 +14,5 @@ export const mockIsAcceptableCatImage: ResponseResolver<
     ctx.status(httpStatusCode.ok),
     ctx.json({
       isAcceptableCatImage: true,
-    })
+    }),
   );
