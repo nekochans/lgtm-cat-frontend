@@ -25,10 +25,10 @@ type UseCatImagesFetcherResponse = {
 export const useCatImagesFetcher = (): UseCatImagesFetcherResponse => ({
   randomCatImagesFetcher: throttle<typeof randomCatImagesFetcher>(
     async () => await randomCatImagesFetcher(),
-    limitThreshold
+    limitThreshold,
   ) as typeof randomCatImagesFetcher,
   newArrivalCatImagesFetcher: throttle<typeof newArrivalCatImagesFetcher>(
     async () => await newArrivalCatImagesFetcher(),
-    limitThreshold
+    limitThreshold,
   ) as typeof newArrivalCatImagesFetcher,
 });

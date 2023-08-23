@@ -18,7 +18,7 @@ export const createFailureResult = <E>(value: E): FailureResult<E> => ({
 });
 
 export const isSuccessResult = <T>(
-  result: Result<unknown, unknown>
+  result: Result<unknown, unknown>,
 ): result is SuccessResult<T> => {
   if ('_' in result) {
     return result._ === SuccessMarker;
@@ -28,7 +28,7 @@ export const isSuccessResult = <T>(
 };
 
 export const isFailureResult = <T>(
-  result: Result<unknown, unknown>
+  result: Result<unknown, unknown>,
 ): result is FailureResult<T> => {
   if ('_' in result) {
     return result._ === FailureMarker;

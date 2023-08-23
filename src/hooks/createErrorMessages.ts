@@ -1,7 +1,7 @@
 import { type Language } from '@/features';
 
 export const createCatImageSizeTooLargeErrorMessages = (
-  language: Language
+  language: Language,
 ): string[] =>
   language === 'en'
     ? ['Image size is too large.', 'Please use images under 4MB.']

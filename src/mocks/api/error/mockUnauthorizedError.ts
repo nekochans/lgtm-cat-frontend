@@ -15,5 +15,5 @@ export const mockUnauthorizedError: ResponseResolver<
     ctx.json({
       code: httpStatusCode.unauthorized,
       message: 'Unauthorized',
-    })
+    }),
   );

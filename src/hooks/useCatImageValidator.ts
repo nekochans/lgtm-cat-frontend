@@ -16,7 +16,7 @@ import {
 
 const createNotAcceptableReasons = (
   notAcceptableReason: IsAcceptableCatImageNotAcceptableReason,
-  language: Language
+  language: Language,
 ): string[] => {
   switch (notAcceptableReason) {
     case 'not an allowed image extension':
@@ -72,13 +72,13 @@ const createImageValidator =
         isAcceptableCatImageResult.value.isAcceptableCatImage,
       notAcceptableReason: createNotAcceptableReasons(
         isAcceptableCatImageResult.value.notAcceptableReason,
-        language
+        language,
       ),
     });
   };
 
 export const useCatImageValidator = (
-  language: Language
+  language: Language,
 ): { imageValidator: ImageValidator } => ({
   imageValidator: createImageValidator(language),
 });

@@ -39,7 +39,7 @@ export type IsAcceptableCatImageResponse = {
 };
 
 export type IsAcceptableCatImage = (
-  dto: IsAcceptableCatImageDto
+  dto: IsAcceptableCatImageDto,
 ) => Promise<
   Result<IsAcceptableCatImageResponse, UploadCatImageSizeTooLargeError>
 >;
@@ -53,7 +53,7 @@ type UploadedImage = {
 export type UploadCatImageDto = IsAcceptableCatImageDto;
 
 export type UploadCatImage = (
-  request: UploadCatImageDto
+  request: UploadCatImageDto,
 ) => Promise<
   Result<
     UploadedImage,

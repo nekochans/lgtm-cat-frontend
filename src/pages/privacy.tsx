@@ -26,14 +26,14 @@ export const getStaticProps: GetStaticProps = async (context) => {
     `${process.cwd()}/src/docs/privacy.ja.md`,
     {
       encoding: 'utf8',
-    }
+    },
   );
 
   const privacyEn = await fsPromise.readFile(
     `${process.cwd()}/src/docs/privacy.en.md`,
     {
       encoding: 'utf8',
-    }
+    },
   );
 
   const { locale } = context;

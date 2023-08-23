@@ -45,7 +45,7 @@ describe('useCatImagesFetcher.ts randomCatImagesFetcher TestCases', () => {
     mockServer.use(rest.get(fetchLgtmImagesUrl(), mockInternalServerError));
 
     await expect(
-      useCatImagesFetcher().randomCatImagesFetcher()
+      useCatImagesFetcher().randomCatImagesFetcher(),
     ).rejects.toStrictEqual(new FetchLgtmImagesError('Internal Server Error'));
   });
 });

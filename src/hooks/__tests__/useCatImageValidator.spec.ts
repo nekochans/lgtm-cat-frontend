@@ -71,12 +71,12 @@ describe('useCatImageValidator TestCases', () => {
 
       const isAcceptableCatImageResult = await imageValidator(
         image,
-        imageExtension
+        imageExtension,
       );
 
       expect(isSuccessResult(isAcceptableCatImageResult)).toBeTruthy();
       expect(isAcceptableCatImageResult.value).toStrictEqual(expected);
-    }
+    },
   );
 
   it.each`
@@ -91,18 +91,18 @@ describe('useCatImageValidator TestCases', () => {
       mockServer.use(
         rest.post(
           isAcceptableCatImageUrl(),
-          mockIsAcceptableCatImageNotAllowedImageExtension
-        )
+          mockIsAcceptableCatImageNotAllowedImageExtension,
+        ),
       );
 
       const isAcceptableCatImageResult = await imageValidator(
         image,
-        imageExtension
+        imageExtension,
       );
 
       expect(isSuccessResult(isAcceptableCatImageResult)).toBeTruthy();
       expect(isAcceptableCatImageResult.value).toStrictEqual(expected);
-    }
+    },
   );
 
   it.each`
@@ -117,18 +117,18 @@ describe('useCatImageValidator TestCases', () => {
       mockServer.use(
         rest.post(
           isAcceptableCatImageUrl(),
-          mockIsAcceptableCatImageNotModerationImage
-        )
+          mockIsAcceptableCatImageNotModerationImage,
+        ),
       );
 
       const isAcceptableCatImageResult = await imageValidator(
         image,
-        imageExtension
+        imageExtension,
       );
 
       expect(isSuccessResult(isAcceptableCatImageResult)).toBeTruthy();
       expect(isAcceptableCatImageResult.value).toStrictEqual(expected);
-    }
+    },
   );
 
   it.each`
@@ -143,18 +143,18 @@ describe('useCatImageValidator TestCases', () => {
       mockServer.use(
         rest.post(
           isAcceptableCatImageUrl(),
-          mockIsAcceptableCatImagePersonFaceInImage
-        )
+          mockIsAcceptableCatImagePersonFaceInImage,
+        ),
       );
 
       const isAcceptableCatImageResult = await imageValidator(
         image,
-        imageExtension
+        imageExtension,
       );
 
       expect(isSuccessResult(isAcceptableCatImageResult)).toBeTruthy();
       expect(isAcceptableCatImageResult.value).toStrictEqual(expected);
-    }
+    },
   );
 
   it.each`
@@ -169,18 +169,18 @@ describe('useCatImageValidator TestCases', () => {
       mockServer.use(
         rest.post(
           isAcceptableCatImageUrl(),
-          mockIsAcceptableCatImageNotCatImage
-        )
+          mockIsAcceptableCatImageNotCatImage,
+        ),
       );
 
       const isAcceptableCatImageResult = await imageValidator(
         image,
-        imageExtension
+        imageExtension,
       );
 
       expect(isSuccessResult(isAcceptableCatImageResult)).toBeTruthy();
       expect(isAcceptableCatImageResult.value).toStrictEqual(expected);
-    }
+    },
   );
 
   it.each`
@@ -195,18 +195,18 @@ describe('useCatImageValidator TestCases', () => {
       mockServer.use(
         rest.post(
           isAcceptableCatImageUrl(),
-          mockIsAcceptableCatImagePayloadTooLargeError
-        )
+          mockIsAcceptableCatImagePayloadTooLargeError,
+        ),
       );
 
       const isAcceptableCatImageResult = await imageValidator(
         image,
-        imageExtension
+        imageExtension,
       );
 
       expect(isSuccessResult(isAcceptableCatImageResult)).toBeTruthy();
       expect(isAcceptableCatImageResult.value).toStrictEqual(expected);
-    }
+    },
   );
 
   it.each`
@@ -219,17 +219,17 @@ describe('useCatImageValidator TestCases', () => {
       const { imageValidator } = useCatImageValidator(language);
 
       mockServer.use(
-        rest.post(isAcceptableCatImageUrl(), mockIsAcceptableCatImageError)
+        rest.post(isAcceptableCatImageUrl(), mockIsAcceptableCatImageError),
       );
 
       const isAcceptableCatImageResult = await imageValidator(
         image,
-        imageExtension
+        imageExtension,
       );
 
       expect(isSuccessResult(isAcceptableCatImageResult)).toBeTruthy();
       expect(isAcceptableCatImageResult.value).toStrictEqual(expected);
-    }
+    },
   );
 
   it.each`
@@ -242,12 +242,12 @@ describe('useCatImageValidator TestCases', () => {
       const { imageValidator } = useCatImageValidator(language);
 
       mockServer.use(
-        rest.post(isAcceptableCatImageUrl(), mockInternalServerError)
+        rest.post(isAcceptableCatImageUrl(), mockInternalServerError),
       );
 
       await expect(imageValidator(image, imageExtension)).rejects.toStrictEqual(
-        expected
+        expected,
       );
-    }
+    },
   );
 });

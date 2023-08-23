@@ -69,7 +69,7 @@ describe('useCatImageUploader TestCases', () => {
       const imageUploadResult = await imageUploader(image, imageExtension);
 
       expect(imageUploadResult.value).toStrictEqual(expected);
-    }
+    },
   );
 
   it.each`
@@ -82,13 +82,13 @@ describe('useCatImageUploader TestCases', () => {
       const { imageUploader } = useCatImageUploader(language);
 
       mockServer.use(
-        rest.post(uploadCatImageUrl(), mockUploadCatImagePayloadTooLarge)
+        rest.post(uploadCatImageUrl(), mockUploadCatImagePayloadTooLarge),
       );
 
       const imageUploadResult = await imageUploader(image, imageExtension);
 
       expect(imageUploadResult.value).toStrictEqual(expected);
-    }
+    },
   );
 
   it.each`
@@ -101,13 +101,13 @@ describe('useCatImageUploader TestCases', () => {
       const { imageUploader } = useCatImageUploader(language);
 
       mockServer.use(
-        rest.post(uploadCatImageUrl(), mockUploadCatImageUnprocessableEntity)
+        rest.post(uploadCatImageUrl(), mockUploadCatImageUnprocessableEntity),
       );
 
       const imageUploadResult = await imageUploader(image, imageExtension);
 
       expect(imageUploadResult.value).toStrictEqual(expected);
-    }
+    },
   );
 
   it.each`
@@ -122,8 +122,8 @@ describe('useCatImageUploader TestCases', () => {
       mockServer.use(rest.post(uploadCatImageUrl(), mockInternalServerError));
 
       await expect(imageUploader(image, imageExtension)).rejects.toStrictEqual(
-        expected
+        expected,
       );
-    }
+    },
   );
 });
