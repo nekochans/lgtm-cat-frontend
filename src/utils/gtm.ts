@@ -38,18 +38,6 @@ export const sendClickTopFetchNewArrivalCatButton = (): void => {
   });
 };
 
-export const sendClickLanguageMenuJaButton = (): void => {
-  window.dataLayer.push({
-    event: 'ClickLanguageMenuJaButton',
-  });
-};
-
-export const sendClickLanguageMenuEnButton = (): void => {
-  window.dataLayer.push({
-    event: 'ClickLanguageMenuEnButton',
-  });
-};
-
 export const sendUploadedCatImage = (): void => {
   window.dataLayer.push({
     event: 'UploadedCatImage',
