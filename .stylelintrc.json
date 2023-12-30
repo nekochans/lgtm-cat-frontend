@@ -1,12 +1,6 @@
 {
-  "extends": [
-    "stylelint-config-standard",
-    "stylelint-config-recess-order",
-    "stylelint-config-prettier"
-  ],
+  "extends": ["stylelint-config-standard", "stylelint-config-recess-order"],
   "ignoreFiles": [
-    "src/styles/markdown.css",
-    "src/components/MarkdownContents/MarkdownContents.module.css",
     "**/node_modules/**",
     "**/.next/**",
     "**/build/**",
