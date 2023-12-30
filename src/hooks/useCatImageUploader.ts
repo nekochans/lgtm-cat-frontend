@@ -1,14 +1,13 @@
 import { uploadCatImage } from '@/api';
 import {
-  UploadCatImageSizeTooLargeError,
-  UploadCatImageValidationError,
   createSuccessResult,
   isFailureResult,
-  type Language,
+  UploadCatImageSizeTooLargeError,
+  UploadCatImageValidationError,
   type AcceptedTypesImageExtension,
   type ImageUploader,
+  type Language,
 } from '@/features';
-
 import {
   createCatImageSizeTooLargeErrorMessages,
   createUnexpectedErrorMessages,

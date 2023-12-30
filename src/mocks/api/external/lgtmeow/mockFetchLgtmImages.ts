@@ -1,11 +1,10 @@
-import {
-  type ResponseResolver,
-  type MockedRequest,
-  type restContext,
-} from 'msw';
-
 import { httpStatusCode } from '@/constants';
 import { fetchLgtmImagesMockBody } from '@/mocks';
+import {
+  type MockedRequest,
+  type ResponseResolver,
+  type restContext,
+} from 'msw';
 
 export const mockFetchLgtmImages: ResponseResolver<
   MockedRequest,

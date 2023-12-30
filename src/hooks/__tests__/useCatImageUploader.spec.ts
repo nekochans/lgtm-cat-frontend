@@ -2,8 +2,6 @@
  * @jest-environment jsdom
  */
 import 'whatwg-fetch';
-import { rest } from 'msw';
-import { setupServer } from 'msw/node';
 import {
   UploadCatImageError,
   uploadCatImageUrl,
@@ -17,6 +15,8 @@ import {
   mockUploadCatImagePayloadTooLarge,
   mockUploadCatImageUnprocessableEntity,
 } from '@/mocks';
+import { rest } from 'msw';
+import { setupServer } from 'msw/node';
 
 const mockHandlers = [rest.post(uploadCatImageUrl(), mockUploadCatImage)];
 

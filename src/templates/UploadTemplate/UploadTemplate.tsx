@@ -1,22 +1,20 @@
-import type { FC } from 'react';
-import { UploadTemplate as OrgUploadTemplate } from '@nekochans/lgtm-cat-ui';
-import Image from 'next/image';
-
 import {
-  metaTagList,
   appBaseUrl,
-  languages,
   i18nUrlList,
+  languages,
+  metaTagList,
   type Language,
 } from '@/features';
-import { useCatImageValidator, useCatImageUploader } from '@/hooks';
+import { useCatImageUploader, useCatImageValidator } from '@/hooks';
 import { DefaultLayout } from '@/layouts';
 import {
-  sendUploadedCatImage,
-  sendCopyMarkdownFromCreatedImage,
   sendCopyMarkdownFromCopyButton,
+  sendCopyMarkdownFromCreatedImage,
+  sendUploadedCatImage,
 } from '@/utils';
-
+import { UploadTemplate as OrgUploadTemplate } from '@nekochans/lgtm-cat-ui';
+import Image from 'next/image';
+import type { FC } from 'react';
 import cat from './images/cat.webp';
 
 const CatImage = () => (

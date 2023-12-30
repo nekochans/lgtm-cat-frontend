@@ -1,5 +1,4 @@
 import { assertNever } from '@/utils';
-
 import type { Language } from './language';
 import { appUrlList, type AppPathName, type AppUrl } from './url';
 

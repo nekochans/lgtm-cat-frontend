@@ -1,11 +1,9 @@
-import throttle from 'lodash/throttle';
-
 import {
   fetchLgtmImagesInRandom,
   fetchLgtmImagesInRecentlyCreated,
 } from '@/api';
-
 import type { CatImagesFetcher, LgtmImage } from '@/features';
+import throttle from 'lodash/throttle';
 
 const randomCatImagesFetcher = async (): Promise<LgtmImage[]> => {
   return await fetchLgtmImagesInRandom();

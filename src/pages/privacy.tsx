@@ -1,8 +1,7 @@
 import fs from 'fs';
-
-import type { GetStaticProps, NextPage } from 'next';
 import { convertLocaleToLanguage, type Language } from '@/features';
 import { TermsOrPrivacyTemplate } from '@/templates';
+import type { GetStaticProps, NextPage } from 'next';
 
 type Props = {
   language: Language;

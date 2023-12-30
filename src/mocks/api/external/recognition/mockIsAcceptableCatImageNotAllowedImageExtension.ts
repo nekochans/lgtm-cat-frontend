@@ -1,10 +1,9 @@
+import { httpStatusCode } from '@/constants';
 import {
-  type ResponseResolver,
   type MockedRequest,
+  type ResponseResolver,
   type restContext,
 } from 'msw';
-
-import { httpStatusCode } from '@/constants';
 
 export const mockIsAcceptableCatImageNotAllowedImageExtension: ResponseResolver<
   MockedRequest,
