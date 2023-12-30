@@ -1,14 +1,13 @@
-import type { FC } from 'react';
+import { MarkdownContents } from '@/components';
+import { i18nUrlList, languages, metaTagList, type Language } from '@/features';
+import { DefaultLayout } from '@/layouts';
+import { assertNever } from '@/utils';
 import {
   TermsOrPrivacyTemplate as OrgTermsOrPrivacyTemplate,
   useSwitchLanguage,
   type TemplateType,
 } from '@nekochans/lgtm-cat-ui';
-
-import { MarkdownContents } from '@/components';
-import { metaTagList, languages, i18nUrlList, type Language } from '@/features';
-import { DefaultLayout } from '@/layouts';
-import { assertNever } from '@/utils';
+import type { FC } from 'react';
 
 type Props = {
   type: TemplateType;

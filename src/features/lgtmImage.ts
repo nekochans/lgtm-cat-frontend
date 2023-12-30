@@ -1,10 +1,10 @@
 import type {
   AcceptedTypesImageExtension as OrgAcceptedTypesImageExtension,
-  LgtmImage as OrgLgtmImage,
-  LgtmImageUrl as OrgLgtmImageUrl,
+  CatImagesFetcher as OrgCatImagesFetcher,
   ImageUploader as OrgImageUploader,
   ImageValidator as OrgImageValidator,
-  CatImagesFetcher as OrgCatImagesFetcher,
+  LgtmImage as OrgLgtmImage,
+  LgtmImageUrl as OrgLgtmImageUrl,
 } from '@nekochans/lgtm-cat-ui';
 import {
   type UploadCatImageError,
@@ -12,7 +12,6 @@ import {
   type UploadCatImageValidationError,
 } from './errors';
 import { imageData } from './imageData';
-
 import type { Result } from './result';
 
 export type LgtmImage = OrgLgtmImage;

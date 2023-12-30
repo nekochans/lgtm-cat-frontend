@@ -2,13 +2,12 @@ import { isAcceptableCatImage } from '@/api';
 import {
   createSuccessResult,
   isFailureResult,
-  type Language,
   type AcceptedTypesImageExtension,
-  type IsAcceptableCatImageNotAcceptableReason,
   type ImageValidator,
+  type IsAcceptableCatImageNotAcceptableReason,
+  type Language,
 } from '@/features';
 import { assertNever } from '@/utils';
-
 import {
   createCatImageSizeTooLargeErrorMessages,
   createUnexpectedErrorMessages,

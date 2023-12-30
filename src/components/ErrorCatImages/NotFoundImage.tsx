@@ -1,6 +1,5 @@
-import type { FC } from 'react';
 import Image from 'next/image';
-
+import type { FC } from 'react';
 import notFound from './images/not_found.webp';
 
 export const NotFoundImage: FC = () => (

@@ -2,18 +2,18 @@
  * @jest-environment jsdom
  */
 import 'whatwg-fetch';
-import { rest } from 'msw';
-import { setupServer } from 'msw/node';
 import {
-  fetchLgtmImagesInRecentlyCreatedUrl,
   FetchLgtmImagesError,
+  fetchLgtmImagesInRecentlyCreatedUrl,
 } from '@/features';
 import { useCatImagesFetcher } from '@/hooks/useCatImagesFetcher';
 import {
-  mockInternalServerError,
-  mockFetchLgtmImages,
   fetchLgtmImagesMockBody,
+  mockFetchLgtmImages,
+  mockInternalServerError,
 } from '@/mocks';
+import { rest } from 'msw';
+import { setupServer } from 'msw/node';
 
 const mockHandlers = [
   rest.get(fetchLgtmImagesInRecentlyCreatedUrl(), mockFetchLgtmImages),

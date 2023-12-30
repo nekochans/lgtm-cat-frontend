@@ -1,10 +1,3 @@
-import type { FC } from 'react';
-import {
-  ErrorTemplate as OrgErrorTemplate,
-  type ErrorType,
-} from '@nekochans/lgtm-cat-ui';
-import { useRouter } from 'next/router';
-
 import {
   InternalServerErrorImage,
   NotFoundImage,
@@ -14,13 +7,19 @@ import { httpStatusCode } from '@/constants';
 import {
   custom404title,
   customErrorTitle,
+  errorMetaTag,
   metaTagList,
   notFoundMetaTag,
-  errorMetaTag,
   type Language,
 } from '@/features';
 import { ErrorLayout } from '@/layouts';
 import { assertNever } from '@/utils';
+import {
+  ErrorTemplate as OrgErrorTemplate,
+  type ErrorType,
+} from '@nekochans/lgtm-cat-ui';
+import { useRouter } from 'next/router';
+import type { FC } from 'react';
 
 type Props = {
   type: ErrorType;

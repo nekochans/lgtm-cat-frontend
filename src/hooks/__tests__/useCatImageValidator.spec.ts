@@ -2,12 +2,10 @@
  * @jest-environment jsdom
  */
 import 'whatwg-fetch';
-import { rest } from 'msw';
-import { setupServer } from 'msw/node';
 import {
   IsAcceptableCatImageError,
-  isSuccessResult,
   isAcceptableCatImageUrl,
+  isSuccessResult,
   type AcceptedTypesImageExtension,
   type Language,
 } from '@/features';
@@ -22,6 +20,8 @@ import {
   mockIsAcceptableCatImagePayloadTooLargeError,
   mockIsAcceptableCatImagePersonFaceInImage,
 } from '@/mocks';
+import { rest } from 'msw';
+import { setupServer } from 'msw/node';
 
 const mockHandlers = [
   rest.post(isAcceptableCatImageUrl(), mockIsAcceptableCatImage),
