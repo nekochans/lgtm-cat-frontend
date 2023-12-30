@@ -5,6 +5,8 @@
     "stylelint-config-prettier"
   ],
   "ignoreFiles": [
+    "src/styles/markdown.css",
+    "src/components/MarkdownContents/MarkdownContents.module.css",
     "**/node_modules/**",
     "**/.next/**",
     "**/build/**",
