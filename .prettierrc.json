@@ -1,4 +1,6 @@
 {
   "singleQuote": true,
-  "endOfLine": "auto"
+  "endOfLine": "auto",
+  "plugins": ["@ianvs/prettier-plugin-sort-imports"],
+  "importOrderTypeScriptVersion": "5.3.3"
 }
