@@ -24,7 +24,7 @@
     "chromatic": "chromatic --project-token=$CHROMATIC_PROJECT_TOKEN"
   },
   "dependencies": {
-    "@nekochans/lgtm-cat-ui": "^3.0.1",
+    "@nekochans/lgtm-cat-ui": "^3.0.2",
     "@sentry/nextjs": "^7.91.0",
     "lodash.throttle": "^4.1.1",
     "next": "^14.0.4",
