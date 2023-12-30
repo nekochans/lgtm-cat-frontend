@@ -73,51 +73,6 @@
         }
       }
     ],
-    "import/order": [
-      "error",
-      {
-        "groups": [
-          "builtin",
-          "external",
-          "internal",
-          "parent",
-          "sibling",
-          "object",
-          "index"
-        ],
-        "pathGroups": [
-          {
-            "pattern": "{react,react-dom/**,react-router*}",
-            "group": "builtin",
-            "position": "before"
-          },
-          {
-            "pattern": "{routes/**,stores/**,utils/**,hooks/**,domains/**}",
-            "group": "internal",
-            "position": "after"
-          },
-          {
-            "pattern": "{A-Z]*,**/[A-Z]*}",
-            "group": "internal",
-            "position": "after"
-          },
-          {
-            "pattern": "assets/**}",
-            "group": "internal",
-            "position": "after"
-          },
-          {
-            "pattern": "./*.{css,scss,sass,less}",
-            "group": "index",
-            "position": "after"
-          }
-        ],
-        "pathGroupsExcludedImportTypes": ["builtin"],
-        "alphabetize": {
-          "order": "asc"
-        }
-      }
-    ],
     "react/display-name": "off"
   },
   "overrides": [
