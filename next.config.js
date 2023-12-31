@@ -16,9 +16,6 @@ const moduleExports = {
       },
     ],
   },
-  compiler: {
-    styledComponents: true,
-  },
   i18n: {
     locales: ['ja', 'en'],
     defaultLocale: 'ja',
