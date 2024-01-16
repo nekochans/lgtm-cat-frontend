@@ -9,7 +9,7 @@ export const config = {
   matcher: ['/', '/upload', '/terms', '/privacy', '/maintenance'],
 };
 
-export const middleware: NextMiddleware = (req: NextRequest) => {
+export const middleware: NextMiddleware = async (req: NextRequest) => {
   const { nextUrl } = req;
 
   if (isBanCountry(req)) {
@@ -18,7 +18,8 @@ export const middleware: NextMiddleware = (req: NextRequest) => {
     return NextResponse.rewrite(nextUrl);
   }
 
-  if (isInMaintenance()) {
+  const isInMaintenanceMode = await isInMaintenance();
+  if (isInMaintenanceMode) {
     nextUrl.pathname = '/maintenance';
 
     return NextResponse.rewrite(nextUrl);
