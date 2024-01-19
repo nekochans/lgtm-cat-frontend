@@ -99,7 +99,28 @@ asdf local nodejs 18.12.1
 
 ## メンテナンスモードについて
 
-`IS_IN_MAINTENANCE` が `1` の場合はメンテナンスページを強制的に表示します。
+[Vercel Edge Config](https://vercel.com/docs/storage/edge-config) を利用してメンテナンスモードを実現しています。
+
+以下から Vercel Edge Config を編集可能です。
+
+https://vercel.com/nekochans/lgtm-cat-frontend/stores
+
+それぞれ以下のように対応しています。
+
+- `lgtm-cat-frontend-store` （本番用）
+- `stg-lgtm-cat-frontend-store` （ローカルを含む開発、ステージング用）
+
+<img width="1416" alt="VercelEdgeConfig" src="https://github.com/nekochans/lgtm-cat-frontend/assets/11032365/7cf65e37-9009-4a79-b039-8f9353ec5c54">
+
+メンテナンスモードに移行する為には `isInMaintenance` を `true` に変更します。
+
+編集後は「Save」を押下するか `Command + s` で保存しないと反映されません。
+
+<img width="1415" alt="VercelEdgeConfigEdit" src="https://github.com/nekochans/lgtm-cat-frontend/assets/11032365/e61c7ff4-ded5-4e42-9ce9-0be2abb371bc">
+
+メンテナンスモードになると全てのページでメンテナンス中を示すエラーページが表示されます。
+
+<img width="887" alt="isInMaintenance" src="https://github.com/nekochans/lgtm-cat-frontend/assets/11032365/0350f584-8876-4df7-833d-fdcf0dda99cd">
 
 ## 開発でよく使うコマンド
 
