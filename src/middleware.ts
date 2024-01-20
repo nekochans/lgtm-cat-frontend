@@ -12,7 +12,8 @@ export const config = {
 export const middleware: NextMiddleware = async (req: NextRequest) => {
   const { nextUrl } = req;
 
-  if (isBanCountry(req)) {
+  const isBanCountryResult = await isBanCountry(req);
+  if (isBanCountryResult) {
     nextUrl.pathname = '/api/errors';
 
     return NextResponse.rewrite(nextUrl);
