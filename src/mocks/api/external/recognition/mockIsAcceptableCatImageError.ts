@@ -1,18 +1,12 @@
 import { httpStatusCode } from '@/constants';
-import {
-  type MockedRequest,
-  type ResponseResolver,
-  type restContext,
-} from 'msw';
+import { HttpResponse, type ResponseResolver } from 'msw';
 
-export const mockIsAcceptableCatImageError: ResponseResolver<
-  MockedRequest,
-  typeof restContext
-> = async (req, res, ctx) =>
-  await res(
-    ctx.status(httpStatusCode.ok),
-    ctx.json({
+export const mockIsAcceptableCatImageError: ResponseResolver = () => {
+  return HttpResponse.json(
+    {
       isAcceptableCatImage: false,
       notAcceptableReason: 'an error has occurred',
-    }),
+    },
+    { status: httpStatusCode.ok, statusText: 'OK' },
   );
+};

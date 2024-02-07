@@ -1,20 +1,14 @@
 import { httpStatusCode } from '@/constants';
-import {
-  type MockedRequest,
-  type ResponseResolver,
-  type restContext,
-} from 'msw';
+import { HttpResponse, type ResponseResolver } from 'msw';
 
-export const mockUploadCatImagePayloadTooLarge: ResponseResolver<
-  MockedRequest,
-  typeof restContext
-> = async (_req, res, ctx) =>
-  await res(
-    ctx.status(httpStatusCode.payloadTooLarge),
-    ctx.json({
+export const mockUploadCatImagePayloadTooLarge: ResponseResolver = () => {
+  return HttpResponse.json(
+    {
       error: {
         code: httpStatusCode.payloadTooLarge,
         message: 'UploadCatImageSizeTooLargeError',
       },
-    }),
+    },
+    { status: httpStatusCode.payloadTooLarge, statusText: 'Payload Too Large' },
   );
+};

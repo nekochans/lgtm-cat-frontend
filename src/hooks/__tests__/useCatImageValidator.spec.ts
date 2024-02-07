@@ -1,7 +1,6 @@
 /**
  * @jest-environment jsdom
  */
-import 'whatwg-fetch';
 import {
   IsAcceptableCatImageError,
   isAcceptableCatImageUrl,
@@ -20,27 +19,27 @@ import {
   mockIsAcceptableCatImagePayloadTooLargeError,
   mockIsAcceptableCatImagePersonFaceInImage,
 } from '@/mocks';
-import { rest } from 'msw';
+import { http } from 'msw';
 import { setupServer } from 'msw/node';
 
 const mockHandlers = [
-  rest.post(isAcceptableCatImageUrl(), mockIsAcceptableCatImage),
+  http.post(isAcceptableCatImageUrl(), mockIsAcceptableCatImage),
 ];
 
-const mockServer = setupServer(...mockHandlers);
+const server = setupServer(...mockHandlers);
 
 // eslint-disable-next-line max-lines-per-function, max-statements
 describe('useCatImageValidator TestCases', () => {
   beforeAll(() => {
-    mockServer.listen();
+    server.listen();
   });
 
   afterEach(() => {
-    mockServer.resetHandlers();
+    server.resetHandlers();
   });
 
   afterAll(() => {
-    mockServer.close();
+    server.close();
   });
 
   const langJa = 'ja';
@@ -88,8 +87,8 @@ describe('useCatImageValidator TestCases', () => {
     async ({ language, image, imageExtension, expected }: TestTable) => {
       const { imageValidator } = useCatImageValidator(language);
 
-      mockServer.use(
-        rest.post(
+      server.use(
+        http.post(
           isAcceptableCatImageUrl(),
           mockIsAcceptableCatImageNotAllowedImageExtension,
         ),
@@ -114,8 +113,8 @@ describe('useCatImageValidator TestCases', () => {
     async ({ language, image, imageExtension, expected }: TestTable) => {
       const { imageValidator } = useCatImageValidator(language);
 
-      mockServer.use(
-        rest.post(
+      server.use(
+        http.post(
           isAcceptableCatImageUrl(),
           mockIsAcceptableCatImageNotModerationImage,
         ),
@@ -140,8 +139,8 @@ describe('useCatImageValidator TestCases', () => {
     async ({ language, image, imageExtension, expected }: TestTable) => {
       const { imageValidator } = useCatImageValidator(language);
 
-      mockServer.use(
-        rest.post(
+      server.use(
+        http.post(
           isAcceptableCatImageUrl(),
           mockIsAcceptableCatImagePersonFaceInImage,
         ),
@@ -166,8 +165,8 @@ describe('useCatImageValidator TestCases', () => {
     async ({ language, image, imageExtension, expected }: TestTable) => {
       const { imageValidator } = useCatImageValidator(language);
 
-      mockServer.use(
-        rest.post(
+      server.use(
+        http.post(
           isAcceptableCatImageUrl(),
           mockIsAcceptableCatImageNotCatImage,
         ),
@@ -192,8 +191,8 @@ describe('useCatImageValidator TestCases', () => {
     async ({ language, image, imageExtension, expected }: TestTable) => {
       const { imageValidator } = useCatImageValidator(language);
 
-      mockServer.use(
-        rest.post(
+      server.use(
+        http.post(
           isAcceptableCatImageUrl(),
           mockIsAcceptableCatImagePayloadTooLargeError,
         ),
@@ -218,8 +217,8 @@ describe('useCatImageValidator TestCases', () => {
     async ({ language, image, imageExtension, expected }: TestTable) => {
       const { imageValidator } = useCatImageValidator(language);
 
-      mockServer.use(
-        rest.post(isAcceptableCatImageUrl(), mockIsAcceptableCatImageError),
+      server.use(
+        http.post(isAcceptableCatImageUrl(), mockIsAcceptableCatImageError),
       );
 
       const isAcceptableCatImageResult = await imageValidator(
@@ -241,9 +240,7 @@ describe('useCatImageValidator TestCases', () => {
     async ({ language, image, imageExtension, expected }: TestTable) => {
       const { imageValidator } = useCatImageValidator(language);
 
-      mockServer.use(
-        rest.post(isAcceptableCatImageUrl(), mockInternalServerError),
-      );
+      server.use(http.post(isAcceptableCatImageUrl(), mockInternalServerError));
 
       await expect(imageValidator(image, imageExtension)).rejects.toStrictEqual(
         expected,

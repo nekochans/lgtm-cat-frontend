@@ -1,7 +1,6 @@
 /**
  * @jest-environment jsdom
  */
-import 'whatwg-fetch';
 import { FetchLgtmImagesError, fetchLgtmImagesUrl } from '@/features';
 import { useCatImagesFetcher } from '@/hooks/useCatImagesFetcher';
 import {
@@ -9,25 +8,25 @@ import {
   mockFetchLgtmImages,
   mockInternalServerError,
 } from '@/mocks';
-import { rest } from 'msw';
+import { http } from 'msw';
 import { setupServer } from 'msw/node';
 
-const mockHandlers = [rest.get(fetchLgtmImagesUrl(), mockFetchLgtmImages)];
+const mockHandlers = [http.get(fetchLgtmImagesUrl(), mockFetchLgtmImages)];
 
-const mockServer = setupServer(...mockHandlers);
+const server = setupServer(...mockHandlers);
 
 // eslint-disable-next-line max-lines-per-function
 describe('useCatImagesFetcher.ts randomCatImagesFetcher TestCases', () => {
   beforeAll(() => {
-    mockServer.listen();
+    server.listen();
   });
 
   afterEach(() => {
-    mockServer.resetHandlers();
+    server.resetHandlers();
   });
 
   afterAll(() => {
-    mockServer.close();
+    server.close();
   });
 
   it('should be able to fetch LGTM Images', async () => {
@@ -42,7 +41,7 @@ describe('useCatImagesFetcher.ts randomCatImagesFetcher TestCases', () => {
   });
 
   it('should FetchLgtmImagesError Throw, because Failed to fetch LGTM Images', async () => {
-    mockServer.use(rest.get(fetchLgtmImagesUrl(), mockInternalServerError));
+    server.use(http.get(fetchLgtmImagesUrl(), mockInternalServerError));
 
     await expect(
       useCatImagesFetcher().randomCatImagesFetcher(),

@@ -1,7 +1,6 @@
 /**
  * @jest-environment jsdom
  */
-import 'whatwg-fetch';
 import {
   UploadCatImageError,
   uploadCatImageUrl,
@@ -15,25 +14,25 @@ import {
   mockUploadCatImagePayloadTooLarge,
   mockUploadCatImageUnprocessableEntity,
 } from '@/mocks';
-import { rest } from 'msw';
+import { http } from 'msw';
 import { setupServer } from 'msw/node';
 
-const mockHandlers = [rest.post(uploadCatImageUrl(), mockUploadCatImage)];
+const mockHandlers = [http.post(uploadCatImageUrl(), mockUploadCatImage)];
 
-const mockServer = setupServer(...mockHandlers);
+const server = setupServer(...mockHandlers);
 
 // eslint-disable-next-line max-lines-per-function, max-statements
 describe('useCatImageUploader TestCases', () => {
   beforeAll(() => {
-    mockServer.listen();
+    server.listen();
   });
 
   afterEach(() => {
-    mockServer.resetHandlers();
+    server.resetHandlers();
   });
 
   afterAll(() => {
-    mockServer.close();
+    server.close();
   });
 
   const langJa = 'ja';
@@ -81,8 +80,8 @@ describe('useCatImageUploader TestCases', () => {
     async ({ language, image, imageExtension, expected }: TestTable) => {
       const { imageUploader } = useCatImageUploader(language);
 
-      mockServer.use(
-        rest.post(uploadCatImageUrl(), mockUploadCatImagePayloadTooLarge),
+      server.use(
+        http.post(uploadCatImageUrl(), mockUploadCatImagePayloadTooLarge),
       );
 
       const imageUploadResult = await imageUploader(image, imageExtension);
@@ -100,8 +99,8 @@ describe('useCatImageUploader TestCases', () => {
     async ({ language, image, imageExtension, expected }: TestTable) => {
       const { imageUploader } = useCatImageUploader(language);
 
-      mockServer.use(
-        rest.post(uploadCatImageUrl(), mockUploadCatImageUnprocessableEntity),
+      server.use(
+        http.post(uploadCatImageUrl(), mockUploadCatImageUnprocessableEntity),
       );
 
       const imageUploadResult = await imageUploader(image, imageExtension);
@@ -119,7 +118,7 @@ describe('useCatImageUploader TestCases', () => {
     async ({ language, image, imageExtension, expected }: TestTable) => {
       const { imageUploader } = useCatImageUploader(language);
 
-      mockServer.use(rest.post(uploadCatImageUrl(), mockInternalServerError));
+      server.use(http.post(uploadCatImageUrl(), mockInternalServerError));
 
       await expect(imageUploader(image, imageExtension)).rejects.toStrictEqual(
         expected,
