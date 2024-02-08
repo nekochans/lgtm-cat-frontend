@@ -1,6 +1,3 @@
-/**
- * @jest-environment jsdom
- */
 import { FetchLgtmImagesError, fetchLgtmImagesUrl } from '@/features';
 import { useCatImagesFetcher } from '@/hooks/useCatImagesFetcher';
 import {
