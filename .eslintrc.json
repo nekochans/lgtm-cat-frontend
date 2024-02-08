@@ -12,7 +12,7 @@
     "plugin:react/recommended",
     "plugin:react/jsx-runtime",
     "plugin:react-hooks/recommended",
-    "plugin:jest/recommended",
+    "plugin:vitest/recommended",
     "plugin:storybook/recommended",
     "next/core-web-vitals",
     "prettier"
