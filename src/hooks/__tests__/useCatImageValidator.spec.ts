@@ -18,6 +18,7 @@ import {
 } from '@/mocks';
 import { http } from 'msw';
 import { setupServer } from 'msw/node';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
 const mockHandlers = [
   http.post(isAcceptableCatImageUrl(), mockIsAcceptableCatImage),
