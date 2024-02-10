@@ -1,18 +1,9 @@
 import { httpStatusCode } from '@/constants';
-import {
-  type MockedRequest,
-  type ResponseResolver,
-  type restContext,
-} from 'msw';
+import { HttpResponse, type ResponseResolver } from 'msw';
 
-export const mockUnauthorizedError: ResponseResolver<
-  MockedRequest,
-  typeof restContext
-> = async (req, res, ctx) =>
-  await res(
-    ctx.status(httpStatusCode.unauthorized),
-    ctx.json({
-      code: httpStatusCode.unauthorized,
-      message: 'Unauthorized',
-    }),
+export const mockUnauthorizedError: ResponseResolver = () => {
+  return HttpResponse.json(
+    { code: httpStatusCode.unauthorized, message: 'Unauthorized' },
+    { status: httpStatusCode.unauthorized, statusText: 'Unauthorized' },
   );
+};

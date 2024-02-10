@@ -1,13 +1,10 @@
 import { httpStatusCode } from '@/constants';
 import { fetchLgtmImagesMockBody } from '@/mocks';
-import {
-  type MockedRequest,
-  type ResponseResolver,
-  type restContext,
-} from 'msw';
+import { HttpResponse, type ResponseResolver } from 'msw';
 
-export const mockFetchLgtmImages: ResponseResolver<
-  MockedRequest,
-  typeof restContext
-> = async (req, res, ctx) =>
-  await res(ctx.status(httpStatusCode.ok), ctx.json(fetchLgtmImagesMockBody));
+export const mockFetchLgtmImages: ResponseResolver = () => {
+  return HttpResponse.json(fetchLgtmImagesMockBody, {
+    status: httpStatusCode.ok,
+    statusText: 'OK',
+  });
+};
