@@ -4,7 +4,6 @@ import { withSentryConfig } from '@sentry/nextjs';
 const baseConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['lgtm-images.lgtmeow.com', 'stg-lgtm-images.lgtmeow.com'],
     remotePatterns: [
       {
         protocol: 'https',
