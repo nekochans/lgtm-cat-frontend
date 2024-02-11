@@ -1,7 +1,7 @@
-const { withSentryConfig } = require('@sentry/nextjs');
+import { withSentryConfig } from '@sentry/nextjs';
 
 /** @type {import('next').NextConfig} */
-const moduleExports = {
+const baseConfig = {
   reactStrictMode: true,
   images: {
     domains: ['lgtm-images.lgtmeow.com', 'stg-lgtm-images.lgtmeow.com'],
@@ -31,4 +31,6 @@ const sentryWebpackPluginOptions = {
   project: process.env.SENTRY_PROJECT,
 };
 
-module.exports = withSentryConfig(moduleExports, sentryWebpackPluginOptions);
+const nextConfig = withSentryConfig(baseConfig, sentryWebpackPluginOptions);
+
+export default nextConfig;
