@@ -1,22 +1,17 @@
-import type {
-  AcceptedTypesImageExtension as OrgAcceptedTypesImageExtension,
-  CatImagesFetcher as OrgCatImagesFetcher,
-  ImageUploader as OrgImageUploader,
-  ImageValidator as OrgImageValidator,
-  LgtmImage as OrgLgtmImage,
-  LgtmImageUrl as OrgLgtmImageUrl,
-} from '@nekochans/lgtm-cat-ui';
 import {
+  NotAllowedImageExtensionError,
   type UploadCatImageError,
   type UploadCatImageSizeTooLargeError,
   type UploadCatImageValidationError,
 } from './errors';
 import { imageData } from './imageData';
-import type { Result } from './result';
+import type { Result, SuccessResult } from './result';
 
-export type LgtmImage = OrgLgtmImage;
+export type LgtmImageUrl = `https://${string}`;
 
-export type AcceptedTypesImageExtension = OrgAcceptedTypesImageExtension;
+export type LgtmImage = { id: number; imageUrl: LgtmImageUrl };
+
+export type AcceptedTypesImageExtension = '.png' | '.jpg' | '.jpeg';
 
 export type FetchLgtmImages = () => Promise<LgtmImage[]>;
 
@@ -43,8 +38,6 @@ export type IsAcceptableCatImage = (
   Result<IsAcceptableCatImageResponse, UploadCatImageSizeTooLargeError>
 >;
 
-export type LgtmImageUrl = OrgLgtmImageUrl;
-
 type UploadedImage = {
   createdLgtmImageUrl: LgtmImageUrl;
 };
@@ -62,11 +55,35 @@ export type UploadCatImage = (
   >
 >;
 
-export type CatImagesFetcher = OrgCatImagesFetcher;
+export type CatImagesFetcher = () => Promise<LgtmImage[]>;
 
-export type ImageValidator = OrgImageValidator;
+export type ImageValidator = (
+  image: string,
+  imageExtension: AcceptedTypesImageExtension,
+) => Promise<
+  SuccessResult<{
+    isAcceptableCatImage: boolean;
+    notAcceptableReason: string[];
+  }>
+>;
 
-export type ImageUploader = OrgImageUploader;
+export type ImageUploader = (
+  image: string,
+  imageExtension: AcceptedTypesImageExtension,
+) => Promise<
+  SuccessResult<{
+    displayErrorMessages: string[];
+    createdLgtmImageUrl?: LgtmImageUrl;
+  }>
+>;
+
+export const isLgtmImageUrl = (value: unknown): value is LgtmImageUrl => {
+  if (typeof value !== 'string') {
+    return false;
+  }
+
+  return value.startsWith('https://');
+};
 
 export const isLgtmImages = (value: unknown): value is LgtmImage[] => {
   if (Array.isArray(value)) {
@@ -100,4 +117,40 @@ export const extractRandomImages = (numberToExtract: number): LgtmImage[] => {
   }
 
   return result;
+};
+
+const acceptedTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg'];
+
+export const isValidFileType = (fileType: string): boolean =>
+  acceptedTypes.includes(fileType);
+
+export const extractImageExtFromValidFileType = (
+  fileType: string,
+): AcceptedTypesImageExtension => {
+  if (!isValidFileType(fileType)) {
+    throw new NotAllowedImageExtensionError(
+      `${fileType} is not an allowed image extension`,
+    );
+  }
+
+  return `.${fileType.replace('image/', '')}` as AcceptedTypesImageExtension;
+};
+
+const calculateFileSize = (file: File): number => {
+  const kb = 1024;
+  // eslint-disable-next-line no-magic-numbers
+  const mb = kb ** 2;
+
+  // eslint-disable-next-line no-magic-numbers
+  return Math.round((file.size / mb) * 100.0) / 100.0;
+};
+
+const acceptableSizeThreshold = 4;
+
+export const acceptableImageSizeThresholdText = `${acceptableSizeThreshold}MB`;
+
+export const isAcceptableFileSize = (file: File): boolean => {
+  const size = calculateFileSize(file);
+
+  return size <= acceptableSizeThreshold;
 };

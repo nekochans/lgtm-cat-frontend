@@ -1,0 +1,1 @@
+export { LgtmImages } from './LgtmImages';

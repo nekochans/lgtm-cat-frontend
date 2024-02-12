@@ -1,22 +1,25 @@
-import { InternalServerErrorImage } from '@/components';
+import { InternalServerErrorImage, ResponsiveLayout } from '@/components';
 import {
   appBaseUrl,
   i18nUrlList,
   languages,
   metaTagList,
+  NewArrivalCatImagesFetcherError,
+  RandomCatImagesFetcherError,
   type Language,
   type LgtmImage,
 } from '@/features';
-import { useCatImagesFetcher } from '@/hooks';
+import { useCatImagesFetcher, useSwitchLanguage } from '@/hooks';
 import { DefaultLayout } from '@/layouts';
+import { updateIsFailedFetchLgtmImages, updateLgtmImages } from '@/stores';
 import {
   sendClickTopFetchNewArrivalCatButton,
   sendClickTopFetchRandomCatButton,
   sendCopyMarkdownFromRandomButton,
   sendCopyMarkdownFromTopImages,
 } from '@/utils';
-import { TopTemplate as OrgTopTemplate } from '@nekochans/lgtm-cat-ui';
 import type { FC } from 'react';
+import { LgtmImagesContents } from './LgtmImagesContents';
 
 const clipboardMarkdownCallback = sendCopyMarkdownFromTopImages;
 
@@ -46,24 +49,72 @@ export const TopTemplate: FC<Props> = ({ language, lgtmImages }) => {
   const { randomCatImagesFetcher, newArrivalCatImagesFetcher } =
     useCatImagesFetcher();
 
+  const { isLanguageMenuDisplayed, onClickLanguageButton, onClickOutSideMenu } =
+    useSwitchLanguage();
+
+  const onClickFetchRandomCatButton = async () => {
+    try {
+      const lgtmImagesList = await randomCatImagesFetcher();
+
+      updateLgtmImages(lgtmImagesList);
+      updateIsFailedFetchLgtmImages(false);
+
+      fetchRandomCatImagesCallback();
+    } catch (error) {
+      updateIsFailedFetchLgtmImages(true);
+      if (error instanceof Error) {
+        throw new RandomCatImagesFetcherError(error.message);
+      }
+
+      throw new RandomCatImagesFetcherError('failed to randomCatImagesFetcher');
+    }
+  };
+
+  const onClickFetchNewArrivalCatButton = async () => {
+    try {
+      const lgtmImagesList = await newArrivalCatImagesFetcher();
+
+      updateLgtmImages(lgtmImagesList);
+      updateIsFailedFetchLgtmImages(false);
+
+      fetchNewArrivalCatImagesCallback();
+    } catch (error) {
+      updateIsFailedFetchLgtmImages(true);
+      if (error instanceof Error) {
+        throw new NewArrivalCatImagesFetcherError(error.message);
+      }
+
+      throw new RandomCatImagesFetcherError(
+        'failed to newArrivalCatImagesFetcher',
+      );
+    }
+  };
+
   return (
     <DefaultLayout
       metaTag={metaTag}
       canonicalLink={canonicalLink}
       alternateUrls={alternateUrls}
     >
-      <OrgTopTemplate
-        language={language}
-        lgtmImages={lgtmImages}
-        randomCatImagesFetcher={randomCatImagesFetcher}
-        newArrivalCatImagesFetcher={newArrivalCatImagesFetcher}
-        errorCatImage={<InternalServerErrorImage />}
-        appUrl={appBaseUrl()}
-        fetchRandomCatImagesCallback={fetchRandomCatImagesCallback}
-        fetchNewArrivalCatImagesCallback={fetchNewArrivalCatImagesCallback}
-        clipboardMarkdownCallback={clipboardMarkdownCallback}
-        catRandomCopyCallback={catRandomCopyCallback}
-      />
+      <div onClick={onClickOutSideMenu} aria-hidden="true">
+        <ResponsiveLayout
+          language={language}
+          isLanguageMenuDisplayed={isLanguageMenuDisplayed}
+          onClickLanguageButton={onClickLanguageButton}
+          currentUrlPath="/"
+        >
+          <LgtmImagesContents
+            language={language}
+            lgtmImages={lgtmImages}
+            errorCatImage={<InternalServerErrorImage />}
+            onClickFetchRandomCatButton={onClickFetchRandomCatButton}
+            onClickFetchNewArrivalCatButton={onClickFetchNewArrivalCatButton}
+            appUrl={appBaseUrl()}
+            catRandomCopyCallback={catRandomCopyCallback}
+            clipboardMarkdownCallback={clipboardMarkdownCallback}
+          />
+        </ResponsiveLayout>
+      </div>
     </DefaultLayout>
   );
 };

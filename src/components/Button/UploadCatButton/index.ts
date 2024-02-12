@@ -1,0 +1,1 @@
+export { UploadCatButton } from './UploadCatButton';

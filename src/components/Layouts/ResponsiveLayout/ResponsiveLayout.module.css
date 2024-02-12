@@ -1,0 +1,14 @@
+.wrapper {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 100%;
+  gap: 64px;
+  min-height: 100vh;
+}
+
+.contents-wrapper {
+  display: inline-block;
+  margin: 0 auto;
+  text-align: center;
+  vertical-align: middle;
+}

@@ -1,0 +1,16 @@
+.text {
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 28px;
+  color: #43281e;
+  text-align: center;
+}
+
+.ja-text {
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+}
+
+.en-text {
+  font-family: Roboto, sans-serif;
+}
