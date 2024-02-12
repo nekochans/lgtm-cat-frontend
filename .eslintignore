@@ -6,6 +6,7 @@ coverage/
 next-env.d.ts
 test/setupTests.ts
 *.config.js
+*.config.mjs
 __mocks__
 storybook-static/
 public/mockServiceWorker.js
