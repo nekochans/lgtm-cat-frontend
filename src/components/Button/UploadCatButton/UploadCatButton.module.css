@@ -1,6 +1,5 @@
 .button {
-  background: var(--primary-color)
-    url('/src/components/Button/images/slash.png') repeat 0 0/16px auto;
+  background: var(--primary-color) url('/images/slash.png') repeat 0 0/16px auto;
 }
 
 .fa-cloud-upload-alt {
