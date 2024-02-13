@@ -3,7 +3,7 @@ import { googleTagManagerId } from '@/utils';
 import type { AppProps } from 'next/app';
 import 'ress/ress.css';
 import '../styles/markdown.css';
-import '@nekochans/lgtm-cat-ui/style.css';
+import '../styles/globals.css';
 
 const CustomApp = ({ Component, pageProps }: AppProps): JSX.Element => (
   <>
