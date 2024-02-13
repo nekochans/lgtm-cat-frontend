@@ -1,3 +1,4 @@
+import { ResponsiveLayout, UploadForm } from '@/components';
 import {
   appBaseUrl,
   i18nUrlList,
@@ -5,17 +6,21 @@ import {
   metaTagList,
   type Language,
 } from '@/features';
-import { useCatImageUploader, useCatImageValidator } from '@/hooks';
+import {
+  useCatImageUploader,
+  useCatImageValidator,
+  useSwitchLanguage,
+} from '@/hooks';
 import { DefaultLayout } from '@/layouts';
 import {
   sendCopyMarkdownFromCopyButton,
   sendCopyMarkdownFromCreatedImage,
   sendUploadedCatImage,
 } from '@/utils';
-import { UploadTemplate as OrgUploadTemplate } from '@nekochans/lgtm-cat-ui';
 import Image from 'next/image';
 import type { FC } from 'react';
 import cat from './images/cat.webp';
+import styles from './UploadTemplate.module.css';
 
 const CatImage = () => (
   <Image src={cat.src} width={302} height={302} alt="Cat" priority={true} />
@@ -42,22 +47,36 @@ export const UploadTemplate: FC<Props> = ({ language }) => {
 
   const { imageUploader } = useCatImageUploader(language);
 
+  const { isLanguageMenuDisplayed, onClickLanguageButton, onClickOutSideMenu } =
+    useSwitchLanguage();
+
   return (
     <DefaultLayout
       metaTag={metaTag}
       canonicalLink={canonicalLink}
       alternateUrls={alternateUrls}
     >
-      <OrgUploadTemplate
-        language={language}
-        imageValidator={imageValidator}
-        imageUploader={imageUploader}
-        catImage={<CatImage />}
-        uploadCallback={sendUploadedCatImage}
-        onClickCreatedLgtmImage={sendCopyMarkdownFromCreatedImage}
-        onClickMarkdownSourceCopyButton={sendCopyMarkdownFromCopyButton}
-        appUrl={appBaseUrl()}
-      />
+      <div onClick={onClickOutSideMenu} aria-hidden="true">
+        <ResponsiveLayout
+          language={language}
+          isLanguageMenuDisplayed={isLanguageMenuDisplayed}
+          onClickLanguageButton={onClickLanguageButton}
+          currentUrlPath="/upload"
+        >
+          <UploadForm
+            language={language}
+            imageValidator={imageValidator}
+            imageUploader={imageUploader}
+            uploadCallback={sendUploadedCatImage}
+            onClickCreatedLgtmImage={sendCopyMarkdownFromCreatedImage}
+            onClickMarkdownSourceCopyButton={sendCopyMarkdownFromCopyButton}
+            appUrl={appBaseUrl()}
+          />
+          <div className={styles['image-wrapper']}>
+            <CatImage />
+          </div>
+        </ResponsiveLayout>
+      </div>
     </DefaultLayout>
   );
 };
