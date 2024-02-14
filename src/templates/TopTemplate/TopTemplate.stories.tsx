@@ -3,7 +3,7 @@ import {
   fetchLgtmImagesUrl,
   type LgtmImage,
 } from '@/features';
-import { mockFetchLgtmImages } from '@/mocks';
+import { mockFetchLgtmImages, mockInternalServerError } from '@/mocks';
 import type { Meta, StoryObj } from '@storybook/react';
 import { http } from 'msw';
 import { TopTemplate } from './.';
@@ -99,11 +99,27 @@ export const ViewInJapaneseError: Story = {
     language: 'ja',
     lgtmImages,
   },
+  parameters: {
+    msw: {
+      handlers: [
+        http.get(fetchLgtmImagesUrl(), mockInternalServerError),
+        http.get(fetchLgtmImagesInRecentlyCreatedUrl(), mockInternalServerError),
+      ],
+    },
+  },
 };
 
 export const ViewInEnglishError: Story = {
   args: {
     language: 'en',
     lgtmImages,
+  },
+  parameters: {
+    msw: {
+      handlers: [
+        http.get(fetchLgtmImagesUrl(), mockInternalServerError),
+        http.get(fetchLgtmImagesInRecentlyCreatedUrl(), mockInternalServerError),
+      ],
+    },
   },
 };
