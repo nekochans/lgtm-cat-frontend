@@ -103,7 +103,10 @@ export const ViewInJapaneseError: Story = {
     msw: {
       handlers: [
         http.get(fetchLgtmImagesUrl(), mockInternalServerError),
-        http.get(fetchLgtmImagesInRecentlyCreatedUrl(), mockInternalServerError),
+        http.get(
+          fetchLgtmImagesInRecentlyCreatedUrl(),
+          mockInternalServerError,
+        ),
       ],
     },
   },
@@ -118,7 +121,10 @@ export const ViewInEnglishError: Story = {
     msw: {
       handlers: [
         http.get(fetchLgtmImagesUrl(), mockInternalServerError),
-        http.get(fetchLgtmImagesInRecentlyCreatedUrl(), mockInternalServerError),
+        http.get(
+          fetchLgtmImagesInRecentlyCreatedUrl(),
+          mockInternalServerError,
+        ),
       ],
     },
   },
