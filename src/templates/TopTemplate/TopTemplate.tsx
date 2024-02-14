@@ -13,21 +13,13 @@ import { useCatImagesFetcher, useSwitchLanguage } from '@/hooks';
 import { DefaultLayout } from '@/layouts';
 import { updateIsFailedFetchLgtmImages, updateLgtmImages } from '@/stores';
 import {
-  sendClickTopFetchNewArrivalCatButton,
-  sendClickTopFetchRandomCatButton,
-  sendCopyMarkdownFromRandomButton,
-  sendCopyMarkdownFromTopImages,
+  type sendClickTopFetchNewArrivalCatButton,
+  type sendClickTopFetchRandomCatButton,
+  type sendCopyMarkdownFromRandomButton,
+  type sendCopyMarkdownFromTopImages,
 } from '@/utils';
 import type { FC } from 'react';
 import { LgtmImagesContents } from './LgtmImagesContents';
-
-const clipboardMarkdownCallback = sendCopyMarkdownFromTopImages;
-
-const fetchRandomCatImagesCallback = sendClickTopFetchRandomCatButton;
-
-const fetchNewArrivalCatImagesCallback = sendClickTopFetchNewArrivalCatButton;
-
-const catRandomCopyCallback = sendCopyMarkdownFromRandomButton;
 
 const alternateUrls = languages.map((hreflang) => {
   const link = hreflang === 'ja' ? i18nUrlList.top?.ja : i18nUrlList.top?.en;
@@ -38,9 +30,19 @@ const alternateUrls = languages.map((hreflang) => {
 type Props = {
   language: Language;
   lgtmImages: LgtmImage[];
+  callbackFunctions?: {
+    clipboardMarkdownCallback?: typeof sendCopyMarkdownFromTopImages;
+    fetchRandomCatImagesCallback?: typeof sendClickTopFetchRandomCatButton;
+    fetchNewArrivalCatImagesCallback?: typeof sendClickTopFetchNewArrivalCatButton;
+    catRandomCopyCallback?: typeof sendCopyMarkdownFromRandomButton;
+  };
 };
 
-export const TopTemplate: FC<Props> = ({ language, lgtmImages }) => {
+export const TopTemplate: FC<Props> = ({
+  language,
+  lgtmImages,
+  callbackFunctions,
+}) => {
   const metaTag = metaTagList(language).top;
 
   const canonicalLink =
@@ -59,7 +61,9 @@ export const TopTemplate: FC<Props> = ({ language, lgtmImages }) => {
       updateLgtmImages(lgtmImagesList);
       updateIsFailedFetchLgtmImages(false);
 
-      fetchRandomCatImagesCallback();
+      if (callbackFunctions?.fetchRandomCatImagesCallback) {
+        callbackFunctions.fetchRandomCatImagesCallback();
+      }
     } catch (error) {
       updateIsFailedFetchLgtmImages(true);
       if (error instanceof Error) {
@@ -77,7 +81,9 @@ export const TopTemplate: FC<Props> = ({ language, lgtmImages }) => {
       updateLgtmImages(lgtmImagesList);
       updateIsFailedFetchLgtmImages(false);
 
-      fetchNewArrivalCatImagesCallback();
+      if (callbackFunctions?.fetchNewArrivalCatImagesCallback) {
+        callbackFunctions.fetchNewArrivalCatImagesCallback();
+      }
     } catch (error) {
       updateIsFailedFetchLgtmImages(true);
       if (error instanceof Error) {
@@ -110,8 +116,10 @@ export const TopTemplate: FC<Props> = ({ language, lgtmImages }) => {
             onClickFetchRandomCatButton={onClickFetchRandomCatButton}
             onClickFetchNewArrivalCatButton={onClickFetchNewArrivalCatButton}
             appUrl={appBaseUrl()}
-            catRandomCopyCallback={catRandomCopyCallback}
-            clipboardMarkdownCallback={clipboardMarkdownCallback}
+            catRandomCopyCallback={callbackFunctions?.catRandomCopyCallback}
+            clipboardMarkdownCallback={
+              callbackFunctions?.clipboardMarkdownCallback
+            }
           />
         </ResponsiveLayout>
       </div>

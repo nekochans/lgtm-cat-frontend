@@ -1,5 +1,11 @@
-import { type LgtmImage } from '@/features';
+import {
+  fetchLgtmImagesInRecentlyCreatedUrl,
+  fetchLgtmImagesUrl,
+  type LgtmImage,
+} from '@/features';
+import { mockFetchLgtmImages } from '@/mocks';
 import type { Meta, StoryObj } from '@storybook/react';
+import { http } from 'msw';
 import { TopTemplate } from './.';
 
 const meta: Meta<typeof TopTemplate> = {
@@ -63,12 +69,28 @@ export const ViewInJapanese: Story = {
     language: 'ja',
     lgtmImages,
   },
+  parameters: {
+    msw: {
+      handlers: [
+        http.get(fetchLgtmImagesUrl(), mockFetchLgtmImages),
+        http.get(fetchLgtmImagesInRecentlyCreatedUrl(), mockFetchLgtmImages),
+      ],
+    },
+  },
 };
 
 export const ViewInEnglish: Story = {
   args: {
     language: 'en',
     lgtmImages,
+  },
+  parameters: {
+    msw: {
+      handlers: [
+        http.get(fetchLgtmImagesUrl(), mockFetchLgtmImages),
+        http.get(fetchLgtmImagesInRecentlyCreatedUrl(), mockFetchLgtmImages),
+      ],
+    },
   },
 };
 
