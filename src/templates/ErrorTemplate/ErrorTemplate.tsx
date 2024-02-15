@@ -1,6 +1,8 @@
 import {
+  ErrorContent,
   InternalServerErrorImage,
   NotFoundImage,
+  ResponsiveLayout,
   ServiceUnavailableImage,
 } from '@/components';
 import { httpStatusCode } from '@/constants';
@@ -10,14 +12,12 @@ import {
   errorMetaTag,
   metaTagList,
   notFoundMetaTag,
+  type ErrorType,
   type Language,
 } from '@/features';
+import { useSwitchLanguage } from '@/hooks';
 import { ErrorLayout } from '@/layouts';
 import { assertNever } from '@/utils';
-import {
-  ErrorTemplate as OrgErrorTemplate,
-  type ErrorType,
-} from '@nekochans/lgtm-cat-ui';
 import { useRouter } from 'next/router';
 import type { FC } from 'react';
 
@@ -72,15 +72,26 @@ export const ErrorTemplate: FC<Props> = ({ type, language }) => {
 
   const currentUrlPath = router.pathname;
 
+  const { isLanguageMenuDisplayed, onClickLanguageButton, onClickOutSideMenu } =
+    useSwitchLanguage();
+
   return (
     <ErrorLayout title={pageTitle(type, language)} metaTag={metaTag}>
-      <OrgErrorTemplate
-        type={type}
-        language={language}
-        catImage={catImage(type)}
-        shouldDisplayBackToTopButton={true}
-        currentUrlPath={currentUrlPath}
-      />
+      <div onClick={onClickOutSideMenu} aria-hidden="true">
+        <ResponsiveLayout
+          language={language}
+          isLanguageMenuDisplayed={isLanguageMenuDisplayed}
+          onClickLanguageButton={onClickLanguageButton}
+          currentUrlPath={currentUrlPath}
+        >
+          <ErrorContent
+            type={type}
+            language={language}
+            catImage={catImage(type)}
+            shouldDisplayBackToTopButton={true}
+          />
+        </ResponsiveLayout>
+      </div>
     </ErrorLayout>
   );
 };

@@ -1,0 +1,11 @@
+.image-wrapper {
+  display: grid;
+  grid-template-columns: 302px 302px 302px;
+}
+
+@media (width <= 767px) {
+  .image-wrapper {
+    grid-template-columns: 302px;
+    justify-content: center;
+  }
+}

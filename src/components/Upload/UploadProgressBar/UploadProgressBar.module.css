@@ -1,0 +1,37 @@
+.wrapper {
+  flex: none;
+  flex-grow: 0;
+  order: 1;
+  width: 280px;
+  height: 54px;
+}
+
+.bar-wrapper {
+  width: 280px;
+  height: 20px;
+}
+
+.main-color-bar {
+  width: 92px;
+  height: 18px;
+  background: var(--primary-variant-color);
+}
+
+.default-color-bar {
+  box-sizing: border-box;
+  width: 280px;
+  height: 20px;
+  background: var(--sub-color);
+  border: 1px solid var(--sub-text-color);
+}
+
+.message {
+  width: 56px;
+  height: 28px;
+  font-family: Roboto, sans-serif;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 28px;
+  color: var(--sub-text-color);
+}

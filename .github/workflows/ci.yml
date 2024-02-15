@@ -15,11 +15,11 @@ jobs:
     timeout-minutes: 10
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [20.x]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
@@ -33,6 +33,6 @@ jobs:
           NEXT_PUBLIC_LGTMEOW_BFF_URL: ${{ secrets.NEXT_PUBLIC_LGTMEOW_BFF_URL }}
           NODE_AUTH_TOKEN: ${{ secrets.AUTH_TOKEN_FOR_GITHUB_PACKAGES }}
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}

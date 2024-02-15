@@ -1,0 +1,154 @@
+.wrapper {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  flex-grow: 0;
+  gap: 61px;
+  align-items: center;
+  order: 0;
+  padding: 0;
+}
+
+.form {
+  flex: none;
+  flex-grow: 0;
+  order: 1;
+  width: 500px;
+}
+
+@media (width <= 767px) {
+  .form {
+    width: 380px;
+  }
+}
+
+.input-file-area {
+  box-sizing: border-box;
+  display: grid;
+  height: 220px;
+  background: var(--white-color);
+  border: 1px dashed var(--text-color);
+}
+
+.text {
+  font-family: Roboto, sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 28px;
+  color: var(--sub-text-color);
+  text-align: center;
+}
+
+.input-file {
+  display: none;
+}
+
+.input-file-label {
+  inset: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  height: 43px;
+  padding: 12px 20px;
+  margin: auto;
+  cursor: pointer;
+  background: var(--background-color);
+  border: 1px solid var(--sub-text-color);
+  border-radius: 4px;
+}
+
+.input-file-label-text {
+  flex: none;
+  flex-grow: 0;
+  order: 0;
+  width: 160px;
+  height: 19px;
+  font-family: Roboto, sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 19px;
+  color: var(--primary-variant-color);
+}
+
+.max-upload-size-text {
+  height: 28px;
+  font-family: Roboto, sans-serif;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 28px;
+  color: var(--sub-text-color);
+  text-align: right;
+}
+
+.caution-text-area {
+  height: 28px;
+  font-family: Roboto, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 28px;
+  color: var(--text-color);
+  text-align: center;
+}
+
+.notes {
+  top: 609px;
+  height: 96px;
+  font-family: Roboto, sans-serif;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  color: var(--text-color);
+}
+
+.description-area-wrapper {
+  display: grid;
+  gap: 24px;
+}
+
+.privacy-policy-area {
+  height: 42px;
+  font-family: Roboto, sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 21px;
+  color: var(--text-color);
+  text-align: center;
+}
+
+.privacy-link-text {
+  height: 42px;
+  font-family: Roboto, sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 21px;
+  color: var(--primary-color);
+  text-align: center;
+  text-decoration-line: underline;
+  cursor: pointer;
+}
+
+.upload-button-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fa-cloud-upload-alt {
+  inset: 0;
+  margin: auto;
+  font-size: 42px;
+  font-style: normal;
+  font-weight: 900;
+  line-height: 39px;
+  color: var(--primary-variant-color);
+}

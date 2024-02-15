@@ -1,3 +1,12 @@
 export * from './MarkdownContents';
 export * from './ErrorCatImages';
 export * from './GoogleTagManager';
+export { Footer } from './Footer';
+export { Header } from './Header';
+export * from './Button';
+export { ResponsiveLayout } from './Layouts';
+export { LgtmImages } from './LgtmImages';
+export { UploadForm } from './Upload/UploadForm';
+export { ErrorContent, type ErrorContentProps } from './ErrorContent';
+export { LibraryBooks } from './Icon/LibraryBooks';
+export { MarkdownPageTitle } from './MarkdownPageTitle';

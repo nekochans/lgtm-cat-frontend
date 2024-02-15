@@ -14,9 +14,9 @@ lgtm-cat（サービス名 LGTMeow https://lgtmeow.com のフロントエンド�
 
 ## 環境変数の設定
 
-`.env`を作成し、下記を設定してください。
+`.env.local`を作成し、下記を設定してください。
 
-数がそれなりに多いので `vercel env pull .env` で環境変数をダウンロードするのがオススメです。
+数がそれなりに多いので `vercel env pull .env.local` で環境変数をダウンロードするのがオススメです。
 
 https://vercel.com/docs/cli#commands/dev/when-to-use-this-command
 
@@ -28,23 +28,16 @@ NEXT_PUBLIC_LGTMEOW_BFF_URL=https://github.com/nekochans/lgtm-cat-bff が稼働�
 EDGE_CONFIG=Vercel Edge ConfigのURL（Vercel上の値を参照）
 ```
 
-以下の環境変数はテストコード実行時や Build 時に参照されるので [direnv](https://github.com/direnv/direnv) を使って `.envrc` を配置するのが良いです。
+ローカルでSentryやChromaticの動作確認を実施する場合 [direnv](https://github.com/direnv/direnv) を使って `.envrc` に以下の環境変数を設定します。
 
 ```
-export NEXT_PUBLIC_LGTMEOW_BFF_URL=https://github.com/nekochans/lgtm-cat-bff が稼働しているURLを指定
-export CHROMATIC_PROJECT_TOKEN=Chromaticのトークンを指定
 export NEXT_PUBLIC_APP_ENV=local
-export NEXT_PUBLIC_APP_URL=http://localhost:2222
-export NEXT_PUBLIC_LGTMEOW_BFF_URL=https://github.com/nekochans/lgtm-cat-bff が稼働しているURLを指定
+export CHROMATIC_PROJECT_TOKEN=Chromaticのトークンを指定
 export SENTRY_ORG=Sentryの組織を指定（Vercel上の値を参照）
 export SENTRY_PROJECT=Sentryのプロジェクト名（Vercel上の値を参照）
 export NEXT_PUBLIC_SENTRY_DSN=SentryのDNS（Vercel上の値を参照）
 export SENTRY_AUTH_TOKEN=Sentryのトークン（Vercel上の値を参照）
 ```
-
-以下の環境変数はなくてもテストが通りますが、Mock Service Worker に渡す URL が `undefined` になる為、Mock 周りで何かトラブルがあった際にデバッグの妨げになる可能性があるので設定しておくのが無難です。
-
-- `NEXT_PUBLIC_LGTMEOW_BFF_URL`
 
 `CHROMATIC_PROJECT_TOKEN` に関しては `npm run chromatic` を利用しない限りは設定不要です。
 
@@ -55,25 +48,6 @@ export SENTRY_AUTH_TOKEN=Sentryのトークン（Vercel上の値を参照）
 - `SENTRY_PROJECT`
 - `NEXT_PUBLIC_SENTRY_DSN`
 - `SENTRY_AUTH_TOKEN`
-
-## `.npmrc` の追加
-
-GitHub Packages 内の private package を利用しているので、プロジェクトルートに `.npmrc` が必要です。
-
-[こちら](https://docs.github.com/ja/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) を参考に Personal Access Token を発行します。
-
-権限は `read:packages` があれば問題ありません。以下は作成例です。
-
-![personal-access-token](https://user-images.githubusercontent.com/11032365/189850906-6008cb05-1705-409f-beec-4910f9175c90.jpg)
-
-Personal Access Token を発行したら以下の内容で`.npmrc` を作成します。
-
-`ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx` の部分は発行した Personal Access Token に置き換えて下さい。
-
-```
-@nekochans:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-```
 
 ## Node.js のインストール
 

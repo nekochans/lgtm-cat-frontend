@@ -6,7 +6,20 @@ import {
   type LgtmImage,
 } from '@/features';
 import { TopTemplate } from '@/templates';
+import {
+  sendClickTopFetchNewArrivalCatButton,
+  sendClickTopFetchRandomCatButton,
+  sendCopyMarkdownFromRandomButton,
+  sendCopyMarkdownFromTopImages,
+} from '@/utils';
 import type { GetStaticProps, NextPage } from 'next';
+
+const callbackFunctions = {
+  clipboardMarkdownCallback: sendCopyMarkdownFromTopImages,
+  fetchRandomCatImagesCallback: sendClickTopFetchRandomCatButton,
+  fetchNewArrivalCatImagesCallback: sendClickTopFetchNewArrivalCatButton,
+  catRandomCopyCallback: sendCopyMarkdownFromRandomButton,
+};
 
 type Props = {
   language: Language;
@@ -14,7 +27,11 @@ type Props = {
 };
 
 const IndexPage: NextPage<Props> = ({ language, lgtmImages }) => (
-  <TopTemplate language={language} lgtmImages={lgtmImages} />
+  <TopTemplate
+    language={language}
+    lgtmImages={lgtmImages}
+    callbackFunctions={callbackFunctions}
+  />
 );
 
 // eslint-disable-next-line max-statements

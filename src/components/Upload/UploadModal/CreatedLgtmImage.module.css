@@ -1,0 +1,19 @@
+.wrapper {
+  flex: none;
+  flex-grow: 0;
+  order: 0;
+}
+
+.image {
+  flex: none;
+  flex-grow: 0;
+  order: 0;
+  width: auto;
+  height: 270px;
+}
+
+@media (width <= 767px) {
+  .image {
+    max-width: 355px;
+  }
+}

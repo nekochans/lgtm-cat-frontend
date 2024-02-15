@@ -1,19 +1,41 @@
-import { MarkdownContents } from '@/components';
-import { i18nUrlList, languages, metaTagList, type Language } from '@/features';
+import {
+  LibraryBooks,
+  MarkdownContents,
+  MarkdownPageTitle,
+  ResponsiveLayout,
+} from '@/components';
+import {
+  createPrivacyPolicyLinksFromLanguages,
+  createTermsOfUseLinksFromLanguages,
+  i18nUrlList,
+  languages,
+  metaTagList,
+  type Language,
+} from '@/features';
+import { useSwitchLanguage } from '@/hooks';
 import { DefaultLayout } from '@/layouts';
 import { assertNever } from '@/utils';
-import {
-  TermsOrPrivacyTemplate as OrgTermsOrPrivacyTemplate,
-  useSwitchLanguage,
-  type TemplateType,
-} from '@nekochans/lgtm-cat-ui';
 import type { FC } from 'react';
+import styles from './TermsOrPrivacyTemplate.module.css';
+
+export type TemplateType = 'terms' | 'privacy';
 
 type Props = {
   type: TemplateType;
   language: Language;
   jaMarkdown: string;
   enMarkdown: string;
+};
+
+const createTitle = (type: TemplateType, language: Language): string => {
+  switch (type) {
+    case 'privacy':
+      return createPrivacyPolicyLinksFromLanguages(language).text;
+    case 'terms':
+      return createTermsOfUseLinksFromLanguages(language).text;
+    default:
+      return assertNever(type);
+  }
 };
 
 const createCanonicalLink = (type: TemplateType, language: Language) => {
@@ -73,21 +95,33 @@ export const TermsOrPrivacyTemplate: FC<Props> = ({
 
   const alternateUrls = createAlternateUrls(type);
 
+  const currentUrlPath =
+    type === 'terms'
+      ? createTermsOfUseLinksFromLanguages(language).link
+      : createPrivacyPolicyLinksFromLanguages(language).link;
+
   return (
     <DefaultLayout
       metaTag={metaTag}
       canonicalLink={canonicalLink}
       alternateUrls={alternateUrls}
     >
-      <OrgTermsOrPrivacyTemplate
-        type={type}
-        language={language}
-        isLanguageMenuDisplayed={isLanguageMenuDisplayed}
-        onClickLanguageButton={onClickLanguageButton}
-        onClickOutSideMenu={onClickOutSideMenu}
-      >
-        <MarkdownContents markdown={termsMarkdown} />
-      </OrgTermsOrPrivacyTemplate>
+      <div onClick={onClickOutSideMenu} aria-hidden="true">
+        <ResponsiveLayout
+          language={language}
+          isLanguageMenuDisplayed={isLanguageMenuDisplayed}
+          onClickLanguageButton={onClickLanguageButton}
+          currentUrlPath={currentUrlPath}
+        >
+          <div className={styles.wrapper}>
+            <MarkdownPageTitle text={createTitle(type, language)} />
+            <LibraryBooks />
+            <div className={styles['children-wrapper']}>
+              <MarkdownContents markdown={termsMarkdown} />
+            </div>
+          </div>
+        </ResponsiveLayout>
+      </div>
     </DefaultLayout>
   );
 };
