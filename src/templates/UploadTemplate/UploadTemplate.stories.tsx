@@ -1,5 +1,5 @@
-import { uploadCatImageUrl } from '@/features';
-import { mockUploadCatImage } from '@/mocks';
+import { isAcceptableCatImageUrl, uploadCatImageUrl } from '@/features';
+import { mockIsAcceptableCatImage, mockUploadCatImage } from '@/mocks';
 import type { Meta, StoryObj } from '@storybook/react';
 import { http } from 'msw';
 import { UploadTemplate } from '.';
@@ -18,7 +18,10 @@ export const ViewInJapanese: Story = {
   },
   parameters: {
     msw: {
-      handlers: [http.post(uploadCatImageUrl(), mockUploadCatImage)],
+      handlers: [
+        http.post(isAcceptableCatImageUrl(), mockIsAcceptableCatImage),
+        http.post(uploadCatImageUrl(), mockUploadCatImage),
+      ],
     },
   },
 };
@@ -29,7 +32,10 @@ export const ViewInEnglish: Story = {
   },
   parameters: {
     msw: {
-      handlers: [http.post(uploadCatImageUrl(), mockUploadCatImage)],
+      handlers: [
+        http.post(isAcceptableCatImageUrl(), mockIsAcceptableCatImage),
+        http.post(uploadCatImageUrl(), mockUploadCatImage),
+      ],
     },
   },
 };
