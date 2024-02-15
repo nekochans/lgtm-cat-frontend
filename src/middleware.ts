@@ -1,3 +1,4 @@
+import { httpStatusCode } from '@/constants';
 import { isBanCountry, isInMaintenance } from '@/edge';
 import {
   NextResponse,
@@ -14,9 +15,10 @@ export const middleware: NextMiddleware = async (req: NextRequest) => {
 
   const isBanCountryResult = await isBanCountry(req);
   if (isBanCountryResult) {
-    nextUrl.pathname = '/api/errors';
-
-    return NextResponse.rewrite(nextUrl);
+    return NextResponse.json(
+      { message: 'Not available from your region.' },
+      { status: httpStatusCode.forbidden },
+    );
   }
 
   const isInMaintenanceMode = await isInMaintenance();
