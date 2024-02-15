@@ -1,9 +1,3 @@
-# 基本方針
-
-UI Component は [@nekochans/lgtm-cat-ui](https://github.com/nekochans/lgtm-cat-ui) で開発します。
-
-よって本アプリケーションには UI Component はほとんど実装されずにビジネスロジックの実装が中心となります。
-
 # ディレクトリ構成について
 
 各ディレクトリの役割について記載します。
@@ -43,13 +37,7 @@ Component の内部で React hooks を利用する事は問題ありません。
 
 一部 `next/image` に依存しているものがありますが、将来的にこれは別のディレクトリに移動させるかもしれません。
 
-基本方針のところにも書きましたが、基本的に UI Component は [@nekochans/lgtm-cat-ui](https://github.com/nekochans/lgtm-cat-ui) で開発します。
-
-そのため、本アプリケーションには Component が実装される事はあまりないと思います。
-
-[@nekochans/lgtm-cat-ui](https://github.com/nekochans/lgtm-cat-ui) にも ReactNode を渡す Component がいくつか存在するので、そのような Component はここで実装する事になります。
-
-また `GoogleTagManager` などの UI の役割を持たない Component もここで定義する事になります。
+`GoogleTagManager` などの UI の役割を持たない Component もここで定義する事になります。
 
 ## constants
 
@@ -87,10 +75,6 @@ Node.js の API は利用出来ないので以下のドキュメントを参照�
 
 また外部ライブラリには依存せずに、順数な TypeScript のオブジェクト、または関数として実装します。
 
-ただし例外的に [@nekochans/lgtm-cat-ui](https://github.com/nekochans/lgtm-cat-ui) に定義している型定義や関数に依存している箇所があります。
-
-[@nekochans/lgtm-cat-ui](https://github.com/nekochans/lgtm-cat-ui) は自作 Package なので例外的にこれを認めています。
-
 ### features/errors
 
 ビジネス上意味のあるエラーオブジェクトを定義します。
@@ -127,17 +111,11 @@ Next.js に依存する処理以外は極力書かずに、その他の層に処
 
 ## styles
 
-大部分の Component を [@nekochans/lgtm-cat-ui](https://github.com/nekochans/lgtm-cat-ui) で開発しているので、CSS はほとんど登場しません。
-
-例外的に Markdown をスタイリングする為の CSS がここに格納されています。
+グローバル定義が必要なCSSを格納します。
 
 ## templates
 
 アトミックデザインで言うところの `Templates` が格納されます。
-
-大部分の Component を [@nekochans/lgtm-cat-ui](https://github.com/nekochans/lgtm-cat-ui) で開発しているので、本アプリケーションで作成する Component のほとんどは `Templates` になります。
-
-ここでは [@nekochans/lgtm-cat-ui](https://github.com/nekochans/lgtm-cat-ui) で作成した `Templates` Component を export して利用しています。
 
 アトミックデザインから用語を拝借しましたが、本プロジェクトではアトミックデザインに準拠している訳ではありません。
 
