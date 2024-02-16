@@ -1,3 +1,5 @@
+'use client';
+
 import type { LgtmImageUrl } from '@/features';
 import Clipboard from 'clipboard';
 import { useEffect, useRef, type MutableRefObject } from 'react';

@@ -1,3 +1,5 @@
+'use client';
+
 import { commonStateSelector, updateIsLanguageMenuDisplayed } from '@/stores';
 import type { MouseEvent, MouseEventHandler } from 'react';
 import { useSnapshot } from 'valtio';

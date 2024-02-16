@@ -1,3 +1,5 @@
+'use client';
+
 import { InternalServerErrorImage, ResponsiveLayout } from '@/components';
 import {
   appBaseUrl,
