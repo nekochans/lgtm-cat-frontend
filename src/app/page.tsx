@@ -1,14 +1,8 @@
 import { fetchLgtmImagesInRandom } from '@/api';
-import type { Language, LgtmImage } from '@/features';
 import { TopTemplate } from '@/templates';
 import type { NextPage } from 'next';
 
-type Props = {
-  language: Language;
-  lgtmImages: LgtmImage[];
-};
-
-const HomePage: NextPage<Props> = async () => {
+const HomePage: NextPage = async () => {
   const revalidate = 3600;
 
   const lgtmImages = await fetchLgtmImagesInRandom(revalidate);
