@@ -34,10 +34,7 @@ type Props = {
   lgtmImages: LgtmImage[];
 };
 
-export const TopTemplate: FC<Props> = ({
-  language,
-  lgtmImages,
-}) => {
+export const TopTemplate: FC<Props> = ({ language, lgtmImages }) => {
   const metaTag = metaTagList(language).top;
 
   const canonicalLink =
