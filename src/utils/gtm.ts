@@ -39,43 +39,64 @@ declare global {
 }
 
 export const sendClickTopFetchRandomCatButton = (): void => {
-  window.dataLayer.push({
-    event: 'ClickTopFetchRandomCatButton',
-  });
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+  if (window.dataLayer) {
+    window.dataLayer.push({
+      event: 'ClickTopFetchRandomCatButton',
+    });
+  }
 };
 
 export const sendClickTopFetchNewArrivalCatButton = (): void => {
-  window.dataLayer.push({
-    event: 'ClickTopFetchNewArrivalCatButton',
-  });
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+  if (window.dataLayer) {
+    window.dataLayer.push({
+      event: 'ClickTopFetchNewArrivalCatButton',
+    });
+  }
 };
 
 export const sendUploadedCatImage = (): void => {
-  window.dataLayer.push({
-    event: 'UploadedCatImage',
-  });
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+  if (window.dataLayer) {
+    window.dataLayer.push({
+      event: 'UploadedCatImage',
+    });
+  }
 };
 
 export const sendCopyMarkdownFromTopImages = (): void => {
-  window.dataLayer.push({
-    event: 'CopyMarkdownFromTopImages',
-  });
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+  if (window.dataLayer) {
+    window.dataLayer.push({
+      event: 'CopyMarkdownFromTopImages',
+    });
+  }
 };
 
 export const sendCopyMarkdownFromCreatedImage = (): void => {
-  window.dataLayer.push({
-    event: 'CopyMarkdownFromCreatedImage',
-  });
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+  if (window.dataLayer) {
+    window.dataLayer.push({
+      event: 'CopyMarkdownFromCreatedImage',
+    });
+  }
 };
 
 export const sendCopyMarkdownFromCopyButton = (): void => {
-  window.dataLayer.push({
-    event: 'CopyMarkdownFromCopyButton',
-  });
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+  if (window.dataLayer) {
+    window.dataLayer.push({
+      event: 'CopyMarkdownFromCopyButton',
+    });
+  }
 };
 
 export const sendCopyMarkdownFromRandomButton = (): void => {
-  window.dataLayer.push({
-    event: 'CopyMarkdownFromRandomButton',
-  });
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+  if (window.dataLayer) {
+    window.dataLayer.push({
+      event: 'CopyMarkdownFromRandomButton',
+    });
+  }
 };
