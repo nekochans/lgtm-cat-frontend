@@ -20,7 +20,7 @@ import {
 import { useSwitchLanguage } from '@/hooks';
 import { ErrorLayout } from '@/layouts';
 import { assertNever } from '@/utils';
-import { useRouter } from 'next/router';
+import { usePathname } from 'next/navigation';
 import type { FC } from 'react';
 
 type Props = {
@@ -70,9 +70,7 @@ const getMetaTag = (type: ErrorType, language: Language) => {
 export const ErrorTemplate: FC<Props> = ({ type, language }) => {
   const metaTag = getMetaTag(type, language);
 
-  const router = useRouter();
-
-  const currentUrlPath = router.pathname;
+  const currentUrlPath = usePathname();
 
   const { isLanguageMenuDisplayed, onClickLanguageButton, onClickOutSideMenu } =
     useSwitchLanguage();
