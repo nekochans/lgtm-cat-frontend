@@ -1,3 +1,5 @@
+'use client';
+
 import {
   LibraryBooks,
   MarkdownContents,
