@@ -1,10 +1,11 @@
-declare const styles: {
-  readonly wrapper: string;
-  readonly 'upper-section': string;
-  readonly 'separator-text': string;
-  readonly 'lower-section': string;
-  readonly 'lower-section-text': string;
-  readonly 'terms-link-text': string;
-  readonly 'privacy-link-text': string;
-};
-export = styles;
+declare const styles:
+  & Readonly<{ "wrapper": string }>
+  & Readonly<{ "upper-section": string }>
+  & Readonly<{ "separator-text": string }>
+  & Readonly<{ "lower-section": string }>
+  & Readonly<{ "lower-section-text": string }>
+  & Readonly<{ "terms-link-text": string }>
+  & Readonly<{ "privacy-link-text": string }>
+;
+export default styles;
+//# sourceMappingURL=./Footer.module.css.d.ts.map

@@ -1,18 +1,20 @@
-declare const styles: {
-  readonly wrapper: string;
-  readonly form: string;
-  readonly 'input-file-area': string;
-  readonly text: string;
-  readonly 'input-file': string;
-  readonly 'input-file-label': string;
-  readonly 'input-file-label-text': string;
-  readonly 'max-upload-size-text': string;
-  readonly 'caution-text-area': string;
-  readonly notes: string;
-  readonly 'description-area-wrapper': string;
-  readonly 'privacy-policy-area': string;
-  readonly 'privacy-link-text': string;
-  readonly 'upload-button-wrapper': string;
-  readonly 'fa-cloud-upload-alt': string;
-};
-export = styles;
+declare const styles:
+  & Readonly<{ "wrapper": string }>
+  & Readonly<{ "form": string }>
+  & Readonly<{ "form": string }>
+  & Readonly<{ "input-file-area": string }>
+  & Readonly<{ "text": string }>
+  & Readonly<{ "input-file": string }>
+  & Readonly<{ "input-file-label": string }>
+  & Readonly<{ "input-file-label-text": string }>
+  & Readonly<{ "max-upload-size-text": string }>
+  & Readonly<{ "caution-text-area": string }>
+  & Readonly<{ "notes": string }>
+  & Readonly<{ "description-area-wrapper": string }>
+  & Readonly<{ "privacy-policy-area": string }>
+  & Readonly<{ "privacy-link-text": string }>
+  & Readonly<{ "upload-button-wrapper": string }>
+  & Readonly<{ "fa-cloud-upload-alt": string }>
+;
+export default styles;
+//# sourceMappingURL=./UploadForm.module.css.d.ts.map

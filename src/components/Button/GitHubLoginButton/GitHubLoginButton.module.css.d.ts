@@ -1,5 +1,6 @@
-declare const styles: {
-  readonly button: string;
-  readonly 'fa-github': string;
-};
-export = styles;
+declare const styles:
+  & Readonly<{ "button": string }>
+  & Readonly<{ "fa-github": string }>
+;
+export default styles;
+//# sourceMappingURL=./GitHubLoginButton.module.css.d.ts.map

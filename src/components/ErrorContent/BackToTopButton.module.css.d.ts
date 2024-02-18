@@ -1,6 +1,9 @@
-declare const styles: {
-  readonly link: string;
-  readonly span: string;
-  readonly text: string;
-};
-export = styles;
+declare const styles:
+  & Readonly<{ "link": string }>
+  & Readonly<{ "span": string }>
+  & Readonly<{ "span": string }>
+  & Readonly<{ "text": string }>
+  & Readonly<{ "text": string }>
+;
+export default styles;
+//# sourceMappingURL=./BackToTopButton.module.css.d.ts.map
