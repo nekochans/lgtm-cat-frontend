@@ -1,6 +1,6 @@
 import type { Language } from '@/features';
 import { assertNever } from '@/utils';
-import type { FC, ComponentPropsWithoutRef } from 'react';
+import type { ComponentPropsWithoutRef, FC } from 'react';
 import styles from './RetryButton.module.css';
 
 const retryButtonText = {

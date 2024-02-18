@@ -4,7 +4,7 @@ import { RetryButton } from './RetryButton';
 const meta: Meta<typeof RetryButton> = {
   component: RetryButton,
   argTypes: {
-    onClick: { action: 'RetryButton clicked!' }
+    onClick: { action: 'RetryButton clicked!' },
   },
 };
 
