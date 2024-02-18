@@ -1,10 +1,13 @@
-declare const styles: {
-  readonly wrapper: string;
-  readonly 'contents-wrapper': string;
-  readonly title: string;
-  readonly 'form-wrapper': string;
-  readonly 'preview-image-wrapper': string;
-  readonly 'preview-image': string;
-  readonly 'confirm-message': string;
-};
-export = styles;
+declare const styles:
+  & Readonly<{ "wrapper": string }>
+  & Readonly<{ "wrapper": string }>
+  & Readonly<{ "contents-wrapper": string }>
+  & Readonly<{ "title": string }>
+  & Readonly<{ "form-wrapper": string }>
+  & Readonly<{ "preview-image-wrapper": string }>
+  & Readonly<{ "preview-image": string }>
+  & Readonly<{ "preview-image": string }>
+  & Readonly<{ "confirm-message": string }>
+;
+export default styles;
+//# sourceMappingURL=./UploadModal.module.css.d.ts.map

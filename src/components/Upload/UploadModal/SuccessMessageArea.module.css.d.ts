@@ -1,15 +1,16 @@
-declare const styles: {
-  readonly wrapper: string;
-  readonly title: string;
-  readonly 'contents-wrapper': string;
-  readonly 'main-message': string;
-  readonly 'under-section-wrapper': string;
-  readonly 'description-wrapper': string;
-  readonly 'description-text': string;
-  readonly 'button-group': string;
-  readonly 'close-button': string;
-  readonly 'close-button-text': string;
-  readonly 'markdown-source-copy-button': string;
-  readonly 'markdown-source-copy-button-text': string;
-};
-export = styles;
+declare const styles:
+  & Readonly<{ "wrapper": string }>
+  & Readonly<{ "title": string }>
+  & Readonly<{ "contents-wrapper": string }>
+  & Readonly<{ "main-message": string }>
+  & Readonly<{ "under-section-wrapper": string }>
+  & Readonly<{ "description-wrapper": string }>
+  & Readonly<{ "description-text": string }>
+  & Readonly<{ "button-group": string }>
+  & Readonly<{ "close-button": string }>
+  & Readonly<{ "close-button-text": string }>
+  & Readonly<{ "markdown-source-copy-button": string }>
+  & Readonly<{ "markdown-source-copy-button-text": string }>
+;
+export default styles;
+//# sourceMappingURL=./SuccessMessageArea.module.css.d.ts.map

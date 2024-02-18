@@ -1,4 +1,6 @@
 /* eslint-disable max-lines */
+'use client';
+
 import type { AppUrl } from '@/constants';
 import {
   createPrivacyPolicyLinksFromLanguages,

@@ -1,8 +1,13 @@
-declare const styles: {
-  readonly wrapper: string;
-  readonly 'cancel-button': string;
-  readonly 'cancel-button-text': string;
-  readonly 'upload-button': string;
-  readonly 'upload-button-text': string;
-};
-export = styles;
+declare const styles:
+  & Readonly<{ "wrapper": string }>
+  & Readonly<{ "cancel-button": string }>
+  & Readonly<{ "cancel-button": string }>
+  & Readonly<{ "cancel-button-text": string }>
+  & Readonly<{ "cancel-button-text": string }>
+  & Readonly<{ "upload-button": string }>
+  & Readonly<{ "upload-button": string }>
+  & Readonly<{ "upload-button-text": string }>
+  & Readonly<{ "upload-button-text": string }>
+;
+export default styles;
+//# sourceMappingURL=./ButtonGroup.module.css.d.ts.map

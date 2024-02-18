@@ -13,7 +13,7 @@ export type LgtmImage = { id: number; imageUrl: LgtmImageUrl };
 
 export type AcceptedTypesImageExtension = '.png' | '.jpg' | '.jpeg';
 
-export type FetchLgtmImages = () => Promise<LgtmImage[]>;
+export type FetchLgtmImages = (revalidate?: number) => Promise<LgtmImage[]>;
 
 export type IsAcceptableCatImageDto = {
   image: string;

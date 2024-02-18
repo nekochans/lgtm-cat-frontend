@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import { useState, type FC, type MouseEvent } from 'react';
 import { FaBars } from 'react-icons/fa';

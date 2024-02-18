@@ -1,5 +1,8 @@
-declare const styles: {
-  readonly wrapper: string;
-  readonly 'button-group': string;
-};
-export = styles;
+declare const styles:
+  & Readonly<{ "wrapper": string }>
+  & Readonly<{ "wrapper": string }>
+  & Readonly<{ "button-group": string }>
+  & Readonly<{ "button-group": string }>
+;
+export default styles;
+//# sourceMappingURL=./CatButtonGroup.module.css.d.ts.map

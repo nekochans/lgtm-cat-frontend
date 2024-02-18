@@ -1,7 +1,8 @@
-declare const styles: {
-  readonly wrapper: string;
-  readonly header: string;
-  readonly title: string;
-  readonly 'fa-bars': string;
-};
-export = styles;
+declare const styles:
+  & Readonly<{ "wrapper": string }>
+  & Readonly<{ "header": string }>
+  & Readonly<{ "title": string }>
+  & Readonly<{ "fa-bars": string }>
+;
+export default styles;
+//# sourceMappingURL=./Header.module.css.d.ts.map

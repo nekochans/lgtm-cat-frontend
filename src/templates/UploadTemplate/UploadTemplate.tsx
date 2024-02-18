@@ -1,3 +1,5 @@
+'use client';
+
 import { ResponsiveLayout, UploadForm } from '@/components';
 import {
   appBaseUrl,
@@ -13,9 +15,9 @@ import {
 } from '@/hooks';
 import { DefaultLayout } from '@/layouts';
 import {
-  type sendCopyMarkdownFromCopyButton,
-  type sendCopyMarkdownFromCreatedImage,
-  type sendUploadedCatImage,
+  sendCopyMarkdownFromCopyButton,
+  sendCopyMarkdownFromCreatedImage,
+  sendUploadedCatImage,
 } from '@/utils';
 import Image from 'next/image';
 import type { FC } from 'react';
@@ -28,14 +30,9 @@ const CatImage = () => (
 
 type Props = {
   language: Language;
-  callbackFunctions?: {
-    uploadCallback?: typeof sendUploadedCatImage;
-    onClickCreatedLgtmImage?: typeof sendCopyMarkdownFromCreatedImage;
-    onClickMarkdownSourceCopyButton?: typeof sendCopyMarkdownFromCopyButton;
-  };
 };
 
-export const UploadTemplate: FC<Props> = ({ language, callbackFunctions }) => {
+export const UploadTemplate: FC<Props> = ({ language }) => {
   const metaTag = metaTagList(language).upload;
 
   const canonicalLink =
@@ -72,11 +69,9 @@ export const UploadTemplate: FC<Props> = ({ language, callbackFunctions }) => {
             language={language}
             imageValidator={imageValidator}
             imageUploader={imageUploader}
-            uploadCallback={callbackFunctions?.uploadCallback}
-            onClickCreatedLgtmImage={callbackFunctions?.onClickCreatedLgtmImage}
-            onClickMarkdownSourceCopyButton={
-              callbackFunctions?.onClickMarkdownSourceCopyButton
-            }
+            uploadCallback={sendUploadedCatImage}
+            onClickCreatedLgtmImage={sendCopyMarkdownFromCreatedImage}
+            onClickMarkdownSourceCopyButton={sendCopyMarkdownFromCopyButton}
             appUrl={appBaseUrl()}
           />
           <div className={styles['image-wrapper']}>

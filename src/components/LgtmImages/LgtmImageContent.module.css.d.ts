@@ -1,4 +1,6 @@
-declare const styles: {
-  readonly wrapper: string;
-};
-export = styles;
+declare const styles:
+  & Readonly<{ "wrapper": string }>
+  & Readonly<{ "wrapper": string }>
+;
+export default styles;
+//# sourceMappingURL=./LgtmImageContent.module.css.d.ts.map
