@@ -3,7 +3,6 @@ import { assertNever } from '@/utils';
 import type { FC, ReactNode } from 'react';
 import { BackToTopButton } from './BackToTopButton';
 import styles from './ErrorContent.module.css';
-import { RetryButton } from './RetryButton';
 
 const errorTitleText = {
   notFound: '404 Not Found',
@@ -94,7 +93,6 @@ export type Props = {
   language: Language;
   catImage: ReactNode;
   shouldDisplayBackToTopButton: boolean;
-  onClickRetryButton?: () => void;
 };
 
 export const ErrorContent: FC<Props> = ({
@@ -102,7 +100,6 @@ export const ErrorContent: FC<Props> = ({
   catImage,
   language,
   shouldDisplayBackToTopButton,
-  onClickRetryButton,
 }) => (
   <div className={styles.wrapper}>
     <div className={styles.title}>{createErrorTitleText(type)}</div>
@@ -112,16 +109,6 @@ export const ErrorContent: FC<Props> = ({
     </div>
     {shouldDisplayBackToTopButton ? (
       <BackToTopButton language={language} />
-    ) : (
-      ''
-    )}
-    {onClickRetryButton ? (
-      <RetryButton
-        language={language}
-        onClick={() => {
-          onClickRetryButton();
-        }}
-      />
     ) : (
       ''
     )}
