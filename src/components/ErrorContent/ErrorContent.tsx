@@ -94,7 +94,7 @@ export type Props = {
   language: Language;
   catImage: ReactNode;
   shouldDisplayBackToTopButton: boolean;
-  retryButtonFunction?: () => void;
+  onClickRetryButton?: () => void;
 };
 
 export const ErrorContent: FC<Props> = ({
@@ -102,7 +102,7 @@ export const ErrorContent: FC<Props> = ({
   catImage,
   language,
   shouldDisplayBackToTopButton,
-  retryButtonFunction,
+  onClickRetryButton,
 }) => (
   <div className={styles.wrapper}>
     <div className={styles.title}>{createErrorTitleText(type)}</div>
@@ -115,11 +115,11 @@ export const ErrorContent: FC<Props> = ({
     ) : (
       ''
     )}
-    {retryButtonFunction ? (
+    {onClickRetryButton ? (
       <RetryButton
         language={language}
         onClick={() => {
-          retryButtonFunction();
+          onClickRetryButton();
         }}
       />
     ) : (

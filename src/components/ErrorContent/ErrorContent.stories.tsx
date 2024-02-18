@@ -67,3 +67,27 @@ export const ServiceUnavailableViewInEnglish: Story = {
     shouldDisplayBackToTopButton: true,
   },
 };
+
+export const ShowRetryButtonViewInJapanese: Story = {
+  args: {
+    type: 500,
+    language: 'ja',
+    catImage: <InternalServerErrorImage />,
+    shouldDisplayBackToTopButton: false,
+    onClickRetryButton: () => {
+      console.log('RetryButton clicked!');
+    },
+  },
+};
+
+export const ShowRetryButtonViewInEnglish: Story = {
+  args: {
+    type: 500,
+    language: 'en',
+    catImage: <InternalServerErrorImage />,
+    shouldDisplayBackToTopButton: false,
+    onClickRetryButton: () => {
+      console.log('RetryButton clicked!');
+    },
+  },
+};

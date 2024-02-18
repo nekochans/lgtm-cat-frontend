@@ -44,7 +44,7 @@ const Error = ({ error, reset }: Props): JSX.Element => {
             language={language}
             catImage={<InternalServerErrorImage />}
             shouldDisplayBackToTopButton={false}
-            retryButtonFunction={reset}
+            onClickRetryButton={reset}
           />
         </ResponsiveLayout>
       </div>
