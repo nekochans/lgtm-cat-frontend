@@ -15,4 +15,14 @@ export default meta;
 
 type Story = StoryObj<typeof CatButtonGroup>;
 
-export const Default: Story = {};
+export const ViewInJapanese: Story = {
+  args: {
+    language: 'ja',
+  },
+};
+
+export const ViewInEnglish: Story = {
+  args: {
+    language: 'en',
+  },
+};

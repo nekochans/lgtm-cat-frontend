@@ -51,6 +51,7 @@ export const LgtmImagesContents: FC<Props> = ({
         callback={catRandomCopyCallback}
       />
       <CatButtonGroup
+        language={language}
         onClickFetchRandomCatButton={onClickFetchRandomCatButton}
         onClickFetchNewArrivalCatButton={onClickFetchNewArrivalCatButton}
       />

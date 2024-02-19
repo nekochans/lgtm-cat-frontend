@@ -39,6 +39,27 @@ export type AppPathName =
   | 'privacy'
   | 'maintenance';
 
+type AppPath = (typeof appPathList)[keyof typeof appPathList];
+
+type IncludeLanguageAppPath =
+  | AppPath
+  | `/${Language}${AppPath}`
+  | `/${Language}`
+  | '/';
+
+export const createIncludeLanguageAppPath = (
+  appPathName: AppPathName,
+  language: Language,
+): IncludeLanguageAppPath => {
+  if (appPathName === 'top' && language === 'en') {
+    return `/${language}`;
+  }
+
+  return language === 'en'
+    ? (`/en${appPathList[appPathName]}` as const)
+    : appPathList[appPathName];
+};
+
 export const appUrlList = {
   top: appBaseUrl(),
   ogpImg: `${appBaseUrl()}/ogp.webp` as const,
