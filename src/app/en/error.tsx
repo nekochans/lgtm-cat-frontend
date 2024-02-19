@@ -2,6 +2,7 @@
 
 import { httpStatusCode } from '@/constants';
 import { ErrorTemplate } from '@/templates';
+import { usePathname } from 'next/navigation';
 import { useEffect, type JSX } from 'react';
 
 type Props = {
@@ -16,10 +17,13 @@ const Error = ({ error }: Props): JSX.Element => {
 
   const language = 'en';
 
+  const currentUrlPath = usePathname();
+
   return (
     <ErrorTemplate
       type={httpStatusCode.internalServerError}
       language={language}
+      currentUrlPath={currentUrlPath}
     />
   );
 };
