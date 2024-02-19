@@ -1,6 +1,6 @@
 import 'ress/ress.css';
-import '../styles/globals.css';
-import '../styles/markdown.css';
+import '../../styles/globals.css';
+import '../../styles/markdown.css';
 import { GoogleTagManager } from '@/components';
 import { metaTagList } from '@/features';
 import { googleTagManagerId } from '@/utils';
@@ -10,14 +10,14 @@ type Props = {
   children: ReactNode;
 };
 
-const language = 'ja';
+const language = 'en';
 
 export const metadata = {
   title: metaTagList(language).top.title,
   description: metaTagList(language).top.description,
 };
 
-const RootLayout = ({ children }: Props): JSX.Element => {
+const EnLayout = ({ children }: Props): JSX.Element => {
   return (
     <html lang={language} prefix="og: https://ogp.me/ns#">
       <head>
@@ -33,4 +33,4 @@ const RootLayout = ({ children }: Props): JSX.Element => {
   );
 };
 
-export default RootLayout;
+export default EnLayout;
