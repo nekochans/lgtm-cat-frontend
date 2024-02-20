@@ -24,6 +24,5 @@ export const mightExtractLanguageFromUrlPath = (
     }
   }
 
-  // 言語コードが見つからない場合は null を返す
   return null;
 };

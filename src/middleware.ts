@@ -37,7 +37,7 @@ export const middleware: NextMiddleware = async (req: NextRequest) => {
   const isInMaintenanceMode = await isInMaintenance();
   if (isInMaintenanceMode) {
     nextUrl.pathname = '/maintenance';
-    if (isLanguage(language)) {
+    if (isLanguage(language) && language !== 'ja') {
       nextUrl.pathname = `${language}/maintenance`;
     }
 
