@@ -1,5 +1,6 @@
 import { httpStatusCode } from '@/constants';
 import { isBanCountry, isInMaintenance } from '@/edge';
+import { isLanguage, mightExtractLanguageFromUrlPath } from '@/features';
 import {
   NextResponse,
   type NextMiddleware,
@@ -7,7 +8,18 @@ import {
 } from 'next/server';
 
 export const config = {
-  matcher: ['/', '/upload', '/terms', '/privacy', '/maintenance'],
+  matcher: [
+    '/',
+    '/en',
+    '/upload',
+    '/en/upload',
+    '/terms',
+    '/en/terms',
+    '/privacy',
+    '/en/privacy',
+    '/maintenance',
+    '/en/maintenance',
+  ],
 };
 
 export const middleware: NextMiddleware = async (req: NextRequest) => {
@@ -21,9 +33,13 @@ export const middleware: NextMiddleware = async (req: NextRequest) => {
     );
   }
 
+  const language = mightExtractLanguageFromUrlPath(nextUrl.pathname);
   const isInMaintenanceMode = await isInMaintenance();
   if (isInMaintenanceMode) {
     nextUrl.pathname = '/maintenance';
+    if (isLanguage(language)) {
+      nextUrl.pathname = `${language}/maintenance`;
+    }
 
     return NextResponse.rewrite(nextUrl);
   }
