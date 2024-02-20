@@ -1,4 +1,4 @@
-import { languages, type Language } from '@/features';
+import { removeLanguageFromUrlPath, type Language } from '@/features';
 import Link from 'next/link';
 import type { FC } from 'react';
 import { FaAngleRight } from 'react-icons/fa';
@@ -9,14 +9,8 @@ export type Props = {
   currentUrlPath: string;
 };
 
-const removeLanguageFromPath = (path: string): string => {
-  const languageRegex = new RegExp(`/(?:${languages.join('|')})(/|$)`, 'g');
-
-  return path.replace(languageRegex, '$1');
-};
-
 export const LanguageMenu: FC<Props> = ({ language, currentUrlPath }) => {
-  const removedLanguagePath = removeLanguageFromPath(currentUrlPath);
+  const removedLanguagePath = removeLanguageFromUrlPath(currentUrlPath);
 
   return (
     <nav className={styles.wrapper}>
