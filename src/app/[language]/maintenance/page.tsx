@@ -1,16 +1,32 @@
 import { httpStatusCode } from '@/constants';
-import { createIncludeLanguageAppPath } from '@/features';
+import {
+  createIncludeLanguageAppPath,
+  isLanguage,
+  type Language,
+} from '@/features';
 import { ErrorTemplate } from '@/templates';
 import type { NextPage } from 'next';
+import { notFound } from 'next/navigation';
 
-const MaintenancePage: NextPage = () => {
-  const language = 'en';
+type Props = {
+  params: {
+    language: Language;
+  };
+};
+
+const MaintenancePage: NextPage<Props> = ({ params }) => {
+  if (!isLanguage(params.language)) {
+    notFound();
+  }
 
   return (
     <ErrorTemplate
       type={httpStatusCode.serviceUnavailable}
-      language={language}
-      currentUrlPath={createIncludeLanguageAppPath('maintenance', language)}
+      language={params.language}
+      currentUrlPath={createIncludeLanguageAppPath(
+        'maintenance',
+        params.language,
+      )}
     />
   );
 };

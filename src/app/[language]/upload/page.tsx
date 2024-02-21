@@ -1,10 +1,20 @@
+import { isLanguage, type Language } from '@/features';
 import { UploadTemplate } from '@/templates';
 import type { NextPage } from 'next';
+import { notFound } from 'next/navigation';
 
-const UploadPage: NextPage = () => {
-  const language = 'en';
+type Props = {
+  params: {
+    language: Language;
+  };
+};
 
-  return <UploadTemplate language={language} />;
+const UploadPage: NextPage<Props> = ({ params }) => {
+  if (!isLanguage(params.language)) {
+    notFound();
+  }
+
+  return <UploadTemplate language={params.language} />;
 };
 
 export default UploadPage;

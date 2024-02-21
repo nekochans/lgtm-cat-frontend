@@ -1,8 +1,20 @@
 import fs from 'fs';
+import { isLanguage, type Language } from '@/features';
 import { TermsOrPrivacyTemplate } from '@/templates';
 import type { NextPage } from 'next';
+import { notFound } from 'next/navigation';
 
-const PrivacyPage: NextPage = async () => {
+type Props = {
+  params: {
+    language: Language;
+  };
+};
+
+const PrivacyPage: NextPage<Props> = async ({ params }) => {
+  if (!isLanguage(params.language)) {
+    notFound();
+  }
+
   const fsPromise = fs.promises;
 
   const privacyJa = await fsPromise.readFile(
@@ -19,12 +31,10 @@ const PrivacyPage: NextPage = async () => {
     },
   );
 
-  const language = 'en';
-
   return (
     <TermsOrPrivacyTemplate
       type="privacy"
-      language={language}
+      language={params.language}
       jaMarkdown={privacyJa}
       enMarkdown={privacyEn}
     />
