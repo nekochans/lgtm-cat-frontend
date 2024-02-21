@@ -12,12 +12,13 @@ type Props = {
 
 const language = 'en';
 
+// TODO 言語毎に動的にmetaタグを設定出来るようにする
 export const metadata = {
   title: metaTagList(language).top.title,
   description: metaTagList(language).top.description,
 };
 
-const EnLayout = ({ children }: Props): JSX.Element => {
+const InternationalizationLayout = ({ children }: Props): JSX.Element => {
   return (
     <html lang={language} prefix="og: https://ogp.me/ns#">
       <head>
@@ -33,4 +34,4 @@ const EnLayout = ({ children }: Props): JSX.Element => {
   );
 };
 
-export default EnLayout;
+export default InternationalizationLayout;
