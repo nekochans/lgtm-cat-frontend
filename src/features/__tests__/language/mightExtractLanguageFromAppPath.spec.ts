@@ -1,13 +1,13 @@
 import {
   type IncludeLanguageAppPath,
-  mightExtractLanguageFromUrlPath,
+  mightExtractLanguageFromAppPath,
   type Language,
 } from '@/features';
 import { describe, expect, it } from 'vitest';
 
-describe('src/features/language.ts mightExtractLanguageFromUrlPath TestCases', () => {
+describe('src/features/language.ts mightExtractLanguageFromAppPath TestCases', () => {
   type TestTable = {
-    urlPath: IncludeLanguageAppPath;
+    appPath: IncludeLanguageAppPath;
     expected: Language | null;
   };
 
@@ -21,9 +21,9 @@ describe('src/features/language.ts mightExtractLanguageFromUrlPath TestCases', (
     ${'/upload/ja'} | ${'ja'}
     ${'en/terms'}   | ${null}
   `(
-    'should return language. urlPath: $urlPath',
-    ({ urlPath, expected }: TestTable) => {
-      expect(mightExtractLanguageFromUrlPath(urlPath)).toStrictEqual(expected);
+    'should return language. appPath: $appPath',
+    ({ appPath, expected }: TestTable) => {
+      expect(mightExtractLanguageFromAppPath(appPath)).toStrictEqual(expected);
     },
   );
 });

@@ -1,12 +1,12 @@
 import {
-  removeLanguageFromUrlPath,
+  removeLanguageFromAppPath,
   type IncludeLanguageAppPath,
 } from '@/features';
 import { describe, expect, it } from 'vitest';
 
-describe('src/features/language.ts removeLanguageFromUrlPath TestCases', () => {
+describe('src/features/language.ts removeLanguageFromAppPath TestCases', () => {
   type TestTable = {
-    urlPath: IncludeLanguageAppPath;
+    appPath: IncludeLanguageAppPath;
     expected: string;
   };
 
@@ -19,9 +19,9 @@ describe('src/features/language.ts removeLanguageFromUrlPath TestCases', () => {
     ${'/upload/en'} | ${'/upload'}
     ${'/upload/ja'} | ${'/upload'}
   `(
-    'should return removed language path. urlPath: $urlPath',
-    ({ urlPath, expected }: TestTable) => {
-      expect(removeLanguageFromUrlPath(urlPath)).toStrictEqual(expected);
+    'should return removed language path. appPath: $appPath',
+    ({ appPath, expected }: TestTable) => {
+      expect(removeLanguageFromAppPath(appPath)).toStrictEqual(expected);
     },
   );
 });

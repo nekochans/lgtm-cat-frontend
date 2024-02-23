@@ -4,10 +4,10 @@ export const languages = ['en', 'ja'] as const;
 
 export type Language = (typeof languages)[number];
 
-export const removeLanguageFromUrlPath = (
-  urlPath: IncludeLanguageAppPath,
+export const removeLanguageFromAppPath = (
+  appPath: IncludeLanguageAppPath,
 ): IncludeLanguageAppPath => {
-  let newUrlPath: string = urlPath;
+  let newUrlPath: string = appPath;
 
   languages.forEach((language) => {
     newUrlPath = newUrlPath.replace(`/${language}`, '');
@@ -24,11 +24,11 @@ export const isLanguage = (value: unknown): value is Language => {
   return languages.includes(value as Language);
 };
 
-export const mightExtractLanguageFromUrlPath = (
-  urlPath: IncludeLanguageAppPath,
+export const mightExtractLanguageFromAppPath = (
+  appPath: IncludeLanguageAppPath,
 ): Language | null => {
   const languageRegex = new RegExp(`/(${languages.join('|')})(/|$)`);
-  const match = urlPath.match(languageRegex);
+  const match = appPath.match(languageRegex);
 
   if (match?.[1] != null) {
     if (isLanguage(match[1])) {

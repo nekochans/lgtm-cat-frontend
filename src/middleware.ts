@@ -2,8 +2,8 @@ import { httpStatusCode } from '@/constants';
 import { isBanCountry, isInMaintenance } from '@/edge';
 import {
   isLanguage,
-  mightExtractLanguageFromUrlPath,
-  removeLanguageFromUrlPath,
+  mightExtractLanguageFromAppPath,
+  removeLanguageFromAppPath,
 } from '@/features';
 import {
   NextResponse,
@@ -42,7 +42,7 @@ export const middleware: NextMiddleware = async (req: NextRequest) => {
     );
   }
 
-  const language = mightExtractLanguageFromUrlPath(nextUrl.pathname);
+  const language = mightExtractLanguageFromAppPath(nextUrl.pathname);
   const isInMaintenanceMode = await isInMaintenance();
   if (isInMaintenanceMode) {
     nextUrl.pathname = '/maintenance';
@@ -54,7 +54,7 @@ export const middleware: NextMiddleware = async (req: NextRequest) => {
   }
 
   if (language === 'ja') {
-    const removedLanguagePath = removeLanguageFromUrlPath(nextUrl.pathname);
+    const removedLanguagePath = removeLanguageFromAppPath(nextUrl.pathname);
     if (nextUrl.pathname !== '/ja') {
       return NextResponse.redirect(new URL(removedLanguagePath, req.url));
     }
