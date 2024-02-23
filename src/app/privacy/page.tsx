@@ -5,6 +5,10 @@ import type { NextPage } from 'next';
 const PrivacyPage: NextPage = async () => {
   const fsPromise = fs.promises;
 
+  console.log('src/app/privacy/page.tsx');
+  console.log(`${process.cwd()}/src/docs/privacy.ja.md`);
+  console.log('src/app/privacy/page.tsx');
+
   const privacyJa = await fsPromise.readFile(
     `${process.cwd()}/src/docs/privacy.ja.md`,
     {
