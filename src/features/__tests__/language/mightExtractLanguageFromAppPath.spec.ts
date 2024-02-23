@@ -12,7 +12,7 @@ describe('src/features/language.ts mightExtractLanguageFromAppPath TestCases', (
   };
 
   it.each`
-    urlPath         | expected
+    appPath         | expected
     ${'/en'}        | ${'en'}
     ${'/ja'}        | ${'ja'}
     ${'/en/upload'} | ${'en'}

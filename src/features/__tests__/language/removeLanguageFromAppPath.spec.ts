@@ -11,7 +11,7 @@ describe('src/features/language.ts removeLanguageFromAppPath TestCases', () => {
   };
 
   it.each`
-    urlPath         | expected
+    appPath         | expected
     ${'/en'}        | ${'/'}
     ${'/ja'}        | ${'/'}
     ${'/en/upload'} | ${'/upload'}

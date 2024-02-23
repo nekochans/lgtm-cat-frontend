@@ -1,4 +1,4 @@
-import { removeLanguageFromAppPath, type Language } from '@/features';
+import { removeLanguageFromAppPath, type Language, IncludeLanguageAppPath } from '@/features';
 import Link from 'next/link';
 import type { FC } from 'react';
 import { FaAngleRight } from 'react-icons/fa';
@@ -6,7 +6,7 @@ import styles from './LanguageMenu.module.css';
 
 export type Props = {
   language: Language;
-  currentUrlPath: string;
+  currentUrlPath: IncludeLanguageAppPath;
 };
 
 export const LanguageMenu: FC<Props> = ({ language, currentUrlPath }) => {
