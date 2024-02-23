@@ -15,17 +15,18 @@ import {
   metaTagList,
   notFoundMetaTag,
   type ErrorType,
+  type IncludeLanguageAppPath,
   type Language,
 } from '@/features';
 import { useSwitchLanguage } from '@/hooks';
 import { ErrorLayout } from '@/layouts';
 import { assertNever } from '@/utils';
-import { usePathname } from 'next/navigation';
 import type { FC } from 'react';
 
 type Props = {
   type: ErrorType;
   language: Language;
+  currentUrlPath: IncludeLanguageAppPath;
 };
 
 const catImage = (type: ErrorType): JSX.Element => {
@@ -67,10 +68,12 @@ const getMetaTag = (type: ErrorType, language: Language) => {
   }
 };
 
-export const ErrorTemplate: FC<Props> = ({ type, language }) => {
+export const ErrorTemplate: FC<Props> = ({
+  type,
+  language,
+  currentUrlPath,
+}) => {
   const metaTag = getMetaTag(type, language);
-
-  const currentUrlPath = usePathname();
 
   const { isLanguageMenuDisplayed, onClickLanguageButton, onClickOutSideMenu } =
     useSwitchLanguage();

@@ -15,11 +15,6 @@ const baseConfig = {
       },
     ],
   },
-  i18n: {
-    locales: ['ja', 'en'],
-    defaultLocale: 'ja',
-    localeDetection: false,
-  },
   swcMinify: true,
 };
 

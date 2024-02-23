@@ -1,5 +1,6 @@
 'use client';
 
+import { createIncludeLanguageAppPath } from '@/features';
 import Link from 'next/link';
 import { useState, type FC, type MouseEvent } from 'react';
 import { FaBars } from 'react-icons/fa';
@@ -56,7 +57,10 @@ export const Header: FC<Props> = ({
       <div className={styles.wrapper}>
         <div className={styles.header}>
           <FaBars className={styles['fa-bars']} onClick={openMenu} />
-          <Link href="/" prefetch={false}>
+          <Link
+            href={createIncludeLanguageAppPath('top', language)}
+            prefetch={false}
+          >
             <span className={styles.title} data-gtm-click="header-app-title">
               LGTMeow
             </span>

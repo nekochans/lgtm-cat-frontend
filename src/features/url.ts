@@ -1,4 +1,4 @@
-import { type Language } from './language';
+import { languages, type Language } from './language';
 
 export type Url = `http://localhost${string}` | `https://${string}`;
 
@@ -38,6 +38,59 @@ export type AppPathName =
   | 'terms'
   | 'privacy'
   | 'maintenance';
+
+type AppPath = (typeof appPathList)[keyof typeof appPathList];
+
+export type IncludeLanguageAppPath =
+  | AppPath
+  | `/${Language}${AppPath}`
+  | `/${Language}`
+  | '/';
+
+export const isIncludeLanguageAppPath = (
+  value: unknown,
+): value is IncludeLanguageAppPath => {
+  const appPaths: string[] = Object.values(appPathList);
+
+  if (typeof value !== 'string') {
+    return false;
+  }
+
+  if (value === '/') {
+    return true;
+  }
+
+  if (languages.some((language) => value === `/${language}`)) {
+    return true;
+  }
+
+  if (
+    languages.some((language) =>
+      appPaths.some((path) => value === `/${language}${path}`),
+    )
+  ) {
+    return true;
+  }
+
+  if (appPaths.includes(value)) {
+    return true;
+  }
+
+  return false;
+};
+
+export const createIncludeLanguageAppPath = (
+  appPathName: AppPathName,
+  language: Language,
+): IncludeLanguageAppPath => {
+  if (appPathName === 'top' && language === 'en') {
+    return `/${language}`;
+  }
+
+  return language === 'en'
+    ? (`/en${appPathList[appPathName]}` as const)
+    : appPathList[appPathName];
+};
 
 export const appUrlList = {
   top: appBaseUrl(),

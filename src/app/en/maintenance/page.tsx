@@ -4,7 +4,7 @@ import { ErrorTemplate } from '@/templates';
 import type { NextPage } from 'next';
 
 const MaintenancePage: NextPage = () => {
-  const language = 'ja';
+  const language = 'en';
 
   return (
     <ErrorTemplate

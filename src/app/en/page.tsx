@@ -3,13 +3,11 @@ import { TopTemplate } from '@/templates';
 import type { NextPage } from 'next';
 
 const HomePage: NextPage = async () => {
-  const language = 'ja';
-
   const revalidate = 3600;
 
   const lgtmImages = await fetchLgtmImagesInRandom(revalidate);
 
-  return <TopTemplate language={language} lgtmImages={lgtmImages} />;
+  return <TopTemplate language="en" lgtmImages={lgtmImages} />;
 };
 
 export default HomePage;

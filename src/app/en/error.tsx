@@ -16,13 +16,13 @@ const Error = ({ error }: Props): JSX.Element => {
     console.error(error);
   }, [error]);
 
-  const language = 'ja';
+  const language = 'en';
 
   const currentUrlPath = usePathname();
 
   const appPath = isIncludeLanguageAppPath(currentUrlPath)
     ? currentUrlPath
-    : '/';
+    : `/${language}`;
 
   return (
     <ErrorTemplate
