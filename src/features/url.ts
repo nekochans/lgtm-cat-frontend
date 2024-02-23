@@ -1,4 +1,4 @@
-import { type Language } from './language';
+import { languages, type Language } from './language';
 
 export type Url = `http://localhost${string}` | `https://${string}`;
 
@@ -46,6 +46,40 @@ type IncludeLanguageAppPath =
   | `/${Language}${AppPath}`
   | `/${Language}`
   | '/';
+
+export const isIncludeLanguageAppPath = (
+  value: unknown,
+): value is IncludeLanguageAppPath => {
+  const appPaths: string[] = Object.values(appPathList);
+
+  if (typeof value !== 'string') {
+    return false;
+  }
+
+  // ルートパスの場合
+  if (value === '/') {
+    return true;
+  }
+
+  // Language 単体のパスの場合
+  if (languages.some((language) => value === `/${language}`)) {
+    return true;
+  }
+
+  if (
+    languages.some((language) =>
+      appPaths.some((path) => value === `/${language}${path}`),
+    )
+  ) {
+    return true;
+  }
+
+  if (appPaths.includes(value)) {
+    return true;
+  }
+
+  return false;
+};
 
 export const createIncludeLanguageAppPath = (
   appPathName: AppPathName,
