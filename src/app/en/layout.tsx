@@ -12,7 +12,6 @@ type Props = {
 
 const language = 'en';
 
-// TODO 言語毎に動的にmetaタグを設定出来るようにする
 export const metadata = {
   title: metaTagList(language).top.title,
   description: metaTagList(language).top.description,
