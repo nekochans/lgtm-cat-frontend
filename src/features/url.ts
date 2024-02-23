@@ -41,7 +41,7 @@ export type AppPathName =
 
 type AppPath = (typeof appPathList)[keyof typeof appPathList];
 
-type IncludeLanguageAppPath =
+export type IncludeLanguageAppPath =
   | AppPath
   | `/${Language}${AppPath}`
   | `/${Language}`

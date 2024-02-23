@@ -1,9 +1,13 @@
-import { mightExtractLanguageFromUrlPath, type Language } from '@/features';
+import {
+  type IncludeLanguageAppPath,
+  mightExtractLanguageFromUrlPath,
+  type Language,
+} from '@/features';
 import { describe, expect, it } from 'vitest';
 
 describe('src/features/language.ts mightExtractLanguageFromUrlPath TestCases', () => {
   type TestTable = {
-    urlPath: string;
+    urlPath: IncludeLanguageAppPath;
     expected: Language | null;
   };
 
