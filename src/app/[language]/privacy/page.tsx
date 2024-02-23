@@ -17,10 +17,6 @@ const PrivacyPage: NextPage<Props> = async ({ params }) => {
 
   const fsPromise = fs.promises;
 
-  console.log('src/app/[language]/privacy/page.tsx');
-  console.log(`${process.cwd()}/src/docs/privacy.ja.md`);
-  console.log('src/app/[language]/privacy/page.tsx');
-
   const privacyJa = await fsPromise.readFile(
     `${process.cwd()}/src/docs/privacy.ja.md`,
     {
