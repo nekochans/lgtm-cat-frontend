@@ -56,12 +56,10 @@ export const isIncludeLanguageAppPath = (
     return false;
   }
 
-  // ルートパスの場合
   if (value === '/') {
     return true;
   }
 
-  // Language 単体のパスの場合
   if (languages.some((language) => value === `/${language}`)) {
     return true;
   }
