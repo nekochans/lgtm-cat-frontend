@@ -15,6 +15,7 @@ import {
   metaTagList,
   notFoundMetaTag,
   type ErrorType,
+  type IncludeLanguageAppPath,
   type Language,
 } from '@/features';
 import { useSwitchLanguage } from '@/hooks';
@@ -25,7 +26,7 @@ import type { FC } from 'react';
 type Props = {
   type: ErrorType;
   language: Language;
-  currentUrlPath: string;
+  currentUrlPath: IncludeLanguageAppPath;
 };
 
 const catImage = (type: ErrorType): JSX.Element => {

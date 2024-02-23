@@ -1,6 +1,7 @@
 'use client';
 
 import { httpStatusCode } from '@/constants';
+import { isIncludeLanguageAppPath } from '@/features';
 import { ErrorTemplate } from '@/templates';
 import { usePathname } from 'next/navigation';
 import { useEffect, type JSX } from 'react';
@@ -19,11 +20,15 @@ const Error = ({ error }: Props): JSX.Element => {
 
   const currentUrlPath = usePathname();
 
+  const appPath = isIncludeLanguageAppPath(currentUrlPath)
+    ? currentUrlPath
+    : `/${language}`;
+
   return (
     <ErrorTemplate
       type={httpStatusCode.internalServerError}
       language={language}
-      currentUrlPath={currentUrlPath}
+      currentUrlPath={appPath}
     />
   );
 };

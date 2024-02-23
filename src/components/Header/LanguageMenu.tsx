@@ -1,4 +1,8 @@
-import { removeLanguageFromAppPath, type Language, IncludeLanguageAppPath } from '@/features';
+import {
+  removeLanguageFromAppPath,
+  type IncludeLanguageAppPath,
+  type Language,
+} from '@/features';
 import Link from 'next/link';
 import type { FC } from 'react';
 import { FaAngleRight } from 'react-icons/fa';

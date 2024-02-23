@@ -1,4 +1,6 @@
+import type { IncludeLanguageAppPath } from '@/features/url';
+
 export type LinkAttribute = {
   text: string;
-  link: `https://${string}` | `/${string}`;
+  link: IncludeLanguageAppPath;
 };

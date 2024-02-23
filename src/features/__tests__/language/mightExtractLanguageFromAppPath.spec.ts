@@ -1,6 +1,6 @@
 import {
-  type IncludeLanguageAppPath,
   mightExtractLanguageFromAppPath,
+  type IncludeLanguageAppPath,
   type Language,
 } from '@/features';
 import { describe, expect, it } from 'vitest';

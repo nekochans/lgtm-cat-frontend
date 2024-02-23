@@ -1,6 +1,7 @@
 import { httpStatusCode } from '@/constants';
 import { isBanCountry, isInMaintenance } from '@/edge';
 import {
+  isIncludeLanguageAppPath,
   isLanguage,
   mightExtractLanguageFromAppPath,
   removeLanguageFromAppPath,
@@ -39,6 +40,13 @@ export const middleware: NextMiddleware = async (req: NextRequest) => {
     return NextResponse.json(
       { message: 'Not available from your region.' },
       { status: httpStatusCode.forbidden },
+    );
+  }
+
+  if (!isIncludeLanguageAppPath(nextUrl.pathname)) {
+    return NextResponse.json(
+      { message: 'An unexpected error has occurred.' },
+      { status: httpStatusCode.internalServerError },
     );
   }
 
