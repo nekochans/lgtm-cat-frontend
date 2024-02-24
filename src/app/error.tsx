@@ -3,6 +3,7 @@
 import { httpStatusCode } from '@/constants';
 import { isIncludeLanguageAppPath } from '@/features';
 import { ErrorTemplate } from '@/templates';
+import * as Sentry from '@sentry/nextjs';
 import { usePathname } from 'next/navigation';
 import { useEffect, type JSX } from 'react';
 
@@ -13,7 +14,7 @@ type Props = {
 
 const Error = ({ error }: Props): JSX.Element => {
   useEffect(() => {
-    console.error(error);
+    Sentry.captureException(error);
   }, [error]);
 
   const language = 'ja';
