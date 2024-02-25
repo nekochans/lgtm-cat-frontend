@@ -3,9 +3,6 @@
 import { ResponsiveLayout, UploadForm } from '@/components';
 import {
   appBaseUrl,
-  i18nUrlList,
-  languages,
-  metaTagList,
   type Language,
 } from '@/features';
 import {
@@ -13,7 +10,6 @@ import {
   useCatImageValidator,
   useSwitchLanguage,
 } from '@/hooks';
-import { DefaultLayout } from '@/layouts';
 import {
   sendCopyMarkdownFromCopyButton,
   sendCopyMarkdownFromCreatedImage,
@@ -33,18 +29,6 @@ type Props = {
 };
 
 export const UploadTemplate: FC<Props> = ({ language }) => {
-  const metaTag = metaTagList(language).upload;
-
-  const canonicalLink =
-    language === 'en' ? i18nUrlList.upload?.en : i18nUrlList.upload?.ja;
-
-  const alternateUrls = languages.map((hreflang) => {
-    const link =
-      hreflang === 'en' ? i18nUrlList.upload?.en : i18nUrlList.upload?.ja;
-
-    return { link, hreflang };
-  });
-
   const { imageValidator } = useCatImageValidator(language);
 
   const { imageUploader } = useCatImageUploader(language);
@@ -53,32 +37,26 @@ export const UploadTemplate: FC<Props> = ({ language }) => {
     useSwitchLanguage();
 
   return (
-    <DefaultLayout
-      metaTag={metaTag}
-      canonicalLink={canonicalLink}
-      alternateUrls={alternateUrls}
-    >
-      <div onClick={onClickOutSideMenu} aria-hidden="true">
-        <ResponsiveLayout
+    <div onClick={onClickOutSideMenu} aria-hidden="true">
+      <ResponsiveLayout
+        language={language}
+        isLanguageMenuDisplayed={isLanguageMenuDisplayed}
+        onClickLanguageButton={onClickLanguageButton}
+        currentUrlPath="/upload"
+      >
+        <UploadForm
           language={language}
-          isLanguageMenuDisplayed={isLanguageMenuDisplayed}
-          onClickLanguageButton={onClickLanguageButton}
-          currentUrlPath="/upload"
-        >
-          <UploadForm
-            language={language}
-            imageValidator={imageValidator}
-            imageUploader={imageUploader}
-            uploadCallback={sendUploadedCatImage}
-            onClickCreatedLgtmImage={sendCopyMarkdownFromCreatedImage}
-            onClickMarkdownSourceCopyButton={sendCopyMarkdownFromCopyButton}
-            appUrl={appBaseUrl()}
-          />
-          <div className={styles['image-wrapper']}>
-            <CatImage />
-          </div>
-        </ResponsiveLayout>
-      </div>
-    </DefaultLayout>
+          imageValidator={imageValidator}
+          imageUploader={imageUploader}
+          uploadCallback={sendUploadedCatImage}
+          onClickCreatedLgtmImage={sendCopyMarkdownFromCreatedImage}
+          onClickMarkdownSourceCopyButton={sendCopyMarkdownFromCopyButton}
+          appUrl={appBaseUrl()}
+        />
+        <div className={styles['image-wrapper']}>
+          <CatImage/>
+        </div>
+      </ResponsiveLayout>
+    </div>
   );
 };
