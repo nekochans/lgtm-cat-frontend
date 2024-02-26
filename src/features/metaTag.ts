@@ -4,7 +4,7 @@ import { appUrlList, type AppPathName, type AppUrl } from './url';
 
 type AppName = 'LGTMeow';
 
-const appName: AppName = 'LGTMeow';
+export const appName: AppName = 'LGTMeow';
 
 const defaultTitle = appName;
 

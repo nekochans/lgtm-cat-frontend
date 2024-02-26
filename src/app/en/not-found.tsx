@@ -1,11 +1,17 @@
 import { httpStatusCode } from '@/constants';
-import { appPathList } from '@/features';
+import { appPathList, notFoundMetaTag } from '@/features';
 import { ErrorTemplate } from '@/templates';
+import type { Metadata } from 'next';
 import type { JSX } from 'react';
 
-const NotFound = (): JSX.Element => {
-  const language = 'en';
+const language = 'en';
 
+export const metadata: Metadata = {
+  title: notFoundMetaTag(language).title,
+  description: notFoundMetaTag(language).description,
+};
+
+const NotFound = (): JSX.Element => {
   return (
     <ErrorTemplate
       type={httpStatusCode.notFound}

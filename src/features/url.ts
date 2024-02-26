@@ -102,27 +102,31 @@ export const appUrlList = {
 } as const;
 
 type I18nUrlList = {
-  [key in AppPathName]?: {
-    [childrenKey in Language]: Url;
+  [key in AppPathName]: {
+    [childrenKey in Language]: string;
   };
 };
 
 export const i18nUrlList: I18nUrlList = {
   top: {
-    ja: `${appUrlList.top}/`,
-    en: `${appBaseUrl()}/en/`,
+    ja: `${appPathList.top}/`,
+    en: `/en/`,
   },
   upload: {
-    ja: `${appUrlList.upload}/`,
-    en: `${appBaseUrl()}/en${appPathList.upload}/`,
+    ja: `${appPathList.upload}/`,
+    en: `/en${appPathList.upload}/`,
   },
   terms: {
-    ja: `${appUrlList.terms}/`,
-    en: `${appBaseUrl()}/en${appPathList.terms}/`,
+    ja: `${appPathList.terms}/`,
+    en: `/en${appPathList.terms}/`,
   },
   privacy: {
-    ja: `${appUrlList.privacy}/`,
-    en: `${appBaseUrl()}/en${appPathList.privacy}/`,
+    ja: `${appPathList.privacy}/`,
+    en: `/en${appPathList.privacy}/`,
+  },
+  maintenance: {
+    ja: `${appPathList.privacy}/`,
+    en: `/en${appPathList.privacy}/`,
   },
 };
 
