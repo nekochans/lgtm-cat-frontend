@@ -1,10 +1,7 @@
 'use client';
 
 import { ResponsiveLayout, UploadForm } from '@/components';
-import {
-  appBaseUrl,
-  type Language,
-} from '@/features';
+import { appBaseUrl, type Language } from '@/features';
 import {
   useCatImageUploader,
   useCatImageValidator,
@@ -54,7 +51,7 @@ export const UploadTemplate: FC<Props> = ({ language }) => {
           appUrl={appBaseUrl()}
         />
         <div className={styles['image-wrapper']}>
-          <CatImage/>
+          <CatImage />
         </div>
       </ResponsiveLayout>
     </div>

@@ -62,10 +62,10 @@ export const TermsOrPrivacyTemplate: FC<Props> = ({
         currentUrlPath={currentUrlPath}
       >
         <div className={styles.wrapper}>
-          <MarkdownPageTitle text={createTitle(type, language)}/>
-          <LibraryBooks/>
+          <MarkdownPageTitle text={createTitle(type, language)} />
+          <LibraryBooks />
           <div className={styles['children-wrapper']}>
-            <MarkdownContents markdown={termsMarkdown}/>
+            <MarkdownContents markdown={termsMarkdown} />
           </div>
         </div>
       </ResponsiveLayout>

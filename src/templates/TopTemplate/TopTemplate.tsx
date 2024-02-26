@@ -78,7 +78,7 @@ export const TopTemplate: FC<Props> = ({ language, lgtmImages }) => {
         <LgtmImagesContents
           language={language}
           lgtmImages={lgtmImages}
-          errorCatImage={<InternalServerErrorImage/>}
+          errorCatImage={<InternalServerErrorImage />}
           onClickFetchRandomCatButton={onClickFetchRandomCatButton}
           onClickFetchNewArrivalCatButton={onClickFetchNewArrivalCatButton}
           appUrl={appBaseUrl()}
