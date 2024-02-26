@@ -1,11 +1,45 @@
 import { httpStatusCode } from '@/constants';
-import { createIncludeLanguageAppPath } from '@/features';
+import {
+  appName,
+  convertLocaleToLanguage,
+  createIncludeLanguageAppPath,
+  i18nUrlList,
+  metaTagList,
+} from '@/features';
 import { ErrorTemplate } from '@/templates';
-import type { NextPage } from 'next';
+import type { Metadata, NextPage } from 'next';
+
+const language = 'ja';
+
+export const metadata: Metadata = {
+  title: metaTagList(language).maintenance.title,
+  description: metaTagList(language).maintenance.description,
+  openGraph: {
+    title: metaTagList(language).maintenance.title,
+    description: metaTagList(language).maintenance.description,
+    url: metaTagList(language).maintenance.ogpTargetUrl,
+    siteName: appName,
+    images: [
+      {
+        url: metaTagList(language).maintenance.ogpImgUrl,
+        width: 1200,
+        height: 630,
+        alt: metaTagList(language).maintenance.title,
+      },
+    ],
+    locale: convertLocaleToLanguage(language),
+    type: 'website',
+  },
+  alternates: {
+    canonical: i18nUrlList.maintenance.ja,
+    languages: {
+      ja: i18nUrlList.maintenance.ja,
+      en: i18nUrlList.maintenance.en,
+    },
+  },
+};
 
 const MaintenancePage: NextPage = () => {
-  const language = 'ja';
-
   return (
     <ErrorTemplate
       type={httpStatusCode.serviceUnavailable}

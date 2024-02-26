@@ -1,6 +1,42 @@
 import fs from 'fs';
+import {
+  appName,
+  convertLocaleToLanguage,
+  i18nUrlList,
+  metaTagList,
+} from '@/features';
 import { TermsOrPrivacyTemplate } from '@/templates';
-import type { NextPage } from 'next';
+import type { Metadata, NextPage } from 'next';
+
+const language = 'en';
+
+export const metadata: Metadata = {
+  title: metaTagList(language).privacy.title,
+  description: metaTagList(language).privacy.description,
+  openGraph: {
+    title: metaTagList(language).privacy.title,
+    description: metaTagList(language).privacy.description,
+    url: metaTagList(language).privacy.ogpTargetUrl,
+    siteName: appName,
+    images: [
+      {
+        url: metaTagList(language).privacy.ogpImgUrl,
+        width: 1200,
+        height: 630,
+        alt: metaTagList(language).privacy.title,
+      },
+    ],
+    locale: convertLocaleToLanguage(language),
+    type: 'website',
+  },
+  alternates: {
+    canonical: i18nUrlList.privacy.en,
+    languages: {
+      ja: i18nUrlList.privacy.ja,
+      en: i18nUrlList.privacy.en,
+    },
+  },
+};
 
 const PrivacyPage: NextPage = async () => {
   const fsPromise = fs.promises;
@@ -22,7 +58,7 @@ const PrivacyPage: NextPage = async () => {
   return (
     <TermsOrPrivacyTemplate
       type="privacy"
-      language="en"
+      language={language}
       jaMarkdown={privacyJa}
       enMarkdown={privacyEn}
     />
