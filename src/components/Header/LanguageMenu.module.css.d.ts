@@ -1,10 +1,12 @@
-declare const styles: {
-  readonly wrapper: string;
-  readonly 'text-wrapper': string;
-  readonly 'en-text-wrapper': string;
-  readonly 'ja-text-wrapper': string;
-  readonly 'link-text': string;
-  readonly link: string;
-  readonly separator: string;
-};
-export = styles;
+declare const styles:
+  & Readonly<{ "wrapper": string }>
+  & Readonly<{ "wrapper": string }>
+  & Readonly<{ "text-wrapper": string }>
+  & Readonly<{ "en-text-wrapper": string }>
+  & Readonly<{ "ja-text-wrapper": string }>
+  & Readonly<{ "link-text": string }>
+  & Readonly<{ "link": string }>
+  & Readonly<{ "separator": string }>
+;
+export default styles;
+//# sourceMappingURL=./LanguageMenu.module.css.d.ts.map

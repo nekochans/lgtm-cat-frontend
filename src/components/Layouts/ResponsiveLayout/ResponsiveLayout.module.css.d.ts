@@ -1,5 +1,6 @@
-declare const styles: {
-  readonly wrapper: string;
-  readonly 'contents-wrapper': string;
-};
-export = styles;
+declare const styles:
+  & Readonly<{ "wrapper": string }>
+  & Readonly<{ "contents-wrapper": string }>
+;
+export default styles;
+//# sourceMappingURL=./ResponsiveLayout.module.css.d.ts.map

@@ -1,6 +1,7 @@
-declare const styles: {
-  readonly base: string;
-  readonly default: string;
-  readonly upper: string;
-};
-export = styles;
+declare const styles:
+  & Readonly<{ "base": string }>
+  & Readonly<{ "default": string }>
+  & Readonly<{ "upper": string }>
+;
+export default styles;
+//# sourceMappingURL=./CopiedGithubMarkdownMessage.module.css.d.ts.map

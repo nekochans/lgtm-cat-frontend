@@ -64,12 +64,23 @@ const isFetchImageResponseBody = (
 };
 
 // eslint-disable-next-line max-statements
-const fetchLgtmImages = async (fetchUrl: Url): Promise<LgtmImage[]> => {
-  const options: RequestInit = {
-    method: 'GET',
-    mode: 'cors',
-    cache: 'no-cache',
-  };
+const fetchLgtmImages = async (
+  fetchUrl: Url,
+  revalidate?: number,
+): Promise<LgtmImage[]> => {
+  const options: RequestInit =
+    revalidate != null
+      ? {
+          method: 'GET',
+          mode: 'cors',
+          cache: 'no-cache',
+          next: { revalidate },
+        }
+      : {
+          method: 'GET',
+          mode: 'cors',
+          cache: 'no-cache',
+        };
 
   const response = await fetch(fetchUrl, options);
   if (!response.ok) {
@@ -94,12 +105,13 @@ const fetchLgtmImages = async (fetchUrl: Url): Promise<LgtmImage[]> => {
 };
 
 // eslint-disable-next-line require-await
-export const fetchLgtmImagesInRandom: FetchLgtmImages = async () =>
-  await fetchLgtmImages(fetchLgtmImagesUrl());
+export const fetchLgtmImagesInRandom: FetchLgtmImages = async (revalidate) =>
+  await fetchLgtmImages(fetchLgtmImagesUrl(), revalidate);
 
 // eslint-disable-next-line require-await
-export const fetchLgtmImagesInRecentlyCreated: FetchLgtmImages = async () =>
-  await fetchLgtmImages(fetchLgtmImagesInRecentlyCreatedUrl());
+export const fetchLgtmImagesInRecentlyCreated: FetchLgtmImages = async (
+  revalidate,
+) => await fetchLgtmImages(fetchLgtmImagesInRecentlyCreatedUrl(), revalidate);
 
 export const isAcceptableCatImage: IsAcceptableCatImage = async (dto) => {
   const options: RequestInit = {

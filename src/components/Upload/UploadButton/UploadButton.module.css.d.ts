@@ -1,7 +1,10 @@
-declare const styles: {
-  readonly button: string;
-  readonly text: string;
-  readonly 'disabled-button': string;
-  readonly 'disabled-text': string;
-};
-export = styles;
+declare const styles:
+  & Readonly<{ "button": string }>
+  & Readonly<{ "button": string }>
+  & Readonly<{ "text": string }>
+  & Readonly<{ "text": string }>
+  & Readonly<{ "disabled-button": string }>
+  & Readonly<{ "disabled-text": string }>
+;
+export default styles;
+//# sourceMappingURL=./UploadButton.module.css.d.ts.map

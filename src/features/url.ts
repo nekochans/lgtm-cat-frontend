@@ -1,4 +1,4 @@
-import { type Language } from './language';
+import { languages, type Language } from './language';
 
 export type Url = `http://localhost${string}` | `https://${string}`;
 
@@ -39,6 +39,59 @@ export type AppPathName =
   | 'privacy'
   | 'maintenance';
 
+type AppPath = (typeof appPathList)[keyof typeof appPathList];
+
+export type IncludeLanguageAppPath =
+  | AppPath
+  | `/${Language}${AppPath}`
+  | `/${Language}`
+  | '/';
+
+export const isIncludeLanguageAppPath = (
+  value: unknown,
+): value is IncludeLanguageAppPath => {
+  const appPaths: string[] = Object.values(appPathList);
+
+  if (typeof value !== 'string') {
+    return false;
+  }
+
+  if (value === '/') {
+    return true;
+  }
+
+  if (languages.some((language) => value === `/${language}`)) {
+    return true;
+  }
+
+  if (
+    languages.some((language) =>
+      appPaths.some((path) => value === `/${language}${path}`),
+    )
+  ) {
+    return true;
+  }
+
+  if (appPaths.includes(value)) {
+    return true;
+  }
+
+  return false;
+};
+
+export const createIncludeLanguageAppPath = (
+  appPathName: AppPathName,
+  language: Language,
+): IncludeLanguageAppPath => {
+  if (appPathName === 'top' && language === 'en') {
+    return `/${language}`;
+  }
+
+  return language === 'en'
+    ? (`/en${appPathList[appPathName]}` as const)
+    : appPathList[appPathName];
+};
+
 export const appUrlList = {
   top: appBaseUrl(),
   ogpImg: `${appBaseUrl()}/ogp.webp` as const,
@@ -49,27 +102,31 @@ export const appUrlList = {
 } as const;
 
 type I18nUrlList = {
-  [key in AppPathName]?: {
-    [childrenKey in Language]: Url;
+  [key in AppPathName]: {
+    [childrenKey in Language]: string;
   };
 };
 
 export const i18nUrlList: I18nUrlList = {
   top: {
-    ja: `${appUrlList.top}/`,
-    en: `${appBaseUrl()}/en/`,
+    ja: `${appPathList.top}/`,
+    en: `/en/`,
   },
   upload: {
-    ja: `${appUrlList.upload}/`,
-    en: `${appBaseUrl()}/en${appPathList.upload}/`,
+    ja: `${appPathList.upload}/`,
+    en: `/en${appPathList.upload}/`,
   },
   terms: {
-    ja: `${appUrlList.terms}/`,
-    en: `${appBaseUrl()}/en${appPathList.terms}/`,
+    ja: `${appPathList.terms}/`,
+    en: `/en${appPathList.terms}/`,
   },
   privacy: {
-    ja: `${appUrlList.privacy}/`,
-    en: `${appBaseUrl()}/en${appPathList.privacy}/`,
+    ja: `${appPathList.privacy}/`,
+    en: `/en${appPathList.privacy}/`,
+  },
+  maintenance: {
+    ja: `${appPathList.privacy}/`,
+    en: `/en${appPathList.privacy}/`,
   },
 };
 

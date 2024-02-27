@@ -1,4 +1,5 @@
-declare const styles: {
-  readonly wrapper: string;
-};
-export = styles;
+declare const styles:
+  & Readonly<{ "wrapper": string }>
+;
+export default styles;
+//# sourceMappingURL=./CatRandomCopyButtonWrapper.module.css.d.ts.map

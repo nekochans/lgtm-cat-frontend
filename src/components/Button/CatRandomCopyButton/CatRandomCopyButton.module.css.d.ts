@@ -1,5 +1,6 @@
-declare const styles: {
-  readonly button: string;
-  readonly 'fa-random': string;
-};
-export = styles;
+declare const styles:
+  & Readonly<{ "button": string }>
+  & Readonly<{ "fa-random": string }>
+;
+export default styles;
+//# sourceMappingURL=./CatRandomCopyButton.module.css.d.ts.map

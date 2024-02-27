@@ -1,4 +1,5 @@
-declare const styles: {
-  readonly title: string;
-};
-export = styles;
+declare const styles:
+  & Readonly<{ "title": string }>
+;
+export default styles;
+//# sourceMappingURL=./MarkdownPageTitle.module.css.d.ts.map

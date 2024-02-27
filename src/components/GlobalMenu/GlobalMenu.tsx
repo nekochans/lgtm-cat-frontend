@@ -1,4 +1,5 @@
 import {
+  createIncludeLanguageAppPath,
   createPrivacyPolicyLinksFromLanguages,
   createTermsOfUseLinksFromLanguages,
   type Language,
@@ -29,7 +30,10 @@ export const GlobalMenu: FC<Props> = ({ language, onClickCloseButton }) => {
       </div>
       <div className={styles['link-group-wrapper']}>
         <div className={styles['link-wrapper']}>
-          <Link href="/" prefetch={false}>
+          <Link
+            href={createIncludeLanguageAppPath('top', language)}
+            prefetch={false}
+          >
             <span
               className={styles['link-text']}
               data-gtm-click="global-menu-top-link"
@@ -40,7 +44,10 @@ export const GlobalMenu: FC<Props> = ({ language, onClickCloseButton }) => {
           <div className={styles.underline} />
         </div>
         <div className={styles['link-wrapper']}>
-          <Link href="/upload" prefetch={false}>
+          <Link
+            href={createIncludeLanguageAppPath('upload', language)}
+            prefetch={false}
+          >
             <span
               className={styles['link-text']}
               data-gtm-click="global-menu-upload-cat-link"
