@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { Footer } from '@/components';
 import {
   appName,
   convertLocaleToLanguage,
@@ -56,12 +57,15 @@ const TermsPage: NextPage = async () => {
   );
 
   return (
-    <TermsOrPrivacyTemplate
-      type="terms"
-      language={language}
-      jaMarkdown={termsJa}
-      enMarkdown={termsEn}
-    />
+    <>
+      <TermsOrPrivacyTemplate
+        type="terms"
+        language={language}
+        jaMarkdown={termsJa}
+        enMarkdown={termsEn}
+      />
+      <Footer language={language} />
+    </>
   );
 };
 

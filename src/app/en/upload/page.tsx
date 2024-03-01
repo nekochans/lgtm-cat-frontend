@@ -1,3 +1,4 @@
+import { Footer } from '@/components';
 import {
   appName,
   convertLocaleToLanguage,
@@ -38,7 +39,12 @@ export const metadata: Metadata = {
 };
 
 const UploadPage: NextPage = () => {
-  return <UploadTemplate language={language} />;
+  return (
+    <>
+      <UploadTemplate language={language} />
+      <Footer language={language} />
+    </>
+  );
 };
 
 export default UploadPage;

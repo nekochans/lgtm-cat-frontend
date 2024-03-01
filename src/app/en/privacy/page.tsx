@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { Footer } from '@/components';
 import {
   appName,
   convertLocaleToLanguage,
@@ -56,12 +57,15 @@ const PrivacyPage: NextPage = async () => {
   );
 
   return (
-    <TermsOrPrivacyTemplate
-      type="privacy"
-      language={language}
-      jaMarkdown={privacyJa}
-      enMarkdown={privacyEn}
-    />
+    <>
+      <TermsOrPrivacyTemplate
+        type="privacy"
+        language={language}
+        jaMarkdown={privacyJa}
+        enMarkdown={privacyEn}
+      />
+      <Footer language={language} />
+    </>
   );
 };
 
