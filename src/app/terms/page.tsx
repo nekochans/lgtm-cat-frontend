@@ -1,8 +1,9 @@
 import fs from 'fs';
-import { Footer } from '@/components';
+import { Footer, MarkdownContentsWrapper } from '@/components';
 import {
   appName,
   convertLocaleToLanguage,
+  createTermsOfUseLinksFromLanguages,
   i18nUrlList,
   metaTagList,
 } from '@/features';
@@ -42,15 +43,8 @@ export const metadata: Metadata = {
 const TermsPage: NextPage = async () => {
   const fsPromise = fs.promises;
 
-  const termsJa = await fsPromise.readFile(
+  const markdown = await fsPromise.readFile(
     `${process.cwd()}/src/docs/terms.ja.md`,
-    {
-      encoding: 'utf8',
-    },
-  );
-
-  const termsEn = await fsPromise.readFile(
-    `${process.cwd()}/src/docs/terms.en.md`,
     {
       encoding: 'utf8',
     },
@@ -58,14 +52,20 @@ const TermsPage: NextPage = async () => {
 
   const language = 'ja';
 
+  const currentUrlPath = createTermsOfUseLinksFromLanguages(language).link;
+
   return (
     <>
       <TermsOrPrivacyTemplate
-        type="terms"
         language={language}
-        jaMarkdown={termsJa}
-        enMarkdown={termsEn}
-      />
+        currentUrlPath={currentUrlPath}
+      >
+        <MarkdownContentsWrapper
+          type="terms"
+          language={language}
+          markdown={markdown}
+        />
+      </TermsOrPrivacyTemplate>
       <Footer language={language} />
     </>
   );

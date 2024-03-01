@@ -1,3 +1,4 @@
+import { MarkdownContentsWrapper } from '@/components/MarkdownContentsWrapper/MarkdownContentsWrapper';
 import type { Meta, StoryObj } from '@storybook/react';
 import { TermsOrPrivacyTemplate } from './';
 
@@ -199,38 +200,74 @@ export default meta;
 
 type Story = StoryObj<typeof TermsOrPrivacyTemplate>;
 
+const PrivacyPolicyJapanese = () => {
+  return (
+    <MarkdownContentsWrapper
+      type="privacy"
+      language="ja"
+      markdown={privacyPolicyJa}
+    />
+  );
+};
+
+const PrivacyPolicyEnglish = () => {
+  return (
+    <MarkdownContentsWrapper
+      type="privacy"
+      language="en"
+      markdown={privacyPolicyEn}
+    />
+  );
+};
+
+const TermsOfUseJapanese = () => {
+  return (
+    <MarkdownContentsWrapper
+      type="terms"
+      language="ja"
+      markdown={termsOfUseJa}
+    />
+  );
+};
+
+const TermsOfUseEnglish = () => {
+  return (
+    <MarkdownContentsWrapper
+      type="terms"
+      language="en"
+      markdown={termsOfUseEn}
+    />
+  );
+};
+
 export const ViewPrivacyPolicyInJapanese: Story = {
   args: {
-    type: 'privacy',
     language: 'ja',
-    jaMarkdown: privacyPolicyJa,
-    enMarkdown: privacyPolicyEn,
+    currentUrlPath: '/privacy',
+    children: <PrivacyPolicyJapanese />,
   },
 };
 
 export const ViewPrivacyPolicyInEnglish: Story = {
   args: {
-    type: 'privacy',
     language: 'en',
-    jaMarkdown: privacyPolicyJa,
-    enMarkdown: privacyPolicyEn,
+    currentUrlPath: '/en/privacy',
+    children: <PrivacyPolicyEnglish />,
   },
 };
 
 export const ViewTermsOfUseInJapanese: Story = {
   args: {
-    type: 'terms',
     language: 'ja',
-    jaMarkdown: termsOfUseJa,
-    enMarkdown: termsOfUseEn,
+    currentUrlPath: '/terms',
+    children: <TermsOfUseJapanese />,
   },
 };
 
 export const ViewTermsOfUseInEnglish: Story = {
   args: {
-    type: 'terms',
     language: 'en',
-    jaMarkdown: termsOfUseJa,
-    enMarkdown: termsOfUseEn,
+    currentUrlPath: '/en/terms',
+    children: <TermsOfUseEnglish />,
   },
 };

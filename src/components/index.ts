@@ -1,4 +1,5 @@
 export * from './MarkdownContents';
+export * from './MarkdownContentsWrapper';
 export * from './ErrorCatImages';
 export * from './GoogleTagManager';
 export { Footer } from './Footer';
