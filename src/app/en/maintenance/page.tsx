@@ -1,3 +1,4 @@
+import { Footer } from '@/components';
 import { httpStatusCode } from '@/constants';
 import {
   appName,
@@ -41,11 +42,14 @@ export const metadata: Metadata = {
 
 const MaintenancePage: NextPage = () => {
   return (
-    <ErrorTemplate
-      type={httpStatusCode.serviceUnavailable}
-      language={language}
-      currentUrlPath={createIncludeLanguageAppPath('maintenance', language)}
-    />
+    <>
+      <ErrorTemplate
+        type={httpStatusCode.serviceUnavailable}
+        language={language}
+        currentUrlPath={createIncludeLanguageAppPath('maintenance', language)}
+      />
+      <Footer language={language} />
+    </>
   );
 };
 

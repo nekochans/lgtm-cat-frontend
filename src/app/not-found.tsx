@@ -1,3 +1,4 @@
+import { Footer } from '@/components';
 import { httpStatusCode } from '@/constants';
 import { appPathList, notFoundMetaTag } from '@/features';
 import { ErrorTemplate } from '@/templates';
@@ -13,11 +14,14 @@ export const metadata: Metadata = {
 
 const NotFound = (): JSX.Element => {
   return (
-    <ErrorTemplate
-      type={httpStatusCode.notFound}
-      language={language}
-      currentUrlPath={appPathList.top}
-    />
+    <>
+      <ErrorTemplate
+        type={httpStatusCode.notFound}
+        language={language}
+        currentUrlPath={appPathList.top}
+      />
+      <Footer language={language} />
+    </>
   );
 };
 

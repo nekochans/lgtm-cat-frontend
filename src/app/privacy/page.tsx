@@ -1,7 +1,9 @@
 import fs from 'fs';
+import { Footer, MarkdownContentsWrapper } from '@/components';
 import {
   appName,
   convertLocaleToLanguage,
+  createPrivacyPolicyLinksFromLanguages,
   i18nUrlList,
   metaTagList,
 } from '@/features';
@@ -41,27 +43,29 @@ export const metadata: Metadata = {
 const PrivacyPage: NextPage = async () => {
   const fsPromise = fs.promises;
 
-  const privacyJa = await fsPromise.readFile(
+  const markdown = await fsPromise.readFile(
     `${process.cwd()}/src/docs/privacy.ja.md`,
     {
       encoding: 'utf8',
     },
   );
 
-  const privacyEn = await fsPromise.readFile(
-    `${process.cwd()}/src/docs/privacy.en.md`,
-    {
-      encoding: 'utf8',
-    },
-  );
+  const currentUrlPath = createPrivacyPolicyLinksFromLanguages(language).link;
 
   return (
-    <TermsOrPrivacyTemplate
-      type="privacy"
-      language={language}
-      jaMarkdown={privacyJa}
-      enMarkdown={privacyEn}
-    />
+    <>
+      <TermsOrPrivacyTemplate
+        language={language}
+        currentUrlPath={currentUrlPath}
+      >
+        <MarkdownContentsWrapper
+          type="privacy"
+          language={language}
+          markdown={markdown}
+        />
+      </TermsOrPrivacyTemplate>
+      <Footer language={language} />
+    </>
   );
 };
 

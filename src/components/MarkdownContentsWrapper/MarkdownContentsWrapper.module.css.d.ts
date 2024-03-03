@@ -4,4 +4,4 @@ declare const styles:
   & Readonly<{ "children-wrapper": string }>
 ;
 export default styles;
-//# sourceMappingURL=./TermsOrPrivacyTemplate.module.css.d.ts.map
+//# sourceMappingURL=./MarkdownContentsWrapper.module.css.d.ts.map

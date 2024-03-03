@@ -1,3 +1,4 @@
+import { CalmCatImage, Footer } from '@/components';
 import { isAcceptableCatImageUrl, uploadCatImageUrl } from '@/features';
 import { mockIsAcceptableCatImage, mockUploadCatImage } from '@/mocks';
 import type { Meta, StoryObj } from '@storybook/react';
@@ -12,10 +13,24 @@ export default meta;
 
 type Story = StoryObj<typeof UploadTemplate>;
 
+const languageJa = 'ja';
+
+const languageEn = 'en';
+
 export const ViewInJapanese: Story = {
   args: {
-    language: 'ja',
+    language: languageJa,
+    children: <CalmCatImage />,
   },
+  decorators: [
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    (Story) => (
+      <>
+        <Story />
+        <Footer language={languageJa} />
+      </>
+    ),
+  ],
   parameters: {
     msw: {
       handlers: [
@@ -28,8 +43,18 @@ export const ViewInJapanese: Story = {
 
 export const ViewInEnglish: Story = {
   args: {
-    language: 'en',
+    language: languageEn,
+    children: <CalmCatImage />,
   },
+  decorators: [
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    (Story) => (
+      <>
+        <Story />
+        <Footer language={languageEn} />
+      </>
+    ),
+  ],
   parameters: {
     msw: {
       handlers: [

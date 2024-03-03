@@ -1,4 +1,5 @@
 import { fetchLgtmImagesInRandom } from '@/api';
+import { Footer } from '@/components';
 import { TopTemplate } from '@/templates';
 import type { NextPage } from 'next';
 
@@ -9,7 +10,12 @@ const HomePage: NextPage = async () => {
 
   const lgtmImages = await fetchLgtmImagesInRandom(revalidate);
 
-  return <TopTemplate language={language} lgtmImages={lgtmImages} />;
+  return (
+    <>
+      <TopTemplate language={language} lgtmImages={lgtmImages} />
+      <Footer language={language} />
+    </>
+  );
 };
 
 export default HomePage;

@@ -1,3 +1,4 @@
+import { Footer } from '@/components';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { FC } from 'react';
 import { ResponsiveLayout } from './';
@@ -26,16 +27,38 @@ const EnContents: FC = () => (
   </>
 );
 
+const languageJa = 'ja';
+
+const languageEn = 'en';
+
 export const ViewInJapanese: Story = {
   args: {
-    language: 'ja',
+    language: languageJa,
     children: <JpContents />,
   },
+  decorators: [
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    (Story) => (
+      <>
+        <Story />
+        <Footer language={languageJa} />
+      </>
+    ),
+  ],
 };
 
 export const ViewInEnglish: Story = {
   args: {
-    language: 'en',
+    language: languageEn,
     children: <EnContents />,
   },
+  decorators: [
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    (Story) => (
+      <>
+        <Story />
+        <Footer language={languageEn} />
+      </>
+    ),
+  ],
 };

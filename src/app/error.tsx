@@ -1,5 +1,6 @@
 'use client';
 
+import { Footer } from '@/components';
 import { httpStatusCode } from '@/constants';
 import { isIncludeLanguageAppPath } from '@/features';
 import { ErrorTemplate } from '@/templates';
@@ -26,11 +27,14 @@ const Error = ({ error }: Props): JSX.Element => {
     : '/';
 
   return (
-    <ErrorTemplate
-      type={httpStatusCode.internalServerError}
-      language={language}
-      currentUrlPath={appPath}
-    />
+    <>
+      <ErrorTemplate
+        type={httpStatusCode.internalServerError}
+        language={language}
+        currentUrlPath={appPath}
+      />
+      <Footer language={language} />
+    </>
   );
 };
 

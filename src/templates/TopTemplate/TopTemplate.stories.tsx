@@ -1,3 +1,4 @@
+import { Footer } from '@/components';
 import {
   fetchLgtmImagesInRecentlyCreatedUrl,
   fetchLgtmImagesUrl,
@@ -64,11 +65,24 @@ const lgtmImages: LgtmImage[] = [
   } as const,
 ];
 
+const languageJa = 'ja';
+
+const languageEn = 'en';
+
 export const ViewInJapanese: Story = {
   args: {
-    language: 'ja',
+    language: languageJa,
     lgtmImages,
   },
+  decorators: [
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    (Story) => (
+      <>
+        <Story />
+        <Footer language={languageJa} />
+      </>
+    ),
+  ],
   parameters: {
     msw: {
       handlers: [
@@ -81,9 +95,18 @@ export const ViewInJapanese: Story = {
 
 export const ViewInEnglish: Story = {
   args: {
-    language: 'en',
+    language: languageEn,
     lgtmImages,
   },
+  decorators: [
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    (Story) => (
+      <>
+        <Story />
+        <Footer language={languageEn} />
+      </>
+    ),
+  ],
   parameters: {
     msw: {
       handlers: [
@@ -96,9 +119,18 @@ export const ViewInEnglish: Story = {
 
 export const ViewInJapaneseError: Story = {
   args: {
-    language: 'ja',
+    language: languageJa,
     lgtmImages,
   },
+  decorators: [
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    (Story) => (
+      <>
+        <Story />
+        <Footer language={languageJa} />
+      </>
+    ),
+  ],
   parameters: {
     msw: {
       handlers: [
@@ -114,9 +146,18 @@ export const ViewInJapaneseError: Story = {
 
 export const ViewInEnglishError: Story = {
   args: {
-    language: 'en',
+    language: languageEn,
     lgtmImages,
   },
+  decorators: [
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    (Story) => (
+      <>
+        <Story />
+        <Footer language={languageEn} />
+      </>
+    ),
+  ],
   parameters: {
     msw: {
       handlers: [
