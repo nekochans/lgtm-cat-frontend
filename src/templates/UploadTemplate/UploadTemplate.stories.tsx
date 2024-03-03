@@ -1,3 +1,4 @@
+import { CalmCatImage } from '@/components';
 import { isAcceptableCatImageUrl, uploadCatImageUrl } from '@/features';
 import { mockIsAcceptableCatImage, mockUploadCatImage } from '@/mocks';
 import type { Meta, StoryObj } from '@storybook/react';
@@ -15,6 +16,7 @@ type Story = StoryObj<typeof UploadTemplate>;
 export const ViewInJapanese: Story = {
   args: {
     language: 'ja',
+    children: <CalmCatImage />,
   },
   parameters: {
     msw: {
@@ -29,6 +31,7 @@ export const ViewInJapanese: Story = {
 export const ViewInEnglish: Story = {
   args: {
     language: 'en',
+    children: <CalmCatImage />,
   },
   parameters: {
     msw: {

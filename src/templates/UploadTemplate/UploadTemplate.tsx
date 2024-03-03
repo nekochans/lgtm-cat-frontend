@@ -12,20 +12,15 @@ import {
   sendCopyMarkdownFromCreatedImage,
   sendUploadedCatImage,
 } from '@/utils';
-import Image from 'next/image';
-import type { FC } from 'react';
-import cat from './images/cat.webp';
+import type { FC, ReactNode } from 'react';
 import styles from './UploadTemplate.module.css';
-
-const CatImage = () => (
-  <Image src={cat.src} width={302} height={302} alt="Cat" priority={true} />
-);
 
 type Props = {
   language: Language;
+  children: ReactNode;
 };
 
-export const UploadTemplate: FC<Props> = ({ language }) => {
+export const UploadTemplate: FC<Props> = ({ language, children }) => {
   const { imageValidator } = useCatImageValidator(language);
 
   const { imageUploader } = useCatImageUploader(language);
@@ -50,9 +45,7 @@ export const UploadTemplate: FC<Props> = ({ language }) => {
           onClickMarkdownSourceCopyButton={sendCopyMarkdownFromCopyButton}
           appUrl={appBaseUrl()}
         />
-        <div className={styles['image-wrapper']}>
-          <CatImage />
-        </div>
+        <div className={styles['image-wrapper']}>{children}</div>
       </ResponsiveLayout>
     </div>
   );

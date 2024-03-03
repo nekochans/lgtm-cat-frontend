@@ -1,4 +1,4 @@
-import { Footer } from '@/components';
+import { CalmCatImage, Footer } from '@/components';
 import {
   appName,
   convertLocaleToLanguage,
@@ -41,7 +41,9 @@ export const metadata: Metadata = {
 const UploadPage: NextPage = () => {
   return (
     <>
-      <UploadTemplate language={language} />
+      <UploadTemplate language={language}>
+        <CalmCatImage />
+      </UploadTemplate>
       <Footer language={language} />
     </>
   );
