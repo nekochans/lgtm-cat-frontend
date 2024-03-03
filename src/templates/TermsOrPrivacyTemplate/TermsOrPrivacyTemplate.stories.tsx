@@ -1,3 +1,4 @@
+import { Footer } from '@/components';
 import { MarkdownContentsWrapper } from '@/components/MarkdownContentsWrapper/MarkdownContentsWrapper';
 import type { Meta, StoryObj } from '@storybook/react';
 import { TermsOrPrivacyTemplate } from './';
@@ -200,11 +201,15 @@ export default meta;
 
 type Story = StoryObj<typeof TermsOrPrivacyTemplate>;
 
+const languageJa = 'ja';
+
+const languageEn = 'en';
+
 const PrivacyPolicyJapanese = () => {
   return (
     <MarkdownContentsWrapper
       type="privacy"
-      language="ja"
+      language={languageJa}
       markdown={privacyPolicyJa}
     />
   );
@@ -214,7 +219,7 @@ const PrivacyPolicyEnglish = () => {
   return (
     <MarkdownContentsWrapper
       type="privacy"
-      language="en"
+      language={languageEn}
       markdown={privacyPolicyEn}
     />
   );
@@ -224,7 +229,7 @@ const TermsOfUseJapanese = () => {
   return (
     <MarkdownContentsWrapper
       type="terms"
-      language="ja"
+      language={languageJa}
       markdown={termsOfUseJa}
     />
   );
@@ -234,7 +239,7 @@ const TermsOfUseEnglish = () => {
   return (
     <MarkdownContentsWrapper
       type="terms"
-      language="en"
+      language={languageEn}
       markdown={termsOfUseEn}
     />
   );
@@ -242,32 +247,68 @@ const TermsOfUseEnglish = () => {
 
 export const ViewPrivacyPolicyInJapanese: Story = {
   args: {
-    language: 'ja',
+    language: languageJa,
     currentUrlPath: '/privacy',
     children: <PrivacyPolicyJapanese />,
   },
+  decorators: [
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    (Story) => (
+      <>
+        <Story />
+        <Footer language={languageJa} />
+      </>
+    ),
+  ],
 };
 
 export const ViewPrivacyPolicyInEnglish: Story = {
   args: {
-    language: 'en',
+    language: languageEn,
     currentUrlPath: '/en/privacy',
     children: <PrivacyPolicyEnglish />,
   },
+  decorators: [
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    (Story) => (
+      <>
+        <Story />
+        <Footer language={languageEn} />
+      </>
+    ),
+  ],
 };
 
 export const ViewTermsOfUseInJapanese: Story = {
   args: {
-    language: 'ja',
+    language: languageJa,
     currentUrlPath: '/terms',
     children: <TermsOfUseJapanese />,
   },
+  decorators: [
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    (Story) => (
+      <>
+        <Story />
+        <Footer language={languageJa} />
+      </>
+    ),
+  ],
 };
 
 export const ViewTermsOfUseInEnglish: Story = {
   args: {
-    language: 'en',
+    language: languageEn,
     currentUrlPath: '/en/terms',
     children: <TermsOfUseEnglish />,
   },
+  decorators: [
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    (Story) => (
+      <>
+        <Story />
+        <Footer language={languageEn} />
+      </>
+    ),
+  ],
 };
