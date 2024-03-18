@@ -149,3 +149,11 @@ export const fetchLgtmImagesInRecentlyCreatedUrl = (): Url =>
 
 export const isAcceptableCatImageUrl = (): Url =>
   `${bffUrl()}/cat-images/validation-results`;
+
+export const lgtmeowApiUrl = (): Url => {
+  if (isUrl(process.env.LGTMEOW_API_URL)) {
+    return process.env.LGTMEOW_API_URL;
+  }
+
+  throw new Error('LGTMEOW_API_URL is not defined');
+};
