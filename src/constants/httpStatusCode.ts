@@ -2,6 +2,7 @@
 export const httpStatusCode = {
   ok: 200,
   accepted: 202,
+  found: 302,
   unauthorized: 401,
   forbidden: 403,
   notFound: 404,
