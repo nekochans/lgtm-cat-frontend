@@ -1,5 +1,5 @@
 import { httpStatusCode } from '@/constants';
-import { isBanCountry, isInMaintenance } from '@/edge';
+import { appBaseUrlHeaderName, isBanCountry, isInMaintenance } from '@/edge';
 import {
   isIncludeLanguageAppPath,
   isLanguage,
@@ -50,6 +50,9 @@ export const middleware: NextMiddleware = async (req: NextRequest) => {
     );
   }
 
+  const requestHeaders = new Headers(req.headers);
+  requestHeaders.set(appBaseUrlHeaderName, nextUrl.origin);
+
   const language = mightExtractLanguageFromAppPath(nextUrl.pathname);
   const isInMaintenanceMode = await isInMaintenance();
   if (isInMaintenanceMode) {
@@ -70,5 +73,9 @@ export const middleware: NextMiddleware = async (req: NextRequest) => {
     return NextResponse.redirect(new URL('/', req.url));
   }
 
-  return NextResponse.next();
+  return NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
 };
