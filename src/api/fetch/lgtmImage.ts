@@ -105,11 +105,29 @@ const fetchLgtmImages = async (
 };
 
 // eslint-disable-next-line require-await
-export const fetchLgtmImagesInRandom: FetchLgtmImages = async (revalidate) =>
-  await fetchLgtmImages(fetchLgtmImagesUrl(), revalidate);
+export const fetchLgtmImagesInRandom: FetchLgtmImages = async (
+  appBaseUrl,
+  revalidate,
+) => {
+  const options = {
+    method: 'GET',
+    next: { revalidate },
+  };
+
+  const response = await fetch(`${fetchLgtmImagesUrl(appBaseUrl)}`, options);
+  if (!response.ok) {
+    mightSetRequestIdToSentry(response);
+
+    throw new FetchLgtmImagesError(response.statusText);
+  }
+
+  return (await response.json()) as LgtmImage[];
+};
+// await fetchLgtmImages(fetchLgtmImagesUrl(), revalidate);
 
 // eslint-disable-next-line require-await
 export const fetchLgtmImagesInRecentlyCreated: FetchLgtmImages = async (
+  appBaseUrl,
   revalidate,
 ) => await fetchLgtmImages(fetchLgtmImagesInRecentlyCreatedUrl(), revalidate);
 

@@ -1,12 +1,11 @@
 import { issueClientCredentialsAccessToken } from '@/api/cognito/openIdConnect';
 import {
   FetchLgtmImagesError,
+  lgtmeowApiUrl,
   validation,
   type LgtmImage,
   type ValidationResult,
 } from '@/features';
-// TODO 後でfetchLgtmImagesUrl関数を使うように修正する
-import { lgtmeowApiUrl } from '@/features/url';
 import { z } from 'zod';
 
 export const dynamic = 'force-dynamic';

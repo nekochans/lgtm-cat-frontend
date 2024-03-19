@@ -1,4 +1,8 @@
-import { FetchLgtmImagesError, fetchLgtmImagesUrl } from '@/features';
+import {
+  appBaseUrl,
+  FetchLgtmImagesError,
+  fetchLgtmImagesUrl,
+} from '@/features';
 import { useCatImagesFetcher } from '@/hooks/useCatImagesFetcher';
 import {
   fetchLgtmImagesMockBody,
@@ -33,7 +37,8 @@ describe('useCatImagesFetcher.ts randomCatImagesFetcher TestCases', () => {
       imageUrl: value.imageUrl,
     }));
 
-    const lgtmImages = await useCatImagesFetcher().randomCatImagesFetcher();
+    const lgtmImages =
+      await useCatImagesFetcher(appBaseUrl()).randomCatImagesFetcher();
 
     expect(lgtmImages).toStrictEqual(expected);
   });
@@ -42,7 +47,7 @@ describe('useCatImagesFetcher.ts randomCatImagesFetcher TestCases', () => {
     server.use(http.get(fetchLgtmImagesUrl(), mockInternalServerError));
 
     await expect(
-      useCatImagesFetcher().randomCatImagesFetcher(),
+      useCatImagesFetcher(appBaseUrl()).randomCatImagesFetcher(),
     ).rejects.toStrictEqual(new FetchLgtmImagesError('Internal Server Error'));
   });
 });

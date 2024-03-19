@@ -142,7 +142,8 @@ const bffUrl = (): Url => {
 
 export const uploadCatImageUrl = (): Url => `${bffUrl()}/lgtm-images`;
 
-export const fetchLgtmImagesUrl = (): Url => `${bffUrl()}/lgtm-images`;
+export const fetchLgtmImagesUrl = (baseUrl?: Url): Url =>
+  `${isUrl(baseUrl) ? baseUrl : appBaseUrl()}/api/lgtm-images`;
 
 export const fetchLgtmImagesInRecentlyCreatedUrl = (): Url =>
   `${bffUrl()}/lgtm-images/recently-created`;

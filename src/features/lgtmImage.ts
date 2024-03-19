@@ -1,3 +1,4 @@
+import type { Url } from '@/features/url';
 import {
   NotAllowedImageExtensionError,
   type UploadCatImageError,
@@ -13,7 +14,10 @@ export type LgtmImage = { id: number; imageUrl: LgtmImageUrl };
 
 export type AcceptedTypesImageExtension = '.png' | '.jpg' | '.jpeg';
 
-export type FetchLgtmImages = (revalidate?: number) => Promise<LgtmImage[]>;
+export type FetchLgtmImages = (
+  appBaseUrl?: Url,
+  revalidate?: number,
+) => Promise<LgtmImage[]>;
 
 export type IsAcceptableCatImageDto = {
   image: string;
@@ -55,7 +59,7 @@ export type UploadCatImage = (
   >
 >;
 
-export type CatImagesFetcher = () => Promise<LgtmImage[]>;
+export type CatImagesFetcher = (appBaseUrl?: Url) => Promise<LgtmImage[]>;
 
 export type ImageValidator = (
   image: string,
