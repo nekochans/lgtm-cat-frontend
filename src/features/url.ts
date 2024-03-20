@@ -145,8 +145,8 @@ export const uploadCatImageUrl = (): Url => `${bffUrl()}/lgtm-images`;
 export const fetchLgtmImagesUrl = (baseUrl?: Url): Url =>
   `${isUrl(baseUrl) ? baseUrl : appBaseUrl()}/api/lgtm-images`;
 
-export const fetchLgtmImagesInRecentlyCreatedUrl = (): Url =>
-  `${bffUrl()}/lgtm-images/recently-created`;
+export const fetchLgtmImagesInRecentlyCreatedUrl = (baseUrl?: Url): Url =>
+  `${isUrl(baseUrl) ? baseUrl : appBaseUrl()}/api/lgtm-images/recently-created`;
 
 export const isAcceptableCatImageUrl = (): Url =>
   `${bffUrl()}/cat-images/validation-results`;

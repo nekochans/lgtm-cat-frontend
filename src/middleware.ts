@@ -61,37 +61,28 @@ export const middleware: NextMiddleware = async (req: NextRequest) => {
       nextUrl.pathname = `${language}/maintenance`;
     }
 
-    return NextResponse.rewrite(
-      nextUrl,
-      {
-        request: {
-          headers: requestHeaders,
-        },
+    return NextResponse.rewrite(nextUrl, {
+      request: {
+        headers: requestHeaders,
       },
-    );
+    });
   }
 
   if (language === 'ja') {
     const removedLanguagePath = removeLanguageFromAppPath(nextUrl.pathname);
     if (nextUrl.pathname !== '/ja') {
-      return NextResponse.redirect(
-        new URL(removedLanguagePath, req.url),
-        {
-          status: httpStatusCode.found,
-          statusText: 'Found',
-          headers: requestHeaders,
-        },
-      );
-    }
-
-    return NextResponse.redirect(
-      new URL('/', req.url),
-      {
+      return NextResponse.redirect(new URL(removedLanguagePath, req.url), {
         status: httpStatusCode.found,
         statusText: 'Found',
         headers: requestHeaders,
-      },
-    );
+      });
+    }
+
+    return NextResponse.redirect(new URL('/', req.url), {
+      status: httpStatusCode.found,
+      statusText: 'Found',
+      headers: requestHeaders,
+    });
   }
 
   return NextResponse.next({

@@ -6,13 +6,15 @@ import type { CatImagesFetcher, LgtmImage, Url } from '@/features';
 import throttle from 'lodash/throttle';
 
 const randomCatImagesFetcher = async (
-  appBaseUrl?: Url,
+  appBaseUrl: Url,
 ): Promise<LgtmImage[]> => {
   return await fetchLgtmImagesInRandom(appBaseUrl);
 };
 
-const newArrivalCatImagesFetcher = async (): Promise<LgtmImage[]> => {
-  return await fetchLgtmImagesInRecentlyCreated();
+const newArrivalCatImagesFetcher = async (
+  appBaseUrl: Url,
+): Promise<LgtmImage[]> => {
+  return await fetchLgtmImagesInRecentlyCreated(appBaseUrl);
 };
 
 const limitThreshold = 1000;
@@ -30,7 +32,7 @@ export const useCatImagesFetcher = (
     limitThreshold,
   ) as typeof randomCatImagesFetcher,
   newArrivalCatImagesFetcher: throttle<typeof newArrivalCatImagesFetcher>(
-    async () => await newArrivalCatImagesFetcher(),
+    async () => await newArrivalCatImagesFetcher(appBaseUrl),
     limitThreshold,
   ) as typeof newArrivalCatImagesFetcher,
 });

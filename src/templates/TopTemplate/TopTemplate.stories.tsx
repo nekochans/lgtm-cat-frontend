@@ -88,7 +88,10 @@ export const ViewInJapanese: Story = {
     msw: {
       handlers: [
         http.get(fetchLgtmImagesUrl(appBaseUrl()), mockFetchLgtmImages),
-        http.get(fetchLgtmImagesInRecentlyCreatedUrl(), mockFetchLgtmImages),
+        http.get(
+          fetchLgtmImagesInRecentlyCreatedUrl(appBaseUrl()),
+          mockFetchLgtmImages,
+        ),
       ],
     },
   },
@@ -112,7 +115,10 @@ export const ViewInEnglish: Story = {
     msw: {
       handlers: [
         http.get(fetchLgtmImagesUrl(appBaseUrl()), mockFetchLgtmImages),
-        http.get(fetchLgtmImagesInRecentlyCreatedUrl(), mockFetchLgtmImages),
+        http.get(
+          fetchLgtmImagesInRecentlyCreatedUrl(appBaseUrl()),
+          mockFetchLgtmImages,
+        ),
       ],
     },
   },
@@ -137,7 +143,7 @@ export const ViewInJapaneseError: Story = {
       handlers: [
         http.get(fetchLgtmImagesUrl(appBaseUrl()), mockInternalServerError),
         http.get(
-          fetchLgtmImagesInRecentlyCreatedUrl(),
+          fetchLgtmImagesInRecentlyCreatedUrl(appBaseUrl()),
           mockInternalServerError,
         ),
       ],
@@ -164,7 +170,7 @@ export const ViewInEnglishError: Story = {
       handlers: [
         http.get(fetchLgtmImagesUrl(appBaseUrl()), mockInternalServerError),
         http.get(
-          fetchLgtmImagesInRecentlyCreatedUrl(),
+          fetchLgtmImagesInRecentlyCreatedUrl(appBaseUrl()),
           mockInternalServerError,
         ),
       ],

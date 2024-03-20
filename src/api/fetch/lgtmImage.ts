@@ -7,7 +7,6 @@ import {
   fetchLgtmImagesUrl,
   IsAcceptableCatImageError,
   isAcceptableCatImageUrl,
-  isLgtmImages,
   isUrl,
   UploadCatImageError,
   UploadCatImageSizeTooLargeError,
@@ -19,90 +18,8 @@ import {
   type LgtmImage,
   type LgtmImageUrl,
   type UploadCatImage,
-  type Url,
 } from '@/features';
 import { mightSetRequestIdToSentry } from '@/utils';
-
-type FetchImageResponseBody = {
-  lgtmImages: Array<{
-    id: number;
-    imageUrl: string;
-  }>;
-};
-
-// eslint-disable-next-line max-statements
-const isFetchImageResponseBody = (
-  value: unknown,
-): value is FetchImageResponseBody => {
-  if (Object.prototype.toString.call(value) !== '[object Object]') {
-    return false;
-  }
-
-  const fetchImageResponseBody = value as FetchImageResponseBody;
-  if (!Object.hasOwn(fetchImageResponseBody, 'lgtmImages')) {
-    return false;
-  }
-
-  if (Array.isArray(fetchImageResponseBody.lgtmImages)) {
-    // eslint-disable-next-line no-magic-numbers
-    if (fetchImageResponseBody.lgtmImages.length === 0) {
-      return false;
-    }
-
-    // eslint-disable-next-line prefer-destructuring, no-magic-numbers
-    const lgtmImage = fetchImageResponseBody.lgtmImages[0];
-    if (Object.prototype.toString.call(lgtmImage) !== '[object Object]') {
-      return false;
-    }
-
-    return (
-      Object.hasOwn(lgtmImage, 'id') && Object.hasOwn(lgtmImage, 'imageUrl')
-    );
-  }
-
-  return false;
-};
-
-// eslint-disable-next-line max-statements
-const fetchLgtmImages = async (
-  fetchUrl: Url,
-  revalidate?: number,
-): Promise<LgtmImage[]> => {
-  const options: RequestInit =
-    revalidate != null
-      ? {
-          method: 'GET',
-          mode: 'cors',
-          cache: 'no-cache',
-          next: { revalidate },
-        }
-      : {
-          method: 'GET',
-          mode: 'cors',
-          cache: 'no-cache',
-        };
-
-  const response = await fetch(fetchUrl, options);
-  if (!response.ok) {
-    mightSetRequestIdToSentry(response);
-
-    throw new FetchLgtmImagesError(response.statusText);
-  }
-
-  const responseBody = (await response.json()) as FetchImageResponseBody;
-  if (isFetchImageResponseBody(responseBody)) {
-    const lgtmImages = responseBody.lgtmImages.map((value) => ({
-      id: Number(value.id),
-      imageUrl: value.imageUrl,
-    }));
-
-    if (isLgtmImages(lgtmImages)) {
-      return lgtmImages;
-    }
-  }
-
-  throw new FetchLgtmImagesError('ResponseBody is not expected');
-};
 
 // eslint-disable-next-line require-await
 export const fetchLgtmImagesInRandom: FetchLgtmImages = async (
@@ -123,13 +40,34 @@ export const fetchLgtmImagesInRandom: FetchLgtmImages = async (
 
   return (await response.json()) as LgtmImage[];
 };
-// await fetchLgtmImages(fetchLgtmImagesUrl(), revalidate);
 
 // eslint-disable-next-line require-await
 export const fetchLgtmImagesInRecentlyCreated: FetchLgtmImages = async (
   appBaseUrl,
   revalidate,
-) => await fetchLgtmImages(fetchLgtmImagesInRecentlyCreatedUrl(), revalidate);
+) => {
+  const options: RequestInit =
+    revalidate != null
+      ? {
+          method: 'GET',
+          next: { revalidate },
+        }
+      : {
+          method: 'GET',
+        };
+
+  const response = await fetch(
+    `${fetchLgtmImagesInRecentlyCreatedUrl(appBaseUrl)}`,
+    options,
+  );
+  if (!response.ok) {
+    mightSetRequestIdToSentry(response);
+
+    throw new FetchLgtmImagesError(response.statusText);
+  }
+
+  return (await response.json()) as LgtmImage[];
+};
 
 export const isAcceptableCatImage: IsAcceptableCatImage = async (dto) => {
   const options: RequestInit = {

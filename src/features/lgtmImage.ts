@@ -59,7 +59,7 @@ export type UploadCatImage = (
   >
 >;
 
-export type CatImagesFetcher = (appBaseUrl?: Url) => Promise<LgtmImage[]>;
+export type CatImagesFetcher = (appBaseUrl: Url) => Promise<LgtmImage[]>;
 
 export type ImageValidator = (
   image: string,
