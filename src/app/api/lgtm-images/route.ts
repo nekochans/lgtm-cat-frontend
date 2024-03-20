@@ -1,43 +1,15 @@
-import { issueClientCredentialsAccessToken } from '@/api/cognito/openIdConnect';
+import {
+  isFetchLgtmImagesResponseBody,
+  issueClientCredentialsAccessToken,
+} from '@/api';
 import {
   FetchLgtmImagesError,
   lgtmeowApiUrl,
-  validation,
   type LgtmImage,
-  type ValidationResult,
 } from '@/features';
-import { z } from 'zod';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'edge';
-
-type FetchLgtmImagesResponseBody = {
-  lgtmImages: Array<{
-    id: string;
-    url: `https://${string}`;
-  }>;
-};
-
-const lgtmImageSchema = z.object({
-  id: z.union([z.string().min(1), z.number().min(1)]),
-  url: z.string().url(),
-});
-
-const fetchLgtmImagesResponseBodySchema = z.object({
-  lgtmImages: z.array(lgtmImageSchema),
-});
-
-export const validateFetchLgtmImagesResponseBody = (
-  value: unknown,
-): ValidationResult => {
-  return validation(fetchLgtmImagesResponseBodySchema, value);
-};
-
-const isFetchLgtmImagesResponseBody = (
-  value: unknown,
-): value is FetchLgtmImagesResponseBody => {
-  return validateFetchLgtmImagesResponseBody(value).isValidate;
-};
 
 export const GET = async (): Promise<Response> => {
   const accessToken = await issueClientCredentialsAccessToken();
