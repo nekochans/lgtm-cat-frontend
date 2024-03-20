@@ -55,7 +55,7 @@ export const TopTemplate: FC<Props> = ({
 
   const onClickFetchNewArrivalCatButton = async () => {
     try {
-      const lgtmImagesList = await newArrivalCatImagesFetcher();
+      const lgtmImagesList = await newArrivalCatImagesFetcher(appBaseUrl);
 
       updateLgtmImages(lgtmImagesList);
       updateIsFailedFetchLgtmImages(false);
