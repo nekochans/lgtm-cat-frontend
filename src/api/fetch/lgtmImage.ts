@@ -83,7 +83,10 @@ export const isAcceptableCatImage: IsAcceptableCatImage = async (dto) => {
     }),
   };
 
-  const response = await fetch(isAcceptableCatImageUrl(), options);
+  const response = await fetch(
+    isAcceptableCatImageUrl(dto.appBaseUrl),
+    options,
+  );
 
   if (response.status !== httpStatusCode.ok) {
     if (response.status === httpStatusCode.payloadTooLarge) {

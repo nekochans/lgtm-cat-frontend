@@ -148,8 +148,8 @@ export const fetchLgtmImagesUrl = (baseUrl?: Url): Url =>
 export const fetchLgtmImagesInRecentlyCreatedUrl = (baseUrl?: Url): Url =>
   `${isUrl(baseUrl) ? baseUrl : appBaseUrl()}/api/lgtm-images/recently-created`;
 
-export const isAcceptableCatImageUrl = (): Url =>
-  `${bffUrl()}/cat-images/validation-results`;
+export const isAcceptableCatImageUrl = (baseUrl?: Url): Url =>
+  `${isUrl(baseUrl) ? baseUrl : appBaseUrl()}/api/cat-images/validation-results`;
 
 export const lgtmeowApiUrl = (): Url => {
   if (isUrl(process.env.LGTMEOW_API_URL)) {
@@ -157,4 +157,12 @@ export const lgtmeowApiUrl = (): Url => {
   }
 
   throw new Error('LGTMEOW_API_URL is not defined');
+};
+
+export const imageRecognitionApiUrl = (): Url => {
+  if (isUrl(process.env.IMAGE_RECOGNITION_API_URL)) {
+    return process.env.IMAGE_RECOGNITION_API_URL;
+  }
+
+  throw new Error('IMAGE_RECOGNITION_API_URL is not defined');
 };

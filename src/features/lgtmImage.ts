@@ -12,7 +12,10 @@ export type LgtmImageUrl = `https://${string}`;
 
 export type LgtmImage = { id: number; imageUrl: LgtmImageUrl };
 
-export type AcceptedTypesImageExtension = '.png' | '.jpg' | '.jpeg';
+export const acceptedTypesImageExtensions = ['.png', '.jpg', '.jpeg'] as const;
+
+export type AcceptedTypesImageExtension =
+  (typeof acceptedTypesImageExtensions)[number];
 
 export type FetchLgtmImages = (
   appBaseUrl?: Url,
@@ -22,6 +25,7 @@ export type FetchLgtmImages = (
 export type IsAcceptableCatImageDto = {
   image: string;
   imageExtension: AcceptedTypesImageExtension;
+  appBaseUrl?: Url;
 };
 
 export type IsAcceptableCatImageNotAcceptableReason =
