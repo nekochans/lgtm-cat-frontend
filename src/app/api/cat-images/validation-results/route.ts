@@ -4,7 +4,9 @@ import {
   acceptedTypesImageExtensions,
   FetchLgtmImagesError,
   imageRecognitionApiUrl,
+  isAcceptableCatImageNotAcceptableReasons,
   validation,
+  type IsAcceptableCatImageResponse,
   type ValidationResult,
 } from '@/features';
 import { NextResponse } from 'next/server';
@@ -24,22 +26,6 @@ const validateCatImageValidationRequestBody = (
   value: unknown,
 ): ValidationResult => {
   return validation(schema, value);
-};
-
-const isAcceptableCatImageNotAcceptableReasons = [
-  'not an allowed image extension',
-  'not moderation image',
-  'person face in the image',
-  'not cat image',
-  'an error has occurred',
-] as const;
-
-export type IsAcceptableCatImageNotAcceptableReason =
-  (typeof isAcceptableCatImageNotAcceptableReasons)[number];
-
-export type IsAcceptableCatImageResponse = {
-  isAcceptableCatImage: boolean;
-  notAcceptableReason?: IsAcceptableCatImageNotAcceptableReason;
 };
 
 const isAcceptableCatImageResponseSchema = z.object({

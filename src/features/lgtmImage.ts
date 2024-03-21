@@ -28,12 +28,16 @@ export type IsAcceptableCatImageDto = {
   appBaseUrl?: Url;
 };
 
+export const isAcceptableCatImageNotAcceptableReasons = [
+  'not an allowed image extension',
+  'not moderation image',
+  'person face in the image',
+  'not cat image',
+  'an error has occurred',
+] as const;
+
 export type IsAcceptableCatImageNotAcceptableReason =
-  | 'not an allowed image extension'
-  | 'not moderation image'
-  | 'person face in the image'
-  | 'not cat image'
-  | 'an error has occurred';
+  (typeof isAcceptableCatImageNotAcceptableReasons)[number];
 
 export type IsAcceptableCatImageResponse = {
   isAcceptableCatImage: boolean;
