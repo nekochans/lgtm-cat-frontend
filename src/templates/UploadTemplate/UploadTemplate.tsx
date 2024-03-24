@@ -28,7 +28,7 @@ export const UploadTemplate: FC<Props> = ({
 }) => {
   const { imageValidator } = useCatImageValidator(language, appBaseUrl);
 
-  const { imageUploader } = useCatImageUploader(language);
+  const { imageUploader } = useCatImageUploader(language, appBaseUrl);
 
   const { isLanguageMenuDisplayed, onClickLanguageButton, onClickOutSideMenu } =
     useSwitchLanguage();

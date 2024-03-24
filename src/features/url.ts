@@ -132,15 +132,8 @@ export const i18nUrlList: I18nUrlList = {
 
 export type AppUrl = (typeof appUrlList)[keyof typeof appUrlList];
 
-const bffUrl = (): Url => {
-  if (isUrl(process.env.NEXT_PUBLIC_LGTMEOW_BFF_URL)) {
-    return process.env.NEXT_PUBLIC_LGTMEOW_BFF_URL;
-  }
-
-  return 'http://localhost:8787';
-};
-
-export const uploadCatImageUrl = (): Url => `${bffUrl()}/lgtm-images`;
+export const uploadCatImageUrl = (baseUrl?: Url): Url =>
+  `${isUrl(baseUrl) ? baseUrl : appBaseUrl()}/api/lgtm-images`;
 
 export const fetchLgtmImagesUrl = (baseUrl?: Url): Url =>
   `${isUrl(baseUrl) ? baseUrl : appBaseUrl()}/api/lgtm-images`;

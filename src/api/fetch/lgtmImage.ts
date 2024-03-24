@@ -141,7 +141,7 @@ export const uploadCatImage: UploadCatImage = async (dto) => {
     }),
   };
 
-  const response = await fetch(uploadCatImageUrl(), options);
+  const response = await fetch(uploadCatImageUrl(dto.appBaseUrl), options);
 
   if (response.status !== httpStatusCode.accepted) {
     switch (response.status) {
