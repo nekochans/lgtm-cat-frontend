@@ -24,7 +24,6 @@ https://vercel.com/docs/cli#commands/dev/when-to-use-this-command
 NEXT_PUBLIC_APP_ENV=local
 NEXT_PUBLIC_APP_URL=本アプリケーションのURL、ローカルの場合は http://localhost:2222
 NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID=GTM-から始まるGoogle Tag ManagerのIDを指定
-NEXT_PUBLIC_LGTMEOW_BFF_URL=https://github.com/nekochans/lgtm-cat-bff が稼働しているURLを指定
 EDGE_CONFIG=Vercel Edge ConfigのURL（Vercel上の値を参照）
 ```
 
