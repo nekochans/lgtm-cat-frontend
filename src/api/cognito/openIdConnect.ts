@@ -1,4 +1,5 @@
 import { validation, type IssueClientCredentialsAccessToken } from '@/features';
+import { Redis } from '@upstash/redis';
 import { z } from 'zod';
 import { IssueClientCredentialsAccessTokenError } from './IssueClientCredentialsAccessTokenError';
 
@@ -51,8 +52,38 @@ const cognitoTokenEndpoint = (): string => {
   );
 };
 
+const upstashRedisRestUrl = (): string => {
+  if (process.env.UPSTASH_REDIS_REST_URL != null) {
+    return process.env.UPSTASH_REDIS_REST_URL;
+  }
+
+  throw new IssueClientCredentialsAccessTokenError(
+    'UPSTASH_REDIS_REST_URL is not defined',
+  );
+};
+
+const upstashRedisRestToken = (): string => {
+  if (process.env.UPSTASH_REDIS_REST_TOKEN != null) {
+    return process.env.UPSTASH_REDIS_REST_TOKEN;
+  }
+
+  throw new IssueClientCredentialsAccessTokenError(
+    'UPSTASH_REDIS_REST_TOKEN is not defined',
+  );
+};
+
 export const issueClientCredentialsAccessToken: IssueClientCredentialsAccessToken =
   async () => {
+    const redis = new Redis({
+      url: upstashRedisRestUrl(),
+      token: upstashRedisRestToken(),
+    });
+
+    const cachedAccessToken = await redis.get(cognitoClientId());
+    if (typeof cachedAccessToken === 'string') {
+      return cachedAccessToken;
+    }
+
     const authorization = btoa(`${cognitoClientId()}:${cognitoClientSecret()}`);
 
     const options = {
@@ -87,6 +118,9 @@ export const issueClientCredentialsAccessToken: IssueClientCredentialsAccessToke
     const responseBody = (await response.json()) as unknown;
 
     if (isCognitoTokenResponseBody(responseBody)) {
+      await redis.set(cognitoClientId(), responseBody.access_token);
+      await redis.expire(cognitoClientId(), 3000);
+
       return responseBody.access_token;
     }
 
