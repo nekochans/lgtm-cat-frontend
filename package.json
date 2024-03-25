@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@sentry/nextjs": "^7.100.1",
+    "@upstash/redis": "^1.29.0",
     "@vercel/edge-config": "^1.0.0",
     "clipboard": "^2.0.11",
     "lodash.throttle": "^4.1.1",
