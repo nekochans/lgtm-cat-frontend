@@ -2,6 +2,7 @@ import {
   isFetchLgtmImagesResponseBody,
   issueClientCredentialsAccessToken,
 } from '@/api';
+import { createTooManyRequestsError } from '@/app/api/_utils/http';
 import {
   httpStatusCode,
   upstashRedisRestToken,
@@ -38,16 +39,7 @@ const rateLimit = new Ratelimit({
 export const GET = async (request: NextRequest): Promise<Response> => {
   const { success } = await rateLimit.limit(request.ip ?? 'anonymous');
   if (!success) {
-    const responseBody = {
-      type: 'TOO_MANY_REQUESTS',
-      title: 'Too many requests.',
-      detail:
-        'Too many requests from this IP. Please try again after some time.',
-    };
-
-    const status = httpStatusCode.tooManyRequests;
-
-    return NextResponse.json(responseBody, { status });
+    return createTooManyRequestsError();
   }
 
   const accessToken = await issueClientCredentialsAccessToken();
@@ -119,8 +111,13 @@ const isUploadLgtmImageResponse = (
   return validation(uploadLgtmImageResponseSchema, value).isValidate;
 };
 
-export const POST = async (req: Request): Promise<Response> => {
-  const requestBody = (await req.json()) as UploadLgtmImageRequestBody;
+export const POST = async (request: NextRequest): Promise<Response> => {
+  const { success } = await rateLimit.limit(request.ip ?? 'anonymous');
+  if (!success) {
+    return createTooManyRequestsError();
+  }
+
+  const requestBody = (await request.json()) as UploadLgtmImageRequestBody;
   const validationResult = validateUploadLgtmImageRequestBody(requestBody);
   if (!validationResult.isValidate && validationResult.invalidParams) {
     const validationErrorBody = {
