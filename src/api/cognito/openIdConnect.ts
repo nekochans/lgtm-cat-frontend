@@ -1,3 +1,4 @@
+import { upstashRedisRestToken, upstashRedisRestUrl } from '@/constants';
 import { validation, type IssueClientCredentialsAccessToken } from '@/features';
 import { Redis } from '@upstash/redis';
 import { z } from 'zod';
@@ -49,26 +50,6 @@ const cognitoTokenEndpoint = (): string => {
 
   throw new IssueClientCredentialsAccessTokenError(
     'COGNITO_TOKEN_ENDPOINT is not defined',
-  );
-};
-
-const upstashRedisRestUrl = (): string => {
-  if (process.env.UPSTASH_REDIS_REST_URL != null) {
-    return process.env.UPSTASH_REDIS_REST_URL;
-  }
-
-  throw new IssueClientCredentialsAccessTokenError(
-    'UPSTASH_REDIS_REST_URL is not defined',
-  );
-};
-
-const upstashRedisRestToken = (): string => {
-  if (process.env.UPSTASH_REDIS_REST_TOKEN != null) {
-    return process.env.UPSTASH_REDIS_REST_TOKEN;
-  }
-
-  throw new IssueClientCredentialsAccessTokenError(
-    'UPSTASH_REDIS_REST_TOKEN is not defined',
   );
 };
 
