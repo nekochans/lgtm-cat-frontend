@@ -2,7 +2,11 @@ import {
   isFetchLgtmImagesResponseBody,
   issueClientCredentialsAccessToken,
 } from '@/api';
-import { httpStatusCode } from '@/constants';
+import {
+  httpStatusCode,
+  upstashRedisRestToken,
+  upstashRedisRestUrl,
+} from '@/constants';
 import {
   acceptedTypesImageExtensions,
   FetchLgtmImagesError,
@@ -11,13 +15,41 @@ import {
   type LgtmImage,
   type ValidationResult,
 } from '@/features';
-import { NextResponse } from 'next/server';
+import { Ratelimit } from '@upstash/ratelimit';
+import { Redis } from '@upstash/redis';
+import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'edge';
 
-export const GET = async (): Promise<Response> => {
+const redis = new Redis({
+  url: upstashRedisRestUrl(),
+  token: upstashRedisRestToken(),
+});
+
+const rateLimit = new Ratelimit({
+  redis,
+  analytics: true,
+  limiter: Ratelimit.slidingWindow(5, '10 s'),
+  prefix: '@upstash/ratelimit',
+});
+
+export const GET = async (request: NextRequest): Promise<Response> => {
+  const { success } = await rateLimit.limit(request.ip ?? 'anonymous');
+  if (!success) {
+    const responseBody = {
+      type: 'TOO_MANY_REQUESTS',
+      title: 'Too many requests.',
+      detail:
+        'Too many requests from this IP. Please try again after some time.',
+    };
+
+    const status = httpStatusCode.tooManyRequests;
+
+    return NextResponse.json(responseBody, { status });
+  }
+
   const accessToken = await issueClientCredentialsAccessToken();
 
   const options = {

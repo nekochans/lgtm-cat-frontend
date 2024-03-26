@@ -9,6 +9,7 @@ export const httpStatusCode = {
   methodNotAllowed: 405,
   payloadTooLarge: 413,
   unprocessableEntity: 422,
+  tooManyRequests: 429,
   internalServerError: 500,
   serviceUnavailable: 503,
 } as const;
