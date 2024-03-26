@@ -24,8 +24,14 @@ https://vercel.com/docs/cli#commands/dev/when-to-use-this-command
 NEXT_PUBLIC_APP_ENV=local
 NEXT_PUBLIC_APP_URL=本アプリケーションのURL、ローカルの場合は http://localhost:2222
 NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID=GTM-から始まるGoogle Tag ManagerのIDを指定
-NEXT_PUBLIC_LGTMEOW_BFF_URL=https://github.com/nekochans/lgtm-cat-bff が稼働しているURLを指定
 EDGE_CONFIG=Vercel Edge ConfigのURL（Vercel上の値を参照）
+COGNITO_TOKEN_ENDPOINT=/oauth2/token で終わるCognitoのエンドポイントを指定
+COGNITO_CLIENT_ID=CognitoUserPoolのClient IDを指定
+COGNITO_CLIENT_SECRET=CognitoUserPoolのClient Secretを指定
+LGTMEOW_API_URL=https://github.com/nekochans/lgtm-cat-api が稼働しているAPIサーバーのURLを指定
+IMAGE_RECOGNITION_API_URL=ねこ画像判定APIが稼働しているAPIサーバーのURLを指定
+UPSTASH_REDIS_REST_URL=upstash Redis REST APIのURLを指定
+UPSTASH_REDIS_REST_TOKEN=upstash Redis REST APIのトークンを指定
 ```
 
 ローカルでSentryやChromaticの動作確認を実施する場合 [direnv](https://github.com/direnv/direnv) を使って `.envrc` に以下の環境変数を設定します。

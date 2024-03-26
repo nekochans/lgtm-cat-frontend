@@ -1,4 +1,5 @@
 import {
+  appBaseUrl,
   FetchLgtmImagesError,
   fetchLgtmImagesInRecentlyCreatedUrl,
 } from '@/features';
@@ -13,7 +14,10 @@ import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
 const mockHandlers = [
-  http.get(fetchLgtmImagesInRecentlyCreatedUrl(), mockFetchLgtmImages),
+  http.get(
+    fetchLgtmImagesInRecentlyCreatedUrl(appBaseUrl()),
+    mockFetchLgtmImages,
+  ),
 ];
 
 const server = setupServer(...mockHandlers);
@@ -38,7 +42,10 @@ describe('useCatImagesFetcher.ts newArrivalCatImagesFetcher TestCases', () => {
       imageUrl: value.imageUrl,
     }));
 
-    const lgtmImages = await useCatImagesFetcher().newArrivalCatImagesFetcher();
+    const lgtmImages =
+      await useCatImagesFetcher(appBaseUrl()).newArrivalCatImagesFetcher(
+        appBaseUrl(),
+      );
 
     expect(lgtmImages).toStrictEqual(expected);
   });
@@ -49,7 +56,9 @@ describe('useCatImagesFetcher.ts newArrivalCatImagesFetcher TestCases', () => {
     );
 
     await expect(
-      useCatImagesFetcher().newArrivalCatImagesFetcher(),
+      useCatImagesFetcher(appBaseUrl()).newArrivalCatImagesFetcher(
+        appBaseUrl(),
+      ),
     ).rejects.toStrictEqual(new FetchLgtmImagesError('Internal Server Error'));
   });
 });

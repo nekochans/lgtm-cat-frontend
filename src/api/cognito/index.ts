@@ -1,0 +1,1 @@
+export { issueClientCredentialsAccessToken } from './openIdConnect';

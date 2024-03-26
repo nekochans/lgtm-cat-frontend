@@ -1,4 +1,5 @@
 import {
+  appBaseUrl,
   IsAcceptableCatImageError,
   isAcceptableCatImageUrl,
   isSuccessResult,
@@ -21,7 +22,7 @@ import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
 const mockHandlers = [
-  http.post(isAcceptableCatImageUrl(), mockIsAcceptableCatImage),
+  http.post(isAcceptableCatImageUrl(appBaseUrl()), mockIsAcceptableCatImage),
 ];
 
 const server = setupServer(...mockHandlers);
@@ -64,7 +65,7 @@ describe('useCatImageValidator TestCases', () => {
   `(
     'should be true for isAcceptableCatImage. language: $language',
     async ({ language, image, imageExtension, expected }: TestTable) => {
-      const { imageValidator } = useCatImageValidator(language);
+      const { imageValidator } = useCatImageValidator(language, appBaseUrl());
 
       const isAcceptableCatImageResult = await imageValidator(
         image,
@@ -83,11 +84,11 @@ describe('useCatImageValidator TestCases', () => {
   `(
     'should result in isAcceptableCatImage being false, because not an allowed image extension. language: $language',
     async ({ language, image, imageExtension, expected }: TestTable) => {
-      const { imageValidator } = useCatImageValidator(language);
+      const { imageValidator } = useCatImageValidator(language, appBaseUrl());
 
       server.use(
         http.post(
-          isAcceptableCatImageUrl(),
+          isAcceptableCatImageUrl(appBaseUrl()),
           mockIsAcceptableCatImageNotAllowedImageExtension,
         ),
       );
@@ -109,11 +110,11 @@ describe('useCatImageValidator TestCases', () => {
   `(
     'should result in isAcceptableCatImage being false, because not moderation image. language: $language',
     async ({ language, image, imageExtension, expected }: TestTable) => {
-      const { imageValidator } = useCatImageValidator(language);
+      const { imageValidator } = useCatImageValidator(language, appBaseUrl());
 
       server.use(
         http.post(
-          isAcceptableCatImageUrl(),
+          isAcceptableCatImageUrl(appBaseUrl()),
           mockIsAcceptableCatImageNotModerationImage,
         ),
       );
@@ -135,11 +136,11 @@ describe('useCatImageValidator TestCases', () => {
   `(
     'should result in isAcceptableCatImage being false, because person face in the image. language: $language',
     async ({ language, image, imageExtension, expected }: TestTable) => {
-      const { imageValidator } = useCatImageValidator(language);
+      const { imageValidator } = useCatImageValidator(language, appBaseUrl());
 
       server.use(
         http.post(
-          isAcceptableCatImageUrl(),
+          isAcceptableCatImageUrl(appBaseUrl()),
           mockIsAcceptableCatImagePersonFaceInImage,
         ),
       );
@@ -161,11 +162,11 @@ describe('useCatImageValidator TestCases', () => {
   `(
     'should result in isAcceptableCatImage being false, because not cat image. language: $language',
     async ({ language, image, imageExtension, expected }: TestTable) => {
-      const { imageValidator } = useCatImageValidator(language);
+      const { imageValidator } = useCatImageValidator(language, appBaseUrl());
 
       server.use(
         http.post(
-          isAcceptableCatImageUrl(),
+          isAcceptableCatImageUrl(appBaseUrl()),
           mockIsAcceptableCatImageNotCatImage,
         ),
       );
@@ -187,11 +188,11 @@ describe('useCatImageValidator TestCases', () => {
   `(
     'should result in isAcceptableCatImage being false, because the image is too large. language: $language',
     async ({ language, image, imageExtension, expected }: TestTable) => {
-      const { imageValidator } = useCatImageValidator(language);
+      const { imageValidator } = useCatImageValidator(language, appBaseUrl());
 
       server.use(
         http.post(
-          isAcceptableCatImageUrl(),
+          isAcceptableCatImageUrl(appBaseUrl()),
           mockIsAcceptableCatImagePayloadTooLargeError,
         ),
       );
@@ -213,10 +214,13 @@ describe('useCatImageValidator TestCases', () => {
   `(
     'should result in isAcceptableCatImage being false, because an error has occurred. language: $language',
     async ({ language, image, imageExtension, expected }: TestTable) => {
-      const { imageValidator } = useCatImageValidator(language);
+      const { imageValidator } = useCatImageValidator(language, appBaseUrl());
 
       server.use(
-        http.post(isAcceptableCatImageUrl(), mockIsAcceptableCatImageError),
+        http.post(
+          isAcceptableCatImageUrl(appBaseUrl()),
+          mockIsAcceptableCatImageError,
+        ),
       );
 
       const isAcceptableCatImageResult = await imageValidator(
@@ -236,9 +240,14 @@ describe('useCatImageValidator TestCases', () => {
   `(
     'should return an IsAcceptableCatImageError, because the API will return internalServer error. language: $language',
     async ({ language, image, imageExtension, expected }: TestTable) => {
-      const { imageValidator } = useCatImageValidator(language);
+      const { imageValidator } = useCatImageValidator(language, appBaseUrl());
 
-      server.use(http.post(isAcceptableCatImageUrl(), mockInternalServerError));
+      server.use(
+        http.post(
+          isAcceptableCatImageUrl(appBaseUrl()),
+          mockInternalServerError,
+        ),
+      );
 
       await expect(imageValidator(image, imageExtension)).rejects.toStrictEqual(
         expected,

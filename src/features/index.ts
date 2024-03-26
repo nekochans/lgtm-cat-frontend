@@ -5,6 +5,8 @@ export * from './locale';
 export * from './metaTag';
 export * from './result';
 export * from './url';
+export * from './validator';
+export * from './openIdConnect';
 export { createPrivacyPolicyLinksFromLanguages } from './privacyPolicy';
 export { createTermsOfUseLinksFromLanguages } from './termsOfUse';
 export { errorType, type ErrorType } from './error';

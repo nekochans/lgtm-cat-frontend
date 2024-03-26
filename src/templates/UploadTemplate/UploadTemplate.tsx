@@ -1,7 +1,7 @@
 'use client';
 
 import { ResponsiveLayout, UploadForm } from '@/components';
-import { appBaseUrl, type Language } from '@/features';
+import { type Language, type Url } from '@/features';
 import {
   useCatImageUploader,
   useCatImageValidator,
@@ -17,13 +17,18 @@ import styles from './UploadTemplate.module.css';
 
 type Props = {
   language: Language;
+  appBaseUrl: Url;
   children: ReactNode;
 };
 
-export const UploadTemplate: FC<Props> = ({ language, children }) => {
-  const { imageValidator } = useCatImageValidator(language);
+export const UploadTemplate: FC<Props> = ({
+  language,
+  appBaseUrl,
+  children,
+}) => {
+  const { imageValidator } = useCatImageValidator(language, appBaseUrl);
 
-  const { imageUploader } = useCatImageUploader(language);
+  const { imageUploader } = useCatImageUploader(language, appBaseUrl);
 
   const { isLanguageMenuDisplayed, onClickLanguageButton, onClickOutSideMenu } =
     useSwitchLanguage();
@@ -43,7 +48,7 @@ export const UploadTemplate: FC<Props> = ({ language, children }) => {
           uploadCallback={sendUploadedCatImage}
           onClickCreatedLgtmImage={sendCopyMarkdownFromCreatedImage}
           onClickMarkdownSourceCopyButton={sendCopyMarkdownFromCopyButton}
-          appUrl={appBaseUrl()}
+          appUrl={appBaseUrl}
         />
         <div className={styles['image-wrapper']}>{children}</div>
       </ResponsiveLayout>

@@ -1,5 +1,6 @@
 import { Footer } from '@/components';
 import {
+  appBaseUrl,
   fetchLgtmImagesInRecentlyCreatedUrl,
   fetchLgtmImagesUrl,
   type LgtmImage,
@@ -86,8 +87,11 @@ export const ViewInJapanese: Story = {
   parameters: {
     msw: {
       handlers: [
-        http.get(fetchLgtmImagesUrl(), mockFetchLgtmImages),
-        http.get(fetchLgtmImagesInRecentlyCreatedUrl(), mockFetchLgtmImages),
+        http.get(fetchLgtmImagesUrl(appBaseUrl()), mockFetchLgtmImages),
+        http.get(
+          fetchLgtmImagesInRecentlyCreatedUrl(appBaseUrl()),
+          mockFetchLgtmImages,
+        ),
       ],
     },
   },
@@ -110,8 +114,11 @@ export const ViewInEnglish: Story = {
   parameters: {
     msw: {
       handlers: [
-        http.get(fetchLgtmImagesUrl(), mockFetchLgtmImages),
-        http.get(fetchLgtmImagesInRecentlyCreatedUrl(), mockFetchLgtmImages),
+        http.get(fetchLgtmImagesUrl(appBaseUrl()), mockFetchLgtmImages),
+        http.get(
+          fetchLgtmImagesInRecentlyCreatedUrl(appBaseUrl()),
+          mockFetchLgtmImages,
+        ),
       ],
     },
   },
@@ -134,9 +141,9 @@ export const ViewInJapaneseError: Story = {
   parameters: {
     msw: {
       handlers: [
-        http.get(fetchLgtmImagesUrl(), mockInternalServerError),
+        http.get(fetchLgtmImagesUrl(appBaseUrl()), mockInternalServerError),
         http.get(
-          fetchLgtmImagesInRecentlyCreatedUrl(),
+          fetchLgtmImagesInRecentlyCreatedUrl(appBaseUrl()),
           mockInternalServerError,
         ),
       ],
@@ -161,9 +168,9 @@ export const ViewInEnglishError: Story = {
   parameters: {
     msw: {
       handlers: [
-        http.get(fetchLgtmImagesUrl(), mockInternalServerError),
+        http.get(fetchLgtmImagesUrl(appBaseUrl()), mockInternalServerError),
         http.get(
-          fetchLgtmImagesInRecentlyCreatedUrl(),
+          fetchLgtmImagesInRecentlyCreatedUrl(appBaseUrl()),
           mockInternalServerError,
         ),
       ],

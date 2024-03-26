@@ -1,4 +1,5 @@
 import { CalmCatImage, Footer } from '@/components';
+import { extractAppBaseUrlFromHeader } from '@/edge';
 import {
   appName,
   convertLocaleToLanguage,
@@ -39,9 +40,11 @@ export const metadata: Metadata = {
 };
 
 const UploadPage: NextPage = () => {
+  const appBaseUrl = extractAppBaseUrlFromHeader();
+
   return (
     <>
-      <UploadTemplate language={language}>
+      <UploadTemplate language={language} appBaseUrl={appBaseUrl}>
         <CalmCatImage />
       </UploadTemplate>
       <Footer language={language} />

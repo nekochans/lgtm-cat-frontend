@@ -5,9 +5,9 @@ type Options = {
   responseBody?: unknown;
 };
 
-export class FetchLgtmImagesError extends Error {
+export class IssueClientCredentialsAccessTokenError extends Error {
   static {
-    this.prototype.name = 'FetchLgtmImagesError';
+    this.prototype.name = 'IssueClientCredentialsAccessTokenError';
   }
 
   private readonly statusCode: number | undefined;

@@ -1,3 +1,4 @@
+import type { Url } from '@/features/url';
 import {
   NotAllowedImageExtensionError,
   type UploadCatImageError,
@@ -11,21 +12,32 @@ export type LgtmImageUrl = `https://${string}`;
 
 export type LgtmImage = { id: number; imageUrl: LgtmImageUrl };
 
-export type AcceptedTypesImageExtension = '.png' | '.jpg' | '.jpeg';
+export const acceptedTypesImageExtensions = ['.png', '.jpg', '.jpeg'] as const;
 
-export type FetchLgtmImages = (revalidate?: number) => Promise<LgtmImage[]>;
+export type AcceptedTypesImageExtension =
+  (typeof acceptedTypesImageExtensions)[number];
+
+export type FetchLgtmImages = (
+  appBaseUrl?: Url,
+  revalidate?: number,
+) => Promise<LgtmImage[]>;
 
 export type IsAcceptableCatImageDto = {
   image: string;
   imageExtension: AcceptedTypesImageExtension;
+  appBaseUrl?: Url;
 };
 
+export const isAcceptableCatImageNotAcceptableReasons = [
+  'not an allowed image extension',
+  'not moderation image',
+  'person face in the image',
+  'not cat image',
+  'an error has occurred',
+] as const;
+
 export type IsAcceptableCatImageNotAcceptableReason =
-  | 'not an allowed image extension'
-  | 'not moderation image'
-  | 'person face in the image'
-  | 'not cat image'
-  | 'an error has occurred';
+  (typeof isAcceptableCatImageNotAcceptableReasons)[number];
 
 export type IsAcceptableCatImageResponse = {
   isAcceptableCatImage: boolean;
@@ -55,7 +67,7 @@ export type UploadCatImage = (
   >
 >;
 
-export type CatImagesFetcher = () => Promise<LgtmImage[]>;
+export type CatImagesFetcher = (appBaseUrl: Url) => Promise<LgtmImage[]>;
 
 export type ImageValidator = (
   image: string,

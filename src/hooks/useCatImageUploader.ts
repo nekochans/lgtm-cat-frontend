@@ -7,6 +7,7 @@ import {
   type AcceptedTypesImageExtension,
   type ImageUploader,
   type Language,
+  type Url,
 } from '@/features';
 import {
   createCatImageSizeTooLargeErrorMessages,
@@ -40,11 +41,12 @@ const createDisplayErrorMessages = (
 };
 
 const createCatImageUploader =
-  (language: Language) =>
+  (language: Language, appBaseUrl: Url) =>
   async (image: string, imageExtension: AcceptedTypesImageExtension) => {
     const uploadCatImageResult = await uploadCatImage({
       image,
       imageExtension,
+      appBaseUrl,
     });
     if (isFailureResult(uploadCatImageResult)) {
       return createSuccessResult({
@@ -63,6 +65,7 @@ const createCatImageUploader =
 
 export const useCatImageUploader = (
   language: Language,
+  appBaseUrl: Url,
 ): { imageUploader: ImageUploader } => ({
-  imageUploader: createCatImageUploader(language),
+  imageUploader: createCatImageUploader(language, appBaseUrl),
 });

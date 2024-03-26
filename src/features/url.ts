@@ -132,20 +132,30 @@ export const i18nUrlList: I18nUrlList = {
 
 export type AppUrl = (typeof appUrlList)[keyof typeof appUrlList];
 
-const bffUrl = (): Url => {
-  if (isUrl(process.env.NEXT_PUBLIC_LGTMEOW_BFF_URL)) {
-    return process.env.NEXT_PUBLIC_LGTMEOW_BFF_URL;
+export const uploadCatImageUrl = (baseUrl?: Url): Url =>
+  `${isUrl(baseUrl) ? baseUrl : appBaseUrl()}/api/lgtm-images`;
+
+export const fetchLgtmImagesUrl = (baseUrl?: Url): Url =>
+  `${isUrl(baseUrl) ? baseUrl : appBaseUrl()}/api/lgtm-images`;
+
+export const fetchLgtmImagesInRecentlyCreatedUrl = (baseUrl?: Url): Url =>
+  `${isUrl(baseUrl) ? baseUrl : appBaseUrl()}/api/lgtm-images/recently-created`;
+
+export const isAcceptableCatImageUrl = (baseUrl?: Url): Url =>
+  `${isUrl(baseUrl) ? baseUrl : appBaseUrl()}/api/cat-images/validation-results`;
+
+export const lgtmeowApiUrl = (): Url => {
+  if (isUrl(process.env.LGTMEOW_API_URL)) {
+    return process.env.LGTMEOW_API_URL;
   }
 
-  return 'http://localhost:8787';
+  throw new Error('LGTMEOW_API_URL is not defined');
 };
 
-export const uploadCatImageUrl = (): Url => `${bffUrl()}/lgtm-images`;
+export const imageRecognitionApiUrl = (): Url => {
+  if (isUrl(process.env.IMAGE_RECOGNITION_API_URL)) {
+    return process.env.IMAGE_RECOGNITION_API_URL;
+  }
 
-export const fetchLgtmImagesUrl = (): Url => `${bffUrl()}/lgtm-images`;
-
-export const fetchLgtmImagesInRecentlyCreatedUrl = (): Url =>
-  `${bffUrl()}/lgtm-images/recently-created`;
-
-export const isAcceptableCatImageUrl = (): Url =>
-  `${bffUrl()}/cat-images/validation-results`;
+  throw new Error('IMAGE_RECOGNITION_API_URL is not defined');
+};

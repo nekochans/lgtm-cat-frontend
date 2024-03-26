@@ -2,11 +2,11 @@
 
 import { InternalServerErrorImage, ResponsiveLayout } from '@/components';
 import {
-  appBaseUrl,
   NewArrivalCatImagesFetcherError,
   RandomCatImagesFetcherError,
   type Language,
   type LgtmImage,
+  type Url,
 } from '@/features';
 import { useCatImagesFetcher, useSwitchLanguage } from '@/hooks';
 import { updateIsFailedFetchLgtmImages, updateLgtmImages } from '@/stores';
@@ -22,18 +22,23 @@ import { LgtmImagesContents } from './LgtmImagesContents';
 type Props = {
   language: Language;
   lgtmImages: LgtmImage[];
+  appBaseUrl: Url;
 };
 
-export const TopTemplate: FC<Props> = ({ language, lgtmImages }) => {
+export const TopTemplate: FC<Props> = ({
+  language,
+  lgtmImages,
+  appBaseUrl,
+}) => {
   const { randomCatImagesFetcher, newArrivalCatImagesFetcher } =
-    useCatImagesFetcher();
+    useCatImagesFetcher(appBaseUrl);
 
   const { isLanguageMenuDisplayed, onClickLanguageButton, onClickOutSideMenu } =
     useSwitchLanguage();
 
   const onClickFetchRandomCatButton = async () => {
     try {
-      const lgtmImagesList = await randomCatImagesFetcher();
+      const lgtmImagesList = await randomCatImagesFetcher(appBaseUrl);
 
       updateLgtmImages(lgtmImagesList);
       updateIsFailedFetchLgtmImages(false);
@@ -50,7 +55,7 @@ export const TopTemplate: FC<Props> = ({ language, lgtmImages }) => {
 
   const onClickFetchNewArrivalCatButton = async () => {
     try {
-      const lgtmImagesList = await newArrivalCatImagesFetcher();
+      const lgtmImagesList = await newArrivalCatImagesFetcher(appBaseUrl);
 
       updateLgtmImages(lgtmImagesList);
       updateIsFailedFetchLgtmImages(false);
@@ -81,7 +86,7 @@ export const TopTemplate: FC<Props> = ({ language, lgtmImages }) => {
           errorCatImage={<InternalServerErrorImage />}
           onClickFetchRandomCatButton={onClickFetchRandomCatButton}
           onClickFetchNewArrivalCatButton={onClickFetchNewArrivalCatButton}
-          appUrl={appBaseUrl()}
+          appUrl={appBaseUrl}
           catRandomCopyCallback={sendCopyMarkdownFromRandomButton}
           clipboardMarkdownCallback={sendCopyMarkdownFromTopImages}
         />

@@ -6,6 +6,7 @@ import {
   type ImageValidator,
   type IsAcceptableCatImageNotAcceptableReason,
   type Language,
+  type Url,
 } from '@/features';
 import { assertNever } from '@/utils';
 import {
@@ -44,11 +45,12 @@ const createNotAcceptableReasons = (
 };
 
 const createImageValidator =
-  (language: Language) =>
+  (language: Language, appBaseUrl: Url) =>
   async (image: string, imageExtension: AcceptedTypesImageExtension) => {
     const isAcceptableCatImageResult = await isAcceptableCatImage({
       image,
       imageExtension,
+      appBaseUrl,
     });
 
     if (isFailureResult(isAcceptableCatImageResult)) {
@@ -78,6 +80,7 @@ const createImageValidator =
 
 export const useCatImageValidator = (
   language: Language,
+  appBaseUrl: Url,
 ): { imageValidator: ImageValidator } => ({
-  imageValidator: createImageValidator(language),
+  imageValidator: createImageValidator(language, appBaseUrl),
 });
