@@ -1,10 +1,11 @@
-import type { StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 import { InternalServerErrorImage } from '.';
 
-// eslint-disable-next-line import/no-anonymous-default-export
-export default {
+const meta = {
   component: InternalServerErrorImage,
-};
+} satisfies Meta<typeof InternalServerErrorImage>;
+
+export default meta;
 
 type Story = StoryObj<typeof InternalServerErrorImage>;
 

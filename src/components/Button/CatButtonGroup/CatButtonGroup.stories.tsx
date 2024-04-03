@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { CatButtonGroup } from './';
 
-const meta: Meta<typeof CatButtonGroup> = {
+const meta = {
   component: CatButtonGroup,
   argTypes: {
     onClickFetchRandomCatButton: { action: 'FetchRandomCatButton Clicked' },
@@ -9,7 +9,7 @@ const meta: Meta<typeof CatButtonGroup> = {
       action: 'FetchNewArrivalCatButton Clicked',
     },
   },
-};
+} satisfies Meta<typeof CatButtonGroup>;
 
 export default meta;
 

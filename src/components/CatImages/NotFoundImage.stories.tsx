@@ -1,10 +1,9 @@
-import type { StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 import { NotFoundImage } from '.';
 
-// eslint-disable-next-line import/no-anonymous-default-export
 export default {
   component: NotFoundImage,
-};
+} satisfies Meta<typeof NotFoundImage>;
 
 type Story = StoryObj<typeof NotFoundImage>;
 

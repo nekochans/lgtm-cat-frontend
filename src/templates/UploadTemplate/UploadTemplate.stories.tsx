@@ -5,9 +5,9 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { http } from 'msw';
 import { UploadTemplate } from '.';
 
-const meta: Meta<typeof UploadTemplate> = {
+const meta = {
   component: UploadTemplate,
-};
+} satisfies Meta<typeof UploadTemplate>;
 
 export default meta;
 

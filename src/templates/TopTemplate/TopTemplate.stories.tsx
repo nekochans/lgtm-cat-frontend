@@ -10,9 +10,9 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { http } from 'msw';
 import { TopTemplate } from './.';
 
-const meta: Meta<typeof TopTemplate> = {
+const meta = {
   component: TopTemplate,
-};
+} satisfies Meta<typeof TopTemplate>;
 
 export default meta;
 
