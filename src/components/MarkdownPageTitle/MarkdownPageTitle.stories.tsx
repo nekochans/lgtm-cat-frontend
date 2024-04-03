@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { MarkdownPageTitle } from './';
 
-const meta: Meta<typeof MarkdownPageTitle> = {
+const meta = {
   component: MarkdownPageTitle,
-};
+} satisfies Meta<typeof MarkdownPageTitle>;
 
 export default meta;
 

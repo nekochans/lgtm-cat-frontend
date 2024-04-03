@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { MarkdownContentsWrapper } from './MarkdownContentsWrapper';
+import { MarkdownContentsWrapper } from './';
 
 const privacyPolicyJa = `
 # プライバシーポリシー
@@ -191,9 +191,9 @@ User shall be responsible for registering, changing, and managing the informatio
 You shall be responsible for any damages caused by unauthorized use of your GitHub account, and the Management Team shall not be liable for any such damages.
 `;
 
-const meta: Meta<typeof MarkdownContentsWrapper> = {
+const meta = {
   component: MarkdownContentsWrapper,
-};
+} satisfies Meta<typeof MarkdownContentsWrapper>;
 
 export default meta;
 

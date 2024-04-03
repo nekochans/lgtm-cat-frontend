@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { RetryButton } from './RetryButton';
 
-const meta: Meta<typeof RetryButton> = {
+const meta = {
   component: RetryButton,
   argTypes: {
     onClick: { action: 'RetryButton clicked!' },
   },
-};
+} satisfies Meta<typeof RetryButton>;
 
 export default meta;
 

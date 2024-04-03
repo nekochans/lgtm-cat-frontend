@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { CatRandomCopyButton } from '.';
 
-const meta: Meta<typeof CatRandomCopyButton> = {
+const meta = {
   component: CatRandomCopyButton,
   argTypes: { callback: { action: 'callback' } },
-};
+} satisfies Meta<typeof CatRandomCopyButton>;
 
 export default meta;
 

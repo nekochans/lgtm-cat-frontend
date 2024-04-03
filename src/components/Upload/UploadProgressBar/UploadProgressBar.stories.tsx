@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { UploadProgressBar } from '.';
 
-const meta: Meta<typeof UploadProgressBar> = {
+const meta = {
   component: UploadProgressBar,
-};
+} satisfies Meta<typeof UploadProgressBar>;
 
 export default meta;
 

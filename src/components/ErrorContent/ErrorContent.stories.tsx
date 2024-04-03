@@ -6,9 +6,9 @@ import {
 import type { Meta, StoryObj } from '@storybook/react';
 import { ErrorContent } from './';
 
-const meta: Meta<typeof ErrorContent> = {
+const meta = {
   component: ErrorContent,
-};
+} satisfies Meta<typeof ErrorContent>;
 
 export default meta;
 

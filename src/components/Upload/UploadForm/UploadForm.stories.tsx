@@ -9,7 +9,7 @@ import { sleep } from '@/utils';
 import type { Meta, StoryObj } from '@storybook/react';
 import { UploadForm } from '.';
 
-const meta: Meta<typeof UploadForm> = {
+const meta = {
   component: UploadForm,
   argTypes: {
     uploadCallback: { action: 'uploadCallback executed' },
@@ -18,7 +18,7 @@ const meta: Meta<typeof UploadForm> = {
       action: 'MarkdownSourceCopyButton Clicked',
     },
   },
-};
+} satisfies Meta<typeof UploadForm>;
 
 export default meta;
 

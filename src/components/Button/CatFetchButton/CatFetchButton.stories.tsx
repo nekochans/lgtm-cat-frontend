@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { CatFetchButton } from '.';
 
-const meta: Meta<typeof CatFetchButton> = {
+const meta = {
   component: CatFetchButton,
-};
+} satisfies Meta<typeof CatFetchButton>;
 
 export default meta;
 

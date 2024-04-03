@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { LibraryBooks } from './';
 
-const meta: Meta<typeof LibraryBooks> = {
+const meta = {
   component: LibraryBooks,
-};
+} satisfies Meta<typeof LibraryBooks>;
 
 export default meta;
 

@@ -3,9 +3,9 @@ import { createIncludeLanguageAppPath } from '@/features';
 import type { Meta, StoryObj } from '@storybook/react';
 import { ErrorTemplate } from './';
 
-const meta: Meta<typeof ErrorTemplate> = {
+const meta = {
   component: ErrorTemplate,
-};
+} satisfies Meta<typeof ErrorTemplate>;
 
 export default meta;
 

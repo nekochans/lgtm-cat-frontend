@@ -193,9 +193,9 @@ User shall be responsible for registering, changing, and managing the informatio
 You shall be responsible for any damages caused by unauthorized use of your GitHub account, and the Management Team shall not be liable for any such damages.
 `;
 
-const meta: Meta<typeof TermsOrPrivacyTemplate> = {
+const meta = {
   component: TermsOrPrivacyTemplate,
-};
+} satisfies Meta<typeof TermsOrPrivacyTemplate>;
 
 export default meta;
 

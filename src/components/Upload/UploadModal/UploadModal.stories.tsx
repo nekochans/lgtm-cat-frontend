@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { UploadModal } from './';
 
-const meta: Meta<typeof UploadModal> = {
+const meta = {
   component: UploadModal,
-};
+} satisfies Meta<typeof UploadModal>;
 
 export default meta;
 

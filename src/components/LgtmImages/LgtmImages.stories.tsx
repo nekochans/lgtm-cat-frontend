@@ -2,9 +2,9 @@ import { type LgtmImage } from '@/features';
 import type { Meta, StoryObj } from '@storybook/react';
 import { LgtmImages } from './';
 
-const meta: Meta<typeof LgtmImages> = {
+const meta = {
   component: LgtmImages,
-};
+} satisfies Meta<typeof LgtmImages>;
 
 export default meta;
 

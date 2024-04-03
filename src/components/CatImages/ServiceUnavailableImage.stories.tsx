@@ -1,10 +1,11 @@
-import type { StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 import { ServiceUnavailableImage } from '.';
 
-// eslint-disable-next-line import/no-anonymous-default-export
-export default {
+const meta = {
   component: ServiceUnavailableImage,
-};
+} satisfies Meta<typeof ServiceUnavailableImage>;
+
+export default meta;
 
 type Story = StoryObj<typeof ServiceUnavailableImage>;
 
