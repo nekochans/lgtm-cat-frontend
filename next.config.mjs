@@ -19,10 +19,14 @@ const baseConfig = {
 };
 
 const sentryWebpackPluginOptions = {
-  silent: true,
+  silent: !process.env.CI,
   authToken: process.env.SENTRY_AUTH_TOKEN,
   org: process.env.SENTRY_ORG,
   project: process.env.SENTRY_PROJECT,
+  widenClientFileUpload: true,
+  hideSourceMaps: true,
+  disableLogger: true,
+  automaticVercelMonitors: true,
 };
 
 const nextConfig = withSentryConfig(baseConfig, sentryWebpackPluginOptions);

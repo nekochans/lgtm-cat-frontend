@@ -24,7 +24,7 @@
     "chromatic": "chromatic --project-token=$CHROMATIC_PROJECT_TOKEN"
   },
   "dependencies": {
-    "@sentry/nextjs": "^7.112.2",
+    "@sentry/nextjs": "8.13.0",
     "@upstash/ratelimit": "^1.1.3",
     "@upstash/redis": "^1.30.0",
     "@vercel/edge-config": "^1.1.0",
