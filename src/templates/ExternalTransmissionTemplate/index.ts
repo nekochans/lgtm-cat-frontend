@@ -1,0 +1,1 @@
+export { ExternalTransmissionTemplate } from './ExternalTransmissionTemplate';

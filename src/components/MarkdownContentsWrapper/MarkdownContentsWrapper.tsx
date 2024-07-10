@@ -4,6 +4,7 @@ import {
   MarkdownPageTitle,
 } from '@/components';
 import {
+  createExternalTransmissionPolicyLinksFromLanguages,
   createPrivacyPolicyLinksFromLanguages,
   createTermsOfUseLinksFromLanguages,
   type Language,
@@ -12,7 +13,7 @@ import { assertNever } from '@/utils';
 import { type JSX } from 'react';
 import styles from './MarkdownContentsWrapper.module.css';
 
-type MarkdownContentsType = 'privacy' | 'terms';
+type MarkdownContentsType = 'privacy' | 'terms' | 'externalTransmission';
 
 const createTitle = (
   type: MarkdownContentsType,
@@ -23,6 +24,8 @@ const createTitle = (
       return createPrivacyPolicyLinksFromLanguages(language).text;
     case 'terms':
       return createTermsOfUseLinksFromLanguages(language).text;
+    case 'externalTransmission':
+      return createExternalTransmissionPolicyLinksFromLanguages(language).text;
     default:
       return assertNever(type);
   }

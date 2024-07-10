@@ -30,6 +30,7 @@ export const appPathList = {
   privacy: '/privacy',
   error: '/error',
   maintenance: '/maintenance',
+  'external-transmission-policy': '/external-transmission-policy',
 } as const;
 
 export type AppPathName =
@@ -37,7 +38,8 @@ export type AppPathName =
   | 'upload'
   | 'terms'
   | 'privacy'
-  | 'maintenance';
+  | 'maintenance'
+  | 'external-transmission-policy';
 
 type AppPath = (typeof appPathList)[keyof typeof appPathList];
 
@@ -99,6 +101,8 @@ export const appUrlList = {
   terms: `${appBaseUrl()}${appPathList.terms}` as const,
   privacy: `${appBaseUrl()}${appPathList.privacy}` as const,
   maintenance: `${appBaseUrl()}${appPathList.maintenance}` as const,
+  externalTransmission:
+    `${appBaseUrl()}${appPathList['external-transmission-policy']}` as const,
 } as const;
 
 type I18nUrlList = {
@@ -127,6 +131,10 @@ export const i18nUrlList: I18nUrlList = {
   maintenance: {
     ja: `${appPathList.privacy}/`,
     en: `/en${appPathList.privacy}/`,
+  },
+  'external-transmission-policy': {
+    ja: `${appPathList['external-transmission-policy']}/`,
+    en: `/en${appPathList['external-transmission-policy']}/`,
   },
 };
 

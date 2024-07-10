@@ -85,6 +85,17 @@ const maintenancePageTitle = (language: Language) => {
   }
 };
 
+const externalTransmissionPageTitle = (language: Language): string => {
+  switch (language) {
+    case 'ja':
+      return `${defaultTitle} 外部送信ポリシー`;
+    case 'en':
+      return `${defaultTitle} External Transmission Policy`;
+    default:
+      return assertNever(language);
+  }
+};
+
 const description = (language: Language): string => {
   switch (language) {
     case 'ja':
@@ -138,6 +149,12 @@ export const metaTagList = (language: Language): MetaTagList => ({
     title: maintenancePageTitle(language),
     ogpImgUrl: appUrlList.ogpImg,
     ogpTargetUrl: appUrlList.maintenance,
+    appName,
+  },
+  'external-transmission-policy': {
+    title: externalTransmissionPageTitle(language),
+    ogpImgUrl: appUrlList.ogpImg,
+    ogpTargetUrl: appUrlList.externalTransmission,
     appName,
   },
 });
