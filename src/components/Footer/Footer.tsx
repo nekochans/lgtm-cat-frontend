@@ -50,7 +50,7 @@ export const Footer: FC<Props> = ({ language }) => {
               prefetch={false}
               className={styles['external-transmission-policy-link-text']}
             >
-              <p data-gtm-click="transmission-policy-link">
+              <p data-gtm-click="footer-external-transmission-policy-link">
                 {externalTransmissionPolicy.text}
               </p>
             </Link>
