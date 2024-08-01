@@ -1,4 +1,5 @@
 import {
+  createExternalTransmissionPolicyLinksFromLanguages,
   createIncludeLanguageAppPath,
   createPrivacyPolicyLinksFromLanguages,
   createTermsOfUseLinksFromLanguages,
@@ -17,6 +18,8 @@ export type Props = {
 export const GlobalMenu: FC<Props> = ({ language, onClickCloseButton }) => {
   const termsOfUseLinks = createTermsOfUseLinksFromLanguages(language);
   const privacyPolicyLinks = createPrivacyPolicyLinksFromLanguages(language);
+  const externalTransmissionPolicy =
+    createExternalTransmissionPolicyLinksFromLanguages(language);
 
   return (
     <div className={styles.wrapper}>
@@ -76,6 +79,17 @@ export const GlobalMenu: FC<Props> = ({ language, onClickCloseButton }) => {
               data-gtm-click="global-menu-terms-link"
             >
               {privacyPolicyLinks.text}
+            </span>
+          </Link>
+          <div className={styles.underline} />
+        </div>
+        <div className={styles['link-wrapper']}>
+          <Link href={externalTransmissionPolicy.link} prefetch={false}>
+            <span
+              className={styles['link-text']}
+              data-gtm-click="global-menu-external-transmission-policy-link"
+            >
+              {externalTransmissionPolicy.text}
             </span>
           </Link>
           <div className={styles.underline} />
