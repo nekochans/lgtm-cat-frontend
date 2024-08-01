@@ -1,4 +1,5 @@
 import {
+  createExternalTransmissionPolicyLinksFromLanguages,
   createPrivacyPolicyLinksFromLanguages,
   createTermsOfUseLinksFromLanguages,
   type Language,
@@ -16,34 +17,45 @@ export const Footer: FC<Props> = ({ language }) => {
 
   const privacy = createPrivacyPolicyLinksFromLanguages(language);
 
+  const externalTransmissionPolicy =
+    createExternalTransmissionPolicyLinksFromLanguages(language);
+
   return (
     <div className={styles.wrapper}>
       <div className={styles['upper-section']}>
-        <Link
-          href={terms.link}
-          prefetch={false}
-          className={styles['terms-link-text']}
-        >
-          <p
-            className={styles['terms-link-text']}
-            data-gtm-click="footer-terms-link"
-          >
-            {terms.text}
-          </p>
-        </Link>
-        <div className={styles['separator-text']}> / </div>
-        <Link
-          href={privacy.link}
-          prefetch={false}
-          className={styles['privacy-link-text']}
-        >
-          <p
-            className={styles['privacy-link-text']}
-            data-gtm-click="footer-privacy-link"
-          >
-            {privacy.text}
-          </p>
-        </Link>
+        <div className={styles['link-container']}>
+          <div className={styles['link-item']}>
+            <Link
+              href={terms.link}
+              prefetch={false}
+              className={styles['terms-link-text']}
+            >
+              <p data-gtm-click="footer-terms-link">{terms.text}</p>
+            </Link>
+          </div>
+          <div className={styles['separator-text']}>/</div>
+          <div className={styles['link-item']}>
+            <Link
+              href={privacy.link}
+              prefetch={false}
+              className={styles['privacy-link-text']}
+            >
+              <p data-gtm-click="footer-privacy-link">{privacy.text}</p>
+            </Link>
+          </div>
+          <div className={styles['separator-text']}>/</div>
+          <div className={styles['link-item']}>
+            <Link
+              href={externalTransmissionPolicy.link}
+              prefetch={false}
+              className={styles['external-transmission-policy-link-text']}
+            >
+              <p data-gtm-click="footer-external-transmission-policy-link">
+                {externalTransmissionPolicy.text}
+              </p>
+            </Link>
+          </div>
+        </div>
       </div>
       <div className={styles['lower-section']}>
         <div className={styles['lower-section-text']}>

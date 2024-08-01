@@ -97,4 +97,28 @@
       hreflang="en"
       href="https://lgtmeow.com/en/privacy/"/>
   </url>
+  <url>
+    <loc>https://lgtmeow.com/external-transmission-policy/</loc>
+    <changefreq>monthly</changefreq>
+    <xhtml:link
+      rel="alternate"
+      hreflang="ja"
+      href="https://lgtmeow.com/external-transmission-policy/"/>
+    <xhtml:link
+      rel="alternate"
+      hreflang="en"
+      href="https://lgtmeow.com/en/external-transmission-policy/"/>
+  </url>
+  <url>
+    <loc>https://lgtmeow.com/en/external-transmission-policy/</loc>
+    <changefreq>monthly</changefreq>
+    <xhtml:link
+      rel="alternate"
+      hreflang="ja"
+      href="https://lgtmeow.com/external-transmission-policy/"/>
+    <xhtml:link
+      rel="alternate"
+      hreflang="en"
+      href="https://lgtmeow.com/en/external-transmission-policy/"/>
+  </url>
 </urlset>

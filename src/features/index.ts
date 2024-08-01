@@ -9,4 +9,5 @@ export * from './validator';
 export * from './openIdConnect';
 export { createPrivacyPolicyLinksFromLanguages } from './privacyPolicy';
 export { createTermsOfUseLinksFromLanguages } from './termsOfUse';
+export { createExternalTransmissionPolicyLinksFromLanguages } from './externalTransmissionPolicy';
 export { errorType, type ErrorType } from './error';
