@@ -10,7 +10,6 @@
     "fix:prettier": "npm run lint:prettier -- --write",
     "lint:eslint": "eslint --cache .",
     "fix:eslint": "npm run lint:eslint -- --fix",
-    "lint:next": "next lint",
     "lint:stylelint": "stylelint --cache './**/*.{css,less,sass,scss}'",
     "fix:stylelint": "npm run lint:stylelint -- --fix",
     "lint": "run-s lint:*",
