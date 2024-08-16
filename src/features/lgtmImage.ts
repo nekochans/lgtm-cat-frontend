@@ -99,12 +99,10 @@ export const isLgtmImageUrl = (value: unknown): value is LgtmImageUrl => {
 
 export const isLgtmImages = (value: unknown): value is LgtmImage[] => {
   if (Array.isArray(value)) {
-    // eslint-disable-next-line no-magic-numbers
     if (Object.prototype.toString.call(value[0]) !== '[object Object]') {
       return false;
     }
 
-    // eslint-disable-next-line no-magic-numbers
     const lgtmImage = value[0] as LgtmImage;
 
     return (
@@ -120,11 +118,9 @@ export const extractRandomImages = (numberToExtract: number): LgtmImage[] => {
   const copiedLgtmImages = [...imageData];
   const result = [];
 
-  // eslint-disable-next-line id-length, no-magic-numbers
   for (let i = numberToExtract; i > 0; i -= 1) {
-    // eslint-disable-next-line no-magic-numbers
     const rand = Math.floor(Math.random() * (copiedLgtmImages.length + 1)) - 1;
-    // eslint-disable-next-line no-magic-numbers
+
     result.push(...copiedLgtmImages.splice(rand, 1));
   }
 
@@ -150,10 +146,9 @@ export const extractImageExtFromValidFileType = (
 
 const calculateFileSize = (file: File): number => {
   const kb = 1024;
-  // eslint-disable-next-line no-magic-numbers
+
   const mb = kb ** 2;
 
-  // eslint-disable-next-line no-magic-numbers
   return Math.round((file.size / mb) * 100.0) / 100.0;
 };
 

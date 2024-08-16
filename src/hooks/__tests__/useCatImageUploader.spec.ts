@@ -19,7 +19,6 @@ const mockHandlers = [http.post(uploadCatImageUrl(), mockUploadCatImage)];
 
 const server = setupServer(...mockHandlers);
 
-// eslint-disable-next-line max-lines-per-function, max-statements
 describe('useCatImageUploader TestCases', () => {
   beforeAll(() => {
     server.listen();

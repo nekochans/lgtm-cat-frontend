@@ -11,7 +11,6 @@ type Props = {
   children: ReactNode;
 };
 
-// eslint-disable-next-line max-lines-per-function
 export const ExternalTransmissionTemplate: FC<Props> = ({
   language,
   currentUrlPath,

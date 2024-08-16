@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 'use client';
 
 import type { AppUrl } from '@/constants';
@@ -83,7 +82,6 @@ export type Props = {
   appUrl?: AppUrl;
 };
 
-// eslint-disable-next-line max-lines-per-function, max-statements
 export const UploadForm: FC<Props> = ({
   language,
   imageValidator,
@@ -143,7 +141,6 @@ export const UploadForm: FC<Props> = ({
     setBase64Image(window.btoa(binaryString));
   };
 
-  // eslint-disable-next-line max-statements
   const mightConvertImageToBase64 = (file: File) => {
     setUploaded(false);
     const fileType = file.type;
@@ -175,10 +172,9 @@ export const UploadForm: FC<Props> = ({
     openModal();
   };
 
-  // eslint-disable-next-line max-statements
   const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
-    // eslint-disable-next-line no-magic-numbers
+
     if (event.target.files && event.target.files.length > 0) {
       const targetIndex = 0;
       const file = event.target.files[targetIndex];
@@ -187,7 +183,6 @@ export const UploadForm: FC<Props> = ({
   };
 
   const shouldDisableButton = (): boolean => {
-    // eslint-disable-next-line no-magic-numbers
     if (displayErrorMessages.length !== 0) {
       return true;
     }
@@ -201,7 +196,6 @@ export const UploadForm: FC<Props> = ({
     openModal();
   };
 
-  // eslint-disable-next-line max-statements, max-lines-per-function
   const executeUpload = async () => {
     setIsLoading(true);
 
@@ -213,7 +207,6 @@ export const UploadForm: FC<Props> = ({
 
       if (
         !imageValidationResult.value.isAcceptableCatImage ||
-        // eslint-disable-next-line no-magic-numbers
         imageValidationResult.value.notAcceptableReason.length !== 0
       ) {
         setDisplayErrorMessages(
@@ -242,7 +235,6 @@ export const UploadForm: FC<Props> = ({
         }
       }
 
-      // eslint-disable-next-line no-magic-numbers
       if (imageUploadResult.value.displayErrorMessages.length !== 0) {
         setDisplayErrorMessages(imageUploadResult.value.displayErrorMessages);
         stateInitAtError();
@@ -264,7 +256,6 @@ export const UploadForm: FC<Props> = ({
   };
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
-    // eslint-disable-next-line no-magic-numbers
     if (acceptedFiles.length > 0) {
       const targetIndex = 0;
       const file = acceptedFiles[targetIndex];
@@ -278,7 +269,7 @@ export const UploadForm: FC<Props> = ({
 
   return (
     <div className={styles.wrapper}>
-      {/* eslint-disable no-magic-numbers */}
+      {}
       {displayErrorMessages.length === 0 ? (
         ''
       ) : (
@@ -286,7 +277,7 @@ export const UploadForm: FC<Props> = ({
       )}
       <UploadTitleArea language={language} />
       <form className={styles.form}>
-        {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+        {}
         <div {...getRootProps()} className={styles['input-file-area']}>
           <FaCloudUploadAlt className={styles['fa-cloud-upload-alt']} />
           <div className={styles.text}>{imageDropAreaText(language)}</div>

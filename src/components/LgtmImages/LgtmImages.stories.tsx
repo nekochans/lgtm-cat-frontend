@@ -74,7 +74,7 @@ export const WithAppUrl: Story = {
 export const WithCallbackFunc: Story = {
   args: {
     images,
-    // eslint-disable-next-line no-alert
+
     callback: () => {
       alert('run callback func!');
     },

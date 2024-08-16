@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import type { LgtmImage } from './lgtmImage';
 
 export const imageData: LgtmImage[] = [

@@ -53,7 +53,6 @@ export const GET = async (request: NextRequest): Promise<Response> => {
 
   const response = await fetch(`${lgtmeowApiUrl()}/lgtm-images`, options);
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const responseBody = (await response.json()) as unknown;
   if (isFetchLgtmImagesResponseBody(responseBody)) {
     const lgtmImages = responseBody.lgtmImages.map((value) => {

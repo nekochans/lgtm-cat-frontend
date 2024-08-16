@@ -12,7 +12,6 @@ type Props = {
   }>;
 };
 
-// eslint-disable-next-line max-lines-per-function
 export const DefaultLayout: FC<Props> = ({
   metaTag,
   children,

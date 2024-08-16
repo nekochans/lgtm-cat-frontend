@@ -65,7 +65,6 @@ const modalStyle = {
   },
 };
 
-// eslint-disable-next-line max-lines-per-function
 export const UploadModal: FC<Props> = ({
   isOpen,
   language,

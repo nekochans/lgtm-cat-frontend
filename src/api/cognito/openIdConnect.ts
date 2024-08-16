@@ -6,7 +6,7 @@ import { IssueClientCredentialsAccessTokenError } from './IssueClientCredentials
 
 type CognitoTokenResponseBody = {
   access_token: string;
-  // eslint-disable-next-line no-magic-numbers
+
   expires_in: 3600;
   token_type: 'Bearer';
 };
@@ -95,7 +95,6 @@ export const issueClientCredentialsAccessToken: IssueClientCredentialsAccessToke
       );
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const responseBody = (await response.json()) as unknown;
 
     if (isCognitoTokenResponseBody(responseBody)) {

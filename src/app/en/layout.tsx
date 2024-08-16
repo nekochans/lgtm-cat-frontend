@@ -50,7 +50,7 @@ export const metadata: Metadata = {
 
 const InternationalizationLayout = ({ children }: Props): JSX.Element => {
   return (
-    <html lang={language} prefix="og: https://ogp.me/ns#">
+    <html lang={language}>
       <head>
         <link
           href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&family=Roboto&family=Zen+Kaku+Gothic+New&display=swap"

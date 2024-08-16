@@ -21,7 +21,6 @@ import {
 } from '@/features';
 import { mightSetRequestIdToSentry } from '@/utils';
 
-// eslint-disable-next-line require-await
 export const fetchLgtmImagesInRandom: FetchLgtmImages = async (
   appBaseUrl,
   revalidate,
@@ -41,7 +40,6 @@ export const fetchLgtmImagesInRandom: FetchLgtmImages = async (
   return (await response.json()) as LgtmImage[];
 };
 
-// eslint-disable-next-line require-await
 export const fetchLgtmImagesInRecentlyCreated: FetchLgtmImages = async (
   appBaseUrl,
   revalidate,
