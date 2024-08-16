@@ -17,7 +17,6 @@ const mockHandlers = [http.get(fetchLgtmImagesUrl(), mockFetchLgtmImages)];
 
 const server = setupServer(...mockHandlers);
 
-// eslint-disable-next-line max-lines-per-function
 describe('useCatImagesFetcher.ts randomCatImagesFetcher TestCases', () => {
   beforeAll(() => {
     server.listen();

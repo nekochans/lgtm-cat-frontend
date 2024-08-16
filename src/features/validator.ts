@@ -12,10 +12,8 @@ export type ValidationResult = {
   invalidParams?: InvalidParams;
 };
 
-// eslint-disable-next-line max-statements
 const isInvalidParams = (value: unknown): value is InvalidParams => {
   if (Array.isArray(value)) {
-    // eslint-disable-next-line no-magic-numbers
     if (value.length === 0) {
       return false;
     }
@@ -72,7 +70,6 @@ export const validation = (
   } catch (error) {
     if (isZodError(error)) {
       const invalidParams = error.errors.map((value) => ({
-        // eslint-disable-next-line no-magic-numbers
         name: value.path[0],
         reason: value.message,
       }));

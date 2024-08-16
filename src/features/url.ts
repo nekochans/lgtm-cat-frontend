@@ -8,9 +8,7 @@ export const isUrl = (value: unknown): value is Url => {
   }
 
   return (
-    // eslint-disable-next-line no-magic-numbers
     value.substring(0, 8) === 'https://' ||
-    // eslint-disable-next-line no-magic-numbers
     value.substring(0, 16) === 'http://localhost'
   );
 };
