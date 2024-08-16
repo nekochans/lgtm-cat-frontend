@@ -7,6 +7,8 @@ import typescriptEslint from '@typescript-eslint/eslint-plugin';
 import jsxA11Y from 'eslint-plugin-jsx-a11y';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
+import storybook from 'eslint-plugin-storybook';
+import vitest from 'eslint-plugin-vitest';
 import globals from 'globals';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -48,9 +50,6 @@ export default [
       'plugin:react/recommended',
       'plugin:react/jsx-runtime',
       'plugin:react-hooks/recommended',
-      'plugin:vitest/recommended',
-      'plugin:storybook/recommended',
-      'next/core-web-vitals',
       'prettier',
     ),
   ),
@@ -60,6 +59,8 @@ export default [
       'jsx-a11y': fixupPluginRules(jsxA11Y),
       react: fixupPluginRules(react),
       'react-hooks': fixupPluginRules(reactHooks),
+      storybook,
+      vitest,
     },
 
     languageOptions: {
