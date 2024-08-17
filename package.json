@@ -15,7 +15,6 @@
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:ci": "vitest run --coverage",
-    "generate:css-types": "hcm 'src/**/*.module.{css,scss}'",
     "storybook": "storybook dev -p 6008",
     "build-storybook": "storybook build",
     "chromatic": "chromatic --project-token=$CHROMATIC_PROJECT_TOKEN"
@@ -80,7 +79,6 @@
     "eslint-plugin-storybook": "^0.8.0",
     "eslint-plugin-vitest": "^0.5.4",
     "globals": "^15.9.0",
-    "happy-css-modules": "^3.1.1",
     "jsdom": "^24.1.1",
     "msw": "^2.3.5",
     "msw-storybook-addon": "2.0.3",
