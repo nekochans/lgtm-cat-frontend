@@ -94,7 +94,7 @@ export const createIncludeLanguageAppPath = (
 
 export const appUrlList = {
   top: appBaseUrl(),
-  ogpImg: `${appBaseUrl()}/ogp.webp` as const,
+  ogpImg: `${appBaseUrl()}/opengraph-image.png` as const,
   upload: `${appBaseUrl()}${appPathList.upload}` as const,
   terms: `${appBaseUrl()}${appPathList.terms}` as const,
   privacy: `${appBaseUrl()}${appPathList.privacy}` as const,
