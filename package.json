@@ -64,6 +64,7 @@
     "eslint-plugin-react": "^7.35.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-storybook": "^0.8.0",
+    "eslint-plugin-tailwindcss": "^3.17.4",
     "eslint-plugin-vitest": "^0.5.4",
     "globals": "^15.9.0",
     "jsdom": "^24.1.1",
