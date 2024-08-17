@@ -1,4 +1,4 @@
-import { isIncludeLanguageAppPath } from '@/features';
+import { isIncludeLanguageAppPath } from '@/features/url';
 import { describe, expect, it } from 'vitest';
 
 describe('src/features/url.ts isIncludeLanguageAppPath TestCases', () => {
