@@ -1,5 +1,5 @@
-import { httpStatusCode } from '@/constants';
-import { fetchLgtmImagesMockBody } from '@/mocks';
+import { httpStatusCode } from '@/constants/httpStatusCode';
+import { fetchLgtmImagesMockBody } from '@/mocks/api/fetchLgtmImagesMockBody';
 import { HttpResponse, type ResponseResolver } from 'msw';
 
 export const mockFetchLgtmImages: ResponseResolver = () => {
