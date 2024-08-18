@@ -5,19 +5,19 @@ import { FaGithub } from 'react-icons/fa';
 type Props = ComponentProps<'button'> & {
   displayText: string;
   showGithubIcon?: boolean;
-  isPending?: boolean;
+  isPressed?: boolean;
 };
 
 export const IconButton = ({
   type,
   displayText,
   showGithubIcon,
-  isPending,
+  isPressed,
 }: Props): JSX.Element => {
   const baseClasses =
     'inline-flex items-center justify-center gap-2 rounded-lg px-7 py-1.5 text-black transition-colors duration-200';
   const stateClasses =
-    isPending === true ? 'bg-amber-500' : 'bg-amber-300 hover:bg-amber-100';
+    isPressed === true ? 'bg-amber-500' : 'bg-amber-300 hover:bg-amber-100';
   const focusClasses =
     'focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2';
 
@@ -25,7 +25,7 @@ export const IconButton = ({
     <Button
       type={type}
       className={`${baseClasses} ${stateClasses} ${focusClasses}`}
-      isDisabled={isPending}
+      isDisabled={isPressed}
     >
       {showGithubIcon != null && (
         <FaGithub className="size-5 text-orange-900" />
