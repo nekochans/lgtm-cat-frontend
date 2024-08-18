@@ -19,7 +19,7 @@ export const Default: Story = {
 export const WithGithubIcon: Story = {
   args: {
     type: 'button',
-    displayText: 'Login',
+    displayText: 'ログイン',
     showGithubIcon: true,
   },
 };
@@ -27,7 +27,7 @@ export const WithGithubIcon: Story = {
 export const WithGithubIconPressed: Story = {
   args: {
     type: 'button',
-    displayText: 'Login',
+    displayText: 'ログイン',
     showGithubIcon: true,
     isPressed: true,
   },
@@ -38,6 +38,7 @@ export const WithRepeatIcon: Story = {
     type: 'button',
     displayText: 'ランダムコピー',
     showRepeatIcon: true,
+    style: { width: '240px' },
   },
 };
 
@@ -47,6 +48,7 @@ export const WithRepeatIconPressed: Story = {
     displayText: 'ランダムコピー',
     showRepeatIcon: true,
     isPressed: true,
+    style: { width: '240px' },
   },
 };
 
@@ -55,6 +57,7 @@ export const WithRandomIcon: Story = {
     type: 'button',
     displayText: 'ねこリフレッシュ',
     showRandomIcon: true,
+    style: { width: '240px' },
   },
 };
 
@@ -64,6 +67,7 @@ export const WithRandomIconPressed: Story = {
     displayText: 'ねこリフレッシュ',
     showRandomIcon: true,
     isPressed: true,
+    style: { width: '240px' },
   },
 };
 
@@ -72,6 +76,7 @@ export const WithCatIcon: Story = {
     type: 'button',
     displayText: 'ねこ新着順',
     showCatIcon: true,
+    style: { width: '240px' },
   },
 };
 
@@ -81,5 +86,6 @@ export const WithCatIconPressed: Story = {
     displayText: 'ねこ新着順',
     showCatIcon: true,
     isPressed: true,
+    style: { width: '240px' },
   },
 };
