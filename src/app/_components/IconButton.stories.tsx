@@ -32,3 +32,54 @@ export const WithGithubIconPressed: Story = {
     isPressed: true,
   },
 };
+
+export const WithRepeatIcon: Story = {
+  args: {
+    type: 'button',
+    displayText: 'ランダムコピー',
+    showRepeatIcon: true,
+  },
+};
+
+export const WithRepeatIconPressed: Story = {
+  args: {
+    type: 'button',
+    displayText: 'ランダムコピー',
+    showRepeatIcon: true,
+    isPressed: true,
+  },
+};
+
+export const WithRandomIcon: Story = {
+  args: {
+    type: 'button',
+    displayText: 'ねこリフレッシュ',
+    showRandomIcon: true,
+  },
+};
+
+export const WithRandomIconPressed: Story = {
+  args: {
+    type: 'button',
+    displayText: 'ねこリフレッシュ',
+    showRandomIcon: true,
+    isPressed: true,
+  },
+};
+
+export const WithCatIcon: Story = {
+  args: {
+    type: 'button',
+    displayText: 'ねこ新着順',
+    showCatIcon: true,
+  },
+};
+
+export const WithCatIconPressed: Story = {
+  args: {
+    type: 'button',
+    displayText: 'ねこ新着順',
+    showCatIcon: true,
+    isPressed: true,
+  },
+};
