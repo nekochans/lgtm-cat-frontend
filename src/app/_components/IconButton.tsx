@@ -27,8 +27,10 @@ export const IconButton = ({
       className={`${baseClasses} ${stateClasses} ${focusClasses}`}
       isDisabled={isPending}
     >
-      {showGithubIcon != null && <FaGithub className="size-5" />}
-      <Text>{displayText}</Text>
+      {showGithubIcon != null && (
+        <FaGithub className="size-5 text-orange-900" />
+      )}
+      <Text className="text-lg text-orange-900">{displayText}</Text>
     </Button>
   );
 };
