@@ -1,5 +1,5 @@
 import type { ComponentProps, JSX } from 'react';
-import { Button as ReactAriaButton, Text } from 'react-aria-components';
+import { Button, Text } from 'react-aria-components';
 import { FaGithub } from 'react-icons/fa';
 
 type Props = ComponentProps<'button'> & {
@@ -8,7 +8,7 @@ type Props = ComponentProps<'button'> & {
   isPending?: boolean;
 };
 
-export const Button = ({
+export const IconButton = ({
   type,
   displayText,
   showGithubIcon,
@@ -22,13 +22,13 @@ export const Button = ({
     'focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2';
 
   return (
-    <ReactAriaButton
+    <Button
       type={type}
       className={`${baseClasses} ${stateClasses} ${focusClasses}`}
       isDisabled={isPending}
     >
       {showGithubIcon != null && <FaGithub className="size-5" />}
       <Text>{displayText}</Text>
-    </ReactAriaButton>
+    </Button>
   );
 };
