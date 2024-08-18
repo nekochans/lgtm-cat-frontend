@@ -108,7 +108,9 @@ export const IconButton = ({
       {showRepeatIcon != null && <RepeatIcon />}
       {showRandomIcon != null && <RandomIcon />}
       {showCatIcon != null && <CatIcon />}
-      <Text className="text-lg text-orange-900">{displayText}</Text>
+      <Text className="text-right font-inter text-lg font-black text-orange-900">
+        {displayText}
+      </Text>
     </Button>
   );
 };
