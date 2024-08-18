@@ -1,4 +1,4 @@
-import { httpStatusCode } from '@/constants';
+import { httpStatusCode } from '@/constants/httpStatusCode';
 import { HttpResponse, type ResponseResolver } from 'msw';
 
 export const mockUploadCatImage: ResponseResolver = () => {

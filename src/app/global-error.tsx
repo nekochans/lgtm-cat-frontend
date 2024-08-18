@@ -1,6 +1,6 @@
 'use client';
 
-import { httpStatusCode } from '@/constants';
+import { httpStatusCode } from '@/constants/httpStatusCode';
 import * as Sentry from '@sentry/nextjs';
 import NextError from 'next/error';
 import { useEffect, type JSX } from 'react';

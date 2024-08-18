@@ -50,6 +50,7 @@ export default [
       'plugin:react/recommended',
       'plugin:react/jsx-runtime',
       'plugin:react-hooks/recommended',
+      'plugin:tailwindcss/recommended',
       'prettier',
     ),
   ),
@@ -142,6 +143,7 @@ export default [
       ],
 
       'react/display-name': 'off',
+      'tailwindcss/classnames-order': 'error',
     },
   },
   {

@@ -1,4 +1,4 @@
-import { appBaseUrl, isUrl, type Url } from '@/features';
+import { appBaseUrl, isUrl, type Url } from '@/features/url';
 import { headers } from 'next/headers';
 
 export const appBaseUrlHeaderName = 'lgtmeow-app-base-url';

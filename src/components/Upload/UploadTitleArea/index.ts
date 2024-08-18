@@ -1,1 +1,0 @@
-export { UploadTitleArea } from './UploadTitleArea';

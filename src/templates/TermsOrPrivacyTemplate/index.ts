@@ -1,1 +1,0 @@
-export { TermsOrPrivacyTemplate } from './TermsOrPrivacyTemplate';

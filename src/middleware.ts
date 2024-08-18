@@ -1,11 +1,13 @@
-import { httpStatusCode } from '@/constants';
-import { appBaseUrlHeaderName, isBanCountry, isInMaintenance } from '@/edge';
+import { httpStatusCode } from '@/constants/httpStatusCode';
+import { isBanCountry } from '@/edge/country';
+import { isInMaintenance } from '@/edge/maintenance';
+import { appBaseUrlHeaderName } from '@/edge/url';
 import {
-  isIncludeLanguageAppPath,
   isLanguage,
   mightExtractLanguageFromAppPath,
   removeLanguageFromAppPath,
-} from '@/features';
+} from '@/features/language';
+import { isIncludeLanguageAppPath } from '@/features/url';
 import {
   NextResponse,
   type NextMiddleware,
