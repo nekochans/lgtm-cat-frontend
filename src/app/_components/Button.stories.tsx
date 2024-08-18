@@ -29,6 +29,6 @@ export const WithGithubIconPressed: Story = {
     type: 'button',
     displayText: 'Login',
     showGithubIcon: true,
-    isPressed: true,
+    isPending: true,
   },
 };
