@@ -1,4 +1,4 @@
-import type { ComponentProps, CSSProperties, JSX } from 'react';
+import type { ComponentProps, JSX } from 'react';
 import { Button, Text } from 'react-aria-components';
 
 const GithubIcon = () => {
@@ -76,7 +76,7 @@ type Props = ComponentProps<'button'> & {
   showRandomIcon?: boolean;
   showCatIcon?: boolean;
   isPressed?: boolean;
-  style?: CSSProperties;
+  className?: string;
 };
 
 export const IconButton = ({
@@ -87,7 +87,7 @@ export const IconButton = ({
   showRandomIcon,
   showCatIcon,
   isPressed,
-  style,
+  className,
 }: Props): JSX.Element => {
   const baseClasses =
     'inline-flex items-center justify-center gap-2 rounded-lg px-7 py-1.5 text-black transition-colors duration-200';
@@ -99,10 +99,9 @@ export const IconButton = ({
   return (
     <Button
       type={type}
-      className={`${baseClasses} ${stateClasses} ${focusClasses}`}
+      className={`${baseClasses} ${stateClasses} ${focusClasses} ${className ?? ''}`}
       isDisabled={isPressed}
       aria-pressed={isPressed}
-      style={style}
     >
       {showGithubIcon != null && <GithubIcon />}
       {showRepeatIcon != null && <RepeatIcon />}

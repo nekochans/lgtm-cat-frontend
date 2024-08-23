@@ -9,6 +9,8 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
+const responsiveWidthClass = 'w-[220px] sm:w-[240px]';
+
 export const Default: Story = {
   args: {
     type: 'button',
@@ -38,7 +40,7 @@ export const WithRepeatIcon: Story = {
     type: 'button',
     displayText: 'ランダムコピー',
     showRepeatIcon: true,
-    style: { width: '240px' },
+    className: responsiveWidthClass,
   },
 };
 
@@ -48,7 +50,7 @@ export const WithRepeatIconPressed: Story = {
     displayText: 'ランダムコピー',
     showRepeatIcon: true,
     isPressed: true,
-    style: { width: '240px' },
+    className: responsiveWidthClass,
   },
 };
 
@@ -57,7 +59,7 @@ export const WithRandomIcon: Story = {
     type: 'button',
     displayText: 'ねこリフレッシュ',
     showRandomIcon: true,
-    style: { width: '240px' },
+    className: responsiveWidthClass,
   },
 };
 
@@ -67,7 +69,7 @@ export const WithRandomIconPressed: Story = {
     displayText: 'ねこリフレッシュ',
     showRandomIcon: true,
     isPressed: true,
-    style: { width: '240px' },
+    className: responsiveWidthClass,
   },
 };
 
@@ -76,7 +78,7 @@ export const WithCatIcon: Story = {
     type: 'button',
     displayText: 'ねこ新着順',
     showCatIcon: true,
-    style: { width: '240px' },
+    className: responsiveWidthClass,
   },
 };
 
@@ -86,6 +88,6 @@ export const WithCatIconPressed: Story = {
     displayText: 'ねこ新着順',
     showCatIcon: true,
     isPressed: true,
-    style: { width: '240px' },
+    className: responsiveWidthClass,
   },
 };
