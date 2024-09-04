@@ -1,14 +1,19 @@
+import Link from 'next/link';
 import type { JSX } from 'react';
 
 export const HeaderLogo = (): JSX.Element => {
   return (
-    <>
+    <Link
+      href="/"
+      className="flex h-10 w-[218px] items-center justify-center gap-0.5 border-b border-orange-300 bg-orange-500"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="36"
         height="27"
         viewBox="0 0 36 27"
         fill="none"
+        className="shrink-0"
       >
         <path
           d="M6.54738 10.5211C6.63369 10.5436 6.71625 10.5548 6.80256 10.5548C7.21159 10.5548 7.59059 10.2847 7.70692 9.86822C8.46869 7.1555 9.42934 4.15011 10.0823 2.56675C11.9023 4.61536 13.6847 6.79155 13.8611 7.32059C13.9624 7.82711 14.4578 8.15729 14.9643 8.05599C15.4709 7.95468 15.8012 7.45941 15.6998 6.95289C15.4672 5.79351 12.3826 2.2891 10.5664 0.304268C10.3825 0.10541 10.1273 -0.00715129 9.84962 0.000352791C9.57569 0.00785687 9.32052 0.131674 9.1479 0.345541C8.10469 1.61748 6.25844 8.08225 5.89819 9.36545C5.75935 9.86447 6.0483 10.3823 6.54738 10.5211Z"
@@ -35,7 +40,7 @@ export const HeaderLogo = (): JSX.Element => {
           fill="#FFF7ED"
         />
       </svg>
-      <h1>LGTMeow</h1>
-    </>
+      <h1 className="text-4xl font-bold text-orange-50">LGTMeow</h1>
+    </Link>
   );
 };
