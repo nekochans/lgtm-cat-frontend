@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { JSX } from 'react';
+import { Text } from 'react-aria-components';
 
 export const HeaderLogo = (): JSX.Element => {
   return (
@@ -40,7 +41,9 @@ export const HeaderLogo = (): JSX.Element => {
           fill="#FFF7ED"
         />
       </svg>
-      <h1 className="text-4xl font-bold text-orange-50">LGTMeow</h1>
+      <h1 className="text-4xl font-bold text-orange-50">
+        <Text>LGTMeow</Text>
+      </h1>
     </Link>
   );
 };
