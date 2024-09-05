@@ -7,6 +7,7 @@ export const HeaderLogo = (): JSX.Element => {
     <Link
       href="/"
       className="flex h-10 w-[218px] items-center justify-center gap-0.5 border-b border-orange-300 bg-orange-500"
+      prefetch={false}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
