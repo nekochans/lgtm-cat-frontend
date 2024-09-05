@@ -6,19 +6,19 @@ import { type Metadata, type NextPage } from 'next';
 const language = 'ja';
 
 export const metadata: Metadata = {
-  title: metaTagList(language).top.title,
-  description: metaTagList(language).top.description,
+  title: metaTagList(language).home.title,
+  description: metaTagList(language).home.description,
   openGraph: {
-    title: metaTagList(language).top.title,
-    description: metaTagList(language).top.description,
-    url: metaTagList(language).top.ogpTargetUrl,
+    title: metaTagList(language).home.title,
+    description: metaTagList(language).home.description,
+    url: metaTagList(language).home.ogpTargetUrl,
     siteName: appName,
     images: [
       {
-        url: metaTagList(language).top.ogpImgUrl,
+        url: metaTagList(language).home.ogpImgUrl,
         width: 1200,
         height: 630,
-        alt: metaTagList(language).top.title,
+        alt: metaTagList(language).home.title,
       },
     ],
     locale: convertLocaleToLanguage(language),
@@ -26,10 +26,10 @@ export const metadata: Metadata = {
   },
   metadataBase: new URL(appBaseUrl()),
   alternates: {
-    canonical: i18nUrlList.top.ja,
+    canonical: i18nUrlList.home.ja,
     languages: {
-      ja: i18nUrlList.top.ja,
-      en: i18nUrlList.top.en,
+      ja: i18nUrlList.home.ja,
+      en: i18nUrlList.home.en,
     },
   },
 };

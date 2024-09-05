@@ -22,7 +22,7 @@ export const appBaseUrl = (): Url => {
 };
 
 export const appPathList = {
-  top: '/',
+  home: '/',
   upload: '/upload',
   terms: '/terms',
   privacy: '/privacy',
@@ -32,7 +32,7 @@ export const appPathList = {
 } as const;
 
 export type AppPathName =
-  | 'top'
+  | 'home'
   | 'upload'
   | 'terms'
   | 'privacy'
@@ -83,7 +83,7 @@ export const createIncludeLanguageAppPath = (
   appPathName: AppPathName,
   language: Language,
 ): IncludeLanguageAppPath => {
-  if (appPathName === 'top' && language === 'en') {
+  if (appPathName === 'home' && language === 'en') {
     return `/${language}`;
   }
 
@@ -110,8 +110,8 @@ type I18nUrlList = {
 };
 
 export const i18nUrlList: I18nUrlList = {
-  top: {
-    ja: `${appPathList.top}/`,
+  home: {
+    ja: `${appPathList.home}/`,
     en: `/en/`,
   },
   upload: {
