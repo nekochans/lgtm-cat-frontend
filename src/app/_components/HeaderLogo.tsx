@@ -1,11 +1,19 @@
+import type { Language } from '@/features/language';
+import { createIncludeLanguageAppPath } from '@/features/url';
 import Link from 'next/link';
 import type { JSX } from 'react';
 import { Text } from 'react-aria-components';
 
-export const HeaderLogo = (): JSX.Element => {
+export type Props = {
+  language: Language;
+};
+
+export const HeaderLogo = ({ language }: Props): JSX.Element => {
+  const homeToLink = createIncludeLanguageAppPath('home', language);
+
   return (
     <Link
-      href="/"
+      href={homeToLink}
       className="flex h-10 w-[218px] items-center justify-center gap-0.5 border-b border-orange-300 bg-orange-500"
       prefetch={false}
     >
