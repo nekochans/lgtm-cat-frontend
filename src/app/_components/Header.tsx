@@ -3,20 +3,19 @@ import { createExternalTransmissionPolicyLinksFromLanguages } from '@/features/e
 import type { Language } from '@/features/language';
 import { createPrivacyPolicyLinksFromLanguages } from '@/features/privacyPolicy';
 import { createTermsOfUseLinksFromLanguages } from '@/features/termsOfUse';
-import { appPathList } from '@/features/url';
+import { appPathList, type IncludeLanguageAppPath } from '@/features/url';
 import Link from 'next/link';
 import type { JSX } from 'react';
 import { Header as ReactAriaHeader, Text } from 'react-aria-components';
 
 type Props = {
   language: Language;
+  currentUrlPath: IncludeLanguageAppPath;
 };
 
-export const Header = ({ language }: Props): JSX.Element => {
+export const Header = ({ language, currentUrlPath }: Props): JSX.Element => {
   const terms = createTermsOfUseLinksFromLanguages(language);
-
   const privacy = createPrivacyPolicyLinksFromLanguages(language);
-
   const externalTransmissionPolicy =
     createExternalTransmissionPolicyLinksFromLanguages(language);
 
@@ -97,31 +96,27 @@ export const Header = ({ language }: Props): JSX.Element => {
                 />
               </svg>
             </button>
-            <div className="absolute right-0 mt-2 hidden w-48 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 group-hover:block">
+            <div className="absolute right-0 mt-2 hidden w-48 rounded-md bg-orange-500 shadow-lg ring-1 ring-black ring-opacity-5 group-hover:block">
               <div
                 className="py-1"
                 role="menu"
                 aria-orientation="vertical"
-                aria-labelledby="options-menu"
+                aria-labelledby="language-menu"
               >
-                <button
-                  onClick={() => {
-                    /* 言語を日本語に切り替える処理 */
-                  }}
-                  className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                <Link
+                  href={currentUrlPath}
+                  className="block w-full px-4 py-2 text-left text-base font-medium text-orange-50 hover:bg-orange-600"
                   role="menuitem"
                 >
                   日本語
-                </button>
-                <button
-                  onClick={() => {
-                    /* 言語を英語に切り替える処理 */
-                  }}
-                  className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                </Link>
+                <Link
+                  href={currentUrlPath}
+                  className="block w-full px-4 py-2 text-left text-base font-medium text-orange-50 hover:bg-orange-600"
                   role="menuitem"
                 >
                   English
-                </button>
+                </Link>
               </div>
             </div>
           </div>

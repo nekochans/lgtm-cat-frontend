@@ -12,11 +12,13 @@ type Story = StoryObj<typeof meta>;
 export const HeaderInJapanese: Story = {
   args: {
     language: 'ja',
+    currentUrlPath: '/',
   },
 };
 
 export const HeaderInEnglish: Story = {
   args: {
     language: 'en',
+    currentUrlPath: '/en',
   },
 };
