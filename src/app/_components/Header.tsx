@@ -6,7 +6,15 @@ import { createTermsOfUseLinksFromLanguages } from '@/features/termsOfUse';
 import { appPathList, type IncludeLanguageAppPath } from '@/features/url';
 import Link from 'next/link';
 import type { JSX } from 'react';
-import { Header as ReactAriaHeader, Text } from 'react-aria-components';
+import {
+  Button,
+  Menu,
+  MenuItem,
+  MenuTrigger,
+  Popover,
+  Header as ReactAriaHeader,
+  Text,
+} from 'react-aria-components';
 
 type Props = {
   language: Language;
@@ -42,8 +50,8 @@ export const Header = ({ language, currentUrlPath }: Props): JSX.Element => {
           >
             <Text>{terms.text}</Text>
           </Link>
-          <div className="group relative">
-            <button className="flex items-center text-base font-medium text-orange-50 hover:text-orange-100 sm:text-lg">
+          <MenuTrigger>
+            <Button className="flex items-center text-base font-medium text-orange-50 hover:text-orange-100 sm:text-lg">
               ポリシー
               <svg
                 className="ml-1 size-4 sm:size-5"
@@ -56,33 +64,24 @@ export const Header = ({ language, currentUrlPath }: Props): JSX.Element => {
                   clipRule="evenodd"
                 />
               </svg>
-            </button>
-            <div className="absolute right-0 mt-2 hidden w-48 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 group-hover:block">
-              <div
-                className="py-1"
-                role="menu"
-                aria-orientation="vertical"
-                aria-labelledby="options-menu"
-              >
-                <Link
-                  href={privacy.link}
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  role="menuitem"
-                >
-                  <Text>{privacy.text}</Text>
-                </Link>
-                <Link
-                  href={externalTransmissionPolicy.link}
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  role="menuitem"
-                >
-                  <Text>{externalTransmissionPolicy.text}</Text>
-                </Link>
-              </div>
-            </div>
-          </div>
-          <div className="group relative">
-            <button className="flex items-center text-base font-medium text-orange-50 hover:text-orange-100 sm:text-lg">
+            </Button>
+            <Popover className="w-48 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+              <Menu className="py-1">
+                <MenuItem className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                  <Link href={privacy.link}>
+                    <Text>{privacy.text}</Text>
+                  </Link>
+                </MenuItem>
+                <MenuItem className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                  <Link href={externalTransmissionPolicy.link}>
+                    <Text>{externalTransmissionPolicy.text}</Text>
+                  </Link>
+                </MenuItem>
+              </Menu>
+            </Popover>
+          </MenuTrigger>
+          <MenuTrigger>
+            <Button className="flex items-center text-base font-medium text-orange-50 hover:text-orange-100 sm:text-lg">
               language
               <svg
                 className="ml-1 size-4 sm:size-5"
@@ -95,31 +94,18 @@ export const Header = ({ language, currentUrlPath }: Props): JSX.Element => {
                   clipRule="evenodd"
                 />
               </svg>
-            </button>
-            <div className="absolute right-0 mt-2 hidden w-48 rounded-md bg-orange-500 shadow-lg ring-1 ring-black ring-opacity-5 group-hover:block">
-              <div
-                className="py-1"
-                role="menu"
-                aria-orientation="vertical"
-                aria-labelledby="language-menu"
-              >
-                <Link
-                  href={currentUrlPath}
-                  className="block w-full px-4 py-2 text-left text-base font-medium text-orange-50 hover:bg-orange-600"
-                  role="menuitem"
-                >
-                  日本語
-                </Link>
-                <Link
-                  href={currentUrlPath}
-                  className="block w-full px-4 py-2 text-left text-base font-medium text-orange-50 hover:bg-orange-600"
-                  role="menuitem"
-                >
-                  English
-                </Link>
-              </div>
-            </div>
-          </div>
+            </Button>
+            <Popover className="w-48 rounded-md bg-orange-500 shadow-lg ring-1 ring-black ring-opacity-5">
+              <Menu className="py-1">
+                <MenuItem className="block w-full px-4 py-2 text-left text-base font-medium text-orange-50 hover:bg-orange-600">
+                  <Link href={currentUrlPath}>日本語</Link>
+                </MenuItem>
+                <MenuItem className="block w-full px-4 py-2 text-left text-base font-medium text-orange-50 hover:bg-orange-600">
+                  <Link href={currentUrlPath}>English</Link>
+                </MenuItem>
+              </Menu>
+            </Popover>
+          </MenuTrigger>
         </nav>
       </div>
     </ReactAriaHeader>
