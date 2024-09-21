@@ -1,3 +1,5 @@
+import type { IncludeLanguageAppPath } from '@/features/url';
+import Link from 'next/link';
 import type { ComponentProps, JSX } from 'react';
 import { Button, Text } from 'react-aria-components';
 
@@ -77,6 +79,7 @@ type Props = ComponentProps<'button'> & {
   showCatIcon?: boolean;
   isPressed?: boolean;
   className?: string;
+  link?: IncludeLanguageAppPath;
 };
 
 export const IconButton = ({
@@ -88,6 +91,7 @@ export const IconButton = ({
   showCatIcon,
   isPressed,
   className,
+  link,
 }: Props): JSX.Element => {
   const baseClasses =
     'inline-flex items-center justify-center gap-2 rounded-lg px-7 py-1.5 text-black transition-colors duration-200';
@@ -95,6 +99,24 @@ export const IconButton = ({
     isPressed === true ? 'bg-amber-500' : 'bg-amber-300 hover:bg-amber-100';
   const focusClasses =
     'focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2';
+
+  if (link != null) {
+    return (
+      <Link
+        className={`${baseClasses} ${stateClasses} ${focusClasses} ${className ?? ''}`}
+        href={link}
+        prefetch={false}
+      >
+        {showGithubIcon != null && <GithubIcon />}
+        {showRepeatIcon != null && <RepeatIcon />}
+        {showRandomIcon != null && <RandomIcon />}
+        {showCatIcon != null && <CatIcon />}
+        <Text className="text-right font-inter text-lg font-black text-orange-900">
+          {displayText}
+        </Text>
+      </Link>
+    );
+  }
 
   return (
     <Button

@@ -91,3 +91,11 @@ export const WithCatIconPressed: Story = {
     className: responsiveWidthClass,
   },
 };
+
+export const WithLink: Story = {
+  args: {
+    displayText: 'ログイン',
+    showGithubIcon: true,
+    link: '/',
+  },
+};
