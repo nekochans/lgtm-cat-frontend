@@ -120,10 +120,10 @@ type MetaTagList = {
 };
 
 export const metaTagList = (language: Language): MetaTagList => ({
-  top: {
+  home: {
     title: topPageTitle(language),
     ogpImgUrl: appUrlList.ogpImg,
-    ogpTargetUrl: appUrlList.top,
+    ogpTargetUrl: appUrlList.home,
     appName,
     description: description(language),
   },
@@ -157,18 +157,24 @@ export const metaTagList = (language: Language): MetaTagList => ({
     ogpTargetUrl: appUrlList.externalTransmission,
     appName,
   },
+  login: {
+    title: externalTransmissionPageTitle(language),
+    ogpImgUrl: appUrlList.ogpImg,
+    ogpTargetUrl: appUrlList.terms,
+    appName,
+  },
 });
 
 export const notFoundMetaTag = (language: Language): MetaTag => ({
   title: custom404title(language),
   ogpImgUrl: appUrlList.ogpImg,
-  ogpTargetUrl: appUrlList.top,
+  ogpTargetUrl: appUrlList.home,
   appName,
 });
 
 export const errorMetaTag = (language: Language): MetaTag => ({
   title: customErrorTitle(language),
   ogpImgUrl: appUrlList.ogpImg,
-  ogpTargetUrl: appUrlList.top,
+  ogpTargetUrl: appUrlList.home,
   appName,
 });
