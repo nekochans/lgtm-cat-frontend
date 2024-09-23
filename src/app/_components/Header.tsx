@@ -1,4 +1,8 @@
 import { HeaderLogo } from '@/app/_components/HeaderLogo';
+import { DownIcon } from '@/app/_components/icons/DownIcon';
+import { GlobeIcon } from '@/app/_components/icons/GlobeIcon';
+import { RightIcon } from '@/app/_components/icons/RightIcon';
+import { LoginButton } from '@/app/_components/LoginButton';
 import { createExternalTransmissionPolicyLinksFromLanguages } from '@/features/externalTransmissionPolicy';
 import type { Language } from '@/features/language';
 import { createPrivacyPolicyLinksFromLanguages } from '@/features/privacyPolicy';
@@ -29,50 +33,40 @@ export const Header = ({ language, currentUrlPath }: Props): JSX.Element => {
 
   return (
     <ReactAriaHeader className="w-full border-b border-orange-300 bg-orange-500">
-      <div className="mx-auto flex max-w-screen-2xl items-center justify-between px-4 py-0 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-16 max-w-screen-2xl items-center justify-between px-5">
         <HeaderLogo language={language} />
-        <nav className="flex items-center gap-4 sm:gap-6 md:gap-8 lg:gap-24">
+        <nav className="flex items-center gap-6">
           <Link
             href={appPathList.upload}
-            className="text-base font-medium text-orange-50 hover:text-orange-100 sm:text-lg"
+            className="text-base font-medium text-orange-50 hover:text-orange-100"
           >
             <Text slot="label">アップロード</Text>
           </Link>
           <Link
             href="/how-to-use"
-            className="text-base font-medium text-orange-50 hover:text-orange-100 sm:text-lg"
+            className="text-base font-medium text-orange-50 hover:text-orange-100"
           >
             <Text slot="label">使い方</Text>
           </Link>
           <Link
             href={terms.link}
-            className="text-base font-medium text-orange-50 hover:text-orange-100 sm:text-lg"
+            className="text-base font-medium text-orange-50 hover:text-orange-100"
           >
             <Text slot="label">{terms.text}</Text>
           </Link>
           <MenuTrigger>
-            <Button className="flex items-center text-base font-medium text-orange-50 hover:text-orange-100 sm:text-lg">
+            <Button className="flex items-center text-base font-medium text-orange-50 hover:text-orange-100">
               ポリシー
-              <svg
-                className="ml-1 size-4 sm:size-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
+              <DownIcon />
             </Button>
-            <Popover className="w-48 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+            <Popover className="w-48 rounded-md bg-orange-500 shadow-lg ring-1 ring-black ring-opacity-5">
               <Menu className="py-1">
-                <MenuItem className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                <MenuItem className="block w-full px-4 py-2 text-left text-base font-medium text-orange-50 hover:bg-orange-600">
                   <Link href={privacy.link}>
                     <Text slot="label">{privacy.text}</Text>
                   </Link>
                 </MenuItem>
-                <MenuItem className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                <MenuItem className="block w-full px-4 py-2 text-left text-base font-medium text-orange-50 hover:bg-orange-600">
                   <Link href={externalTransmissionPolicy.link}>
                     <Text slot="label">{externalTransmissionPolicy.text}</Text>
                   </Link>
@@ -81,35 +75,41 @@ export const Header = ({ language, currentUrlPath }: Props): JSX.Element => {
             </Popover>
           </MenuTrigger>
           <MenuTrigger>
-            <Button className="flex items-center text-base font-medium text-orange-50 hover:text-orange-100 sm:text-lg">
+            <Button className="flex items-center text-base font-medium text-orange-50 hover:text-orange-100">
+              <GlobeIcon />
               language
-              <svg
-                className="ml-1 size-4 sm:size-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
+              <DownIcon />
             </Button>
             <Popover className="w-48 rounded-md bg-orange-500 shadow-lg ring-1 ring-black ring-opacity-5">
               <Menu className="py-1">
-                <MenuItem className="block w-full px-4 py-2 text-left text-base font-medium text-orange-50 hover:bg-orange-600">
+                <MenuItem
+                  className={`flex w-full items-center justify-between px-4 py-2 text-left text-base font-medium ${
+                    language === 'ja'
+                      ? 'bg-orange-600 text-orange-50'
+                      : 'text-orange-50 hover:bg-orange-600'
+                  }`}
+                >
                   <Link href={currentUrlPath}>
                     <Text slot="label">日本語</Text>
                   </Link>
+                  {language === 'ja' && <RightIcon />}
                 </MenuItem>
-                <MenuItem className="block w-full px-4 py-2 text-left text-base font-medium text-orange-50 hover:bg-orange-600">
+                <MenuItem
+                  className={`flex w-full items-center justify-between px-4 py-2 text-left text-base font-medium ${
+                    language === 'en'
+                      ? 'bg-orange-600 text-orange-50'
+                      : 'text-orange-50 hover:bg-orange-600'
+                  }`}
+                >
                   <Link href={currentUrlPath}>
                     <Text slot="label">English</Text>
                   </Link>
+                  {language === 'en' && <RightIcon />}
                 </MenuItem>
               </Menu>
             </Popover>
           </MenuTrigger>
+          <LoginButton language={language} />
         </nav>
       </div>
     </ReactAriaHeader>
