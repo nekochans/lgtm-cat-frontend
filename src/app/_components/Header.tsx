@@ -36,19 +36,19 @@ export const Header = ({ language, currentUrlPath }: Props): JSX.Element => {
             href={appPathList.upload}
             className="text-base font-medium text-orange-50 hover:text-orange-100 sm:text-lg"
           >
-            <Text>アップロード</Text>
+            <Text slot="label">アップロード</Text>
           </Link>
           <Link
             href="/how-to-use"
             className="text-base font-medium text-orange-50 hover:text-orange-100 sm:text-lg"
           >
-            <Text>使い方</Text>
+            <Text slot="label">使い方</Text>
           </Link>
           <Link
             href={terms.link}
             className="text-base font-medium text-orange-50 hover:text-orange-100 sm:text-lg"
           >
-            <Text>{terms.text}</Text>
+            <Text slot="label">{terms.text}</Text>
           </Link>
           <MenuTrigger>
             <Button className="flex items-center text-base font-medium text-orange-50 hover:text-orange-100 sm:text-lg">
@@ -69,12 +69,12 @@ export const Header = ({ language, currentUrlPath }: Props): JSX.Element => {
               <Menu className="py-1">
                 <MenuItem className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                   <Link href={privacy.link}>
-                    <Text>{privacy.text}</Text>
+                    <Text slot="label">{privacy.text}</Text>
                   </Link>
                 </MenuItem>
                 <MenuItem className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                   <Link href={externalTransmissionPolicy.link}>
-                    <Text>{externalTransmissionPolicy.text}</Text>
+                    <Text slot="label">{externalTransmissionPolicy.text}</Text>
                   </Link>
                 </MenuItem>
               </Menu>
@@ -98,10 +98,14 @@ export const Header = ({ language, currentUrlPath }: Props): JSX.Element => {
             <Popover className="w-48 rounded-md bg-orange-500 shadow-lg ring-1 ring-black ring-opacity-5">
               <Menu className="py-1">
                 <MenuItem className="block w-full px-4 py-2 text-left text-base font-medium text-orange-50 hover:bg-orange-600">
-                  <Link href={currentUrlPath}>日本語</Link>
+                  <Link href={currentUrlPath}>
+                    <Text slot="label">日本語</Text>
+                  </Link>
                 </MenuItem>
                 <MenuItem className="block w-full px-4 py-2 text-left text-base font-medium text-orange-50 hover:bg-orange-600">
-                  <Link href={currentUrlPath}>English</Link>
+                  <Link href={currentUrlPath}>
+                    <Text slot="label">English</Text>
+                  </Link>
                 </MenuItem>
               </Menu>
             </Popover>
