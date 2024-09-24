@@ -78,44 +78,46 @@ export const Header = ({ language, currentUrlPath }: Props): JSX.Element => {
                   </Menu>
                 </Popover>
               </MenuTrigger>
-              <MenuTrigger>
-                <Button className="flex items-center text-base font-medium text-orange-50 hover:text-orange-100">
-                  <GlobeIcon />
-                  language
-                  <DownIcon />
-                </Button>
-                <Popover className="w-48 rounded-md bg-orange-500 shadow-lg ring-1 ring-black ring-opacity-5">
-                  <Menu className="py-1">
-                    <MenuItem
-                      className={`flex w-full items-center justify-between px-4 py-2 text-left text-base font-medium ${
-                        language === 'ja'
-                          ? 'bg-orange-600 text-orange-50'
-                          : 'text-orange-50 hover:bg-orange-600'
-                      }`}
-                    >
-                      <Link href={currentUrlPath}>
-                        <Text slot="label">日本語</Text>
-                      </Link>
-                      {language === 'ja' && <RightIcon />}
-                    </MenuItem>
-                    <MenuItem
-                      className={`flex w-full items-center justify-between px-4 py-2 text-left text-base font-medium ${
-                        language === 'en'
-                          ? 'bg-orange-600 text-orange-50'
-                          : 'text-orange-50 hover:bg-orange-600'
-                      }`}
-                    >
-                      <Link href={currentUrlPath}>
-                        <Text slot="label">English</Text>
-                      </Link>
-                      {language === 'en' && <RightIcon />}
-                    </MenuItem>
-                  </Menu>
-                </Popover>
-              </MenuTrigger>
             </nav>
           </div>
-          <LoginButton language={language} />
+          <div className="flex items-center gap-7 px-7">
+            <MenuTrigger>
+              <Button className="flex items-center text-base font-medium text-orange-50 hover:text-orange-100">
+                <GlobeIcon />
+                language
+                <DownIcon />
+              </Button>
+              <Popover className="w-48 rounded-md bg-orange-500 shadow-lg ring-1 ring-black ring-opacity-5">
+                <Menu className="py-1">
+                  <MenuItem
+                    className={`flex w-full items-center justify-between px-4 py-2 text-left text-base font-medium ${
+                      language === 'ja'
+                        ? 'bg-orange-600 text-orange-50'
+                        : 'text-orange-50 hover:bg-orange-600'
+                    }`}
+                  >
+                    <Link href={currentUrlPath}>
+                      <Text slot="label">日本語</Text>
+                    </Link>
+                    {language === 'ja' && <RightIcon />}
+                  </MenuItem>
+                  <MenuItem
+                    className={`flex w-full items-center justify-between px-4 py-2 text-left text-base font-medium ${
+                      language === 'en'
+                        ? 'bg-orange-600 text-orange-50'
+                        : 'text-orange-50 hover:bg-orange-600'
+                    }`}
+                  >
+                    <Link href={currentUrlPath}>
+                      <Text slot="label">English</Text>
+                    </Link>
+                    {language === 'en' && <RightIcon />}
+                  </MenuItem>
+                </Menu>
+              </Popover>
+            </MenuTrigger>
+            <LoginButton language={language} />
+          </div>
         </div>
       </div>
     </ReactAriaHeader>
