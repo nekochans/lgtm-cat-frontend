@@ -80,38 +80,52 @@ export const Header = ({ language, currentUrlPath }: Props): JSX.Element => {
               </MenuTrigger>
             </nav>
           </div>
-          <div className="flex items-center gap-7 px-7">
+          <div className="flex items-center gap-4 px-7">
             <MenuTrigger>
-              <Button className="flex items-center text-base font-medium text-orange-50 hover:text-orange-100">
-                <GlobeIcon />
+              <Button className="flex items-center justify-center gap-2 bg-orange-500 px-5 py-2 text-base font-medium text-orange-50 hover:text-orange-100">
+                <span className="flex size-5 items-center justify-center">
+                  <GlobeIcon />
+                </span>
                 language
-                <DownIcon />
+                <span className="flex size-4 items-center justify-center">
+                  <DownIcon />
+                </span>
               </Button>
-              <Popover className="w-48 rounded-md bg-orange-500 shadow-lg ring-1 ring-black ring-opacity-5">
-                <Menu className="py-1">
+              <Popover className="bg-orange-500 shadow-lg ring-1 ring-black ring-opacity-5">
+                <Menu className="w-[167px]">
                   <MenuItem
-                    className={`flex w-full items-center justify-between px-4 py-2 text-left text-base font-medium ${
+                    className={`flex w-full items-center px-5 py-2 text-left text-base font-medium ${
                       language === 'ja'
-                        ? 'bg-orange-600 text-orange-50'
-                        : 'text-orange-50 hover:bg-orange-600'
+                        ? 'bg-orange-400 text-orange-50'
+                        : 'bg-orange-500 text-orange-50 hover:bg-orange-600'
                     }`}
                   >
-                    <Link href={currentUrlPath}>
-                      <Text slot="label">日本語</Text>
+                    <Link
+                      href={currentUrlPath}
+                      className="flex w-full items-center"
+                    >
+                      <span className="flex items-center gap-2">
+                        {language === 'ja' && <RightIcon />}
+                        <Text slot="label">日本語</Text>
+                      </span>
                     </Link>
-                    {language === 'ja' && <RightIcon />}
                   </MenuItem>
                   <MenuItem
-                    className={`flex w-full items-center justify-between px-4 py-2 text-left text-base font-medium ${
+                    className={`flex w-full items-center px-5 py-2 text-left text-base font-medium ${
                       language === 'en'
-                        ? 'bg-orange-600 text-orange-50'
-                        : 'text-orange-50 hover:bg-orange-600'
+                        ? 'bg-orange-400 text-orange-50'
+                        : 'bg-orange-500 text-orange-50 hover:bg-orange-600'
                     }`}
                   >
-                    <Link href={currentUrlPath}>
-                      <Text slot="label">English</Text>
+                    <Link
+                      href={currentUrlPath}
+                      className="flex w-full items-center"
+                    >
+                      <span className="flex items-center gap-2">
+                        {language === 'en' && <RightIcon />}
+                        <Text slot="label">English</Text>
+                      </span>
                     </Link>
-                    {language === 'en' && <RightIcon />}
                   </MenuItem>
                 </Menu>
               </Popover>
