@@ -57,7 +57,7 @@ export const Header = ({ language, currentUrlPath }: Props): JSX.Element => {
                 <Text slot="label">{terms.text}</Text>
               </Link>
               <MenuTrigger>
-                <Button className="flex items-center text-base font-medium text-orange-50 hover:text-orange-100">
+                <Button className="flex items-center justify-center gap-2 bg-orange-500 p-5 text-base font-medium text-orange-50 hover:text-orange-100">
                   ポリシー
                   <DownIcon />
                 </Button>
@@ -83,27 +83,24 @@ export const Header = ({ language, currentUrlPath }: Props): JSX.Element => {
           <div className="flex items-center gap-4 px-7">
             <MenuTrigger>
               <Button className="flex items-center justify-center gap-2 bg-orange-500 px-5 py-2 text-base font-medium text-orange-50 hover:text-orange-100">
-                <span className="flex size-5 items-center justify-center">
+                <span className="flex items-center justify-center w-5 h-5">
                   <GlobeIcon />
                 </span>
                 language
-                <span className="flex size-4 items-center justify-center">
+                <span className="flex items-center justify-center w-4 h-4">
                   <DownIcon />
                 </span>
               </Button>
               <Popover className="bg-orange-500 shadow-lg ring-1 ring-black ring-opacity-5">
                 <Menu className="w-[167px]">
                   <MenuItem
-                    className={`flex w-full items-center px-5 py-2 text-left text-base font-medium ${
+                    className={`flex w-full items-center py-2 px-5 text-left text-base font-medium ${
                       language === 'ja'
                         ? 'bg-orange-400 text-orange-50'
                         : 'bg-orange-500 text-orange-50 hover:bg-orange-600'
                     }`}
                   >
-                    <Link
-                      href={currentUrlPath}
-                      className="flex w-full items-center"
-                    >
+                    <Link href={currentUrlPath} className="flex items-center w-full">
                       <span className="flex items-center gap-2">
                         {language === 'ja' && <RightIcon />}
                         <Text slot="label">日本語</Text>
@@ -111,16 +108,13 @@ export const Header = ({ language, currentUrlPath }: Props): JSX.Element => {
                     </Link>
                   </MenuItem>
                   <MenuItem
-                    className={`flex w-full items-center px-5 py-2 text-left text-base font-medium ${
+                    className={`flex w-full items-center py-2 px-5 text-left text-base font-medium ${
                       language === 'en'
                         ? 'bg-orange-400 text-orange-50'
                         : 'bg-orange-500 text-orange-50 hover:bg-orange-600'
                     }`}
                   >
-                    <Link
-                      href={currentUrlPath}
-                      className="flex w-full items-center"
-                    >
+                    <Link href={currentUrlPath} className="flex items-center w-full">
                       <span className="flex items-center gap-2">
                         {language === 'en' && <RightIcon />}
                         <Text slot="label">English</Text>
