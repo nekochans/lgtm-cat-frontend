@@ -15,11 +15,11 @@ export const HeaderLogo = ({ language }: Props): JSX.Element => {
   return (
     <Link
       href={homeToLink}
-      className="flex h-10 w-[218px] items-center justify-center gap-0.5 border-b border-orange-300 bg-orange-500"
+      className="flex h-10 w-[218px] items-center justify-center gap-0.5 bg-orange-500"
       prefetch={false}
     >
       <LgtmCatIcon className="shrink-0" aria-hidden={true} />
-      <h1 className="text-4xl font-bold text-orange-50">
+      <h1 className="text-4xl font-bold text-orange-50 no-underline">
         <Text>LGTMeow</Text>
       </h1>
     </Link>
