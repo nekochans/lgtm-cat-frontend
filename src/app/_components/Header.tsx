@@ -42,30 +42,38 @@ export const Header = ({ language, currentUrlPath }: Props): JSX.Element => {
                 href={appPathList.upload}
                 className="flex items-center justify-center bg-orange-500 p-5 text-base font-medium text-orange-50 hover:text-orange-100"
               >
-                <Text slot="label">アップロード</Text>
+                <Text slot="label" className="text-base font-bold">
+                  アップロード
+                </Text>
               </Link>
               <Link
                 href="/how-to-use"
                 className="flex items-center justify-center bg-orange-500 p-5 text-base font-medium text-orange-50 hover:text-orange-100"
               >
-                <Text slot="label">使い方</Text>
+                <Text slot="label" className="text-base font-bold">
+                  使い方
+                </Text>
               </Link>
               <Link
                 href={terms.link}
                 className="flex items-center justify-center bg-orange-500 p-5 text-base font-medium text-orange-50 hover:text-orange-100"
               >
-                <Text slot="label">{terms.text}</Text>
+                <Text slot="label" className="text-base font-bold">
+                  {terms.text}
+                </Text>
               </Link>
               <MenuTrigger>
                 <Button className="flex items-center justify-center gap-2 bg-orange-500 px-5 py-2 text-base font-medium text-orange-50 hover:text-orange-100">
-                  ポリシー
+                  <Text className="text-base font-bold">ポリシー</Text>
                   <DownIcon />
                 </Button>
                 <Popover className="bg-orange-500 shadow-lg ring-1 ring-black ring-opacity-5">
                   <Menu className="w-[180px]">
                     <MenuItem className="flex w-full items-center px-6 py-2 text-left text-base font-medium text-orange-50 hover:bg-orange-600">
                       <Link href={privacy.link} className="w-full">
-                        <Text slot="label">{privacy.text}</Text>
+                        <Text slot="label" className="text-base font-bold">
+                          {privacy.text}
+                        </Text>
                       </Link>
                     </MenuItem>
                     <MenuItem className="flex w-full items-center px-6 py-2 text-left text-base font-medium text-orange-50 hover:bg-orange-600">
@@ -73,7 +81,7 @@ export const Header = ({ language, currentUrlPath }: Props): JSX.Element => {
                         href={externalTransmissionPolicy.link}
                         className="w-full"
                       >
-                        <Text slot="label">
+                        <Text slot="label" className="text-base font-bold">
                           {externalTransmissionPolicy.text}
                         </Text>
                       </Link>
@@ -89,7 +97,7 @@ export const Header = ({ language, currentUrlPath }: Props): JSX.Element => {
                 <span className="flex size-5 items-center justify-center">
                   <GlobeIcon />
                 </span>
-                language
+                <Text className="text-base font-bold">language</Text>
                 <span className="flex size-4 items-center justify-center">
                   <DownIcon />
                 </span>
@@ -109,7 +117,9 @@ export const Header = ({ language, currentUrlPath }: Props): JSX.Element => {
                     >
                       <span className="flex items-center gap-2">
                         {language === 'ja' && <RightIcon />}
-                        <Text slot="label">日本語</Text>
+                        <Text slot="label" className="text-base font-bold">
+                          日本語
+                        </Text>
                       </span>
                     </Link>
                   </MenuItem>
@@ -126,7 +136,9 @@ export const Header = ({ language, currentUrlPath }: Props): JSX.Element => {
                     >
                       <span className="flex items-center gap-2">
                         {language === 'en' && <RightIcon />}
-                        <Text slot="label">English</Text>
+                        <Text slot="label" className="text-base font-bold">
+                          English
+                        </Text>
                       </span>
                     </Link>
                   </MenuItem>
