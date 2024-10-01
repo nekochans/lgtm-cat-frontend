@@ -68,7 +68,7 @@ export const Header = ({ language, currentUrlPath }: Props): JSX.Element => {
                   <Text className="text-base font-bold">ポリシー</Text>
                   <DownIcon />
                 </Button>
-                <Popover className="bg-orange-500 shadow-lg ring-1 ring-black ring-opacity-5">
+                <Popover className="bg-orange-500 shadow-lg ring-1 ring-black/5">
                   <Menu className="w-[180px]">
                     <MenuItem className="flex w-full items-center px-6 py-2 text-left text-base font-medium text-orange-50 hover:bg-orange-600">
                       <Link href={privacy.link} className="w-full">
@@ -103,7 +103,7 @@ export const Header = ({ language, currentUrlPath }: Props): JSX.Element => {
                   <DownIcon />
                 </span>
               </Button>
-              <Popover className="bg-orange-500 shadow-lg ring-1 ring-black ring-opacity-5">
+              <Popover className="bg-orange-500 shadow-lg ring-1 ring-black/5">
                 <Menu className="w-[167px]">
                   <MenuItem
                     className={`flex w-full items-center px-5 py-2 text-left text-base font-medium ${
