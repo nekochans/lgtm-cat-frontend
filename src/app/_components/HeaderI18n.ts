@@ -22,3 +22,14 @@ export const howToUseText = (language: Language): string => {
       return assertNever(language);
   }
 };
+
+export const policyText = (language: Language): string => {
+  switch (language) {
+    case 'ja':
+      return 'ポリシー';
+    case 'en':
+      return 'Policy';
+    default:
+      return assertNever(language);
+  }
+};

@@ -19,7 +19,7 @@ import {
   Header as ReactAriaHeader,
   Text,
 } from 'react-aria-components';
-import { howToUseText, uploadText } from './HeaderI18n';
+import { howToUseText, policyText, uploadText } from './HeaderI18n';
 
 type Props = {
   language: Language;
@@ -65,7 +65,9 @@ export const Header = ({ language, currentUrlPath }: Props): JSX.Element => {
               </Link>
               <MenuTrigger>
                 <Button className="flex items-center justify-center gap-2 bg-orange-500 px-5 py-2 text-base font-medium text-orange-50 hover:text-orange-100">
-                  <Text className="text-base font-bold">ポリシー</Text>
+                  <Text className="text-base font-bold">
+                    {policyText(language)}
+                  </Text>
                   <DownIcon />
                 </Button>
                 <Popover className="bg-orange-500 shadow-lg ring-1 ring-black/5">
