@@ -19,6 +19,7 @@ import {
   Header as ReactAriaHeader,
   Text,
 } from 'react-aria-components';
+import { howToUseText, uploadText } from './HeaderI18n';
 
 type Props = {
   language: Language;
@@ -43,7 +44,7 @@ export const Header = ({ language, currentUrlPath }: Props): JSX.Element => {
                 className="flex items-center justify-center bg-orange-500 p-5 text-base font-medium text-orange-50 hover:text-orange-100"
               >
                 <Text slot="label" className="text-base font-bold">
-                  アップロード
+                  {uploadText(language)}
                 </Text>
               </Link>
               <Link
@@ -51,7 +52,7 @@ export const Header = ({ language, currentUrlPath }: Props): JSX.Element => {
                 className="flex items-center justify-center bg-orange-500 p-5 text-base font-medium text-orange-50 hover:text-orange-100"
               >
                 <Text slot="label" className="text-base font-bold">
-                  使い方
+                  {howToUseText(language)}
                 </Text>
               </Link>
               <Link
