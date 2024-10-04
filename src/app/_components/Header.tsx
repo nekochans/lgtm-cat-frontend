@@ -4,7 +4,7 @@ import { GlobeIcon } from '@/app/_components/icons/GlobeIcon';
 import { RightIcon } from '@/app/_components/icons/RightIcon';
 import { LoginButton } from '@/app/_components/LoginButton';
 import { createExternalTransmissionPolicyLinksFromLanguages } from '@/features/externalTransmissionPolicy';
-import type { Language } from '@/features/language';
+import { removeLanguageFromAppPath, type Language } from '@/features/language';
 import { createPrivacyPolicyLinksFromLanguages } from '@/features/privacyPolicy';
 import { createTermsOfUseLinksFromLanguages } from '@/features/termsOfUse';
 import { appPathList, type IncludeLanguageAppPath } from '@/features/url';
@@ -31,6 +31,7 @@ export const Header = ({ language, currentUrlPath }: Props): JSX.Element => {
   const privacy = createPrivacyPolicyLinksFromLanguages(language);
   const externalTransmissionPolicy =
     createExternalTransmissionPolicyLinksFromLanguages(language);
+  const removedLanguagePath = removeLanguageFromAppPath(currentUrlPath);
 
   return (
     <ReactAriaHeader className="w-full border-b border-orange-300 bg-orange-500">
@@ -115,7 +116,7 @@ export const Header = ({ language, currentUrlPath }: Props): JSX.Element => {
                     }`}
                   >
                     <Link
-                      href={currentUrlPath}
+                      href={removedLanguagePath}
                       className="flex w-full items-center"
                     >
                       <span className="flex items-center gap-2">
@@ -134,7 +135,7 @@ export const Header = ({ language, currentUrlPath }: Props): JSX.Element => {
                     }`}
                   >
                     <Link
-                      href={currentUrlPath}
+                      href={`/en${removedLanguagePath}`}
                       className="flex w-full items-center"
                     >
                       <span className="flex items-center gap-2">
