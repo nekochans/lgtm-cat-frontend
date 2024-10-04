@@ -22,22 +22,24 @@ export const appBaseUrl = (): Url => {
 };
 
 export const appPathList = {
-  top: '/',
+  home: '/',
   upload: '/upload',
   terms: '/terms',
   privacy: '/privacy',
   error: '/error',
   maintenance: '/maintenance',
   'external-transmission-policy': '/external-transmission-policy',
+  login: '/login',
 } as const;
 
 export type AppPathName =
-  | 'top'
+  | 'home'
   | 'upload'
   | 'terms'
   | 'privacy'
   | 'maintenance'
-  | 'external-transmission-policy';
+  | 'external-transmission-policy'
+  | 'login';
 
 type AppPath = (typeof appPathList)[keyof typeof appPathList];
 
@@ -83,7 +85,7 @@ export const createIncludeLanguageAppPath = (
   appPathName: AppPathName,
   language: Language,
 ): IncludeLanguageAppPath => {
-  if (appPathName === 'top' && language === 'en') {
+  if (appPathName === 'home' && language === 'en') {
     return `/${language}`;
   }
 
@@ -93,7 +95,7 @@ export const createIncludeLanguageAppPath = (
 };
 
 export const appUrlList = {
-  top: appBaseUrl(),
+  home: appBaseUrl(),
   ogpImg: `${appBaseUrl()}/opengraph-image.png` as const,
   upload: `${appBaseUrl()}${appPathList.upload}` as const,
   terms: `${appBaseUrl()}${appPathList.terms}` as const,
@@ -101,6 +103,7 @@ export const appUrlList = {
   maintenance: `${appBaseUrl()}${appPathList.maintenance}` as const,
   externalTransmission:
     `${appBaseUrl()}${appPathList['external-transmission-policy']}` as const,
+  login: `${appBaseUrl()}${appPathList.login}` as const,
 } as const;
 
 type I18nUrlList = {
@@ -110,8 +113,8 @@ type I18nUrlList = {
 };
 
 export const i18nUrlList: I18nUrlList = {
-  top: {
-    ja: `${appPathList.top}/`,
+  home: {
+    ja: `${appPathList.home}/`,
     en: `/en/`,
   },
   upload: {
@@ -133,6 +136,10 @@ export const i18nUrlList: I18nUrlList = {
   'external-transmission-policy': {
     ja: `${appPathList['external-transmission-policy']}/`,
     en: `/en${appPathList['external-transmission-policy']}/`,
+  },
+  login: {
+    ja: `${appPathList.login}/`,
+    en: `/en${appPathList.login}/`,
   },
 };
 
