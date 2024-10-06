@@ -13,6 +13,7 @@ export const HeaderInJapanese: Story = {
   args: {
     language: 'ja',
     currentUrlPath: '/',
+    isLoggedIn: false,
   },
 };
 
@@ -20,5 +21,22 @@ export const HeaderInEnglish: Story = {
   args: {
     language: 'en',
     currentUrlPath: '/en',
+    isLoggedIn: false,
+  },
+};
+
+export const LoggedInHeaderInJapanese: Story = {
+  args: {
+    language: 'ja',
+    currentUrlPath: '/',
+    isLoggedIn: true,
+  },
+};
+
+export const LoggedInHeaderInEnglish: Story = {
+  args: {
+    language: 'en',
+    currentUrlPath: '/en',
+    isLoggedIn: true,
   },
 };
