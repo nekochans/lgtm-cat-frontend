@@ -91,7 +91,9 @@ export const IconButton = ({
         href={link}
         prefetch={false}
       >
-        {showGithubIcon != null && <GithubIcon width={20} height={20} />}
+        {showGithubIcon != null && (
+          <GithubIcon width={20} height={20} color="default" />
+        )}
         {showRepeatIcon != null && <RepeatIcon />}
         {showRandomIcon != null && <RandomIcon />}
         {showCatIcon != null && <CatIcon />}
@@ -109,7 +111,9 @@ export const IconButton = ({
       isDisabled={isPressed}
       aria-pressed={isPressed}
     >
-      {showGithubIcon != null && <GithubIcon width={20} height={20} />}
+      {showGithubIcon != null && (
+        <GithubIcon width={20} height={20} color="default" />
+      )}
       {showRepeatIcon != null && <RepeatIcon />}
       {showRandomIcon != null && <RandomIcon />}
       {showCatIcon != null && <CatIcon />}
