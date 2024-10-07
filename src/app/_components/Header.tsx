@@ -20,7 +20,14 @@ import {
   Header as ReactAriaHeader,
   Text,
 } from 'react-aria-components';
-import { howToUseText, policyText, uploadText } from './HeaderI18n';
+import {
+  favoriteListText,
+  howToUseText,
+  logoutText,
+  meowlistText,
+  policyText,
+  uploadText,
+} from './HeaderI18n';
 
 type Props = {
   language: Language;
@@ -168,21 +175,21 @@ export const Header = ({
                     <MenuItem className="flex w-full items-center px-5 py-2 text-left text-base font-medium text-orange-50 hover:bg-orange-600">
                       <Link href="/favorites" className="w-full">
                         <Text slot="label" className="text-base font-bold">
-                          お気に入り
+                          {favoriteListText(language)}
                         </Text>
                       </Link>
                     </MenuItem>
                     <MenuItem className="flex w-full items-center px-5 py-2 text-left text-base font-medium text-orange-50 hover:bg-orange-600">
                       <Link href="/cat-list" className="w-full">
                         <Text slot="label" className="text-base font-bold">
-                          にゃんリスト
+                          {meowlistText(language)}
                         </Text>
                       </Link>
                     </MenuItem>
                     <MenuItem className="flex w-full items-center px-5 py-2 text-left text-base font-medium text-orange-50 hover:bg-orange-600">
                       <Link href="/logout" className="w-full">
                         <Text slot="label" className="text-base font-bold">
-                          ログアウト
+                          {logoutText(language)}
                         </Text>
                       </Link>
                     </MenuItem>
