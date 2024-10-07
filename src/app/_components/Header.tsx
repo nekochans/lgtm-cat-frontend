@@ -163,7 +163,7 @@ export const Header = ({
                     <DownIcon />
                   </span>
                 </Button>
-                <Popover className="bg-orange-500 shadow-lg ring-1 ring-black/5 mx-4">
+                <Popover className="mx-4 bg-orange-500 shadow-lg ring-1 ring-black/5">
                   <Menu className="min-w-[180px]">
                     <MenuItem className="flex w-full items-center px-5 py-2 text-left text-base font-medium text-orange-50 hover:bg-orange-600">
                       <Link href="/favorites" className="w-full">
