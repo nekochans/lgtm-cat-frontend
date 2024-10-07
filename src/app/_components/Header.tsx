@@ -101,7 +101,7 @@ export const Header = ({
               </MenuTrigger>
             </nav>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             <MenuTrigger>
               <Button className="flex items-center justify-center gap-2 bg-orange-500 px-5 py-2 text-base font-medium text-orange-50 hover:text-orange-100">
                 <span className="flex items-center justify-center">
