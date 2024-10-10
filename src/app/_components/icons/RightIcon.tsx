@@ -1,6 +1,6 @@
 import type { JSX } from 'react';
 
-export const RightIcon = (): JSX.Element => {
+export function RightIcon(): JSX.Element {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -15,4 +15,4 @@ export const RightIcon = (): JSX.Element => {
       />
     </svg>
   );
-};
+}

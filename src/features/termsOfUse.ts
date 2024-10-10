@@ -1,11 +1,9 @@
-import { type Language } from '@/features/language';
+import type { Language } from '@/features/language';
+import type { LinkAttribute } from './linkAttribute';
 import { createIncludeLanguageAppPath } from '@/features/url';
 import { assertNever } from '@/utils/assertNever';
-import type { LinkAttribute } from './linkAttribute';
 
-export const createTermsOfUseLinksFromLanguages = (
-  language: Language,
-): LinkAttribute => {
+export function createTermsOfUseLinksFromLanguages(language: Language): LinkAttribute {
   switch (language) {
     case 'en':
       return {
@@ -20,4 +18,4 @@ export const createTermsOfUseLinksFromLanguages = (
     default:
       return assertNever(language);
   }
-};
+}

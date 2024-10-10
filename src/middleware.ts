@@ -9,9 +9,9 @@ import {
 } from '@/features/language';
 import { isIncludeLanguageAppPath } from '@/features/url';
 import {
-  NextResponse,
   type NextMiddleware,
   type NextRequest,
+  NextResponse,
 } from 'next/server';
 
 export const config = {

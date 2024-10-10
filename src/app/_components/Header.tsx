@@ -1,3 +1,4 @@
+import type { JSX } from 'react';
 import { HeaderLogo } from '@/app/_components/HeaderLogo';
 import { DownIcon } from '@/app/_components/icons/DownIcon';
 import { GithubIcon } from '@/app/_components/icons/GithubIcon';
@@ -5,12 +6,11 @@ import { GlobeIcon } from '@/app/_components/icons/GlobeIcon';
 import { RightIcon } from '@/app/_components/icons/RightIcon';
 import { LoginButton } from '@/app/_components/LoginButton';
 import { createExternalTransmissionPolicyLinksFromLanguages } from '@/features/externalTransmissionPolicy';
-import { removeLanguageFromAppPath, type Language } from '@/features/language';
+import { type Language, removeLanguageFromAppPath } from '@/features/language';
 import { createPrivacyPolicyLinksFromLanguages } from '@/features/privacyPolicy';
 import { createTermsOfUseLinksFromLanguages } from '@/features/termsOfUse';
 import { appPathList, type IncludeLanguageAppPath } from '@/features/url';
 import Link from 'next/link';
-import type { JSX } from 'react';
 import {
   Button,
   Menu,
@@ -35,15 +35,15 @@ type Props = {
   isLoggedIn: boolean;
 };
 
-export const Header = ({
+export function Header({
   language,
   currentUrlPath,
   isLoggedIn,
-}: Props): JSX.Element => {
+}: Props): JSX.Element {
   const terms = createTermsOfUseLinksFromLanguages(language);
   const privacy = createPrivacyPolicyLinksFromLanguages(language);
-  const externalTransmissionPolicy =
-    createExternalTransmissionPolicyLinksFromLanguages(language);
+  const externalTransmissionPolicy
+    = createExternalTransmissionPolicyLinksFromLanguages(language);
   const removedLanguagePath = removeLanguageFromAppPath(currentUrlPath);
 
   return (
@@ -162,46 +162,48 @@ export const Header = ({
                 </Menu>
               </Popover>
             </MenuTrigger>
-            {isLoggedIn ? (
-              <MenuTrigger>
-                <Button className="flex items-center justify-center gap-2 bg-orange-500 px-5 py-2 text-base font-medium text-orange-50 hover:text-orange-100">
-                  <span className="flex items-center gap-2">
-                    <GithubIcon width={24} height={24} color="white" />
-                    <DownIcon />
-                  </span>
-                </Button>
-                <Popover className="mx-4 bg-orange-500 shadow-lg ring-1 ring-black/5">
-                  <Menu className="min-w-[180px]">
-                    <MenuItem className="flex w-full items-center px-5 py-2 text-left text-base font-medium text-orange-50 hover:bg-orange-600">
-                      <Link href="/favorites" className="w-full">
-                        <Text slot="label" className="text-base font-bold">
-                          {favoriteListText(language)}
-                        </Text>
-                      </Link>
-                    </MenuItem>
-                    <MenuItem className="flex w-full items-center px-5 py-2 text-left text-base font-medium text-orange-50 hover:bg-orange-600">
-                      <Link href="/cat-list" className="w-full">
-                        <Text slot="label" className="text-base font-bold">
-                          {meowlistText(language)}
-                        </Text>
-                      </Link>
-                    </MenuItem>
-                    <MenuItem className="flex w-full items-center px-5 py-2 text-left text-base font-medium text-orange-50 hover:bg-orange-600">
-                      <Link href="/logout" className="w-full">
-                        <Text slot="label" className="text-base font-bold">
-                          {logoutText(language)}
-                        </Text>
-                      </Link>
-                    </MenuItem>
-                  </Menu>
-                </Popover>
-              </MenuTrigger>
-            ) : (
-              <LoginButton language={language} />
-            )}
+            {isLoggedIn
+              ? (
+                  <MenuTrigger>
+                    <Button className="flex items-center justify-center gap-2 bg-orange-500 px-5 py-2 text-base font-medium text-orange-50 hover:text-orange-100">
+                      <span className="flex items-center gap-2">
+                        <GithubIcon width={24} height={24} color="white" />
+                        <DownIcon />
+                      </span>
+                    </Button>
+                    <Popover className="mx-4 bg-orange-500 shadow-lg ring-1 ring-black/5">
+                      <Menu className="min-w-[180px]">
+                        <MenuItem className="flex w-full items-center px-5 py-2 text-left text-base font-medium text-orange-50 hover:bg-orange-600">
+                          <Link href="/favorites" className="w-full">
+                            <Text slot="label" className="text-base font-bold">
+                              {favoriteListText(language)}
+                            </Text>
+                          </Link>
+                        </MenuItem>
+                        <MenuItem className="flex w-full items-center px-5 py-2 text-left text-base font-medium text-orange-50 hover:bg-orange-600">
+                          <Link href="/cat-list" className="w-full">
+                            <Text slot="label" className="text-base font-bold">
+                              {meowlistText(language)}
+                            </Text>
+                          </Link>
+                        </MenuItem>
+                        <MenuItem className="flex w-full items-center px-5 py-2 text-left text-base font-medium text-orange-50 hover:bg-orange-600">
+                          <Link href="/logout" className="w-full">
+                            <Text slot="label" className="text-base font-bold">
+                              {logoutText(language)}
+                            </Text>
+                          </Link>
+                        </MenuItem>
+                      </Menu>
+                    </Popover>
+                  </MenuTrigger>
+                )
+              : (
+                  <LoginButton language={language} />
+                )}
           </div>
         </div>
       </div>
     </ReactAriaHeader>
   );
-};
+}

@@ -1,7 +1,7 @@
+import type { Metadata, NextPage } from 'next';
 import { convertLocaleToLanguage } from '@/features/locale';
 import { appName, metaTagList } from '@/features/metaTag';
 import { appBaseUrl, i18nUrlList } from '@/features/url';
-import { type Metadata, type NextPage } from 'next';
 
 const language = 'ja';
 

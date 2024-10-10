@@ -1,11 +1,9 @@
-import { type Language } from '@/features/language';
+import type { Language } from '@/features/language';
+import type { LinkAttribute } from './linkAttribute';
 import { createIncludeLanguageAppPath } from '@/features/url';
 import { assertNever } from '@/utils/assertNever';
-import type { LinkAttribute } from './linkAttribute';
 
-export const createExternalTransmissionPolicyLinksFromLanguages = (
-  language: Language,
-): LinkAttribute => {
+export function createExternalTransmissionPolicyLinksFromLanguages(language: Language): LinkAttribute {
   switch (language) {
     case 'en':
       return {
@@ -26,4 +24,4 @@ export const createExternalTransmissionPolicyLinksFromLanguages = (
     default:
       return assertNever(language);
   }
-};
+}

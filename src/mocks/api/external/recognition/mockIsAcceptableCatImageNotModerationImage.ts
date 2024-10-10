@@ -1,8 +1,8 @@
 import { httpStatusCode } from '@/constants/httpStatusCode';
 import { HttpResponse, type ResponseResolver } from 'msw';
 
-export const mockIsAcceptableCatImageNotModerationImage: ResponseResolver =
-  () => {
+export const mockIsAcceptableCatImageNotModerationImage: ResponseResolver
+  = () => {
     return HttpResponse.json(
       {
         isAcceptableCatImage: false,

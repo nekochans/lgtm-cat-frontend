@@ -1,6 +1,6 @@
 import type { JSX } from 'react';
 
-export const GlobeIcon = (): JSX.Element => {
+export function GlobeIcon(): JSX.Element {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -18,4 +18,4 @@ export const GlobeIcon = (): JSX.Element => {
       />
     </svg>
   );
-};
+}

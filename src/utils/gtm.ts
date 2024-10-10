@@ -12,7 +12,7 @@ export type CustomDataAttrGtmClick =
   | 'language-menu-en-link'
   | 'language-menu-ja-link';
 
-const isGoogleTagManagerId = (value: unknown): value is GoogleTagManagerId => {
+function isGoogleTagManagerId(value: unknown): value is GoogleTagManagerId {
   if (typeof value !== 'string') {
     return false;
   }
@@ -22,15 +22,15 @@ const isGoogleTagManagerId = (value: unknown): value is GoogleTagManagerId => {
   const endPosition = 4;
 
   return value.slice(startPosition, endPosition) === 'GTM-';
-};
+}
 
-export const googleTagManagerId = (): GoogleTagManagerId => {
+export function googleTagManagerId(): GoogleTagManagerId {
   if (isGoogleTagManagerId(process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID)) {
     return process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID;
   }
 
   return 'GTM-T9VPVTR';
-};
+}
 
 declare global {
   interface Window {
@@ -38,65 +38,65 @@ declare global {
   }
 }
 
-export const sendClickTopFetchRandomCatButton = (): void => {
+export function sendClickTopFetchRandomCatButton(): void {
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (window.dataLayer) {
     window.dataLayer.push({
       event: 'ClickTopFetchRandomCatButton',
     });
   }
-};
+}
 
-export const sendClickTopFetchNewArrivalCatButton = (): void => {
+export function sendClickTopFetchNewArrivalCatButton(): void {
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (window.dataLayer) {
     window.dataLayer.push({
       event: 'ClickTopFetchNewArrivalCatButton',
     });
   }
-};
+}
 
-export const sendUploadedCatImage = (): void => {
+export function sendUploadedCatImage(): void {
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (window.dataLayer) {
     window.dataLayer.push({
       event: 'UploadedCatImage',
     });
   }
-};
+}
 
-export const sendCopyMarkdownFromTopImages = (): void => {
+export function sendCopyMarkdownFromTopImages(): void {
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (window.dataLayer) {
     window.dataLayer.push({
       event: 'CopyMarkdownFromTopImages',
     });
   }
-};
+}
 
-export const sendCopyMarkdownFromCreatedImage = (): void => {
+export function sendCopyMarkdownFromCreatedImage(): void {
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (window.dataLayer) {
     window.dataLayer.push({
       event: 'CopyMarkdownFromCreatedImage',
     });
   }
-};
+}
 
-export const sendCopyMarkdownFromCopyButton = (): void => {
+export function sendCopyMarkdownFromCopyButton(): void {
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (window.dataLayer) {
     window.dataLayer.push({
       event: 'CopyMarkdownFromCopyButton',
     });
   }
-};
+}
 
-export const sendCopyMarkdownFromRandomButton = (): void => {
+export function sendCopyMarkdownFromRandomButton(): void {
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (window.dataLayer) {
     window.dataLayer.push({
       event: 'CopyMarkdownFromRandomButton',
     });
   }
-};
+}

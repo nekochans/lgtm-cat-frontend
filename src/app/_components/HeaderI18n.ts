@@ -1,7 +1,7 @@
-import { type Language } from '@/features/language';
+import type { Language } from '@/features/language';
 import { assertNever } from '@/utils/assertNever';
 
-export const uploadText = (language: Language): string => {
+export function uploadText(language: Language): string {
   switch (language) {
     case 'ja':
       return 'アップロード';
@@ -10,9 +10,9 @@ export const uploadText = (language: Language): string => {
     default:
       return assertNever(language);
   }
-};
+}
 
-export const howToUseText = (language: Language): string => {
+export function howToUseText(language: Language): string {
   switch (language) {
     case 'ja':
       return '使い方';
@@ -21,9 +21,9 @@ export const howToUseText = (language: Language): string => {
     default:
       return assertNever(language);
   }
-};
+}
 
-export const policyText = (language: Language): string => {
+export function policyText(language: Language): string {
   switch (language) {
     case 'ja':
       return 'ポリシー';
@@ -32,9 +32,9 @@ export const policyText = (language: Language): string => {
     default:
       return assertNever(language);
   }
-};
+}
 
-export const favoriteListText = (language: Language): string => {
+export function favoriteListText(language: Language): string {
   switch (language) {
     case 'ja':
       return 'お気に入り';
@@ -43,9 +43,9 @@ export const favoriteListText = (language: Language): string => {
     default:
       return assertNever(language);
   }
-};
+}
 
-export const meowlistText = (language: Language): string => {
+export function meowlistText(language: Language): string {
   switch (language) {
     case 'ja':
       return 'にゃんリスト';
@@ -54,9 +54,9 @@ export const meowlistText = (language: Language): string => {
     default:
       return assertNever(language);
   }
-};
+}
 
-export const logoutText = (language: Language): string => {
+export function logoutText(language: Language): string {
   switch (language) {
     case 'ja':
       return 'ログアウト';
@@ -65,4 +65,4 @@ export const logoutText = (language: Language): string => {
     default:
       return assertNever(language);
   }
-};
+}

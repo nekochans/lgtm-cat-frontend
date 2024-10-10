@@ -1,6 +1,6 @@
 import type { JSX } from 'react';
 
-export const DownIcon = (): JSX.Element => {
+export function DownIcon(): JSX.Element {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -15,4 +15,4 @@ export const DownIcon = (): JSX.Element => {
       />
     </svg>
   );
-};
+}

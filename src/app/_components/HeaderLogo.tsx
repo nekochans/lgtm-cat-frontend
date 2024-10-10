@@ -1,15 +1,15 @@
-import { LgtmCatIcon } from '@/app/_components/LgtmCatIcon';
 import type { Language } from '@/features/language';
+import type { JSX } from 'react';
+import { LgtmCatIcon } from '@/app/_components/LgtmCatIcon';
 import { createIncludeLanguageAppPath } from '@/features/url';
 import Link from 'next/link';
-import type { JSX } from 'react';
 import { Text } from 'react-aria-components';
 
 export type Props = {
   language: Language;
 };
 
-export const HeaderLogo = ({ language }: Props): JSX.Element => {
+export function HeaderLogo({ language }: Props): JSX.Element {
   const homeToLink = createIncludeLanguageAppPath('home', language);
 
   return (
@@ -24,4 +24,4 @@ export const HeaderLogo = ({ language }: Props): JSX.Element => {
       </h1>
     </Link>
   );
-};
+}

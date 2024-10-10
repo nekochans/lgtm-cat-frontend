@@ -1,9 +1,9 @@
-import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
-import { expect, test } from 'vitest';
+import { expect } from 'vitest';
 import { Footer } from './Footer';
+import '@testing-library/jest-dom';
 
-test('show language is ja', () => {
+it('show language is ja', () => {
   render(<Footer language="ja" />);
 
   expect(screen.getByRole('link', { name: '利用規約' })).toBeTruthy();
@@ -13,7 +13,7 @@ test('show language is ja', () => {
   expect(screen.getByRole('link', { name: '外部送信ポリシー' })).toBeTruthy();
 });
 
-test('show language is en', () => {
+it('show language is en', () => {
   render(<Footer language="en" />);
 
   expect(screen.getByRole('link', { name: 'Terms of Use' })).toBeTruthy();

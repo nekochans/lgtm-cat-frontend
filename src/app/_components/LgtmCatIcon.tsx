@@ -1,14 +1,14 @@
 import type { JSX } from 'react';
 
 type Props = {
-  className?: string;
+  'className'?: string;
   'aria-hidden'?: boolean;
 };
 
-export const LgtmCatIcon = ({
+export function LgtmCatIcon({
   className,
   'aria-hidden': ariaHidden,
-}: Props): JSX.Element => {
+}: Props): JSX.Element {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -45,4 +45,4 @@ export const LgtmCatIcon = ({
       />
     </svg>
   );
-};
+}
