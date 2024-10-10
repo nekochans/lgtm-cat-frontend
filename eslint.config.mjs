@@ -38,6 +38,7 @@ export default antfu(
       '**/vitest.config.mts',
       '**/vitest.setup.mts',
       'next.config.mjs',
+      'tsconfig.json',
     ],
   },
   {
