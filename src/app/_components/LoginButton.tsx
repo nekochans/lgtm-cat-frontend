@@ -11,6 +11,7 @@ export function LoginButton({ language }: Props): JSX.Element {
   return (
     <IconButton
       displayText={language === 'en' ? 'Login' : 'ログイン'}
+      // eslint-disable-next-line react/prefer-shorthand-boolean
       showGithubIcon={true}
       link={createIncludeLanguageAppPath('login', language)}
     />

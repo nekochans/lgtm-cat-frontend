@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { expect } from 'vitest';
+import { expect, it } from 'vitest';
 import { Footer } from './Footer';
 import '@testing-library/jest-dom';
 
