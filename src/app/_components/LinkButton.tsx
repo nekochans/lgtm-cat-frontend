@@ -1,6 +1,6 @@
-import { type IncludeLanguageAppPath, type Url } from '@/features/url';
-import Link from 'next/link';
+import type { IncludeLanguageAppPath, Url } from '@/features/url';
 import type { CSSProperties, JSX } from 'react';
+import Link from 'next/link';
 import { Text } from 'react-aria-components';
 
 type Props = {
@@ -10,12 +10,12 @@ type Props = {
   style?: CSSProperties;
 };
 
-export const LinkButton = ({
+export function LinkButton({
   linkText,
   linkUrl,
   className,
   style,
-}: Props): JSX.Element => {
+}: Props): JSX.Element {
   return (
     <Link
       href={linkUrl}
@@ -35,4 +35,4 @@ export const LinkButton = ({
       </Text>
     </Link>
   );
-};
+}

@@ -1,26 +1,30 @@
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { fixupConfigRules, fixupPluginRules } from '@eslint/compat';
-import { FlatCompat } from '@eslint/eslintrc';
-import js from '@eslint/js';
-import typescriptEslint from '@typescript-eslint/eslint-plugin';
-import jsxA11Y from 'eslint-plugin-jsx-a11y';
-import react from 'eslint-plugin-react';
-import reactHooks from 'eslint-plugin-react-hooks';
-import storybook from 'eslint-plugin-storybook';
-import vitest from 'eslint-plugin-vitest';
-import globals from 'globals';
+import antfu from '@antfu/eslint-config';
+import tailwindcss from 'eslint-plugin-tailwindcss';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all,
-});
-
-export default [
+export default antfu(
   {
+    react: true,
+    formatters: {
+      css: true,
+      html: true,
+      markdown: 'prettier',
+    },
+    stylistic: {
+      semi: true,
+      overrides: {
+        'semi': ['error', 'always'],
+        'semi-spacing': ['error', { after: true, before: false }],
+        'semi-style': ['error', 'last'],
+        'no-extra-semi': 'error',
+        'no-unexpected-multiline': 'error',
+        'no-unreachable': 'error',
+      },
+    },
+    typescript: {
+      overrides: {
+        'ts/consistent-type-definitions': ['error', 'type'],
+      },
+    },
     ignores: [
       '**/node_modules/',
       '**/.next/',
@@ -28,129 +32,19 @@ export default [
       '**/coverage/',
       '**/.eslintrc.json',
       '**/next-env.d.ts',
-      'test/setupTests.ts',
       '**/*.config.js',
-      '**/*.config.mjs',
-      '**/__mocks__',
       '**/storybook-static/',
       'public/mockServiceWorker.js',
-      '**/*.module.css.d.ts',
-      '**/*.module.css.d.ts.map',
       '**/vitest.config.mts',
       '**/vitest.setup.mts',
+      'next.config.mjs',
+      'tsconfig.json',
     ],
   },
-  ...fixupConfigRules(
-    compat.extends(
-      'eslint:recommended',
-      'plugin:@typescript-eslint/recommended',
-      'plugin:@typescript-eslint/recommended-requiring-type-checking',
-      'standard-with-typescript',
-      'plugin:jsx-a11y/recommended',
-      'plugin:react/recommended',
-      'plugin:react/jsx-runtime',
-      'plugin:react-hooks/recommended',
-      'plugin:tailwindcss/recommended',
-      'prettier',
-    ),
-  ),
   {
-    plugins: {
-      '@typescript-eslint': fixupPluginRules(typescriptEslint),
-      'jsx-a11y': fixupPluginRules(jsxA11Y),
-      react: fixupPluginRules(react),
-      'react-hooks': fixupPluginRules(reactHooks),
-      storybook,
-      vitest,
-    },
-
-    languageOptions: {
-      globals: {
-        ...globals.browser,
-        ...globals.node,
-      },
-
-      ecmaVersion: 'latest',
-      sourceType: 'module',
-
-      parserOptions: {
-        tsconfigRootDir: '.',
-        project: ['./tsconfig.json', './tsconfig.storybook.json'],
-      },
-    },
-
-    settings: {
-      react: {
-        version: 'detect',
-      },
-    },
-
     rules: {
-      'padding-line-between-statements': [
-        'error',
-        {
-          blankLine: 'always',
-          prev: '*',
-          next: 'return',
-        },
-      ],
-
-      '@typescript-eslint/consistent-type-definitions': 'off',
-      '@typescript-eslint/explicit-function-return-type': 'off',
-      '@typescript-eslint/explicit-module-boundary-types': ['error'],
-
-      '@typescript-eslint/no-misused-promises': [
-        'error',
-        {
-          checksVoidReturn: false,
-        },
-      ],
-
-      '@typescript-eslint/no-unused-vars': [
-        'error',
-        {
-          argsIgnorePattern: '^_',
-          varsIgnorePattern: '^_',
-        },
-      ],
-
-      '@typescript-eslint/strict-boolean-expressions': [
-        'error',
-        {
-          allowNullableObject: true,
-        },
-      ],
-
-      '@typescript-eslint/triple-slash-reference': [
-        'error',
-        {
-          types: 'always',
-        },
-      ],
-
-      'import/extensions': [
-        'error',
-        {
-          ignorePackages: true,
-
-          pattern: {
-            js: 'never',
-            jsx: 'never',
-            ts: 'never',
-            tsx: 'never',
-          },
-        },
-      ],
-
-      'react/display-name': 'off',
-      'tailwindcss/classnames-order': 'error',
+      'node/prefer-global/process': 'off',
     },
   },
-  {
-    files: ['**/*.tsx'],
-
-    rules: {
-      'react/prop-types': 'off',
-    },
-  },
-];
+  ...tailwindcss.configs['flat/recommended'],
+);

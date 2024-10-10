@@ -1,5 +1,5 @@
+import type { IncludeLanguageAppPath } from '@/features/url';
 import { removeLanguageFromAppPath } from '@/features/language';
-import { type IncludeLanguageAppPath } from '@/features/url';
 import { describe, expect, it } from 'vitest';
 
 describe('src/features/language.ts removeLanguageFromAppPath TestCases', () => {

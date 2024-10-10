@@ -1,10 +1,10 @@
 import type { IncludeLanguageAppPath } from '@/features/url';
-import Link from 'next/link';
 import type { ComponentProps, JSX } from 'react';
+import Link from 'next/link';
 import { Button, Text } from 'react-aria-components';
 import { GithubIcon } from './icons/GithubIcon';
 
-const RepeatIcon = () => {
+function RepeatIcon() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -19,9 +19,9 @@ const RepeatIcon = () => {
       />
     </svg>
   );
-};
+}
 
-const RandomIcon = () => {
+function RandomIcon() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -36,9 +36,9 @@ const RandomIcon = () => {
       />
     </svg>
   );
-};
+}
 
-const CatIcon = () => {
+function CatIcon() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -53,7 +53,7 @@ const CatIcon = () => {
       />
     </svg>
   );
-};
+}
 
 type Props = ComponentProps<'button'> & {
   displayText: string;
@@ -66,7 +66,7 @@ type Props = ComponentProps<'button'> & {
   link?: IncludeLanguageAppPath;
 };
 
-export const IconButton = ({
+export function IconButton({
   type,
   displayText,
   showGithubIcon,
@@ -76,13 +76,13 @@ export const IconButton = ({
   isPressed,
   className,
   link,
-}: Props): JSX.Element => {
-  const baseClasses =
-    'inline-flex items-center justify-center gap-2 rounded-lg px-7 py-1.5 text-black transition-colors duration-200';
-  const stateClasses =
-    isPressed === true ? 'bg-amber-500' : 'bg-amber-300 hover:bg-amber-100';
-  const focusClasses =
-    'focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2';
+}: Props): JSX.Element {
+  const baseClasses
+    = 'inline-flex items-center justify-center gap-2 rounded-lg px-7 py-1.5 text-black transition-colors duration-200';
+  const stateClasses
+    = isPressed === true ? 'bg-amber-500' : 'bg-amber-300 hover:bg-amber-100';
+  const focusClasses
+    = 'focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2';
 
   if (link != null) {
     return (
@@ -122,4 +122,4 @@ export const IconButton = ({
       </Text>
     </Button>
   );
-};
+}

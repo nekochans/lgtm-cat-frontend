@@ -1,25 +1,25 @@
-import { createExternalTransmissionPolicyLinksFromLanguages } from '@/features/externalTransmissionPolicy';
 import type { Language } from '@/features/language';
+import type { JSX } from 'react';
+import { createExternalTransmissionPolicyLinksFromLanguages } from '@/features/externalTransmissionPolicy';
 import { createPrivacyPolicyLinksFromLanguages } from '@/features/privacyPolicy';
 import { createTermsOfUseLinksFromLanguages } from '@/features/termsOfUse';
 import Link from 'next/link';
-import type { JSX } from 'react';
 import { Text } from 'react-aria-components';
 
 export type Props = {
   language: Language;
 };
 
-const linkStyle =
-  'text-[#43281E] font-inter text-sm font-normal leading-5 hover:underline';
+const linkStyle
+  = 'text-[#43281E] font-inter text-sm font-normal leading-5 hover:underline';
 
-export const Footer = ({ language }: Props): JSX.Element => {
+export function Footer({ language }: Props): JSX.Element {
   const terms = createTermsOfUseLinksFromLanguages(language);
 
   const privacy = createPrivacyPolicyLinksFromLanguages(language);
 
-  const externalTransmissionPolicy =
-    createExternalTransmissionPolicyLinksFromLanguages(language);
+  const externalTransmissionPolicy
+    = createExternalTransmissionPolicyLinksFromLanguages(language);
 
   return (
     <footer className="flex w-full flex-col">
@@ -49,4 +49,4 @@ export const Footer = ({ language }: Props): JSX.Element => {
       </div>
     </footer>
   );
-};
+}

@@ -1,4 +1,4 @@
-import { type JSX } from 'react';
+import type { JSX } from 'react';
 
 type Props = {
   width: number;
@@ -6,7 +6,7 @@ type Props = {
   color: 'default' | 'white';
 };
 
-export const GithubIcon = ({ width, height, color }: Props): JSX.Element => {
+export function GithubIcon({ width, height, color }: Props): JSX.Element {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -21,4 +21,4 @@ export const GithubIcon = ({ width, height, color }: Props): JSX.Element => {
       />
     </svg>
   );
-};
+}

@@ -1,9 +1,9 @@
-import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
-import { expect, test } from 'vitest';
+import { expect, it } from 'vitest';
 import { Header } from './Header';
+import '@testing-library/jest-dom';
 
-test('show isLoggedIn false language is ja', () => {
+it('show isLoggedIn false language is ja', () => {
   render(<Header language="ja" currentUrlPath="/" isLoggedIn={false} />);
 
   expect(screen.getByRole('link', { name: 'LGTMeow' })).toBeTruthy();
@@ -15,7 +15,7 @@ test('show isLoggedIn false language is ja', () => {
   expect(screen.getByRole('link', { name: 'ログイン' })).toBeTruthy();
 });
 
-test('show isLoggedIn false language is en', () => {
+it('show isLoggedIn false language is en', () => {
   render(<Header language="en" currentUrlPath="/" isLoggedIn={false} />);
 
   expect(screen.getByRole('link', { name: 'LGTMeow' })).toBeTruthy();
@@ -27,7 +27,8 @@ test('show isLoggedIn false language is en', () => {
   expect(screen.getByRole('link', { name: 'Login' })).toBeTruthy();
 });
 
-test('show isLoggedIn true language is ja', () => {
+it('show isLoggedIn true language is ja', () => {
+  // eslint-disable-next-line react/prefer-shorthand-boolean
   render(<Header language="ja" currentUrlPath="/" isLoggedIn={true} />);
 
   expect(screen.getByRole('link', { name: 'LGTMeow' })).toBeTruthy();
@@ -38,7 +39,8 @@ test('show isLoggedIn true language is ja', () => {
   expect(screen.getByRole('button', { name: 'language' })).toBeTruthy();
 });
 
-test('show isLoggedIn true language is en', () => {
+it('show isLoggedIn true language is en', () => {
+  // eslint-disable-next-line react/prefer-shorthand-boolean
   render(<Header language="en" currentUrlPath="/" isLoggedIn={true} />);
 
   expect(screen.getByRole('link', { name: 'LGTMeow' })).toBeTruthy();
