@@ -6,8 +6,6 @@
     "dev": "next dev -p 2222",
     "build": "next build",
     "start": "next start -p 2222",
-    "lint:prettier": "prettier --cache --check .",
-    "fix:prettier": "npm run lint:prettier -- --write",
     "lint:eslint": "eslint --cache .",
     "fix:eslint": "npm run lint:eslint -- --fix",
     "lint": "run-s lint:*",
