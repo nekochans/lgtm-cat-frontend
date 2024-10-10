@@ -1,4 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const assertNever = (value: never): never => {
+// eslint-disable-next-line unused-imports/no-unused-vars
+export function assertNever(value: never): never {
   throw new Error('Unexpected value. Should have been never.');
-};
+}

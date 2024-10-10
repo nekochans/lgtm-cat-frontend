@@ -1,8 +1,8 @@
+import type { IncludeLanguageAppPath } from '@/features/url';
 import {
-  mightExtractLanguageFromAppPath,
-  type IncludeLanguageAppPath,
   type Language,
-} from '@/features';
+  mightExtractLanguageFromAppPath,
+} from '@/features/language';
 import { describe, expect, it } from 'vitest';
 
 describe('src/features/language.ts mightExtractLanguageFromAppPath TestCases', () => {

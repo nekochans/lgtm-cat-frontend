@@ -1,10 +1,9 @@
-import { createIncludeLanguageAppPath, type Language } from '@/features';
-import { assertNever } from '@/utils';
+import type { Language } from '@/features/language';
 import type { LinkAttribute } from './linkAttribute';
+import { createIncludeLanguageAppPath } from '@/features/url';
+import { assertNever } from '@/utils/assertNever';
 
-export const createPrivacyPolicyLinksFromLanguages = (
-  language: Language,
-): LinkAttribute => {
+export function createPrivacyPolicyLinksFromLanguages(language: Language): LinkAttribute {
   switch (language) {
     case 'en':
       return {
@@ -19,4 +18,4 @@ export const createPrivacyPolicyLinksFromLanguages = (
     default:
       return assertNever(language);
   }
-};
+}

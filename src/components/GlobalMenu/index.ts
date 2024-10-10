@@ -1,1 +1,0 @@
-export { GlobalMenu } from './GlobalMenu';
