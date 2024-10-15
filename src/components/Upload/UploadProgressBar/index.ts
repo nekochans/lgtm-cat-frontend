@@ -1,1 +1,0 @@
-export { UploadProgressBar } from './UploadProgressBar';

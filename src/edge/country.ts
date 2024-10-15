@@ -1,7 +1,7 @@
+import type { NextRequest } from 'next/server';
 import { get } from '@vercel/edge-config';
-import { type NextRequest } from 'next/server';
 
-export const isBanCountry = async (req: NextRequest): Promise<boolean> => {
+export async function isBanCountry(req: NextRequest): Promise<boolean> {
   const bannedCountryCodeList = await get<string[]>('bannedCountryCodeList');
   if (bannedCountryCodeList) {
     const country = req.geo?.country?.toUpperCase();
@@ -11,4 +11,4 @@ export const isBanCountry = async (req: NextRequest): Promise<boolean> => {
   }
 
   return false;
-};
+}

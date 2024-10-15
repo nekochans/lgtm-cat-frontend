@@ -24,6 +24,7 @@ export default defineConfig({
         'next.config.js',
         'next-env.d.ts',
         'sentry.*.config.js',
+        '**/tests-e2e/**',
       ],
     },
     exclude: [...configDefaults.exclude],

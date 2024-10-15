@@ -12,7 +12,7 @@ export type CustomDataAttrGtmClick =
   | 'language-menu-en-link'
   | 'language-menu-ja-link';
 
-const isGoogleTagManagerId = (value: unknown): value is GoogleTagManagerId => {
+function isGoogleTagManagerId(value: unknown): value is GoogleTagManagerId {
   if (typeof value !== 'string') {
     return false;
   }
@@ -22,81 +22,75 @@ const isGoogleTagManagerId = (value: unknown): value is GoogleTagManagerId => {
   const endPosition = 4;
 
   return value.slice(startPosition, endPosition) === 'GTM-';
-};
+}
 
-export const googleTagManagerId = (): GoogleTagManagerId => {
+export function googleTagManagerId(): GoogleTagManagerId {
   if (isGoogleTagManagerId(process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID)) {
     return process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID;
   }
 
   return 'GTM-T9VPVTR';
-};
+}
 
 declare global {
+  // eslint-disable-next-line ts/consistent-type-definitions
   interface Window {
     dataLayer: Array<Record<string, unknown>>;
   }
 }
 
-export const sendClickTopFetchRandomCatButton = (): void => {
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+export function sendClickTopFetchRandomCatButton(): void {
   if (window.dataLayer) {
     window.dataLayer.push({
       event: 'ClickTopFetchRandomCatButton',
     });
   }
-};
+}
 
-export const sendClickTopFetchNewArrivalCatButton = (): void => {
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+export function sendClickTopFetchNewArrivalCatButton(): void {
   if (window.dataLayer) {
     window.dataLayer.push({
       event: 'ClickTopFetchNewArrivalCatButton',
     });
   }
-};
+}
 
-export const sendUploadedCatImage = (): void => {
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+export function sendUploadedCatImage(): void {
   if (window.dataLayer) {
     window.dataLayer.push({
       event: 'UploadedCatImage',
     });
   }
-};
+}
 
-export const sendCopyMarkdownFromTopImages = (): void => {
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+export function sendCopyMarkdownFromTopImages(): void {
   if (window.dataLayer) {
     window.dataLayer.push({
       event: 'CopyMarkdownFromTopImages',
     });
   }
-};
+}
 
-export const sendCopyMarkdownFromCreatedImage = (): void => {
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+export function sendCopyMarkdownFromCreatedImage(): void {
   if (window.dataLayer) {
     window.dataLayer.push({
       event: 'CopyMarkdownFromCreatedImage',
     });
   }
-};
+}
 
-export const sendCopyMarkdownFromCopyButton = (): void => {
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+export function sendCopyMarkdownFromCopyButton(): void {
   if (window.dataLayer) {
     window.dataLayer.push({
       event: 'CopyMarkdownFromCopyButton',
     });
   }
-};
+}
 
-export const sendCopyMarkdownFromRandomButton = (): void => {
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+export function sendCopyMarkdownFromRandomButton(): void {
   if (window.dataLayer) {
     window.dataLayer.push({
       event: 'CopyMarkdownFromRandomButton',
     });
   }
-};
+}

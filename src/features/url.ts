@@ -1,43 +1,45 @@
-import { languages, type Language } from './language';
+import { type Language, languages } from './language';
 
 export type Url = `http://localhost${string}` | `https://${string}`;
 
-export const isUrl = (value: unknown): value is Url => {
+export function isUrl(value: unknown): value is Url {
   if (typeof value !== 'string') {
     return false;
   }
 
   return (
-    value.substring(0, 8) === 'https://' ||
-    value.substring(0, 16) === 'http://localhost'
+    value.substring(0, 8) === 'https://'
+    || value.substring(0, 16) === 'http://localhost'
   );
-};
+}
 
-export const appBaseUrl = (): Url => {
+export function appBaseUrl(): Url {
   if (isUrl(process.env.NEXT_PUBLIC_APP_URL)) {
     return process.env.NEXT_PUBLIC_APP_URL;
   }
 
   return 'https://lgtmeow.com';
-};
+}
 
 export const appPathList = {
-  top: '/',
-  upload: '/upload',
-  terms: '/terms',
-  privacy: '/privacy',
-  error: '/error',
-  maintenance: '/maintenance',
+  'home': '/',
+  'upload': '/upload',
+  'terms': '/terms',
+  'privacy': '/privacy',
+  'error': '/error',
+  'maintenance': '/maintenance',
   'external-transmission-policy': '/external-transmission-policy',
+  'login': '/login',
 } as const;
 
 export type AppPathName =
-  | 'top'
+  | 'home'
   | 'upload'
   | 'terms'
   | 'privacy'
   | 'maintenance'
-  | 'external-transmission-policy';
+  | 'external-transmission-policy'
+  | 'login';
 
 type AppPath = (typeof appPathList)[keyof typeof appPathList];
 
@@ -47,9 +49,7 @@ export type IncludeLanguageAppPath =
   | `/${Language}`
   | '/';
 
-export const isIncludeLanguageAppPath = (
-  value: unknown,
-): value is IncludeLanguageAppPath => {
+export function isIncludeLanguageAppPath(value: unknown): value is IncludeLanguageAppPath {
   const appPaths: string[] = Object.values(appPathList);
 
   if (typeof value !== 'string') {
@@ -60,13 +60,13 @@ export const isIncludeLanguageAppPath = (
     return true;
   }
 
-  if (languages.some((language) => value === `/${language}`)) {
+  if (languages.some(language => value === `/${language}`)) {
     return true;
   }
 
   if (
-    languages.some((language) =>
-      appPaths.some((path) => value === `/${language}${path}`),
+    languages.some(language =>
+      appPaths.some(path => value === `/${language}${path}`),
     )
   ) {
     return true;
@@ -77,30 +77,28 @@ export const isIncludeLanguageAppPath = (
   }
 
   return false;
-};
+}
 
-export const createIncludeLanguageAppPath = (
-  appPathName: AppPathName,
-  language: Language,
-): IncludeLanguageAppPath => {
-  if (appPathName === 'top' && language === 'en') {
+export function createIncludeLanguageAppPath(appPathName: AppPathName, language: Language): IncludeLanguageAppPath {
+  if (appPathName === 'home' && language === 'en') {
     return `/${language}`;
   }
 
   return language === 'en'
     ? (`/en${appPathList[appPathName]}` as const)
     : appPathList[appPathName];
-};
+}
 
 export const appUrlList = {
-  top: appBaseUrl(),
-  ogpImg: `${appBaseUrl()}/ogp.webp` as const,
+  home: appBaseUrl(),
+  ogpImg: `${appBaseUrl()}/opengraph-image.png` as const,
   upload: `${appBaseUrl()}${appPathList.upload}` as const,
   terms: `${appBaseUrl()}${appPathList.terms}` as const,
   privacy: `${appBaseUrl()}${appPathList.privacy}` as const,
   maintenance: `${appBaseUrl()}${appPathList.maintenance}` as const,
   externalTransmission:
     `${appBaseUrl()}${appPathList['external-transmission-policy']}` as const,
+  login: `${appBaseUrl()}${appPathList.login}` as const,
 } as const;
 
 type I18nUrlList = {
@@ -110,23 +108,23 @@ type I18nUrlList = {
 };
 
 export const i18nUrlList: I18nUrlList = {
-  top: {
-    ja: `${appPathList.top}/`,
+  'home': {
+    ja: `${appPathList.home}/`,
     en: `/en/`,
   },
-  upload: {
+  'upload': {
     ja: `${appPathList.upload}/`,
     en: `/en${appPathList.upload}/`,
   },
-  terms: {
+  'terms': {
     ja: `${appPathList.terms}/`,
     en: `/en${appPathList.terms}/`,
   },
-  privacy: {
+  'privacy': {
     ja: `${appPathList.privacy}/`,
     en: `/en${appPathList.privacy}/`,
   },
-  maintenance: {
+  'maintenance': {
     ja: `${appPathList.privacy}/`,
     en: `/en${appPathList.privacy}/`,
   },
@@ -134,34 +132,42 @@ export const i18nUrlList: I18nUrlList = {
     ja: `${appPathList['external-transmission-policy']}/`,
     en: `/en${appPathList['external-transmission-policy']}/`,
   },
+  'login': {
+    ja: `${appPathList.login}/`,
+    en: `/en${appPathList.login}/`,
+  },
 };
 
 export type AppUrl = (typeof appUrlList)[keyof typeof appUrlList];
 
-export const uploadCatImageUrl = (baseUrl?: Url): Url =>
-  `${isUrl(baseUrl) ? baseUrl : appBaseUrl()}/api/lgtm-images`;
+export function uploadCatImageUrl(baseUrl?: Url): Url {
+  return `${isUrl(baseUrl) ? baseUrl : appBaseUrl()}/api/lgtm-images`;
+}
 
-export const fetchLgtmImagesUrl = (baseUrl?: Url): Url =>
-  `${isUrl(baseUrl) ? baseUrl : appBaseUrl()}/api/lgtm-images`;
+export function fetchLgtmImagesUrl(baseUrl?: Url): Url {
+  return `${isUrl(baseUrl) ? baseUrl : appBaseUrl()}/api/lgtm-images`;
+}
 
-export const fetchLgtmImagesInRecentlyCreatedUrl = (baseUrl?: Url): Url =>
-  `${isUrl(baseUrl) ? baseUrl : appBaseUrl()}/api/lgtm-images/recently-created`;
+export function fetchLgtmImagesInRecentlyCreatedUrl(baseUrl?: Url): Url {
+  return `${isUrl(baseUrl) ? baseUrl : appBaseUrl()}/api/lgtm-images/recently-created`;
+}
 
-export const isAcceptableCatImageUrl = (baseUrl?: Url): Url =>
-  `${isUrl(baseUrl) ? baseUrl : appBaseUrl()}/api/cat-images/validation-results`;
+export function isAcceptableCatImageUrl(baseUrl?: Url): Url {
+  return `${isUrl(baseUrl) ? baseUrl : appBaseUrl()}/api/cat-images/validation-results`;
+}
 
-export const lgtmeowApiUrl = (): Url => {
+export function lgtmeowApiUrl(): Url {
   if (isUrl(process.env.LGTMEOW_API_URL)) {
     return process.env.LGTMEOW_API_URL;
   }
 
   throw new Error('LGTMEOW_API_URL is not defined');
-};
+}
 
-export const imageRecognitionApiUrl = (): Url => {
+export function imageRecognitionApiUrl(): Url {
   if (isUrl(process.env.IMAGE_RECOGNITION_API_URL)) {
     return process.env.IMAGE_RECOGNITION_API_URL;
   }
 
   throw new Error('IMAGE_RECOGNITION_API_URL is not defined');
-};
+}

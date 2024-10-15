@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/nextjs';
 
-export const mightSetRequestIdToSentry = (response: Response): void => {
+export function mightSetRequestIdToSentry(response: Response): void {
   const xRequestId = response.headers.get('x-request-id');
   if (xRequestId != null) {
     Sentry.getCurrentScope().setTag('x_request_id', xRequestId);
@@ -10,4 +10,4 @@ export const mightSetRequestIdToSentry = (response: Response): void => {
   if (lambdaRequestId != null) {
     Sentry.getCurrentScope().setTag('x_lambda_request_id', lambdaRequestId);
   }
-};
+}
