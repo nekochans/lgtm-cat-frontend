@@ -48,11 +48,11 @@ export function Header({
 
   return (
     <ReactAriaHeader className="w-full border-b border-orange-300 bg-orange-500">
-      <div className="mx-auto flex h-16 max-w-screen-2xl items-center justify-between px-5">
+      <div className="mx-auto flex h-16 max-w-screen-2xl items-center justify-between px-3">
         <div className="flex w-full items-center justify-between">
-          <div className="flex items-center gap-24">
+          <div className="flex items-center gap-3">
             <HeaderLogo language={language} />
-            <nav className="flex items-center gap-6">
+            <nav className="flex items-center gap-1">
               <Link
                 href={appPathList.upload}
                 className="flex items-center justify-center bg-orange-500 p-5 text-base font-medium text-orange-50 hover:text-orange-100"
