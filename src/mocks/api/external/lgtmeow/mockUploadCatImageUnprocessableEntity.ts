@@ -1,17 +1,16 @@
-import { httpStatusCode } from '@/constants/httpStatusCode';
-import { HttpResponse, type ResponseResolver } from 'msw';
+import { HttpResponse, type ResponseResolver } from "msw";
+import { httpStatusCode } from "@/constants/httpStatusCode";
 
-export const mockUploadCatImageUnprocessableEntity: ResponseResolver = () => {
-  return HttpResponse.json(
+export const mockUploadCatImageUnprocessableEntity: ResponseResolver = () =>
+  HttpResponse.json(
     {
       error: {
         code: httpStatusCode.unprocessableEntity,
-        message: 'UploadCatImageValidationError',
+        message: "UploadCatImageValidationError",
       },
     },
     {
       status: httpStatusCode.unprocessableEntity,
-      statusText: 'Unprocessable Entity',
-    },
+      statusText: "Unprocessable Entity",
+    }
   );
-};

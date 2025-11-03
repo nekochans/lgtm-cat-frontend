@@ -1,9 +1,8 @@
-import { httpStatusCode } from '@/constants/httpStatusCode';
-import { HttpResponse, type ResponseResolver } from 'msw';
+import { HttpResponse, type ResponseResolver } from "msw";
+import { httpStatusCode } from "@/constants/httpStatusCode";
 
-export const mockUnauthorizedError: ResponseResolver = () => {
-  return HttpResponse.json(
-    { code: httpStatusCode.unauthorized, message: 'Unauthorized' },
-    { status: httpStatusCode.unauthorized, statusText: 'Unauthorized' },
+export const mockUnauthorizedError: ResponseResolver = () =>
+  HttpResponse.json(
+    { code: httpStatusCode.unauthorized, message: "Unauthorized" },
+    { status: httpStatusCode.unauthorized, statusText: "Unauthorized" }
   );
-};

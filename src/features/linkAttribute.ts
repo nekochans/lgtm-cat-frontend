@@ -1,4 +1,4 @@
-import type { IncludeLanguageAppPath } from '@/features/url';
+import type { IncludeLanguageAppPath } from "@/features/url";
 
 export type LinkAttribute = {
   text: string;

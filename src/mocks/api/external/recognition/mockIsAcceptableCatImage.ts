@@ -1,11 +1,10 @@
-import { httpStatusCode } from '@/constants/httpStatusCode';
-import { HttpResponse, type ResponseResolver } from 'msw';
+import { HttpResponse, type ResponseResolver } from "msw";
+import { httpStatusCode } from "@/constants/httpStatusCode";
 
-export const mockIsAcceptableCatImage: ResponseResolver = () => {
-  return HttpResponse.json(
+export const mockIsAcceptableCatImage: ResponseResolver = () =>
+  HttpResponse.json(
     {
       isAcceptableCatImage: true,
     },
-    { status: httpStatusCode.ok, statusText: 'OK' },
+    { status: httpStatusCode.ok, statusText: "OK" }
   );
-};

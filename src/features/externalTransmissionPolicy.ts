@@ -1,24 +1,26 @@
-import type { Language } from '@/features/language';
-import type { LinkAttribute } from './linkAttribute';
-import { createIncludeLanguageAppPath } from '@/features/url';
-import { assertNever } from '@/utils/assertNever';
+import type { Language } from "@/features/language";
+import { createIncludeLanguageAppPath } from "@/features/url";
+import { assertNever } from "@/utils/assertNever";
+import type { LinkAttribute } from "./linkAttribute";
 
-export function createExternalTransmissionPolicyLinksFromLanguages(language: Language): LinkAttribute {
+export function createExternalTransmissionPolicyLinksFromLanguages(
+  language: Language
+): LinkAttribute {
   switch (language) {
-    case 'en':
+    case "en":
       return {
-        text: 'External Transmission Policy',
+        text: "External Transmission Policy",
         link: createIncludeLanguageAppPath(
-          'external-transmission-policy',
-          language,
+          "external-transmission-policy",
+          language
         ),
       };
-    case 'ja':
+    case "ja":
       return {
-        text: '外部送信ポリシー',
+        text: "外部送信ポリシー",
         link: createIncludeLanguageAppPath(
-          'external-transmission-policy',
-          language,
+          "external-transmission-policy",
+          language
         ),
       };
     default:

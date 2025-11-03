@@ -1,15 +1,14 @@
-import { httpStatusCode } from '@/constants/httpStatusCode';
-import { HttpResponse, type ResponseResolver } from 'msw';
+import { HttpResponse, type ResponseResolver } from "msw";
+import { httpStatusCode } from "@/constants/httpStatusCode";
 
-export const mockInternalServerError: ResponseResolver = () => {
-  return HttpResponse.json(
+export const mockInternalServerError: ResponseResolver = () =>
+  HttpResponse.json(
     {
       code: httpStatusCode.internalServerError,
-      message: 'Internal Server Error',
+      message: "Internal Server Error",
     },
     {
       status: httpStatusCode.internalServerError,
-      statusText: 'Internal Server Error',
-    },
+      statusText: "Internal Server Error",
+    }
   );
-};

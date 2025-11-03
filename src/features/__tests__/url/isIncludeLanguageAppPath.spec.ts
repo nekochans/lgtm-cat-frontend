@@ -1,7 +1,7 @@
-import { isIncludeLanguageAppPath } from '@/features/url';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from "vitest";
+import { isIncludeLanguageAppPath } from "@/features/url";
 
-describe('src/features/url.ts isIncludeLanguageAppPath TestCases', () => {
+describe("src/features/url.ts isIncludeLanguageAppPath TestCases", () => {
   type TestTable = {
     value: unknown;
     expected: boolean;
@@ -9,23 +9,23 @@ describe('src/features/url.ts isIncludeLanguageAppPath TestCases', () => {
 
   it.each`
     value            | expected
-    ${'/'}           | ${true}
-    ${'/en'}         | ${true}
-    ${'/ja'}         | ${true}
-    ${'/en/upload'}  | ${true}
-    ${'/ja/upload'}  | ${true}
-    ${'/terms'}      | ${true}
-    ${'/ja/terms'}   | ${true}
-    ${'/en/terms'}   | ${true}
-    ${'/privacy'}    | ${true}
-    ${'/ja/privacy'} | ${true}
-    ${'/en/privacy'} | ${true}
-    ${'/bn/upload'}  | ${false}
-    ${'/upload/ja'}  | ${false}
+    ${"/"}           | ${true}
+    ${"/en"}         | ${true}
+    ${"/ja"}         | ${true}
+    ${"/en/upload"}  | ${true}
+    ${"/ja/upload"}  | ${true}
+    ${"/terms"}      | ${true}
+    ${"/ja/terms"}   | ${true}
+    ${"/en/terms"}   | ${true}
+    ${"/privacy"}    | ${true}
+    ${"/ja/privacy"} | ${true}
+    ${"/en/privacy"} | ${true}
+    ${"/bn/upload"}  | ${false}
+    ${"/upload/ja"}  | ${false}
   `(
-    'should return the intended result. value: $value',
+    "should return the intended result. value: $value",
     ({ value, expected }: TestTable) => {
       expect(isIncludeLanguageAppPath(value)).toStrictEqual(expected);
-    },
+    }
   );
 });

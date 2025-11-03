@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { httpStatusCode } from '@/constants/httpStatusCode';
-import * as Sentry from '@sentry/nextjs';
-import NextError from 'next/error';
-import { type JSX, useEffect } from 'react';
+import * as Sentry from "@sentry/nextjs";
+import NextError from "next/error";
+import { type JSX, useEffect } from "react";
+import { httpStatusCode } from "@/constants/httpStatusCode";
 
 type Props = {
   error: Error & { digest?: string };

@@ -1,18 +1,18 @@
-import type { Language } from './language';
-import { assertNever } from '@/utils/assertNever';
-import { type AppPathName, type AppUrl, appUrlList } from './url';
+import { assertNever } from "@/utils/assertNever";
+import type { Language } from "./language";
+import { type AppPathName, type AppUrl, appUrlList } from "./url";
 
-type AppName = 'LGTMeow';
+type AppName = "LGTMeow";
 
-export const appName: AppName = 'LGTMeow';
+export const appName: AppName = "LGTMeow";
 
 const defaultTitle = appName;
 
 export function custom404title(language: Language): string {
   switch (language) {
-    case 'ja':
+    case "ja":
       return `${defaultTitle} ページが見つかりません`;
-    case 'en':
+    case "en":
       return `${defaultTitle} Page not found`;
     default:
       return assertNever(language);
@@ -21,9 +21,9 @@ export function custom404title(language: Language): string {
 
 export function customErrorTitle(language: Language): string {
   switch (language) {
-    case 'ja':
+    case "ja":
       return `${defaultTitle} エラー`;
-    case 'en':
+    case "en":
       return `${defaultTitle} Error`;
     default:
       return assertNever(language);
@@ -32,9 +32,9 @@ export function customErrorTitle(language: Language): string {
 
 function topPageTitle(language: Language): string {
   switch (language) {
-    case 'ja':
+    case "ja":
       return `${defaultTitle} 猫好きのためのLGTM画像共有サービス`;
-    case 'en':
+    case "en":
       return `${defaultTitle} | LGTM image share service for cat lovers`;
     default:
       return assertNever(language);
@@ -43,9 +43,9 @@ function topPageTitle(language: Language): string {
 
 function uploadPageTitle(language: Language): string {
   switch (language) {
-    case 'ja':
+    case "ja":
       return `${defaultTitle} 猫ちゃん画像アップロード`;
-    case 'en':
+    case "en":
       return `${defaultTitle} Cat Image Upload`;
     default:
       return assertNever(language);
@@ -54,9 +54,9 @@ function uploadPageTitle(language: Language): string {
 
 function termsPageTitle(language: Language): string {
   switch (language) {
-    case 'ja':
+    case "ja":
       return `${defaultTitle} 利用規約`;
-    case 'en':
+    case "en":
       return `${defaultTitle} Terms of Use`;
     default:
       return assertNever(language);
@@ -65,9 +65,9 @@ function termsPageTitle(language: Language): string {
 
 function privacyPageTitle(language: Language): string {
   switch (language) {
-    case 'ja':
+    case "ja":
       return `${defaultTitle} プライバシーポリシー`;
-    case 'en':
+    case "en":
       return `${defaultTitle} Privacy Policy`;
     default:
       return assertNever(language);
@@ -76,9 +76,9 @@ function privacyPageTitle(language: Language): string {
 
 function maintenancePageTitle(language: Language) {
   switch (language) {
-    case 'ja':
+    case "ja":
       return `${defaultTitle} メンテナンス`;
-    case 'en':
+    case "en":
       return `${defaultTitle} Maintenance`;
     default:
       return assertNever(language);
@@ -87,9 +87,9 @@ function maintenancePageTitle(language: Language) {
 
 function externalTransmissionPageTitle(language: Language): string {
   switch (language) {
-    case 'ja':
+    case "ja":
       return `${defaultTitle} 外部送信ポリシー`;
-    case 'en':
+    case "en":
       return `${defaultTitle} External Transmission Policy`;
     default:
       return assertNever(language);
@@ -98,9 +98,9 @@ function externalTransmissionPageTitle(language: Language): string {
 
 function description(language: Language): string {
   switch (language) {
-    case 'ja':
+    case "ja":
       return `${appName}は可愛い猫のLGTM画像を共有出来るサービスです。`;
-    case 'en':
+    case "en":
       return `${appName} is a service that allows you to share LGTM images of cats.`;
     default:
       return assertNever(language);
@@ -121,44 +121,44 @@ type MetaTagList = {
 
 export function metaTagList(language: Language): MetaTagList {
   return {
-    'home': {
+    home: {
       title: topPageTitle(language),
       ogpImgUrl: appUrlList.ogpImg,
       ogpTargetUrl: appUrlList.home,
       appName,
       description: description(language),
     },
-    'upload': {
+    upload: {
       title: uploadPageTitle(language),
       ogpImgUrl: appUrlList.ogpImg,
       ogpTargetUrl: appUrlList.upload,
       appName,
     },
-    'terms': {
+    terms: {
       title: termsPageTitle(language),
       ogpImgUrl: appUrlList.ogpImg,
       ogpTargetUrl: appUrlList.terms,
       appName,
     },
-    'privacy': {
+    privacy: {
       title: privacyPageTitle(language),
       ogpImgUrl: appUrlList.ogpImg,
       ogpTargetUrl: appUrlList.privacy,
       appName,
     },
-    'maintenance': {
+    maintenance: {
       title: maintenancePageTitle(language),
       ogpImgUrl: appUrlList.ogpImg,
       ogpTargetUrl: appUrlList.maintenance,
       appName,
     },
-    'external-transmission-policy': {
+    "external-transmission-policy": {
       title: externalTransmissionPageTitle(language),
       ogpImgUrl: appUrlList.ogpImg,
       ogpTargetUrl: appUrlList.externalTransmission,
       appName,
     },
-    'login': {
+    login: {
       title: externalTransmissionPageTitle(language),
       ogpImgUrl: appUrlList.ogpImg,
       ogpTargetUrl: appUrlList.terms,

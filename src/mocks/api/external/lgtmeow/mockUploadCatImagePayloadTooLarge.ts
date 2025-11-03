@@ -1,14 +1,13 @@
-import { httpStatusCode } from '@/constants/httpStatusCode';
-import { HttpResponse, type ResponseResolver } from 'msw';
+import { HttpResponse, type ResponseResolver } from "msw";
+import { httpStatusCode } from "@/constants/httpStatusCode";
 
-export const mockUploadCatImagePayloadTooLarge: ResponseResolver = () => {
-  return HttpResponse.json(
+export const mockUploadCatImagePayloadTooLarge: ResponseResolver = () =>
+  HttpResponse.json(
     {
       error: {
         code: httpStatusCode.payloadTooLarge,
-        message: 'UploadCatImageSizeTooLargeError',
+        message: "UploadCatImageSizeTooLargeError",
       },
     },
-    { status: httpStatusCode.payloadTooLarge, statusText: 'Payload Too Large' },
+    { status: httpStatusCode.payloadTooLarge, statusText: "Payload Too Large" }
   );
-};

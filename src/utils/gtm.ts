@@ -1,19 +1,19 @@
 export type GoogleTagManagerId = `GTM-${string}`;
 
 export type CustomDataAttrGtmClick =
-  | 'header-app-title'
-  | 'top-upload-cat-button'
-  | 'footer-terms-link'
-  | 'footer-privacy-link'
-  | 'global-menu-top-link'
-  | 'global-menu-upload-cat-link'
-  | 'global-menu-terms-link'
-  | 'global-menu-privacy-link'
-  | 'language-menu-en-link'
-  | 'language-menu-ja-link';
+  | "header-app-title"
+  | "top-upload-cat-button"
+  | "footer-terms-link"
+  | "footer-privacy-link"
+  | "global-menu-top-link"
+  | "global-menu-upload-cat-link"
+  | "global-menu-terms-link"
+  | "global-menu-privacy-link"
+  | "language-menu-en-link"
+  | "language-menu-ja-link";
 
 function isGoogleTagManagerId(value: unknown): value is GoogleTagManagerId {
-  if (typeof value !== 'string') {
+  if (typeof value !== "string") {
     return false;
   }
 
@@ -21,7 +21,7 @@ function isGoogleTagManagerId(value: unknown): value is GoogleTagManagerId {
 
   const endPosition = 4;
 
-  return value.slice(startPosition, endPosition) === 'GTM-';
+  return value.slice(startPosition, endPosition) === "GTM-";
 }
 
 export function googleTagManagerId(): GoogleTagManagerId {
@@ -29,7 +29,7 @@ export function googleTagManagerId(): GoogleTagManagerId {
     return process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID;
   }
 
-  return 'GTM-T9VPVTR';
+  return "GTM-T9VPVTR";
 }
 
 declare global {
@@ -42,7 +42,7 @@ declare global {
 export function sendClickTopFetchRandomCatButton(): void {
   if (window.dataLayer) {
     window.dataLayer.push({
-      event: 'ClickTopFetchRandomCatButton',
+      event: "ClickTopFetchRandomCatButton",
     });
   }
 }
@@ -50,7 +50,7 @@ export function sendClickTopFetchRandomCatButton(): void {
 export function sendClickTopFetchNewArrivalCatButton(): void {
   if (window.dataLayer) {
     window.dataLayer.push({
-      event: 'ClickTopFetchNewArrivalCatButton',
+      event: "ClickTopFetchNewArrivalCatButton",
     });
   }
 }
@@ -58,7 +58,7 @@ export function sendClickTopFetchNewArrivalCatButton(): void {
 export function sendUploadedCatImage(): void {
   if (window.dataLayer) {
     window.dataLayer.push({
-      event: 'UploadedCatImage',
+      event: "UploadedCatImage",
     });
   }
 }
@@ -66,7 +66,7 @@ export function sendUploadedCatImage(): void {
 export function sendCopyMarkdownFromTopImages(): void {
   if (window.dataLayer) {
     window.dataLayer.push({
-      event: 'CopyMarkdownFromTopImages',
+      event: "CopyMarkdownFromTopImages",
     });
   }
 }
@@ -74,7 +74,7 @@ export function sendCopyMarkdownFromTopImages(): void {
 export function sendCopyMarkdownFromCreatedImage(): void {
   if (window.dataLayer) {
     window.dataLayer.push({
-      event: 'CopyMarkdownFromCreatedImage',
+      event: "CopyMarkdownFromCreatedImage",
     });
   }
 }
@@ -82,7 +82,7 @@ export function sendCopyMarkdownFromCreatedImage(): void {
 export function sendCopyMarkdownFromCopyButton(): void {
   if (window.dataLayer) {
     window.dataLayer.push({
-      event: 'CopyMarkdownFromCopyButton',
+      event: "CopyMarkdownFromCopyButton",
     });
   }
 }
@@ -90,7 +90,7 @@ export function sendCopyMarkdownFromCopyButton(): void {
 export function sendCopyMarkdownFromRandomButton(): void {
   if (window.dataLayer) {
     window.dataLayer.push({
-      event: 'CopyMarkdownFromRandomButton',
+      event: "CopyMarkdownFromRandomButton",
     });
   }
 }

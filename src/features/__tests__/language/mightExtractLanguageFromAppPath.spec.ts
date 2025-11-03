@@ -1,11 +1,11 @@
-import type { IncludeLanguageAppPath } from '@/features/url';
+import { describe, expect, it } from "vitest";
 import {
   type Language,
   mightExtractLanguageFromAppPath,
-} from '@/features/language';
-import { describe, expect, it } from 'vitest';
+} from "@/features/language";
+import type { IncludeLanguageAppPath } from "@/features/url";
 
-describe('src/features/language.ts mightExtractLanguageFromAppPath TestCases', () => {
+describe("src/features/language.ts mightExtractLanguageFromAppPath TestCases", () => {
   type TestTable = {
     appPath: IncludeLanguageAppPath;
     expected: Language | null;
@@ -13,17 +13,17 @@ describe('src/features/language.ts mightExtractLanguageFromAppPath TestCases', (
 
   it.each`
     appPath         | expected
-    ${'/en'}        | ${'en'}
-    ${'/ja'}        | ${'ja'}
-    ${'/en/upload'} | ${'en'}
-    ${'/ja/upload'} | ${'ja'}
-    ${'/upload/en'} | ${'en'}
-    ${'/upload/ja'} | ${'ja'}
-    ${'en/terms'}   | ${null}
+    ${"/en"}        | ${"en"}
+    ${"/ja"}        | ${"ja"}
+    ${"/en/upload"} | ${"en"}
+    ${"/ja/upload"} | ${"ja"}
+    ${"/upload/en"} | ${"en"}
+    ${"/upload/ja"} | ${"ja"}
+    ${"en/terms"}   | ${null}
   `(
-    'should return language. appPath: $appPath',
+    "should return language. appPath: $appPath",
     ({ appPath, expected }: TestTable) => {
       expect(mightExtractLanguageFromAppPath(appPath)).toStrictEqual(expected);
-    },
+    }
   );
 });
