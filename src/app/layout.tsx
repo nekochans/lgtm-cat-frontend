@@ -1,9 +1,10 @@
+// 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { Metadata } from "next";
 import type { JSX, ReactNode } from "react";
 import "./globals.css";
 import { Providers } from "@/components/heroui/providers";
 import { convertLocaleToLanguage } from "@/features/locale";
-import { appName, metaTagList } from "@/features/metaTag";
+import { appName, metaTagList } from "@/features/meta-tag";
 import { appBaseUrl, i18nUrlList } from "@/features/url";
 
 type Props = {

@@ -1,3 +1,4 @@
+// 絶対厳守：編集前に必ずAI実装ルールを読む
 // biome-ignore lint/performance/noNamespaceImport: Storybook addon annotations require namespace imports
 import * as a11yAddonAnnotations from "@storybook/addon-a11y/preview";
 import { setProjectAnnotations } from "@storybook/nextjs-vite";

@@ -1,9 +1,10 @@
+// 絶対厳守：編集前に必ずAI実装ルールを読む
 "use client";
 
-import * as Sentry from "@sentry/nextjs";
+import { captureException } from "@sentry/nextjs";
 import NextError from "next/error";
 import { type JSX, useEffect } from "react";
-import { httpStatusCode } from "@/constants/httpStatusCode";
+import { httpStatusCode } from "@/constants/http-status-code";
 
 type Props = {
   error: Error & { digest?: string };
@@ -12,7 +13,7 @@ type Props = {
 
 function GlobalError({ error }: Props): JSX.Element {
   useEffect(() => {
-    Sentry.captureException(error);
+    captureException(error);
   }, [error]);
 
   return (

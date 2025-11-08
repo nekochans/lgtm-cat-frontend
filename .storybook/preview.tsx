@@ -1,3 +1,4 @@
+// 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { Preview } from "@storybook/react";
 import { initialize, mswLoader } from "msw-storybook-addon";
 import { INITIAL_VIEWPORTS } from "storybook/viewport";

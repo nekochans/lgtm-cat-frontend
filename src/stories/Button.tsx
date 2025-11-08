@@ -1,6 +1,7 @@
+// 絶対厳守：編集前に必ずAI実装ルールを読む
 import "./button.css";
 
-export interface ButtonProps {
+export type ButtonProps = {
   /** Is this the principal call to action on the page? */
   primary?: boolean;
   /** What background color to use */
@@ -11,7 +12,7 @@ export interface ButtonProps {
   label: string;
   /** Optional click handler */
   onClick?: () => void;
-}
+};
 
 /** Primary UI component for user interaction */
 export const Button = ({

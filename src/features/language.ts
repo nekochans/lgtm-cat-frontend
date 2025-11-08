@@ -1,3 +1,4 @@
+// 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { IncludeLanguageAppPath } from "@/features/url";
 
 export const languages = ["en", "ja"] as const;
@@ -9,9 +10,9 @@ export function removeLanguageFromAppPath(
 ): IncludeLanguageAppPath {
   let newUrlPath: string = appPath;
 
-  languages.forEach((language) => {
+  for (const language of languages) {
     newUrlPath = newUrlPath.replace(`/${language}`, "");
-  });
+  }
 
   if (newUrlPath === "") {
     return "/";

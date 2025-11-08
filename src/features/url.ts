@@ -1,4 +1,8 @@
+// 絶対厳守：編集前に必ずAI実装ルールを読む
 import { type Language, languages } from "./language";
+
+const HTTPS_PREFIX = "https://";
+const LOCALHOST_PREFIX = "http://localhost";
 
 export type Url = `http://localhost${string}` | `https://${string}`;
 
@@ -7,10 +11,7 @@ export function isUrl(value: unknown): value is Url {
     return false;
   }
 
-  return (
-    value.substring(0, 8) === "https://" ||
-    value.substring(0, 16) === "http://localhost"
-  );
+  return value.startsWith(HTTPS_PREFIX) || value.startsWith(LOCALHOST_PREFIX);
 }
 
 export function appBaseUrl(): Url {

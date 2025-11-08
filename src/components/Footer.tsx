@@ -1,10 +1,11 @@
+// 絶対厳守：編集前に必ずAI実装ルールを読む
 import Link from "next/link";
 import type { JSX } from "react";
 import { Text } from "react-aria-components";
-import { createExternalTransmissionPolicyLinksFromLanguages } from "@/features/externalTransmissionPolicy";
+import { createExternalTransmissionPolicyLinksFromLanguages } from "@/features/external-transmission-policy";
 import type { Language } from "@/features/language";
-import { createPrivacyPolicyLinksFromLanguages } from "@/features/privacyPolicy";
-import { createTermsOfUseLinksFromLanguages } from "@/features/termsOfUse";
+import { createPrivacyPolicyLinksFromLanguages } from "@/features/privacy-policy";
+import { createTermsOfUseLinksFromLanguages } from "@/features/terms-of-use";
 
 export type Props = {
   language: Language;

@@ -1,3 +1,4 @@
+// 絶対厳守：編集前に必ずAI実装ルールを読む
 import { get } from "@vercel/edge-config";
 import type { NextRequest } from "next/server";
 

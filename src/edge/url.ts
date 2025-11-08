@@ -1,3 +1,4 @@
+// 絶対厳守：編集前に必ずAI実装ルールを読む
 import { headers } from "next/headers";
 import { appBaseUrl, isUrl, type Url } from "@/features/url";
 

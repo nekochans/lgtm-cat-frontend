@@ -1,9 +1,10 @@
+// 絶対厳守：編集前に必ずAI実装ルールを読む
 import {
   type NextMiddleware,
   type NextRequest,
   NextResponse,
 } from "next/server";
-import { httpStatusCode } from "@/constants/httpStatusCode";
+import { httpStatusCode } from "@/constants/http-status-code";
 import { isBanCountry } from "@/edge/country";
 import { isInMaintenance } from "@/edge/maintenance";
 import { appBaseUrlHeaderName } from "@/edge/url";

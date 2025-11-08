@@ -1,3 +1,4 @@
+// 絶対厳守：編集前に必ずAI実装ルールを読む
 import Link from "next/link";
 import type { JSX } from "react";
 import {
@@ -9,16 +10,16 @@ import {
   Header as ReactAriaHeader,
   Text,
 } from "react-aria-components";
-import { HeaderLogo } from "@/components/HeaderLogo";
-import { DownIcon } from "@/components/icons/DownIcon";
-import { GithubIcon } from "@/components/icons/GithubIcon";
-import { GlobeIcon } from "@/components/icons/GlobeIcon";
-import { RightIcon } from "@/components/icons/RightIcon";
-import { LoginButton } from "@/components/LoginButton";
-import { createExternalTransmissionPolicyLinksFromLanguages } from "@/features/externalTransmissionPolicy";
+import { HeaderLogo } from "@/components/header-logo";
+import { DownIcon } from "@/components/icons/down-icon";
+import { GithubIcon } from "@/components/icons/github-icon";
+import { GlobeIcon } from "@/components/icons/globe-icon";
+import { RightIcon } from "@/components/icons/right-icon";
+import { LoginButton } from "@/components/login-button";
+import { createExternalTransmissionPolicyLinksFromLanguages } from "@/features/external-transmission-policy";
 import { type Language, removeLanguageFromAppPath } from "@/features/language";
-import { createPrivacyPolicyLinksFromLanguages } from "@/features/privacyPolicy";
-import { createTermsOfUseLinksFromLanguages } from "@/features/termsOfUse";
+import { createPrivacyPolicyLinksFromLanguages } from "@/features/privacy-policy";
+import { createTermsOfUseLinksFromLanguages } from "@/features/terms-of-use";
 import { appPathList, type IncludeLanguageAppPath } from "@/features/url";
 import {
   favoriteListText,
@@ -27,7 +28,7 @@ import {
   meowlistText,
   policyText,
   uploadText,
-} from "./HeaderI18n";
+} from "./header-i18n";
 
 type Props = {
   language: Language;

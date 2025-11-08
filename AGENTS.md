@@ -24,11 +24,13 @@
 @docs/basic-coding-guidelines.md （docs/basic-coding-guidelines.md を参照）
 
 ## プロジェクト構成とモジュール
+
 - Next.js 16 App Router を採用し、`src/app` にページ、`src/components` に共通 UI、`src/features` にドメインごとのロジックと `__tests__` を配置します。
 - `src/utils` はヘルパー、`src/docs` は静的コンテンツ、`src/mocks` は MSW ハンドラー、`stories` と `.storybook` は Storybook 設定です。
 - 公開アセットは `public/`、解析や仕様の補足は `docs/`、Sentry 関連は `sentry.*.config.ts` にまとまっています。
 
 ## ビルド・テスト・開発コマンド
+
 - `npm run dev` : ポート 2222 でホットリロード付きの開発サーバーを起動します。
 - `npm run build` : 本番向けビルドを生成します。マージ前セルフチェックで実行してください。
 - `npm run lint` : Ultracite + Prettier のスタイル検証を行います。修正は `npm run format`。

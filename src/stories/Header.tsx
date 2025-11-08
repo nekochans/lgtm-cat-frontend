@@ -1,16 +1,17 @@
-import { Button } from "./Button";
+// 絶対厳守：編集前に必ずAI実装ルールを読む
+import { Button } from "./button";
 import "./header.css";
 
 type User = {
   name: string;
 };
 
-export interface HeaderProps {
+export type HeaderProps = {
   user?: User;
   onLogin?: () => void;
   onLogout?: () => void;
   onCreateAccount?: () => void;
-}
+};
 
 export const Header = ({
   user,
@@ -27,6 +28,7 @@ export const Header = ({
           width="32"
           xmlns="http://www.w3.org/2000/svg"
         >
+          <title>Storybook logo</title>
           <g fill="none" fillRule="evenodd">
             <path
               d="M10 0h12a10 10 0 0110 10v12a10 10 0 01-10 10H10A10 10 0 010 22V10A10 10 0 0110 0z"

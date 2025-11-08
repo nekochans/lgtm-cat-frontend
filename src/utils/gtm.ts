@@ -1,3 +1,4 @@
+// 絶対厳守：編集前に必ずAI実装ルールを読む
 export type GoogleTagManagerId = `GTM-${string}`;
 
 export type CustomDataAttrGtmClick =
@@ -32,65 +33,43 @@ export function googleTagManagerId(): GoogleTagManagerId {
   return "GTM-T9VPVTR";
 }
 
-declare global {
-  // eslint-disable-next-line ts/consistent-type-definitions
-  interface Window {
-    dataLayer: Array<Record<string, unknown>>;
+type WindowWithDataLayer = Window & {
+  dataLayer?: Record<string, unknown>[];
+};
+
+function pushDataLayerEvent(event: string): void {
+  if (typeof window === "undefined") {
+    return;
   }
+
+  const dataLayerWindow = window as WindowWithDataLayer;
+  dataLayerWindow.dataLayer?.push({ event });
 }
 
 export function sendClickTopFetchRandomCatButton(): void {
-  if (window.dataLayer) {
-    window.dataLayer.push({
-      event: "ClickTopFetchRandomCatButton",
-    });
-  }
+  pushDataLayerEvent("ClickTopFetchRandomCatButton");
 }
 
 export function sendClickTopFetchNewArrivalCatButton(): void {
-  if (window.dataLayer) {
-    window.dataLayer.push({
-      event: "ClickTopFetchNewArrivalCatButton",
-    });
-  }
+  pushDataLayerEvent("ClickTopFetchNewArrivalCatButton");
 }
 
 export function sendUploadedCatImage(): void {
-  if (window.dataLayer) {
-    window.dataLayer.push({
-      event: "UploadedCatImage",
-    });
-  }
+  pushDataLayerEvent("UploadedCatImage");
 }
 
 export function sendCopyMarkdownFromTopImages(): void {
-  if (window.dataLayer) {
-    window.dataLayer.push({
-      event: "CopyMarkdownFromTopImages",
-    });
-  }
+  pushDataLayerEvent("CopyMarkdownFromTopImages");
 }
 
 export function sendCopyMarkdownFromCreatedImage(): void {
-  if (window.dataLayer) {
-    window.dataLayer.push({
-      event: "CopyMarkdownFromCreatedImage",
-    });
-  }
+  pushDataLayerEvent("CopyMarkdownFromCreatedImage");
 }
 
 export function sendCopyMarkdownFromCopyButton(): void {
-  if (window.dataLayer) {
-    window.dataLayer.push({
-      event: "CopyMarkdownFromCopyButton",
-    });
-  }
+  pushDataLayerEvent("CopyMarkdownFromCopyButton");
 }
 
 export function sendCopyMarkdownFromRandomButton(): void {
-  if (window.dataLayer) {
-    window.dataLayer.push({
-      event: "CopyMarkdownFromRandomButton",
-    });
-  }
+  pushDataLayerEvent("CopyMarkdownFromRandomButton");
 }
