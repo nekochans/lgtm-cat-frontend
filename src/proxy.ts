@@ -1,9 +1,5 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
-import {
-  type NextMiddleware,
-  type NextRequest,
-  NextResponse,
-} from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { httpStatusCode } from "@/constants/http-status-code";
 import { isBanCountry } from "@/edge/country";
 import { isInMaintenance } from "@/edge/maintenance";
@@ -35,10 +31,10 @@ export const config = {
   ],
 };
 
-export const middleware: NextMiddleware = async (req: NextRequest) => {
-  const { nextUrl } = req;
+export async function proxy(request: NextRequest) {
+  const { nextUrl } = request;
 
-  const isBanCountryResult = await isBanCountry(req);
+  const isBanCountryResult = await isBanCountry(request);
   if (isBanCountryResult) {
     return NextResponse.json(
       { message: "Not available from your region." },
@@ -53,7 +49,7 @@ export const middleware: NextMiddleware = async (req: NextRequest) => {
     );
   }
 
-  const requestHeaders = new Headers(req.headers);
+  const requestHeaders = new Headers(request.headers);
   requestHeaders.set(appBaseUrlHeaderName, nextUrl.origin);
 
   const language = mightExtractLanguageFromAppPath(nextUrl.pathname);
@@ -74,14 +70,14 @@ export const middleware: NextMiddleware = async (req: NextRequest) => {
   if (language === "ja") {
     const removedLanguagePath = removeLanguageFromAppPath(nextUrl.pathname);
     if (nextUrl.pathname !== "/ja") {
-      return NextResponse.redirect(new URL(removedLanguagePath, req.url), {
+      return NextResponse.redirect(new URL(removedLanguagePath, request.url), {
         status: httpStatusCode.found,
         statusText: "Found",
         headers: requestHeaders,
       });
     }
 
-    return NextResponse.redirect(new URL("/", req.url), {
+    return NextResponse.redirect(new URL("/", request.url), {
       status: httpStatusCode.found,
       statusText: "Found",
       headers: requestHeaders,
@@ -93,4 +89,4 @@ export const middleware: NextMiddleware = async (req: NextRequest) => {
       headers: requestHeaders,
     },
   });
-};
+}
