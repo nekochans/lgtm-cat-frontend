@@ -1,4 +1,5 @@
 import type { Metadata, NextPage } from "next";
+import { HomePageContainer } from "@/features/home/components/HomePageContainer";
 import { convertLocaleToLanguage } from "@/features/locale";
 import { appName, metaTagList } from "@/features/metaTag";
 import { appBaseUrl, i18nUrlList } from "@/features/url";
@@ -35,9 +36,7 @@ export const metadata: Metadata = {
 };
 
 const HomePage: NextPage = () => (
-  <main className="flex min-h-screen flex-col items-center justify-between p-24">
-    <h1>Hello new design!</h1>
-  </main>
+  <HomePageContainer currentUrlPath="/" language={language} />
 );
 
 export default HomePage;
