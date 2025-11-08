@@ -63,3 +63,6 @@ node_modules/
 /playwright/.cache/
 
 *storybook.log
+
+# AIコーディングエージェントに対するユーザープロンプト置き場
+user-prompt/
