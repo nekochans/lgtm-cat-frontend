@@ -23,13 +23,23 @@ jobs:
           cache: npm
           registry-url: "https://npm.pkg.github.com"
           scope: "@nekochans"
-      - run: |
-          npm ci --legacy-peer-deps
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+        env:
+          NEXT_PUBLIC_LGTMEOW_BFF_URL: ${{ secrets.NEXT_PUBLIC_LGTMEOW_BFF_URL }}
+          NODE_AUTH_TOKEN: ${{ secrets.AUTH_TOKEN_FOR_GITHUB_PACKAGES }}
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Lint and Test
+        run: |
           npm run lint
           npm run test:ci
         env:
           NEXT_PUBLIC_LGTMEOW_BFF_URL: ${{ secrets.NEXT_PUBLIC_LGTMEOW_BFF_URL }}
           NODE_AUTH_TOKEN: ${{ secrets.AUTH_TOKEN_FOR_GITHUB_PACKAGES }}
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
