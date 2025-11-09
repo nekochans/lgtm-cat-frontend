@@ -1,6 +1,6 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { Meta, StoryObj } from "@storybook/react";
-import { Header } from "./header";
+import { Header } from "./Header";
 
 const meta = {
   component: Header,
