@@ -1,7 +1,7 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import { render, screen } from "@testing-library/react";
 import { expect, it } from "vitest";
-import { Footer } from "./Footer";
+import { Footer } from "@/components/footer";
 
 it("show language is ja", () => {
   render(<Footer language="ja" />);
