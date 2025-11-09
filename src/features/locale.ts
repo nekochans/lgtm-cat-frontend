@@ -1,11 +1,12 @@
-import { type Language, languages } from './language';
+// 絶対厳守：編集前に必ずAI実装ルールを読む
+import { type Language, languages } from "./language";
 
 const locales = languages;
 
 export type Locale = (typeof locales)[number];
 
 function isLocale(value: unknown): value is Locale {
-  if (typeof value !== 'string') {
+  if (typeof value !== "string") {
     return false;
   }
 
@@ -17,5 +18,5 @@ export function convertLocaleToLanguage(locale: unknown): Language {
     return locale;
   }
 
-  return 'ja';
+  return "ja";
 }

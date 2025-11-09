@@ -1,16 +1,17 @@
-import { type Language, languages } from './language';
+// 絶対厳守：編集前に必ずAI実装ルールを読む
+import { type Language, languages } from "./language";
+
+const HTTPS_PREFIX = "https://";
+const LOCALHOST_PREFIX = "http://localhost";
 
 export type Url = `http://localhost${string}` | `https://${string}`;
 
 export function isUrl(value: unknown): value is Url {
-  if (typeof value !== 'string') {
+  if (typeof value !== "string") {
     return false;
   }
 
-  return (
-    value.substring(0, 8) === 'https://'
-    || value.substring(0, 16) === 'http://localhost'
-  );
+  return value.startsWith(HTTPS_PREFIX) || value.startsWith(LOCALHOST_PREFIX);
 }
 
 export function appBaseUrl(): Url {
@@ -18,28 +19,28 @@ export function appBaseUrl(): Url {
     return process.env.NEXT_PUBLIC_APP_URL;
   }
 
-  return 'https://lgtmeow.com';
+  return "https://lgtmeow.com";
 }
 
 export const appPathList = {
-  'home': '/',
-  'upload': '/upload',
-  'terms': '/terms',
-  'privacy': '/privacy',
-  'error': '/error',
-  'maintenance': '/maintenance',
-  'external-transmission-policy': '/external-transmission-policy',
-  'login': '/login',
+  home: "/",
+  upload: "/upload",
+  terms: "/terms",
+  privacy: "/privacy",
+  error: "/error",
+  maintenance: "/maintenance",
+  "external-transmission-policy": "/external-transmission-policy",
+  login: "/login",
 } as const;
 
 export type AppPathName =
-  | 'home'
-  | 'upload'
-  | 'terms'
-  | 'privacy'
-  | 'maintenance'
-  | 'external-transmission-policy'
-  | 'login';
+  | "home"
+  | "upload"
+  | "terms"
+  | "privacy"
+  | "maintenance"
+  | "external-transmission-policy"
+  | "login";
 
 type AppPath = (typeof appPathList)[keyof typeof appPathList];
 
@@ -47,26 +48,28 @@ export type IncludeLanguageAppPath =
   | AppPath
   | `/${Language}${AppPath}`
   | `/${Language}`
-  | '/';
+  | "/";
 
-export function isIncludeLanguageAppPath(value: unknown): value is IncludeLanguageAppPath {
+export function isIncludeLanguageAppPath(
+  value: unknown
+): value is IncludeLanguageAppPath {
   const appPaths: string[] = Object.values(appPathList);
 
-  if (typeof value !== 'string') {
+  if (typeof value !== "string") {
     return false;
   }
 
-  if (value === '/') {
+  if (value === "/") {
     return true;
   }
 
-  if (languages.some(language => value === `/${language}`)) {
+  if (languages.some((language) => value === `/${language}`)) {
     return true;
   }
 
   if (
-    languages.some(language =>
-      appPaths.some(path => value === `/${language}${path}`),
+    languages.some((language) =>
+      appPaths.some((path) => value === `/${language}${path}`)
     )
   ) {
     return true;
@@ -79,12 +82,15 @@ export function isIncludeLanguageAppPath(value: unknown): value is IncludeLangua
   return false;
 }
 
-export function createIncludeLanguageAppPath(appPathName: AppPathName, language: Language): IncludeLanguageAppPath {
-  if (appPathName === 'home' && language === 'en') {
+export function createIncludeLanguageAppPath(
+  appPathName: AppPathName,
+  language: Language
+): IncludeLanguageAppPath {
+  if (appPathName === "home" && language === "en") {
     return `/${language}`;
   }
 
-  return language === 'en'
+  return language === "en"
     ? (`/en${appPathList[appPathName]}` as const)
     : appPathList[appPathName];
 }
@@ -97,7 +103,7 @@ export const appUrlList = {
   privacy: `${appBaseUrl()}${appPathList.privacy}` as const,
   maintenance: `${appBaseUrl()}${appPathList.maintenance}` as const,
   externalTransmission:
-    `${appBaseUrl()}${appPathList['external-transmission-policy']}` as const,
+    `${appBaseUrl()}${appPathList["external-transmission-policy"]}` as const,
   login: `${appBaseUrl()}${appPathList.login}` as const,
 } as const;
 
@@ -108,31 +114,31 @@ type I18nUrlList = {
 };
 
 export const i18nUrlList: I18nUrlList = {
-  'home': {
+  home: {
     ja: `${appPathList.home}/`,
-    en: `/en/`,
+    en: "/en/",
   },
-  'upload': {
+  upload: {
     ja: `${appPathList.upload}/`,
     en: `/en${appPathList.upload}/`,
   },
-  'terms': {
+  terms: {
     ja: `${appPathList.terms}/`,
     en: `/en${appPathList.terms}/`,
   },
-  'privacy': {
+  privacy: {
     ja: `${appPathList.privacy}/`,
     en: `/en${appPathList.privacy}/`,
   },
-  'maintenance': {
+  maintenance: {
     ja: `${appPathList.privacy}/`,
     en: `/en${appPathList.privacy}/`,
   },
-  'external-transmission-policy': {
-    ja: `${appPathList['external-transmission-policy']}/`,
-    en: `/en${appPathList['external-transmission-policy']}/`,
+  "external-transmission-policy": {
+    ja: `${appPathList["external-transmission-policy"]}/`,
+    en: `/en${appPathList["external-transmission-policy"]}/`,
   },
-  'login': {
+  login: {
     ja: `${appPathList.login}/`,
     en: `/en${appPathList.login}/`,
   },
@@ -161,7 +167,7 @@ export function lgtmeowApiUrl(): Url {
     return process.env.LGTMEOW_API_URL;
   }
 
-  throw new Error('LGTMEOW_API_URL is not defined');
+  throw new Error("LGTMEOW_API_URL is not defined");
 }
 
 export function imageRecognitionApiUrl(): Url {
@@ -169,5 +175,5 @@ export function imageRecognitionApiUrl(): Url {
     return process.env.IMAGE_RECOGNITION_API_URL;
   }
 
-  throw new Error('IMAGE_RECOGNITION_API_URL is not defined');
+  throw new Error("IMAGE_RECOGNITION_API_URL is not defined");
 }

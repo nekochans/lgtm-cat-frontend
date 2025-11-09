@@ -1,13 +1,14 @@
-import * as Sentry from '@sentry/nextjs';
+// 絶対厳守：編集前に必ずAI実装ルールを読む
+import { getCurrentScope } from "@sentry/nextjs";
 
 export function mightSetRequestIdToSentry(response: Response): void {
-  const xRequestId = response.headers.get('x-request-id');
+  const xRequestId = response.headers.get("x-request-id");
   if (xRequestId != null) {
-    Sentry.getCurrentScope().setTag('x_request_id', xRequestId);
+    getCurrentScope().setTag("x_request_id", xRequestId);
   }
 
-  const lambdaRequestId = response.headers.get('x-lambda-request-id');
+  const lambdaRequestId = response.headers.get("x-lambda-request-id");
   if (lambdaRequestId != null) {
-    Sentry.getCurrentScope().setTag('x_lambda_request_id', lambdaRequestId);
+    getCurrentScope().setTag("x_lambda_request_id", lambdaRequestId);
   }
 }
