@@ -1,6 +1,6 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { Meta, StoryObj } from "@storybook/react";
-import { Footer } from "./footer";
+import { Footer } from "./Footer";
 
 const meta = {
   component: Footer,

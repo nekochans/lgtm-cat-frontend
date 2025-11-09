@@ -9,12 +9,13 @@ const dirname =
   typeof __dirname !== "undefined"
     ? __dirname
     : path.dirname(fileURLToPath(import.meta.url));
+const srcDir = fileURLToPath(new URL("./src", import.meta.url));
 
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
   resolve: {
     alias: {
-      "@": path.join(dirname, "src"),
+      "@": srcDir,
     },
   },
   test: {
@@ -22,8 +23,11 @@ export default defineConfig({
       {
         test: {
           name: "unit",
-          include: ["src/**/*.test.ts"],
-          environment: "node",
+          include: ["src/**/*.test.ts", "src/**/*.test.tsx"],
+          alias: {
+            "@": srcDir,
+          },
+          environment: "jsdom",
           setupFiles: ["./vitest.setup.mts"],
         },
       },
@@ -36,6 +40,9 @@ export default defineConfig({
         ],
         test: {
           name: "storybook",
+          alias: {
+            "@": srcDir,
+          },
           browser: {
             enabled: true,
             headless: true,
