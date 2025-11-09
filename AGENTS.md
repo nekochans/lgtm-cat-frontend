@@ -74,7 +74,7 @@ GitHubのMCPサーバーを利用してGitHubへのPRを作成する事が可能
 
 - ブランチはユーザーが作成しますので現在のブランチをそのまま利用します
 - PRのタイトルは日本語で入力します
-- PRの作成先は特別な指示がない場合は `main` ブランチになります
+- PRの作成先は特別な指示がない場合は `staging` ブランチになります
 - PRの説明欄は @.github/PULL_REQUEST_TEMPLATE.md を参考に入力します
 - 対応issueがある場合は、PRの説明欄に `#<issue番号>` を記載します
 - Issue番号は現在のブランチ名から取得出来ます、例えば `feature/issue7/add-docs` の場合は `7` がIssue番号になります
