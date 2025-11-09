@@ -67,3 +67,7 @@ node_modules/
 # AIコーディングエージェントに対するユーザープロンプト置き場
 user-prompt/
 /.serena/
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
