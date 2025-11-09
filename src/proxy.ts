@@ -1,9 +1,9 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import { type NextRequest, NextResponse } from "next/server";
+import { isBanCountry } from "@/app/edge/country";
+import { isInMaintenance } from "@/app/edge/maintenance";
+import { appBaseUrlHeaderName } from "@/app/edge/url";
 import { httpStatusCode } from "@/constants/http-status-code";
-import { isBanCountry } from "@/edge/country";
-import { isInMaintenance } from "@/edge/maintenance";
-import { appBaseUrlHeaderName } from "@/edge/url";
 import {
   isLanguage,
   mightExtractLanguageFromAppPath,
