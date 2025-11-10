@@ -71,3 +71,6 @@ user-prompt/
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Playwright MCP logs
+.playwright-mcp/
