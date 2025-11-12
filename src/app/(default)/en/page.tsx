@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   },
   metadataBase: new URL(appBaseUrl()),
   alternates: {
-    canonical: i18nUrlList.home.ja,
+    canonical: i18nUrlList.home.en,
     languages: {
       ja: i18nUrlList.home.ja,
       en: i18nUrlList.home.en,
