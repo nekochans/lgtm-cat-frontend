@@ -132,15 +132,11 @@ export function Header({
                 aria-label="Language selection"
                 className="min-w-[180px] rounded-lg bg-primary p-2"
                 classNames={{ base: "!gap-0", list: "gap-0" }}
-                selectedKeys={language === "ja" ? ["ja"] : ["en"]}
-                selectionMode="single"
               >
                 <DropdownItem
                   as={Link}
-                  className={`rounded-lg px-3 py-2 font-bold text-xl ${
-                    language === "ja"
-                      ? "!bg-orange-400 data-[hover=true]:!bg-orange-300 text-background"
-                      : "data-[hover=true]:!bg-orange-300 text-background"
+                  className={`data-[hover=true]:!bg-orange-300 rounded-lg px-3 py-2 font-bold text-background text-xl ${
+                    language === "ja" ? "!bg-orange-400" : ""
                   }`}
                   href={removedLanguagePath}
                   key="ja"
@@ -150,10 +146,8 @@ export function Header({
                 </DropdownItem>
                 <DropdownItem
                   as={Link}
-                  className={`rounded-lg px-3 py-2 font-bold text-xl ${
-                    language === "en"
-                      ? "!bg-orange-400 data-[hover=true]:!bg-orange-300 text-background"
-                      : "data-[hover=true]:!bg-orange-300 text-background"
+                  className={`data-[hover=true]:!bg-orange-300 rounded-lg px-3 py-2 font-bold text-background text-xl ${
+                    language === "en" ? "!bg-orange-400" : ""
                   }`}
                   href={`/en${removedLanguagePath}`}
                   key="en"
