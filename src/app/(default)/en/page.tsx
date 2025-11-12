@@ -1,6 +1,6 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { Metadata, NextPage } from "next";
-import { HomePageContainer } from "@/features/home/components/home-page-container";
+import { HomePageContainer } from "@/features/main/components/home-page-container";
 import { convertLocaleToLanguage } from "@/features/locale";
 import { appName, metaTagList } from "@/features/meta-tag";
 import { appBaseUrl, i18nUrlList } from "@/features/url";
