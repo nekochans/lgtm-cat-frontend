@@ -30,6 +30,10 @@ async function findAgentsFiles(rootDir: string): Promise<string[]> {
       if (SKIP_DIRECTORIES.has(entry.name)) {
         continue;
       }
+      // シンボリックリンクはスキップして無限ループを防ぐ
+      if (entry.isSymbolicLink()) {
+        continue;
+      }
       files.push(...(await findAgentsFiles(entryPath)));
       continue;
     }

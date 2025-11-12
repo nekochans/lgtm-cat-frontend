@@ -131,7 +131,7 @@ gemini --prompt "WebSearch: <query>"
 
 実際にブラウザの操作を行い動作確認を行う際に利用します。
 
-フロントエンドの動作確認を行い際にはこのPlaywright MCPを利用して動作確認を行います。
+フロントエンドの動作確認を行う際にはこのPlaywright MCPを利用して動作確認を行います。
 
 ### Chrome DevTools MCP
 

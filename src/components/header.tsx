@@ -18,7 +18,10 @@ import { createExternalTransmissionPolicyLinksFromLanguages } from "@/features/e
 import { type Language, removeLanguageFromAppPath } from "@/features/language";
 import { createPrivacyPolicyLinksFromLanguages } from "@/features/privacy-policy";
 import { createTermsOfUseLinksFromLanguages } from "@/features/terms-of-use";
-import { appPathList, type IncludeLanguageAppPath } from "@/features/url";
+import {
+  createIncludeLanguageAppPath,
+  type IncludeLanguageAppPath,
+} from "@/features/url";
 import {
   favoriteListText,
   howToUseText,
@@ -54,7 +57,7 @@ export function Header({
             <nav className="flex items-center gap-1">
               <Link
                 className="flex items-center justify-center bg-primary p-5 font-bold text-background text-base hover:text-button-tertiary-hover"
-                href={appPathList.upload}
+                href={createIncludeLanguageAppPath("upload", language)}
               >
                 {uploadText(language)}
               </Link>

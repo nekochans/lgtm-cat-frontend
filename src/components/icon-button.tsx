@@ -93,12 +93,12 @@ export function IconButton({
 
   const startContent = (
     <>
-      {showGithubIcon != null && (
+      {showGithubIcon === true && (
         <GithubIcon color="default" height={20} width={20} />
       )}
-      {showRepeatIcon != null && <RepeatIcon />}
-      {showRandomIcon != null && <RandomIcon />}
-      {showCatIcon != null && <CatIcon />}
+      {showRepeatIcon === true && <RepeatIcon />}
+      {showRandomIcon === true && <RandomIcon />}
+      {showCatIcon === true && <CatIcon />}
     </>
   );
 
