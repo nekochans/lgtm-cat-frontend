@@ -31,7 +31,7 @@ export function customErrorTitle(language: Language): string {
   }
 }
 
-function topPageTitle(language: Language): string {
+function homePageTitle(language: Language): string {
   switch (language) {
     case "ja":
       return `${defaultTitle} 猫好きのためのLGTM画像共有サービス`;
@@ -123,7 +123,7 @@ type MetaTagList = {
 export function metaTagList(language: Language): MetaTagList {
   return {
     home: {
-      title: topPageTitle(language),
+      title: homePageTitle(language),
       ogpImgUrl: appUrlList.ogpImg,
       ogpTargetUrl: createI18nUrl("home", language),
       appName,
