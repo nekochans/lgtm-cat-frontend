@@ -196,18 +196,35 @@ weather_tool.ts (スネークケース)
 
 ### 汎用的な名前を避ける
 
-`data` のような曖昧な変数名は禁止です。意味が伝わる名称を使用してください。
+`data` のような曖昧な変数名は**絶対に禁止**です。意味が伝わる名称を使用してください。
+
+**重要**: `data` という変数名は何の情報も表していません。必ず具体的な名前を使用してください。
 
 ```typescript
 // ❌ 非推奨
 const data = await fetchUser();
 const validatedData = schema.parse(input);
+const data = await response.json(); // 最も悪い例
 
 // ✅ 推奨
-const email = await fetchUserEmail();
+const userEmail = await fetchUserEmail();
 const validatedEmail = schema.parse(input);
-const responseBody = await response.json();
+const responseBody = await response.json(); // response.json() の結果は必ず responseBody
 const userProfile = await fetchUserProfile();
+const lgtmImages = await fetchLgtmImages();
+```
+
+**特に重要な例**:
+```typescript
+// ❌ 絶対禁止: dataは何のデータか全く分からない
+const response = await fetch(url);
+const data = await response.json();
+return convertToModel(data);
+
+// ✅ 推奨: responseBodyは何の情報か明確
+const response = await fetch(url);
+const responseBody = await response.json();
+return convertToModel(responseBody);
 ```
 
 ### キャメルケースを使用
