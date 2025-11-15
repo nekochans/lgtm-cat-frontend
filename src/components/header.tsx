@@ -63,6 +63,7 @@ export function Header({
               </Link>
               <Link
                 className="flex items-center justify-center bg-primary p-5 font-bold text-background text-base hover:text-button-tertiary-hover"
+                // TODO: /how-to-use ページ実装後は `createIncludeLanguageAppPath` を使ってパスを生成するように修正する
                 href="/how-to-use"
               >
                 {howToUseText(language)}
@@ -181,6 +182,7 @@ export function Header({
                   <DropdownItem
                     as={Link}
                     className="data-[hover=true]:!bg-orange-300 rounded-lg px-3 py-2 font-bold text-background text-xl"
+                    // TODO: https://github.com/nekochans/lgtm-cat/issues/14 でログイン機能が出来た際にこのページを実装するので実装後は `createIncludeLanguageAppPath` を使ってパスを生成するように修正する
                     href="/favorites"
                     key="favorites"
                   >
@@ -189,6 +191,7 @@ export function Header({
                   <DropdownItem
                     as={Link}
                     className="data-[hover=true]:!bg-orange-300 rounded-lg px-3 py-2 font-bold text-background text-xl"
+                    // TODO: https://github.com/nekochans/lgtm-cat/issues/14 でログイン機能が出来た際にこのページを実装するので実装後は `createIncludeLanguageAppPath` を使ってパスを生成するように修正する
                     href="/cat-list"
                     key="cat-list"
                   >
@@ -197,6 +200,7 @@ export function Header({
                   <DropdownItem
                     as={Link}
                     className="data-[hover=true]:!bg-orange-300 rounded-lg px-3 py-2 font-bold text-background text-xl"
+                    // TODO: https://github.com/nekochans/lgtm-cat/issues/14 でログイン機能が出来た際にこのページを実装するので実装後は `createIncludeLanguageAppPath` を使ってパスを生成するように修正する
                     href="/logout"
                     key="logout"
                   >
