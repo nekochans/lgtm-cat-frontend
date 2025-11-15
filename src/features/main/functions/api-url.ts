@@ -1,4 +1,4 @@
-import { isUrl, Url } from "@/features/url";
+import { isUrl, type Url } from "@/features/url";
 
 export function lgtmeowApiUrl(): Url {
   if (isUrl(process.env.LGTMEOW_API_URL)) {

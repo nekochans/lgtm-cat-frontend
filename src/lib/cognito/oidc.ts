@@ -1,7 +1,7 @@
 import { Redis } from "@upstash/redis";
 import { z } from "zod";
-import type { IssueClientCredentialsAccessToken } from "@/features/oidc/types/access-token";
 import { IssueClientCredentialsAccessTokenError } from "@/features/oidc/errors/issue-client-credentials-access-token-error";
+import type { IssueClientCredentialsAccessToken } from "@/features/oidc/types/access-token";
 import { validation } from "@/features/validator";
 import {
   upstashRedisRestToken,
