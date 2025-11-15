@@ -97,6 +97,17 @@ function externalTransmissionPageTitle(language: Language): string {
   }
 }
 
+function loginPageTitle(language: Language): string {
+  switch (language) {
+    case "ja":
+      return `${defaultTitle} ログイン`;
+    case "en":
+      return `${defaultTitle} Login`;
+    default:
+      return assertNever(language);
+  }
+}
+
 function description(language: Language): string {
   switch (language) {
     case "ja":
@@ -160,7 +171,7 @@ export function metaTagList(language: Language): MetaTagList {
       appName,
     },
     login: {
-      title: externalTransmissionPageTitle(language),
+      title: loginPageTitle(language),
       ogpImgUrl: appUrlList.ogpImg,
       ogpTargetUrl: createI18nUrl("login", language),
       appName,
