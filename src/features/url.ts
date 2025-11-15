@@ -144,7 +144,10 @@ export const i18nUrlList: I18nUrlList = {
   },
 };
 
-export function createI18nUrl(appPathName: AppPathName, language: Language): Url {
+export function createI18nUrl(
+  appPathName: AppPathName,
+  language: Language
+): Url {
   const baseUrl = appBaseUrl();
   return `${baseUrl}${i18nUrlList[appPathName][language]}` as Url;
 }
