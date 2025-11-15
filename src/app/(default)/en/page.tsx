@@ -5,7 +5,7 @@ import { HomePageContainer } from "@/features/main/components/home-page-containe
 import { appName, metaTagList } from "@/features/meta-tag";
 import { appBaseUrl, i18nUrlList } from "@/features/url";
 
-const language = "ja";
+const language = "en";
 
 export const metadata: Metadata = {
   title: metaTagList(language).home.title,
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   },
   metadataBase: new URL(appBaseUrl()),
   alternates: {
-    canonical: i18nUrlList.home.ja,
+    canonical: i18nUrlList.home.en,
     languages: {
       ja: i18nUrlList.home.ja,
       en: i18nUrlList.home.en,
@@ -36,8 +36,8 @@ export const metadata: Metadata = {
   },
 };
 
-const HomePage: NextPage = () => (
-  <HomePageContainer currentUrlPath="/" language={language} />
+const EnHomePage: NextPage = () => (
+  <HomePageContainer currentUrlPath="/en" language={language} />
 );
 
-export default HomePage;
+export default EnHomePage;

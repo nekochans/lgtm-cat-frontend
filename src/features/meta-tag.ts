@@ -1,7 +1,7 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import { assertNever } from "@/utils/assert-never";
 import type { Language } from "./language";
-import { type AppPathName, type AppUrl, appUrlList } from "./url";
+import { type AppPathName, appUrlList, createI18nUrl, type Url } from "./url";
 
 type AppName = "LGTMeow";
 
@@ -31,7 +31,7 @@ export function customErrorTitle(language: Language): string {
   }
 }
 
-function topPageTitle(language: Language): string {
+function homePageTitle(language: Language): string {
   switch (language) {
     case "ja":
       return `${defaultTitle} 猫好きのためのLGTM画像共有サービス`;
@@ -97,6 +97,17 @@ function externalTransmissionPageTitle(language: Language): string {
   }
 }
 
+function loginPageTitle(language: Language): string {
+  switch (language) {
+    case "ja":
+      return `${defaultTitle} ログイン`;
+    case "en":
+      return `${defaultTitle} Login`;
+    default:
+      return assertNever(language);
+  }
+}
+
 function description(language: Language): string {
   switch (language) {
     case "ja":
@@ -108,10 +119,10 @@ function description(language: Language): string {
   }
 }
 
-export type MetaTag = {
+type MetaTag = {
   title: string;
   ogpImgUrl: typeof appUrlList.ogpImg;
-  ogpTargetUrl: AppUrl;
+  ogpTargetUrl: Url;
   appName: AppName;
   description?: string;
 };
@@ -123,46 +134,46 @@ type MetaTagList = {
 export function metaTagList(language: Language): MetaTagList {
   return {
     home: {
-      title: topPageTitle(language),
+      title: homePageTitle(language),
       ogpImgUrl: appUrlList.ogpImg,
-      ogpTargetUrl: appUrlList.home,
+      ogpTargetUrl: createI18nUrl("home", language),
       appName,
       description: description(language),
     },
     upload: {
       title: uploadPageTitle(language),
       ogpImgUrl: appUrlList.ogpImg,
-      ogpTargetUrl: appUrlList.upload,
+      ogpTargetUrl: createI18nUrl("upload", language),
       appName,
     },
     terms: {
       title: termsPageTitle(language),
       ogpImgUrl: appUrlList.ogpImg,
-      ogpTargetUrl: appUrlList.terms,
+      ogpTargetUrl: createI18nUrl("terms", language),
       appName,
     },
     privacy: {
       title: privacyPageTitle(language),
       ogpImgUrl: appUrlList.ogpImg,
-      ogpTargetUrl: appUrlList.privacy,
+      ogpTargetUrl: createI18nUrl("privacy", language),
       appName,
     },
     maintenance: {
       title: maintenancePageTitle(language),
       ogpImgUrl: appUrlList.ogpImg,
-      ogpTargetUrl: appUrlList.maintenance,
+      ogpTargetUrl: createI18nUrl("maintenance", language),
       appName,
     },
     "external-transmission-policy": {
       title: externalTransmissionPageTitle(language),
       ogpImgUrl: appUrlList.ogpImg,
-      ogpTargetUrl: appUrlList.externalTransmission,
+      ogpTargetUrl: createI18nUrl("external-transmission-policy", language),
       appName,
     },
     login: {
-      title: externalTransmissionPageTitle(language),
+      title: loginPageTitle(language),
       ogpImgUrl: appUrlList.ogpImg,
-      ogpTargetUrl: appUrlList.terms,
+      ogpTargetUrl: createI18nUrl("login", language),
       appName,
     },
   };
@@ -172,7 +183,7 @@ export function notFoundMetaTag(language: Language): MetaTag {
   return {
     title: custom404title(language),
     ogpImgUrl: appUrlList.ogpImg,
-    ogpTargetUrl: appUrlList.home,
+    ogpTargetUrl: createI18nUrl("home", language),
     appName,
   };
 }
@@ -181,7 +192,7 @@ export function errorMetaTag(language: Language): MetaTag {
   return {
     title: customErrorTitle(language),
     ogpImgUrl: appUrlList.ogpImg,
-    ogpTargetUrl: appUrlList.home,
+    ogpTargetUrl: createI18nUrl("home", language),
     appName,
   };
 }

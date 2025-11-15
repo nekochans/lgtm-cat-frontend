@@ -1,15 +1,13 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
-import Link from "next/link";
-import type { JSX } from "react";
 import {
   Button,
-  Menu,
-  MenuItem,
-  MenuTrigger,
-  Popover,
-  Header as ReactAriaHeader,
-  Text,
-} from "react-aria-components";
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@heroui/react";
+import Link from "next/link";
+import type { JSX } from "react";
 import { HeaderLogo } from "@/components/header-logo";
 import { DownIcon } from "@/components/icons/down-icon";
 import { GithubIcon } from "@/components/icons/github-icon";
@@ -20,7 +18,10 @@ import { createExternalTransmissionPolicyLinksFromLanguages } from "@/features/e
 import { type Language, removeLanguageFromAppPath } from "@/features/language";
 import { createPrivacyPolicyLinksFromLanguages } from "@/features/privacy-policy";
 import { createTermsOfUseLinksFromLanguages } from "@/features/terms-of-use";
-import { appPathList, type IncludeLanguageAppPath } from "@/features/url";
+import {
+  createIncludeLanguageAppPath,
+  type IncludeLanguageAppPath,
+} from "@/features/url";
 import {
   favoriteListText,
   howToUseText,
@@ -48,161 +49,171 @@ export function Header({
   const removedLanguagePath = removeLanguageFromAppPath(currentUrlPath);
 
   return (
-    <ReactAriaHeader className="w-full border-orange-300 border-b bg-orange-500">
+    <header className="w-full border-orange-300 border-b bg-primary">
       <div className="mx-auto flex h-16 max-w-screen-2xl items-center justify-between px-3">
         <div className="flex w-full items-center justify-between">
           <div className="flex items-center gap-3">
             <HeaderLogo language={language} />
             <nav className="flex items-center gap-1">
               <Link
-                className="flex items-center justify-center bg-orange-500 p-5 font-medium text-base text-orange-50 hover:text-orange-100"
-                href={appPathList.upload}
+                className="flex items-center justify-center bg-primary p-5 font-bold text-background text-base hover:text-button-tertiary-hover"
+                href={createIncludeLanguageAppPath("upload", language)}
               >
-                <Text className="font-bold text-base" slot="label">
-                  {uploadText(language)}
-                </Text>
+                {uploadText(language)}
               </Link>
               <Link
-                className="flex items-center justify-center bg-orange-500 p-5 font-medium text-base text-orange-50 hover:text-orange-100"
+                className="flex items-center justify-center bg-primary p-5 font-bold text-background text-base hover:text-button-tertiary-hover"
+                // TODO: /how-to-use ページ実装後は `createIncludeLanguageAppPath` を使ってパスを生成するように修正する
                 href="/how-to-use"
               >
-                <Text className="font-bold text-base" slot="label">
-                  {howToUseText(language)}
-                </Text>
+                {howToUseText(language)}
               </Link>
               <Link
-                className="flex items-center justify-center bg-orange-500 p-5 font-medium text-base text-orange-50 hover:text-orange-100"
+                className="flex items-center justify-center bg-primary p-5 font-bold text-background text-base hover:text-button-tertiary-hover"
                 href={terms.link}
               >
-                <Text className="font-bold text-base" slot="label">
-                  {terms.text}
-                </Text>
+                {terms.text}
               </Link>
-              <MenuTrigger>
-                <Button className="flex items-center justify-center gap-2 bg-orange-500 px-5 py-2 font-medium text-base text-orange-50 hover:text-orange-100">
-                  <Text className="font-bold text-base">
+              <Dropdown
+                classNames={{
+                  content: "p-0",
+                }}
+              >
+                <DropdownTrigger>
+                  <Button
+                    className="flex items-center justify-center gap-2 bg-transparent px-5 py-2 font-bold text-background text-base hover:text-button-tertiary-hover data-[hover=true]:bg-transparent"
+                    variant="light"
+                  >
                     {policyText(language)}
-                  </Text>
-                  <DownIcon />
-                </Button>
-                <Popover className="bg-orange-500 shadow-lg ring-1 ring-black/5">
-                  <Menu className="min-w-[200px] max-w-[400px]">
-                    <MenuItem className="flex w-full items-center px-6 py-2 text-left font-medium text-base text-orange-50 hover:bg-orange-600">
-                      <Link className="w-full" href={privacy.link}>
-                        <Text className="font-bold text-base" slot="label">
-                          {privacy.text}
-                        </Text>
-                      </Link>
-                    </MenuItem>
-                    <MenuItem className="flex w-full items-center px-6 py-2 text-left font-medium text-base text-orange-50 hover:bg-orange-600">
-                      <Link
-                        className="w-full"
-                        href={externalTransmissionPolicy.link}
-                      >
-                        <Text className="font-bold text-base" slot="label">
-                          {externalTransmissionPolicy.text}
-                        </Text>
-                      </Link>
-                    </MenuItem>
-                  </Menu>
-                </Popover>
-              </MenuTrigger>
+                    <DownIcon />
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu
+                  aria-label="Policy menu"
+                  className="min-w-[200px] max-w-[400px] rounded-lg bg-primary p-2"
+                  classNames={{ base: "!gap-0", list: "gap-0" }}
+                >
+                  <DropdownItem
+                    as={Link}
+                    className="data-[hover=true]:!bg-orange-300 rounded-lg px-3 py-2 font-bold text-background text-xl"
+                    href={privacy.link}
+                    key="privacy"
+                  >
+                    {privacy.text}
+                  </DropdownItem>
+                  <DropdownItem
+                    as={Link}
+                    className="data-[hover=true]:!bg-orange-300 rounded-lg px-3 py-2 font-bold text-background text-xl"
+                    href={externalTransmissionPolicy.link}
+                    key="external-transmission"
+                  >
+                    {externalTransmissionPolicy.text}
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
             </nav>
           </div>
           <div className="flex items-center gap-2">
-            <MenuTrigger>
-              <Button className="flex items-center justify-center gap-2 bg-orange-500 px-5 py-2 font-medium text-base text-orange-50 hover:text-orange-100">
-                <span className="flex items-center justify-center">
+            <Dropdown
+              classNames={{
+                content: "p-0",
+              }}
+            >
+              <DropdownTrigger>
+                <Button
+                  className="border-2 border-background bg-primary px-5 py-3 font-bold text-background text-base hover:bg-primary"
+                  variant="bordered"
+                >
                   <GlobeIcon />
-                </span>
-                <Text className="font-bold text-base">language</Text>
-                <span className="flex items-center justify-center">
+                  language
                   <DownIcon />
-                </span>
-              </Button>
-              <Popover className="bg-orange-500 shadow-lg ring-1 ring-black/5">
-                <Menu className="min-w-[180px]">
-                  <MenuItem
-                    className={`flex w-full items-center px-5 py-2 text-left font-medium text-base ${
-                      language === "ja"
-                        ? "bg-orange-400 text-orange-50"
-                        : "bg-orange-500 text-orange-50 hover:bg-orange-600"
-                    }`}
-                  >
-                    <Link
-                      className="flex w-full items-center"
-                      href={removedLanguagePath}
-                    >
-                      <span className="flex items-center gap-2">
-                        {language === "ja" && <RightIcon />}
-                        <Text className="font-bold text-base" slot="label">
-                          日本語
-                        </Text>
-                      </span>
-                    </Link>
-                  </MenuItem>
-                  <MenuItem
-                    className={`flex w-full items-center px-5 py-2 text-left font-medium text-base ${
-                      language === "en"
-                        ? "bg-orange-400 text-orange-50"
-                        : "bg-orange-500 text-orange-50 hover:bg-orange-600"
-                    }`}
-                  >
-                    <Link
-                      className="flex w-full items-center"
-                      href={`/en${removedLanguagePath}`}
-                    >
-                      <span className="flex items-center gap-2">
-                        {language === "en" && <RightIcon />}
-                        <Text className="font-bold text-base" slot="label">
-                          English
-                        </Text>
-                      </span>
-                    </Link>
-                  </MenuItem>
-                </Menu>
-              </Popover>
-            </MenuTrigger>
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                aria-label="Language selection"
+                className="min-w-[180px] rounded-lg bg-primary p-2"
+                classNames={{ base: "!gap-0", list: "gap-0" }}
+              >
+                <DropdownItem
+                  as={Link}
+                  className={`data-[hover=true]:!bg-orange-300 rounded-lg px-3 py-2 font-bold text-background text-xl ${
+                    language === "ja" ? "!bg-orange-400" : ""
+                  }`}
+                  href={removedLanguagePath}
+                  key="ja"
+                  startContent={language === "ja" ? <RightIcon /> : null}
+                >
+                  日本語
+                </DropdownItem>
+                <DropdownItem
+                  as={Link}
+                  className={`data-[hover=true]:!bg-orange-300 rounded-lg px-3 py-2 font-bold text-background text-xl ${
+                    language === "en" ? "!bg-orange-400" : ""
+                  }`}
+                  href={`/en${removedLanguagePath}`}
+                  key="en"
+                  startContent={language === "en" ? <RightIcon /> : null}
+                >
+                  English
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
             {isLoggedIn ? (
-              <MenuTrigger>
-                <Button className="flex items-center justify-center gap-2 bg-orange-500 px-5 py-2 font-medium text-base text-orange-50 hover:text-orange-100">
-                  <span className="flex items-center gap-2">
+              <Dropdown
+                classNames={{
+                  content: "p-0",
+                }}
+              >
+                <DropdownTrigger>
+                  <Button
+                    aria-label="User menu"
+                    className="bg-transparent px-5 py-2 data-[hover=true]:bg-transparent"
+                    variant="light"
+                  >
                     <GithubIcon color="white" height={24} width={24} />
                     <DownIcon />
-                  </span>
-                </Button>
-                <Popover className="mx-4 bg-orange-500 shadow-lg ring-1 ring-black/5">
-                  <Menu className="min-w-[180px]">
-                    <MenuItem className="flex w-full items-center px-5 py-2 text-left font-medium text-base text-orange-50 hover:bg-orange-600">
-                      <Link className="w-full" href="/favorites">
-                        <Text className="font-bold text-base" slot="label">
-                          {favoriteListText(language)}
-                        </Text>
-                      </Link>
-                    </MenuItem>
-                    <MenuItem className="flex w-full items-center px-5 py-2 text-left font-medium text-base text-orange-50 hover:bg-orange-600">
-                      <Link className="w-full" href="/cat-list">
-                        <Text className="font-bold text-base" slot="label">
-                          {meowlistText(language)}
-                        </Text>
-                      </Link>
-                    </MenuItem>
-                    <MenuItem className="flex w-full items-center px-5 py-2 text-left font-medium text-base text-orange-50 hover:bg-orange-600">
-                      <Link className="w-full" href="/logout">
-                        <Text className="font-bold text-base" slot="label">
-                          {logoutText(language)}
-                        </Text>
-                      </Link>
-                    </MenuItem>
-                  </Menu>
-                </Popover>
-              </MenuTrigger>
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu
+                  aria-label="User menu"
+                  className="min-w-[180px] rounded-lg bg-primary p-2"
+                  classNames={{ base: "!gap-0", list: "gap-0" }}
+                >
+                  <DropdownItem
+                    as={Link}
+                    className="data-[hover=true]:!bg-orange-300 rounded-lg px-3 py-2 font-bold text-background text-xl"
+                    // TODO: https://github.com/nekochans/lgtm-cat/issues/14 でログイン機能が出来た際にこのページを実装するので実装後は `createIncludeLanguageAppPath` を使ってパスを生成するように修正する
+                    href="/favorites"
+                    key="favorites"
+                  >
+                    {favoriteListText(language)}
+                  </DropdownItem>
+                  <DropdownItem
+                    as={Link}
+                    className="data-[hover=true]:!bg-orange-300 rounded-lg px-3 py-2 font-bold text-background text-xl"
+                    // TODO: https://github.com/nekochans/lgtm-cat/issues/14 でログイン機能が出来た際にこのページを実装するので実装後は `createIncludeLanguageAppPath` を使ってパスを生成するように修正する
+                    href="/cat-list"
+                    key="cat-list"
+                  >
+                    {meowlistText(language)}
+                  </DropdownItem>
+                  <DropdownItem
+                    as={Link}
+                    className="data-[hover=true]:!bg-orange-300 rounded-lg px-3 py-2 font-bold text-background text-xl"
+                    // TODO: https://github.com/nekochans/lgtm-cat/issues/14 でログイン機能が出来た際にこのページを実装するので実装後は `createIncludeLanguageAppPath` を使ってパスを生成するように修正する
+                    href="/logout"
+                    key="logout"
+                  >
+                    {logoutText(language)}
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
             ) : (
               <LoginButton language={language} />
             )}
           </div>
         </div>
       </div>
-    </ReactAriaHeader>
+    </header>
   );
 }

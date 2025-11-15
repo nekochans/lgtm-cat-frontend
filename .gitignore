@@ -71,3 +71,9 @@ user-prompt/
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Playwright MCP logs
+.playwright-mcp/
+
+# ClaudeCode MCP設定ファイル
+.mcp.json

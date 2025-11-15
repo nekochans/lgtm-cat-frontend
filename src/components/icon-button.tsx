@@ -1,7 +1,7 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
+import { Button } from "@heroui/react";
 import Link from "next/link";
 import type { ComponentProps, JSX } from "react";
-import { Button, Text } from "react-aria-components";
 import type { IncludeLanguageAppPath } from "@/features/url";
 import { GithubIcon } from "./icons/github-icon";
 
@@ -84,49 +84,45 @@ export function IconButton({
   className,
   link,
 }: Props): JSX.Element {
-  const baseClasses =
-    "inline-flex items-center justify-center gap-2 rounded-lg px-7 py-1.5 text-black transition-colors duration-200";
-  const stateClasses =
-    isPressed === true ? "bg-amber-500" : "bg-amber-300 hover:bg-amber-100";
-  const focusClasses =
-    "focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2";
+  // Figmaデザインに基づくスタイル（デザイントークン使用）
+  const buttonClasses = `inline-flex items-center justify-center gap-2 rounded-lg px-7 py-2 font-bold font-inter text-xl text-text-br transition-colors duration-200 ${
+    isPressed === true
+      ? "bg-button-secondary-active"
+      : "bg-button-secondary-base hover:bg-button-secondary-hover"
+  } ${className ?? ""}`;
+
+  const startContent = (
+    <>
+      {showGithubIcon === true && (
+        <GithubIcon color="default" height={20} width={20} />
+      )}
+      {showRepeatIcon === true && <RepeatIcon />}
+      {showRandomIcon === true && <RandomIcon />}
+      {showCatIcon === true && <CatIcon />}
+    </>
+  );
 
   if (link != null) {
     return (
-      <Link
-        className={`${baseClasses} ${stateClasses} ${focusClasses} ${className ?? ""}`}
+      <Button
+        as={Link}
+        className={buttonClasses}
         href={link}
-        prefetch={false}
+        startContent={startContent}
       >
-        {showGithubIcon != null && (
-          <GithubIcon color="default" height={20} width={20} />
-        )}
-        {showRepeatIcon != null && <RepeatIcon />}
-        {showRandomIcon != null && <RandomIcon />}
-        {showCatIcon != null && <CatIcon />}
-        <Text className="text-right font-black font-inter text-lg text-orange-900">
-          {displayText}
-        </Text>
-      </Link>
+        {displayText}
+      </Button>
     );
   }
 
   return (
     <Button
-      aria-pressed={isPressed}
-      className={`${baseClasses} ${stateClasses} ${focusClasses} ${className ?? ""}`}
+      className={buttonClasses}
       isDisabled={isPressed}
+      startContent={startContent}
       type={type}
     >
-      {showGithubIcon != null && (
-        <GithubIcon color="default" height={20} width={20} />
-      )}
-      {showRepeatIcon != null && <RepeatIcon />}
-      {showRandomIcon != null && <RandomIcon />}
-      {showCatIcon != null && <CatIcon />}
-      <Text className="text-right font-black font-inter text-lg text-orange-900">
-        {displayText}
-      </Text>
+      {displayText}
     </Button>
   );
 }

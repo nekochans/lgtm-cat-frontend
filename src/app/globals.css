@@ -4,3 +4,31 @@
 
 @source "../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}";
 @custom-variant dark (&:is(.dark *));
+
+/* LGTMeow Design Tokens from Figma */
+@theme {
+  /* Colors - Text */
+  --color-text-br: #7c2d12;
+  --color-text-wh: #ffffff;
+
+  /* Colors - Background & Border */
+  --color-background: #fff7ed;
+  --color-primary: #f97316;
+  --color-border: #fed7aa;
+
+  /* Colors - Button Primary */
+  --color-button-primary-base: #f97316;
+  --color-button-primary-hover: #fed7aa;
+  --color-button-primary-active: #c2410c;
+
+  /* Colors - Button Secondary */
+  --color-button-secondary-base: #fcd34d;
+  --color-button-secondary-hover: #fde68a;
+  --color-button-secondary-active: #eab308;
+
+  /* Colors - Button Tertiary */
+  --color-button-tertiary-base: #fff7ed;
+  --color-button-tertiary-border: #fed7aa;
+  --color-button-tertiary-tx: #ea580c;
+  --color-button-tertiary-hover: #ffedd5;
+}

@@ -1,7 +1,7 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
+import { Button } from "@heroui/react";
 import Link from "next/link";
 import type { CSSProperties, JSX } from "react";
-import { Text } from "react-aria-components";
 import type { IncludeLanguageAppPath, Url } from "@/features/url";
 
 type Props = {
@@ -18,16 +18,13 @@ export function LinkButton({
   style,
 }: Props): JSX.Element {
   return (
-    <Link
-      className={`flex w-full max-w-screen-md items-center justify-center gap-2.5 rounded-lg bg-orange-600 px-6 py-3.5 transition-colors duration-200 hover:bg-orange-700 ${className ?? ""}
-      `}
+    <Button
+      as={Link}
+      className={`flex w-full max-w-screen-md items-center justify-center gap-2.5 rounded-lg bg-button-tertiary-tx px-6 py-3.5 font-bold font-inter text-lg text-text-wh transition-colors duration-200 hover:bg-button-primary-active ${className ?? ""}`}
       href={linkUrl}
-      prefetch={false}
       style={style}
     >
-      <Text className="font-bold font-inter text-lg text-white">
-        {linkText}
-      </Text>
-    </Link>
+      {linkText}
+    </Button>
   );
 }

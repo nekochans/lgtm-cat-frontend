@@ -29,6 +29,17 @@ jobs:
         env:
           NEXT_PUBLIC_LGTMEOW_BFF_URL: ${{ secrets.NEXT_PUBLIC_LGTMEOW_BFF_URL }}
           NODE_AUTH_TOKEN: ${{ secrets.AUTH_TOKEN_FOR_GITHUB_PACKAGES }}
+
+      - name: Verify Agents Docs Clean
+        run: |
+          npm run sync:agents-docs
+          if ! git diff --quiet -- CLAUDE.md AGENTS.md ':(glob)**/CLAUDE.md'; then
+            echo "::error title=Agents docs not synced::AI向けドキュメントが同期されていません。npm run sync:agents-docs を実行して変更をコミットしてください。"
+            git status --short -- CLAUDE.md AGENTS.md ':(glob)**/CLAUDE.md'
+            git diff --stat -- CLAUDE.md AGENTS.md ':(glob)**/CLAUDE.md'
+            exit 1
+          fi
+
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
