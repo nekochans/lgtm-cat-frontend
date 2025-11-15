@@ -1,8 +1,11 @@
+// 絶対厳守：編集前に必ずAI実装ルールを読む
 import { Redis } from "@upstash/redis";
 import { z } from "zod";
 import { IssueClientCredentialsAccessTokenError } from "@/features/oidc/errors/issue-client-credentials-access-token-error";
-import type { IssueClientCredentialsAccessToken } from "@/features/oidc/types/access-token";
-import { validation } from "@/features/validator";
+import {
+  createJwtAccessTokenString,
+  type IssueClientCredentialsAccessToken,
+} from "@/features/oidc/types/access-token";
 import {
   upstashRedisRestToken,
   upstashRedisRestUrl,
@@ -22,8 +25,10 @@ const cognitoTokenResponseBodySchema = z.object({
 
 const isCognitoTokenResponseBody = (
   value: unknown
-): value is CognitoTokenResponseBody =>
-  validation(cognitoTokenResponseBodySchema, value).isValidate;
+): value is CognitoTokenResponseBody => {
+  const result = cognitoTokenResponseBodySchema.safeParse(value);
+  return result.success;
+};
 
 const cognitoClientId = (): string => {
   if (process.env.COGNITO_CLIENT_ID != null) {
@@ -64,7 +69,7 @@ export const issueClientCredentialsAccessToken: IssueClientCredentialsAccessToke
 
     const cachedAccessToken = await redis.get(cognitoClientId());
     if (typeof cachedAccessToken === "string") {
-      return cachedAccessToken;
+      return createJwtAccessTokenString(cachedAccessToken);
     }
 
     const authorization = btoa(`${cognitoClientId()}:${cognitoClientSecret()}`);
@@ -103,7 +108,7 @@ export const issueClientCredentialsAccessToken: IssueClientCredentialsAccessToke
       await redis.set(cognitoClientId(), responseBody.access_token);
       await redis.expire(cognitoClientId(), 3000);
 
-      return responseBody.access_token;
+      return createJwtAccessTokenString(responseBody.access_token);
     }
 
     const headers: Record<string, string> = {};
