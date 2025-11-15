@@ -1,13 +1,19 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import * as z from "zod";
-import type { JwtAccessTokenString } from "@/features/oidc/types/access-token";
-import type { FetchLgtmImages, LgtmImage } from "@/features/main/types/lgtmImage";
-import { createLgtmImageId, createLgtmImageUrl } from "@/features/main/types/lgtmImage";
 import {
   fetchLgtmImagesInRandomUrl,
   fetchLgtmImagesInRecentlyCreatedUrl,
 } from "@/features/main/functions/api-url";
 import { isLgtmImageUrl } from "@/features/main/functions/is-lgtm-image-url";
+import type {
+  FetchLgtmImages,
+  LgtmImage,
+} from "@/features/main/types/lgtmImage";
+import {
+  createLgtmImageId,
+  createLgtmImageUrl,
+} from "@/features/main/types/lgtmImage";
+import type { JwtAccessTokenString } from "@/features/oidc/types/access-token";
 
 /**
  * APIレスポンスのzodスキーマ（.readonly() で readonly 化）
@@ -22,7 +28,8 @@ const apiLgtmImageResponseSchema = z
               message: "id must be a numeric string",
             }),
             url: z.url().refine(isLgtmImageUrl, {
-              message: "url must be a valid LGTM image URL (.webp extension and lgtmeow.com domain)",
+              message:
+                "url must be a valid LGTM image URL (.webp extension and lgtmeow.com domain)",
             }),
           })
           .readonly()
@@ -42,7 +49,7 @@ type FetchLgtmImagesErrorOptions = {
 
 export class FetchLgtmImagesError extends Error {
   static {
-    this.prototype.name = "FetchLgtmImagesError";
+    FetchLgtmImagesError.prototype.name = "FetchLgtmImagesError";
   }
 
   private readonly statusCode: number | undefined;
@@ -63,7 +70,9 @@ export class FetchLgtmImagesError extends Error {
   }
 }
 
-function isValidApiLgtmImageResponse(apiResponse: unknown): apiResponse is ApiLgtmImageResponse {
+function isValidApiLgtmImageResponse(
+  apiResponse: unknown
+): apiResponse is ApiLgtmImageResponse {
   const result = apiLgtmImageResponseSchema.safeParse(apiResponse);
   return result.success;
 }
@@ -82,7 +91,7 @@ async function parseErrorResponseBody(response: Response): Promise<unknown> {
     try {
       return await response.text();
     } catch {
-      return undefined;
+      return;
     }
   }
 }
@@ -129,12 +138,15 @@ async function requestLgtmImages(
         });
       }
 
-      throw new FetchLgtmImagesError(`HTTP Error: ${response.status} ${response.statusText}`, {
-        statusCode: response.status,
-        statusText: response.statusText,
-        headers: headersRecord,
-        responseBody: errorResponseBody,
-      });
+      throw new FetchLgtmImagesError(
+        `HTTP Error: ${response.status} ${response.statusText}`,
+        {
+          statusCode: response.status,
+          statusText: response.statusText,
+          headers: headersRecord,
+          responseBody: errorResponseBody,
+        }
+      );
     }
 
     let responseBodyRaw: unknown;
@@ -173,12 +185,10 @@ async function requestLgtmImages(
 
 export const fetchLgtmImagesInRandom: FetchLgtmImages = async (
   accessToken: JwtAccessTokenString
-): Promise<LgtmImage[]> => {
-  return requestLgtmImages(fetchLgtmImagesInRandomUrl(), accessToken);
-};
+): Promise<LgtmImage[]> =>
+  requestLgtmImages(fetchLgtmImagesInRandomUrl(), accessToken);
 
 export const fetchLgtmImagesInRecentlyCreated: FetchLgtmImages = async (
   accessToken: JwtAccessTokenString
-): Promise<LgtmImage[]> => {
-  return requestLgtmImages(fetchLgtmImagesInRecentlyCreatedUrl(), accessToken);
-};
+): Promise<LgtmImage[]> =>
+  requestLgtmImages(fetchLgtmImagesInRecentlyCreatedUrl(), accessToken);

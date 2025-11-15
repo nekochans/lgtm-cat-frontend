@@ -1,15 +1,21 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
-import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
+
 import { http } from "msw";
 import { setupServer } from "msw/node";
-import { fetchLgtmImagesInRandom } from "@/features/main/functions/fetch-lgtm-images";
+import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 import { fetchLgtmImagesInRandomUrl } from "@/features/main/functions/api-url";
-import { createLgtmImageId, createLgtmImageUrl } from "@/features/main/types/lgtmImage";
-import { mockFetchLgtmImages } from "@/mocks/api/external/lgtmeow/mock-fetch-lgtm-images";
-import { mockUnauthorizedError } from "@/mocks/api/error/mock-unauthorized-error";
+import { fetchLgtmImagesInRandom } from "@/features/main/functions/fetch-lgtm-images";
+import {
+  createLgtmImageId,
+  createLgtmImageUrl,
+} from "@/features/main/types/lgtmImage";
 import { mockInternalServerError } from "@/mocks/api/error/mock-internal-server-error";
+import { mockUnauthorizedError } from "@/mocks/api/error/mock-unauthorized-error";
+import { mockFetchLgtmImages } from "@/mocks/api/external/lgtmeow/mock-fetch-lgtm-images";
 
-const mockHandlers = [http.get(fetchLgtmImagesInRandomUrl(), mockFetchLgtmImages)];
+const mockHandlers = [
+  http.get(fetchLgtmImagesInRandomUrl(), mockFetchLgtmImages),
+];
 
 const server = setupServer(...mockHandlers);
 
@@ -50,7 +56,9 @@ describe("src/features/main/functions/fetch-lgtm-images.ts fetchLgtmImagesInRand
   it("should throw FetchLgtmImagesError when API returns 401 Unauthorized", async () => {
     server.use(http.get(fetchLgtmImagesInRandomUrl(), mockUnauthorizedError));
 
-    await expect(fetchLgtmImagesInRandom(dummyAccessToken)).rejects.toThrow("Unauthorized");
+    await expect(fetchLgtmImagesInRandom(dummyAccessToken)).rejects.toThrow(
+      "Unauthorized"
+    );
   });
 
   it("should throw FetchLgtmImagesError when API returns 500 Internal Server Error", async () => {
@@ -63,22 +71,24 @@ describe("src/features/main/functions/fetch-lgtm-images.ts fetchLgtmImagesInRand
 
   it("should throw FetchLgtmImagesError when API returns 200 but response has invalid id format", async () => {
     server.use(
-      http.get(fetchLgtmImagesInRandomUrl(), () => {
-        return new Response(
-          JSON.stringify({
-            lgtmImages: [
-              {
-                id: "abc",
-                url: "https://lgtm-images.lgtmeow.com/2021/03/16/00/image.webp",
-              },
-            ],
-          }),
-          {
-            status: 200,
-            headers: { "Content-Type": "application/json" },
-          }
-        );
-      })
+      http.get(
+        fetchLgtmImagesInRandomUrl(),
+        () =>
+          new Response(
+            JSON.stringify({
+              lgtmImages: [
+                {
+                  id: "abc",
+                  url: "https://lgtm-images.lgtmeow.com/2021/03/16/00/image.webp",
+                },
+              ],
+            }),
+            {
+              status: 200,
+              headers: { "Content-Type": "application/json" },
+            }
+          )
+      )
     );
 
     await expect(fetchLgtmImagesInRandom(dummyAccessToken)).rejects.toThrow(
@@ -88,22 +98,24 @@ describe("src/features/main/functions/fetch-lgtm-images.ts fetchLgtmImagesInRand
 
   it("should throw FetchLgtmImagesError when API returns 200 but response has invalid url extension", async () => {
     server.use(
-      http.get(fetchLgtmImagesInRandomUrl(), () => {
-        return new Response(
-          JSON.stringify({
-            lgtmImages: [
-              {
-                id: "1",
-                url: "https://lgtm-images.lgtmeow.com/2021/03/16/00/image.png",
-              },
-            ],
-          }),
-          {
-            status: 200,
-            headers: { "Content-Type": "application/json" },
-          }
-        );
-      })
+      http.get(
+        fetchLgtmImagesInRandomUrl(),
+        () =>
+          new Response(
+            JSON.stringify({
+              lgtmImages: [
+                {
+                  id: "1",
+                  url: "https://lgtm-images.lgtmeow.com/2021/03/16/00/image.png",
+                },
+              ],
+            }),
+            {
+              status: 200,
+              headers: { "Content-Type": "application/json" },
+            }
+          )
+      )
     );
 
     await expect(fetchLgtmImagesInRandom(dummyAccessToken)).rejects.toThrow(
@@ -113,22 +125,24 @@ describe("src/features/main/functions/fetch-lgtm-images.ts fetchLgtmImagesInRand
 
   it("should throw FetchLgtmImagesError when API returns 200 but response has invalid url domain", async () => {
     server.use(
-      http.get(fetchLgtmImagesInRandomUrl(), () => {
-        return new Response(
-          JSON.stringify({
-            lgtmImages: [
-              {
-                id: "1",
-                url: "https://evil.com/image.webp",
-              },
-            ],
-          }),
-          {
-            status: 200,
-            headers: { "Content-Type": "application/json" },
-          }
-        );
-      })
+      http.get(
+        fetchLgtmImagesInRandomUrl(),
+        () =>
+          new Response(
+            JSON.stringify({
+              lgtmImages: [
+                {
+                  id: "1",
+                  url: "https://evil.com/image.webp",
+                },
+              ],
+            }),
+            {
+              status: 200,
+              headers: { "Content-Type": "application/json" },
+            }
+          )
+      )
     );
 
     await expect(fetchLgtmImagesInRandom(dummyAccessToken)).rejects.toThrow(

@@ -24,7 +24,10 @@ describe("src/features/main/functions/is-lgtm-image-url.ts isLgtmImageUrl TestCa
     ${"https://example.com/lgtmeow.com/image.webp"}                                              | ${false}
     ${"https://lgtmeow.com.evil.org/image.webp"}                                                 | ${false}
     ${"not-a-valid-url"}                                                                         | ${false}
-  `("should return $expected when url is $url", ({ url, expected }: TestTable) => {
-    expect(isLgtmImageUrl(url)).toBe(expected);
-  });
+  `(
+    "should return $expected when url is $url",
+    ({ url, expected }: TestTable) => {
+      expect(isLgtmImageUrl(url)).toBe(expected);
+    }
+  );
 });

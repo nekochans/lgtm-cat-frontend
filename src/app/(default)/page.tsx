@@ -2,13 +2,13 @@
 import type { Metadata, NextPage } from "next";
 import { convertLocaleToLanguage } from "@/features/locale";
 import { HomePageContainer } from "@/features/main/components/home-page-container";
-import { appName, metaTagList } from "@/features/meta-tag";
-import { appBaseUrl, i18nUrlList } from "@/features/url";
-import { issueClientCredentialsAccessToken } from "@/lib/cognito/oidc";
 import {
   fetchLgtmImagesInRandom,
   fetchLgtmImagesInRecentlyCreated,
 } from "@/features/main/functions/fetch-lgtm-images";
+import { appName, metaTagList } from "@/features/meta-tag";
+import { appBaseUrl, i18nUrlList } from "@/features/url";
+import { issueClientCredentialsAccessToken } from "@/lib/cognito/oidc";
 
 const language = "ja";
 
@@ -46,7 +46,8 @@ const HomePage: NextPage = async () => {
 
   const fetchedRandomLgtmImages = await fetchLgtmImagesInRandom(accessToken);
 
-  const fetchedRecentlyCreatedLgtmImages = await fetchLgtmImagesInRecentlyCreated(accessToken);
+  const fetchedRecentlyCreatedLgtmImages =
+    await fetchLgtmImagesInRecentlyCreated(accessToken);
 
   // TODO 後でLGTM画像を表示するComponentを追加
   console.log(fetchedRandomLgtmImages);
