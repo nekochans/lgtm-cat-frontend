@@ -166,8 +166,8 @@ export function Header({
               >
                 <DropdownTrigger>
                   <Button
+                    aria-label="User menu"
                     className="bg-transparent px-5 py-2 data-[hover=true]:bg-transparent"
-                    isIconOnly
                     variant="light"
                   >
                     <GithubIcon color="white" height={24} width={24} />
