@@ -4,6 +4,7 @@ import { convertLocaleToLanguage } from "@/features/locale";
 import { HomePageContainer } from "@/features/main/components/home-page-container";
 import { appName, metaTagList } from "@/features/meta-tag";
 import { appBaseUrl, i18nUrlList } from "@/features/url";
+import { issueClientCredentialsAccessToken } from "@/lib/cognito/oidc";
 
 const language = "ja";
 
@@ -36,8 +37,13 @@ export const metadata: Metadata = {
   },
 };
 
-const HomePage: NextPage = () => (
-  <HomePageContainer currentUrlPath="/" language={language} />
-);
+const HomePage: NextPage = async () => {
+  const accessToken = await issueClientCredentialsAccessToken();
+
+  // TODO 後でこのトークンを使ってLGTM画像を取得する処理を実装
+  console.log(accessToken);
+
+  return <HomePageContainer currentUrlPath="/" language={language} />;
+};
 
 export default HomePage;
