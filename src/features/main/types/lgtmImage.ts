@@ -1,4 +1,4 @@
-import type { JwtAccessTokenString } from "@/features/oidc/access-token";
+import type { JwtAccessTokenString } from "@/features/oidc/types/access-token";
 
 export type LgtmImageUrl = `https://${string}`;
 
