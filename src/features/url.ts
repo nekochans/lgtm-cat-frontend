@@ -153,35 +153,3 @@ export function createI18nUrl(
 }
 
 export type AppUrl = (typeof appUrlList)[keyof typeof appUrlList];
-
-export function uploadCatImageUrl(baseUrl?: Url): Url {
-  return `${isUrl(baseUrl) ? baseUrl : appBaseUrl()}/api/lgtm-images`;
-}
-
-export function fetchLgtmImagesUrl(baseUrl?: Url): Url {
-  return `${isUrl(baseUrl) ? baseUrl : appBaseUrl()}/api/lgtm-images`;
-}
-
-export function fetchLgtmImagesInRecentlyCreatedUrl(baseUrl?: Url): Url {
-  return `${isUrl(baseUrl) ? baseUrl : appBaseUrl()}/api/lgtm-images/recently-created`;
-}
-
-export function isAcceptableCatImageUrl(baseUrl?: Url): Url {
-  return `${isUrl(baseUrl) ? baseUrl : appBaseUrl()}/api/cat-images/validation-results`;
-}
-
-export function lgtmeowApiUrl(): Url {
-  if (isUrl(process.env.LGTMEOW_API_URL)) {
-    return process.env.LGTMEOW_API_URL;
-  }
-
-  throw new Error("LGTMEOW_API_URL is not defined");
-}
-
-export function imageRecognitionApiUrl(): Url {
-  if (isUrl(process.env.IMAGE_RECOGNITION_API_URL)) {
-    return process.env.IMAGE_RECOGNITION_API_URL;
-  }
-
-  throw new Error("IMAGE_RECOGNITION_API_URL is not defined");
-}
