@@ -1,0 +1,51 @@
+// 絶対厳守：編集前に必ずAI実装ルールを読む
+
+import type { Language } from "@/features/language";
+import { assertNever } from "@/utils/assert-never";
+
+type ServiceDescriptionText = {
+  readonly line1: string;
+  readonly line2: string;
+};
+
+export function getServiceDescriptionText(
+  language: Language
+): ServiceDescriptionText {
+  switch (language) {
+    case "ja":
+      return {
+        line1: "猫のLGTM画像を共有出来るサービスです。",
+        line2: "画像をクリックするとGitHub Markdownがコピーされます。",
+      };
+    case "en":
+      return {
+        line1: "A service for sharing cat LGTM images.",
+        line2: "Click on an image to copy the GitHub Markdown.",
+      };
+    default:
+      return assertNever(language);
+  }
+}
+
+export function getActionButtonText(language: Language): {
+  readonly randomCopy: string;
+  readonly refreshCats: string;
+  readonly latestCats: string;
+} {
+  switch (language) {
+    case "ja":
+      return {
+        randomCopy: "ランダムコピー",
+        refreshCats: "ねこリフレッシュ",
+        latestCats: "ねこ新着順",
+      };
+    case "en":
+      return {
+        randomCopy: "Random Copy",
+        refreshCats: "Refresh Cats",
+        latestCats: "Latest Cats",
+      };
+    default:
+      return assertNever(language);
+  }
+}
