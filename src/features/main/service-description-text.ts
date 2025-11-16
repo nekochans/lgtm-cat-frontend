@@ -41,9 +41,9 @@ export function getActionButtonText(language: Language): {
       };
     case "en":
       return {
-        randomCopy: "Random Copy",
+        randomCopy: "Copy Random Cat",
         refreshCats: "Refresh Cats",
-        latestCats: "Latest Cats",
+        latestCats: "Show Latest Cats",
       };
     default:
       return assertNever(language);
