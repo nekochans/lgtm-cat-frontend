@@ -5,20 +5,23 @@ import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import type { Language } from "@/features/language";
 import type { IncludeLanguageAppPath } from "@/features/url";
+import { LgtmImages } from "@/features/main/components/lgtm-images";
+import type { LgtmImage as LgtmImageType } from "@/features/main/types/lgtmImage";
 
 type Props = {
   language: Language;
   currentUrlPath: IncludeLanguageAppPath;
+  readonly lgtmImages: LgtmImageType;
 };
 
-export const HomePageContainer = ({ language, currentUrlPath }: Props) => (
+export const HomePageContainer = ({ language, currentUrlPath, lgtmImages }: Props) => (
   <>
     <Header
       currentUrlPath={currentUrlPath}
       isLoggedIn={false}
       language={language}
     />
-    <h1>Hello new design!</h1>
+      <LgtmImages images={lgtmImages} />
     <Footer language={language} />
   </>
 );

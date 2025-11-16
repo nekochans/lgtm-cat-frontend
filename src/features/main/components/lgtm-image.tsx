@@ -19,6 +19,8 @@ export function LgtmImage({ id, imageUrl }: Props): JSX.Element {
   const [isFavorite, setIsFavorite] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const copyTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const [isCopyActive, setIsCopyActive] = useState(false);
+  const [isFavoriteActive, setIsFavoriteActive] = useState(false);
 
   const handleCopy = useCallback(() => {
     const markdown = `[![LGTMeow](${imageUrl})](${appBaseUrl()})`;
@@ -39,6 +41,22 @@ export function LgtmImage({ id, imageUrl }: Props): JSX.Element {
   const handleCopyIconPress = useCallback(() => {
     handleCopy();
   }, [handleCopy]);
+
+  const handleCopyPressStart = useCallback(() => {
+    setIsCopyActive(true);
+  }, []);
+
+  const handleCopyPressEnd = useCallback(() => {
+    setIsCopyActive(false);
+  }, []);
+
+  const handleFavoritePressStart = useCallback(() => {
+    setIsFavoriteActive(true);
+  }, []);
+
+  const handleFavoritePressEnd = useCallback(() => {
+    setIsFavoriteActive(false);
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -75,21 +93,33 @@ export function LgtmImage({ id, imageUrl }: Props): JSX.Element {
           className="min-w-0 bg-white/80 p-2 backdrop-blur-sm hover:bg-white/90"
           isIconOnly
           onPress={handleCopyIconPress}
+          onPressEnd={handleCopyPressEnd}
+          onPressStart={handleCopyPressStart}
           radius="sm"
           size="sm"
         >
-          <CopyIcon color="default" height={20} width={20} />
+          <CopyIcon
+            color={isCopyActive ? "active" : "default"}
+            height={20}
+            width={20}
+          />
         </Button>
         <Button
           aria-label="Add to favorites"
           className="min-w-0 bg-white/80 p-2 backdrop-blur-sm hover:bg-white/90"
           isIconOnly
           onPress={handleToggleFavorite}
+          onPressEnd={handleFavoritePressEnd}
+          onPressStart={handleFavoritePressStart}
           radius="sm"
           size="sm"
         >
           <HeartIcon
-            color={isFavorite ? "favorite" : "default"}
+            color={
+              isFavorite === true || isFavoriteActive === true
+                ? "favorite"
+                : "default"
+            }
             height={20}
             width={20}
           />
