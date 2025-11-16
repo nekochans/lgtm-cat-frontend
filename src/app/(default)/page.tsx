@@ -2,13 +2,8 @@
 import type { Metadata, NextPage } from "next";
 import { convertLocaleToLanguage } from "@/features/locale";
 import { HomePageContainer } from "@/features/main/components/home-page-container";
-import {
-  fetchLgtmImagesInRandom,
-  fetchLgtmImagesInRecentlyCreated,
-} from "@/features/main/functions/fetch-lgtm-images";
 import { appName, metaTagList } from "@/features/meta-tag";
 import { appBaseUrl, i18nUrlList } from "@/features/url";
-import { issueClientCredentialsAccessToken } from "@/lib/cognito/oidc";
 
 const language = "ja";
 
@@ -41,19 +36,8 @@ export const metadata: Metadata = {
   },
 };
 
-const HomePage: NextPage = async () => {
-  const accessToken = await issueClientCredentialsAccessToken();
-
-  const fetchedRandomLgtmImages = await fetchLgtmImagesInRandom(accessToken);
-
-  const fetchedRecentlyCreatedLgtmImages =
-    await fetchLgtmImagesInRecentlyCreated(accessToken);
-
-  // TODO 後でLGTM画像を表示するComponentを追加
-  console.log(fetchedRandomLgtmImages);
-  console.log(fetchedRecentlyCreatedLgtmImages);
-
-  return <HomePageContainer currentUrlPath="/" language={language} />;
-};
+const HomePage: NextPage = async () => (
+  <HomePageContainer currentUrlPath="/" language={language} />
+);
 
 export default HomePage;

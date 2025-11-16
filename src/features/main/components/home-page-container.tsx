@@ -4,24 +4,22 @@
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import type { Language } from "@/features/language";
+import { RandomLgtmImages } from "@/features/main/components/random-lgtm-images";
 import type { IncludeLanguageAppPath } from "@/features/url";
-import { LgtmImages } from "@/features/main/components/lgtm-images";
-import type { LgtmImage as LgtmImageType } from "@/features/main/types/lgtmImage";
 
 type Props = {
-  language: Language;
-  currentUrlPath: IncludeLanguageAppPath;
-  readonly lgtmImages: LgtmImageType;
+  readonly language: Language;
+  readonly currentUrlPath: IncludeLanguageAppPath;
 };
 
-export const HomePageContainer = ({ language, currentUrlPath, lgtmImages }: Props) => (
+export const HomePageContainer = ({ language, currentUrlPath }: Props) => (
   <>
     <Header
       currentUrlPath={currentUrlPath}
       isLoggedIn={false}
       language={language}
     />
-      <LgtmImages images={lgtmImages} />
+    <RandomLgtmImages />
     <Footer language={language} />
   </>
 );

@@ -58,13 +58,14 @@ export function LgtmImage({ id, imageUrl }: Props): JSX.Element {
     setIsFavoriteActive(false);
   }, []);
 
-  useEffect(() => {
-    return () => {
+  useEffect(
+    () => () => {
       if (copyTimerRef.current != null) {
         clearTimeout(copyTimerRef.current);
       }
-    };
-  }, []);
+    },
+    []
+  );
 
   return (
     <div
@@ -73,7 +74,7 @@ export function LgtmImage({ id, imageUrl }: Props): JSX.Element {
     >
       <button
         aria-label="Copy LGTM markdown"
-        className="relative block w-full min-h-[220px] aspect-[4/3] cursor-pointer border-0 bg-neutral-50 p-0 dark:bg-neutral-900"
+        className="relative block aspect-[4/3] min-h-[220px] w-full cursor-pointer border-0 bg-neutral-50 p-0 dark:bg-neutral-900"
         onClick={handleCopy}
         type="button"
       >
@@ -128,7 +129,7 @@ export function LgtmImage({ id, imageUrl }: Props): JSX.Element {
       {isCopied ? (
         <div
           aria-live="polite"
-          className="pointer-events-none absolute inset-x-0 top-1/3 flex items-center justify-center bg-[#7B2F1D] px-4 py-3 text-base font-semibold text-white md:py-4 md:text-lg"
+          className="pointer-events-none absolute inset-x-0 top-1/3 flex items-center justify-center bg-[#7B2F1D] px-4 py-3 font-semibold text-base text-white md:py-4 md:text-lg"
         >
           Copied!
         </div>
