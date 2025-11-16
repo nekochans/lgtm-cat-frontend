@@ -69,7 +69,7 @@ export function LgtmImage({ id, imageUrl }: Props): JSX.Element {
 
   return (
     <div
-      className="relative w-full max-w-[390px] flex-none overflow-hidden rounded-lg"
+      className="group relative w-full max-w-[390px] flex-none overflow-hidden rounded-lg"
       data-lgtm-image-id={id}
     >
       <button
@@ -88,7 +88,7 @@ export function LgtmImage({ id, imageUrl }: Props): JSX.Element {
           src={imageUrl}
         />
       </button>
-      <div className="absolute top-2 right-2 flex gap-2">
+      <div className="absolute top-2 right-2 flex gap-2 opacity-100 transition-opacity duration-150 md:opacity-0 md:group-hover:opacity-100">
         <Button
           aria-label="Copy to clipboard"
           className="min-w-0 bg-white/80 p-2 backdrop-blur-sm hover:bg-white/90"
