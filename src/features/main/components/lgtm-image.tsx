@@ -55,14 +55,15 @@ export function LgtmImage({ id, imageUrl }: Props): JSX.Element {
     >
       <button
         aria-label="Copy LGTM markdown"
-        className="relative block h-[220px] w-full cursor-pointer border-0 bg-transparent p-0"
+        className="relative block w-full min-h-[220px] aspect-[4/3] cursor-pointer border-0 bg-neutral-50 p-0 dark:bg-neutral-900"
         onClick={handleCopy}
         type="button"
       >
         <Image
           alt="LGTM image"
-          className="object-cover"
+          className="object-contain"
           fill
+          objectPosition="center top"
           priority={false}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           src={imageUrl}
