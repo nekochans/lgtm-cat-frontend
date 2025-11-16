@@ -93,14 +93,14 @@ export function IconButton({
   } ${className ?? ""}`;
 
   const startContent = (
-    <>
+    <span aria-hidden="true" className="flex items-center gap-2">
       {showGithubIcon === true && (
         <GithubIcon color="default" height={20} width={20} />
       )}
       {showRepeatIcon === true && <RepeatIcon />}
       {showRandomIcon === true && <RandomIcon />}
       {showCatIcon === true && <CatIcon />}
-    </>
+    </span>
   );
 
   if (link != null) {
