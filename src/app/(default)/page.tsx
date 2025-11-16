@@ -5,6 +5,8 @@ import { HomePageContainer } from "@/features/main/components/home-page-containe
 import { appName, metaTagList } from "@/features/meta-tag";
 import { appBaseUrl, i18nUrlList } from "@/features/url";
 
+export const dynamic = "force-dynamic";
+
 const language = "ja";
 
 export const metadata: Metadata = {

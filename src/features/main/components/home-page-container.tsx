@@ -1,5 +1,4 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
-"use client";
 
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
