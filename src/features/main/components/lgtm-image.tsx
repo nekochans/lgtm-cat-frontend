@@ -7,7 +7,7 @@ import type { JSX } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CopyIcon } from "@/components/icons/copy-icon";
 import { HeartIcon } from "@/components/icons/heart-icon";
-import type { LgtmImage as LgtmImageType } from "@/features/main/types/lgtmImage";
+import type { LgtmImage as LgtmImageType } from "@/features/main/types/lgtm-image";
 import { appBaseUrl } from "@/features/url";
 
 type Props = {

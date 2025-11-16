@@ -4,7 +4,7 @@ import { LgtmImage } from "@/features/main/components/lgtm-image";
 import {
   createLgtmImageId,
   createLgtmImageUrl,
-} from "@/features/main/types/lgtmImage";
+} from "@/features/main/types/lgtm-image";
 import { fetchLgtmImagesMockBody } from "@/mocks/api/fetch-lgtm-images-mock-body";
 
 const meta = {

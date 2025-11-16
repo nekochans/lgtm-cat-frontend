@@ -215,6 +215,7 @@ const lgtmImages = await fetchLgtmImages();
 ```
 
 **特に重要な例**:
+
 ```typescript
 // ❌ 絶対禁止: dataは何のデータか全く分からない
 const response = await fetch(url);

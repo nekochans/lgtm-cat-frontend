@@ -8,7 +8,7 @@ import { fetchLgtmImagesInRandom } from "@/features/main/functions/fetch-lgtm-im
 import {
   createLgtmImageId,
   createLgtmImageUrl,
-} from "@/features/main/types/lgtmImage";
+} from "@/features/main/types/lgtm-image";
 import { mockInternalServerError } from "@/mocks/api/error/mock-internal-server-error";
 import { mockUnauthorizedError } from "@/mocks/api/error/mock-unauthorized-error";
 import { mockFetchLgtmImages } from "@/mocks/api/external/lgtmeow/mock-fetch-lgtm-images";

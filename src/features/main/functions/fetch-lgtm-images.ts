@@ -1,5 +1,5 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
-import * as z from "zod";
+import { z } from "zod";
 import {
   fetchLgtmImagesInRandomUrl,
   fetchLgtmImagesInRecentlyCreatedUrl,
@@ -8,12 +8,14 @@ import { isLgtmImageUrl } from "@/features/main/functions/is-lgtm-image-url";
 import type {
   FetchLgtmImages,
   LgtmImage,
-} from "@/features/main/types/lgtmImage";
+} from "@/features/main/types/lgtm-image";
 import {
   createLgtmImageId,
   createLgtmImageUrl,
-} from "@/features/main/types/lgtmImage";
+} from "@/features/main/types/lgtm-image";
 import type { JwtAccessTokenString } from "@/features/oidc/types/access-token";
+
+const NUMERIC_ID_REGEX = /^\d+$/;
 
 /**
  * APIレスポンスのzodスキーマ（.readonly() で readonly 化）
@@ -24,7 +26,7 @@ const apiLgtmImageResponseSchema = z
       .array(
         z
           .object({
-            id: z.string().refine((val) => /^\d+$/.test(val), {
+            id: z.string().refine((val) => NUMERIC_ID_REGEX.test(val), {
               message: "id must be a numeric string",
             }),
             url: z.url().refine(isLgtmImageUrl, {
@@ -52,13 +54,13 @@ export class FetchLgtmImagesError extends Error {
     FetchLgtmImagesError.prototype.name = "FetchLgtmImagesError";
   }
 
-  private readonly statusCode: number | undefined;
+  readonly statusCode: number | undefined;
 
-  private readonly statusText: string | undefined;
+  readonly statusText: string | undefined;
 
-  private readonly headers: Record<string, string> | undefined;
+  readonly headers: Record<string, string> | undefined;
 
-  private readonly responseBody: unknown;
+  readonly responseBody: unknown;
 
   constructor(message = "", options: FetchLgtmImagesErrorOptions = {}) {
     const { statusCode, statusText, headers, responseBody, ...rest } = options;

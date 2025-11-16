@@ -11,13 +11,13 @@ export class IssueClientCredentialsAccessTokenError extends Error {
       "IssueClientCredentialsAccessTokenError";
   }
 
-  private readonly statusCode: number | undefined;
+  readonly statusCode: number | undefined;
 
-  private readonly statusText: string | undefined;
+  readonly statusText: string | undefined;
 
-  private readonly headers: Record<string, string> | undefined;
+  readonly headers: Record<string, string> | undefined;
 
-  private readonly responseBody: unknown;
+  readonly responseBody: unknown;
 
   constructor(message = "", options: Options = {}) {
     const { statusCode, statusText, headers, responseBody, ...rest } = options;
