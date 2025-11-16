@@ -5,7 +5,6 @@ import { Button } from "@heroui/react";
 import Image from "next/image";
 import type { JSX } from "react";
 import { useCallback, useState } from "react";
-import type { PressEvent } from "react-aria-components";
 import { CopyIcon } from "@/components/icons/copy-icon";
 import { HeartIcon } from "@/components/icons/heart-icon";
 import type { LgtmImage as LgtmImageType } from "@/features/main/types/lgtmImage";
@@ -24,21 +23,13 @@ export function LgtmImage({ id, imageUrl }: Props): JSX.Element {
     navigator.clipboard.writeText(markdown);
   }, [imageUrl]);
 
-  const handleToggleFavorite = useCallback(
-    (event: PressEvent) => {
-      event.stopPropagation();
-      setIsFavorite((previous) => !previous);
-    },
-    []
-  );
+  const handleToggleFavorite = useCallback(() => {
+    setIsFavorite((previous) => !previous);
+  }, []);
 
-  const handleCopyIconPress = useCallback(
-    (event: PressEvent) => {
-      event.stopPropagation();
-      handleCopy();
-    },
-    [handleCopy]
-  );
+  const handleCopyIconPress = useCallback(() => {
+    handleCopy();
+  }, [handleCopy]);
 
   return (
     <div
@@ -75,7 +66,7 @@ export function LgtmImage({ id, imageUrl }: Props): JSX.Element {
           aria-label="Add to favorites"
           className="min-w-0 bg-white/80 p-2 backdrop-blur-sm hover:bg-white/90"
           isIconOnly
-          onClick={handleToggleFavorite}
+          onPress={handleToggleFavorite}
           radius="sm"
           size="sm"
         >
