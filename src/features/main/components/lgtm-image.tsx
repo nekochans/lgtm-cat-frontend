@@ -4,7 +4,7 @@
 import { Button } from "@heroui/react";
 import Image from "next/image";
 import type { JSX } from "react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { CopyIcon } from "@/components/icons/copy-icon";
 import { HeartIcon } from "@/components/icons/heart-icon";
 import type { LgtmImage as LgtmImageType } from "@/features/main/types/lgtmImage";
@@ -17,10 +17,19 @@ type Props = {
 
 export function LgtmImage({ id, imageUrl }: Props): JSX.Element {
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
+  const copyTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleCopy = useCallback(() => {
     const markdown = `[![LGTMeow](${imageUrl})](${appBaseUrl()})`;
     navigator.clipboard.writeText(markdown);
+    setIsCopied(true);
+    if (copyTimerRef.current != null) {
+      clearTimeout(copyTimerRef.current);
+    }
+    copyTimerRef.current = setTimeout(() => {
+      setIsCopied(false);
+    }, 1500);
   }, [imageUrl]);
 
   const handleToggleFavorite = useCallback(() => {
@@ -30,6 +39,14 @@ export function LgtmImage({ id, imageUrl }: Props): JSX.Element {
   const handleCopyIconPress = useCallback(() => {
     handleCopy();
   }, [handleCopy]);
+
+  useEffect(() => {
+    return () => {
+      if (copyTimerRef.current != null) {
+        clearTimeout(copyTimerRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div
@@ -77,6 +94,14 @@ export function LgtmImage({ id, imageUrl }: Props): JSX.Element {
           />
         </Button>
       </div>
+      {isCopied ? (
+        <div
+          aria-live="polite"
+          className="pointer-events-none absolute inset-x-0 top-1/3 flex items-center justify-center bg-[#7B2F1D] px-4 py-3 text-base font-semibold text-white md:py-4 md:text-lg"
+        >
+          Copied!
+        </div>
+      ) : null}
     </div>
   );
 }
