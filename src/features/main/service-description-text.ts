@@ -14,12 +14,12 @@ export function getServiceDescriptionText(
   switch (language) {
     case "ja":
       return {
-        line1: "猫のLGTM画像を共有出来るサービスです。",
+        line1: "可愛い猫のLGTM画像を作成して共有できるサービスです。",
         line2: "画像をクリックするとGitHub Markdownがコピーされます。",
       };
     case "en":
       return {
-        line1: "A service for sharing cat LGTM images.",
+        line1: "A service for generating and sharing cute cat LGTM images.",
         line2: "Click on an image to copy the GitHub Markdown.",
       };
     default:
