@@ -14,13 +14,13 @@ type Props = {
 };
 
 export const HomePageContainer = ({ language, currentUrlPath }: Props) => (
-  <div className="flex min-h-screen w-full flex-col bg-[#fff4e9]">
+  <div className="flex min-h-screen w-full flex-col bg-background">
     <Header
       currentUrlPath={currentUrlPath}
       isLoggedIn={false}
       language={language}
     />
-    <main className="flex w-full flex-1 flex-col items-center bg-[#fff4e9]">
+    <main className="flex w-full flex-1 flex-col items-center bg-background">
       <div className="flex w-full max-w-[1020px] flex-col items-center gap-[80px] px-[40px] py-[60px]">
         <div className="flex w-full max-w-[1020px] flex-col items-center gap-7 rounded-xl px-3 pt-10 pb-8">
           <ServiceDescription language={language} />
