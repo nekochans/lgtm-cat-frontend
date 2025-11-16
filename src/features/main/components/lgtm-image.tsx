@@ -69,12 +69,12 @@ export function LgtmImage({ id, imageUrl }: Props): JSX.Element {
 
   return (
     <div
-      className="relative overflow-hidden rounded-lg"
+      className="relative w-full max-w-[390px] flex-none overflow-hidden rounded-lg"
       data-lgtm-image-id={id}
     >
       <button
         aria-label="Copy LGTM markdown"
-        className="relative block aspect-[4/3] min-h-[220px] w-full cursor-pointer border-0 bg-neutral-50 p-0 dark:bg-neutral-900"
+        className="relative block h-[220px] w-full max-w-[390px] flex-none cursor-pointer border-0 bg-neutral-50 p-0 dark:bg-neutral-900"
         onClick={handleCopy}
         type="button"
       >
@@ -84,7 +84,7 @@ export function LgtmImage({ id, imageUrl }: Props): JSX.Element {
           fill
           objectPosition="center top"
           priority={false}
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          sizes="(max-width: 768px) 100vw, 390px"
           src={imageUrl}
         />
       </button>

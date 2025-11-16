@@ -12,13 +12,21 @@ type Props = {
 };
 
 export const HomePageContainer = ({ language, currentUrlPath }: Props) => (
-  <>
+  <div className="flex min-h-screen w-full flex-col bg-[#fff4e9]">
     <Header
       currentUrlPath={currentUrlPath}
       isLoggedIn={false}
       language={language}
     />
-    <RandomLgtmImages />
+    <main className="flex w-full flex-1 flex-col items-center bg-[#fff4e9]">
+      <div className="flex w-full max-w-[1020px] flex-col items-center gap-[80px] px-[40px] py-[60px]">
+        <div
+          aria-hidden
+          className="flex h-[210px] w-full max-w-[1020px] flex-col items-center gap-6 rounded-xl px-[12px] pt-[40px] pb-[32px]"
+        />
+        <RandomLgtmImages />
+      </div>
+    </main>
     <Footer language={language} />
-  </>
+  </div>
 );

@@ -9,7 +9,7 @@ type Props = {
 
 export function LgtmImages({ images }: Props): JSX.Element {
   return (
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <div className="flex w-full flex-wrap content-center items-center justify-center gap-[24px]">
       {images.map((image) => (
         <LgtmImage key={image.id} {...image} />
       ))}
