@@ -9,6 +9,7 @@ import {
   createLgtmImageId,
   createLgtmImageUrl,
 } from "@/features/main/types/lgtm-image";
+import { createJwtAccessTokenString } from "@/features/oidc/types/access-token";
 import { mockInternalServerError } from "@/mocks/api/error/mock-internal-server-error";
 import { mockUnauthorizedError } from "@/mocks/api/error/mock-unauthorized-error";
 import { mockFetchLgtmImages } from "@/mocks/api/external/lgtmeow/mock-fetch-lgtm-images";
@@ -32,8 +33,7 @@ describe("src/features/main/functions/fetch-lgtm-images.ts fetchLgtmImagesInRece
     server.close();
   });
 
-  const dummyAccessToken =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+  const dummyAccessToken = createJwtAccessTokenString("dummy-access-token");
 
   it("should return LGTM images when API call succeeds", async () => {
     const result = await fetchLgtmImagesInRecentlyCreated(dummyAccessToken);
