@@ -151,17 +151,14 @@ async function requestLgtmImages(
       );
     }
 
-    let responseBodyRaw: unknown;
-    try {
-      responseBodyRaw = await response.json();
-    } catch {
+    const responseBodyRaw: unknown = await response.json().catch(() => {
       const headersRecord = createHeadersRecord(response);
       throw new FetchLgtmImagesError("Invalid API response format", {
         statusCode: response.status,
         statusText: response.statusText,
         headers: headersRecord,
       });
-    }
+    });
 
     if (!isValidApiLgtmImageResponse(responseBodyRaw)) {
       const headersRecord = createHeadersRecord(response);

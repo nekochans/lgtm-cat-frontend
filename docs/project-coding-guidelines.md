@@ -272,3 +272,77 @@ function convertToUser(external: ExternalApiResponse): User {
   };
 }
 ```
+
+### constを優先し、letの使用は原則禁止
+
+変数宣言には **`const`** を使用し、**`let`** の使用は原則として禁止します。
+
+```typescript
+// ❌ 非推奨: let を使用
+let responseBodyRaw: unknown;
+try {
+  responseBodyRaw = await response.json();
+} catch {
+  throw new Error("Invalid API response format");
+}
+
+// ✅ 推奨: const を使用（.catch() パターン）
+const responseBody: unknown = await response.json().catch(() => {
+  throw new Error("Invalid API response format");
+});
+```
+
+```typescript
+// ❌ 非推奨: let を使用
+let user = await fetchUser();
+user = transformUser(user);
+
+// ✅ 推奨: const を使用（中間変数に別名を付ける）
+const rawUser = await fetchUser();
+const user = transformUser(rawUser);
+```
+
+```typescript
+// ❌ 非推奨: let を使用
+let result = null;
+if (condition) {
+  result = await fetchData();
+} else {
+  result = getDefaultData();
+}
+
+// ✅ 推奨: const を使用（三項演算子または即時実行関数）
+const result = condition ? await fetchData() : getDefaultData();
+
+// または
+const result = await (async () => {
+  if (condition) {
+    return await fetchData();
+  }
+  return getDefaultData();
+})();
+```
+
+**理由:**
+
+- イミュータブルなコードを推進
+- 意図しない再代入を防ぐ
+- コードの意図を明確にする
+- バグの早期発見
+- リファクタリングの安全性向上
+
+**例外ケース:**
+
+forループのカウンタなど、本当に再代入が必要な場合のみ `let` を使用できますが、可能な限り `for...of` や配列メソッド（`map`, `filter`, `reduce` など）で代替してください。
+
+```typescript
+// ⚠️ 例外: forループカウンタ（ただし for...of を優先すべき）
+for (let i = 0; i < items.length; i++) {
+  processItem(items[i]);
+}
+
+// ✅ より推奨: for...of を使用
+for (const item of items) {
+  processItem(item);
+}
+```
