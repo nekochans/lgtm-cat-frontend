@@ -14,12 +14,14 @@ export function isUrl(value: unknown): value is Url {
   return value.startsWith(HTTPS_PREFIX) || value.startsWith(LOCALHOST_PREFIX);
 }
 
+const defaultAppUrl = "https://lgtmeow.com";
+
 export function appBaseUrl(): Url {
   if (isUrl(process.env.NEXT_PUBLIC_APP_URL)) {
     return process.env.NEXT_PUBLIC_APP_URL;
   }
 
-  return "https://lgtmeow.com";
+  return defaultAppUrl;
 }
 
 export const appPathList = {
