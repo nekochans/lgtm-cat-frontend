@@ -196,18 +196,36 @@ weather_tool.ts (スネークケース)
 
 ### 汎用的な名前を避ける
 
-`data` のような曖昧な変数名は禁止です。意味が伝わる名称を使用してください。
+`data` のような曖昧な変数名は**絶対に禁止**です。意味が伝わる名称を使用してください。
+
+**重要**: `data` という変数名は何の情報も表していません。必ず具体的な名前を使用してください。
 
 ```typescript
 // ❌ 非推奨
 const data = await fetchUser();
 const validatedData = schema.parse(input);
+const data = await response.json(); // 最も悪い例
 
 // ✅ 推奨
-const email = await fetchUserEmail();
+const userEmail = await fetchUserEmail();
 const validatedEmail = schema.parse(input);
-const responseBody = await response.json();
+const responseBody = await response.json(); // response.json() の結果は必ず responseBody
 const userProfile = await fetchUserProfile();
+const lgtmImages = await fetchLgtmImages();
+```
+
+**特に重要な例**:
+
+```typescript
+// ❌ 絶対禁止: dataは何のデータか全く分からない
+const response = await fetch(url);
+const data = await response.json();
+return convertToModel(data);
+
+// ✅ 推奨: responseBodyは何の情報か明確
+const response = await fetch(url);
+const responseBody = await response.json();
+return convertToModel(responseBody);
 ```
 
 ### キャメルケースを使用
@@ -252,5 +270,79 @@ function convertToUser(external: ExternalApiResponse): User {
     createdAt: external.created_at,
     isActive: external.is_active,
   };
+}
+```
+
+### constを優先し、letの使用は原則禁止
+
+変数宣言には **`const`** を使用し、**`let`** の使用は原則として禁止します。
+
+```typescript
+// ❌ 非推奨: let を使用
+let responseBodyRaw: unknown;
+try {
+  responseBodyRaw = await response.json();
+} catch {
+  throw new Error("Invalid API response format");
+}
+
+// ✅ 推奨: const を使用（.catch() パターン）
+const responseBody: unknown = await response.json().catch(() => {
+  throw new Error("Invalid API response format");
+});
+```
+
+```typescript
+// ❌ 非推奨: let を使用
+let user = await fetchUser();
+user = transformUser(user);
+
+// ✅ 推奨: const を使用（中間変数に別名を付ける）
+const rawUser = await fetchUser();
+const user = transformUser(rawUser);
+```
+
+```typescript
+// ❌ 非推奨: let を使用
+let result = null;
+if (condition) {
+  result = await fetchData();
+} else {
+  result = getDefaultData();
+}
+
+// ✅ 推奨: const を使用（三項演算子または即時実行関数）
+const result = condition ? await fetchData() : getDefaultData();
+
+// または
+const result = await (async () => {
+  if (condition) {
+    return await fetchData();
+  }
+  return getDefaultData();
+})();
+```
+
+**理由:**
+
+- イミュータブルなコードを推進
+- 意図しない再代入を防ぐ
+- コードの意図を明確にする
+- バグの早期発見
+- リファクタリングの安全性向上
+
+**例外ケース:**
+
+forループのカウンタなど、本当に再代入が必要な場合のみ `let` を使用できますが、可能な限り `for...of` や配列メソッド（`map`, `filter`, `reduce` など）で代替してください。
+
+```typescript
+// ⚠️ 例外: forループカウンタ（ただし for...of を優先すべき）
+for (let i = 0; i < items.length; i++) {
+  processItem(items[i]);
+}
+
+// ✅ より推奨: for...of を使用
+for (const item of items) {
+  processItem(item);
 }
 ```

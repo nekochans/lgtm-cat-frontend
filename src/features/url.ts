@@ -14,12 +14,14 @@ export function isUrl(value: unknown): value is Url {
   return value.startsWith(HTTPS_PREFIX) || value.startsWith(LOCALHOST_PREFIX);
 }
 
+const defaultAppUrl = "https://lgtmeow.com";
+
 export function appBaseUrl(): Url {
   if (isUrl(process.env.NEXT_PUBLIC_APP_URL)) {
     return process.env.NEXT_PUBLIC_APP_URL;
   }
 
-  return "https://lgtmeow.com";
+  return defaultAppUrl;
 }
 
 export const appPathList = {
@@ -153,35 +155,3 @@ export function createI18nUrl(
 }
 
 export type AppUrl = (typeof appUrlList)[keyof typeof appUrlList];
-
-export function uploadCatImageUrl(baseUrl?: Url): Url {
-  return `${isUrl(baseUrl) ? baseUrl : appBaseUrl()}/api/lgtm-images`;
-}
-
-export function fetchLgtmImagesUrl(baseUrl?: Url): Url {
-  return `${isUrl(baseUrl) ? baseUrl : appBaseUrl()}/api/lgtm-images`;
-}
-
-export function fetchLgtmImagesInRecentlyCreatedUrl(baseUrl?: Url): Url {
-  return `${isUrl(baseUrl) ? baseUrl : appBaseUrl()}/api/lgtm-images/recently-created`;
-}
-
-export function isAcceptableCatImageUrl(baseUrl?: Url): Url {
-  return `${isUrl(baseUrl) ? baseUrl : appBaseUrl()}/api/cat-images/validation-results`;
-}
-
-export function lgtmeowApiUrl(): Url {
-  if (isUrl(process.env.LGTMEOW_API_URL)) {
-    return process.env.LGTMEOW_API_URL;
-  }
-
-  throw new Error("LGTMEOW_API_URL is not defined");
-}
-
-export function imageRecognitionApiUrl(): Url {
-  if (isUrl(process.env.IMAGE_RECOGNITION_API_URL)) {
-    return process.env.IMAGE_RECOGNITION_API_URL;
-  }
-
-  throw new Error("IMAGE_RECOGNITION_API_URL is not defined");
-}
