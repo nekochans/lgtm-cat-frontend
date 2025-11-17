@@ -74,25 +74,56 @@ export const issueClientCredentialsAccessToken: IssueClientCredentialsAccessToke
 
     const authorization = btoa(`${cognitoClientId()}:${cognitoClientSecret()}`);
 
+    const body = new URLSearchParams({
+      grant_type: "client_credentials",
+      scope: "api.lgtmeow/all image-recognition-api.lgtmeow/all",
+    });
+
     const options = {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         Authorization: `Basic ${authorization}`,
       },
-      body: "grant_type=client_credentials&scope=api.lgtmeow/all image-recognition-api.lgtmeow/all",
+      body: body.toString(),
     };
 
-    const response = await fetch(cognitoTokenEndpoint(), options);
-    if (!response.ok) {
-      const responseBody = await response.text();
+    try {
+      const response = await fetch(cognitoTokenEndpoint(), options);
+      if (!response.ok) {
+        const responseBody = await response.text();
+        const headers: Record<string, string> = {};
+        response.headers.forEach((value, key) => {
+          headers[key] = value;
+        });
+
+        throw new IssueClientCredentialsAccessTokenError(
+          `failed to issueAccessToken: ${response.status} ${response.statusText}`,
+          {
+            statusCode: response.status,
+            statusText: response.statusText,
+            headers,
+            responseBody,
+          }
+        );
+      }
+
+      const responseBody = (await response.json()) as unknown;
+
+      if (isCognitoTokenResponseBody(responseBody)) {
+        await redis.set(cognitoClientId(), responseBody.access_token);
+        await redis.expire(cognitoClientId(), 3000);
+
+        return createJwtAccessTokenString(responseBody.access_token);
+      }
+
       const headers: Record<string, string> = {};
       response.headers.forEach((value, key) => {
         headers[key] = value;
       });
 
       throw new IssueClientCredentialsAccessTokenError(
-        `failed to issueAccessToken: ${response.status} ${response.statusText}`,
+        "response body is invalid",
         {
           statusCode: response.status,
           statusText: response.statusText,
@@ -100,29 +131,19 @@ export const issueClientCredentialsAccessToken: IssueClientCredentialsAccessToke
           responseBody,
         }
       );
-    }
-
-    const responseBody = (await response.json()) as unknown;
-
-    if (isCognitoTokenResponseBody(responseBody)) {
-      await redis.set(cognitoClientId(), responseBody.access_token);
-      await redis.expire(cognitoClientId(), 3000);
-
-      return createJwtAccessTokenString(responseBody.access_token);
-    }
-
-    const headers: Record<string, string> = {};
-    response.headers.forEach((value, key) => {
-      headers[key] = value;
-    });
-
-    throw new IssueClientCredentialsAccessTokenError(
-      "response body is invalid",
-      {
-        statusCode: response.status,
-        statusText: response.statusText,
-        headers,
-        responseBody,
+    } catch (error) {
+      if (error instanceof IssueClientCredentialsAccessTokenError) {
+        throw error;
       }
-    );
+
+      throw new IssueClientCredentialsAccessTokenError(
+        `Failed to fetch access token: ${error instanceof Error ? error.message : String(error)}`,
+        {
+          statusCode: 0,
+          statusText: "Network Error",
+          headers: {},
+          responseBody: error,
+        }
+      );
+    }
   };
