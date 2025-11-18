@@ -18,7 +18,7 @@
 
 ### 現在のファイル構造
 
-```
+```text
 src/
 ├── app/
 │   └── (default)/
@@ -236,9 +236,9 @@ const fetchLgtmImages = async () => {
   "use cache";
   cacheTag(CACHE_TAG_LGTM_IMAGES_RANDOM);
   cacheLife({
-    stale: 900, // 15分（デフォルト）
-    revalidate: 900, // 15分
-    expire: 3600, // 1時間
+    stale: 86_400, // 24時間フレッシュ扱い
+    revalidate: 86_400, // 24時間ごと再検証
+    expire: 2_592_000, // 30日で強制失効
   });
 
   const accessToken = await issueClientCredentialsAccessToken();
@@ -281,9 +281,9 @@ const fetchLgtmImages = async () => {
   "use cache";
   cacheTag(CACHE_TAG_LGTM_IMAGES_LATEST);
   cacheLife({
-    stale: 900, // 15分（デフォルト）
-    revalidate: 900, // 15分
-    expire: 3600, // 1時間
+    stale: 86_400, // 24時間フレッシュ扱い
+    revalidate: 86_400, // 24時間ごと再検証
+    expire: 2_592_000, // 30日で強制失効
   });
 
   const accessToken = await issueClientCredentialsAccessToken();
