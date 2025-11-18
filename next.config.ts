@@ -16,6 +16,7 @@ const baseConfig: NextConfig = {
     ],
   },
   reactCompiler: true,
+  cacheComponents: true,
 };
 
 const sentryWebpackPluginOptions = {

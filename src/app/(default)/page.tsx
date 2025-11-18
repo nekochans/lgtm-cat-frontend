@@ -1,11 +1,10 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { Metadata, NextPage } from "next";
+import { Suspense } from "react";
 import { convertLocaleToLanguage } from "@/features/locale";
 import { HomePageContainer } from "@/features/main/components/home-page-container";
 import { appName, metaTagList } from "@/features/meta-tag";
 import { appBaseUrl, i18nUrlList } from "@/features/url";
-
-export const dynamic = "force-dynamic";
 
 const language = "ja";
 
@@ -38,8 +37,29 @@ export const metadata: Metadata = {
   },
 };
 
-const HomePage: NextPage = async () => (
-  <HomePageContainer currentUrlPath="/" language={language} />
+type Props = {
+  readonly searchParams: Promise<{
+    readonly view?: "random" | "latest";
+  }>;
+};
+
+const HomePageContent = async ({
+  searchParams,
+}: {
+  readonly searchParams: Props["searchParams"];
+}) => {
+  const params = await searchParams;
+  const view = params.view ?? "random";
+
+  return (
+    <HomePageContainer currentUrlPath="/" language={language} view={view} />
+  );
+};
+
+const HomePage: NextPage<Props> = ({ searchParams }) => (
+  <Suspense fallback={null}>
+    <HomePageContent searchParams={searchParams} />
+  </Suspense>
 );
 
 export default HomePage;

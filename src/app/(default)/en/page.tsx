@@ -1,5 +1,6 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { Metadata, NextPage } from "next";
+import { Suspense } from "react";
 import { convertLocaleToLanguage } from "@/features/locale";
 import { HomePageContainer } from "@/features/main/components/home-page-container";
 import { appName, metaTagList } from "@/features/meta-tag";
@@ -36,8 +37,29 @@ export const metadata: Metadata = {
   },
 };
 
-const EnHomePage: NextPage = () => (
-  <HomePageContainer currentUrlPath="/en" language={language} />
+type Props = {
+  readonly searchParams: Promise<{
+    readonly view?: "random" | "latest";
+  }>;
+};
+
+const EnHomePageContent = async ({
+  searchParams,
+}: {
+  readonly searchParams: Props["searchParams"];
+}) => {
+  const params = await searchParams;
+  const view = params.view ?? "random";
+
+  return (
+    <HomePageContainer currentUrlPath="/en" language={language} view={view} />
+  );
+};
+
+const EnHomePage: NextPage<Props> = ({ searchParams }) => (
+  <Suspense fallback={null}>
+    <EnHomePageContent searchParams={searchParams} />
+  </Suspense>
 );
 
 export default EnHomePage;
