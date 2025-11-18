@@ -2,6 +2,10 @@
 
 import { IconButton } from "@/components/icon-button";
 import type { Language } from "@/features/language";
+import {
+  refreshRandomCats,
+  showLatestCats,
+} from "@/features/main/actions/refresh-images";
 import { getActionButtonText } from "@/features/main/service-description-text";
 
 type Props = {
@@ -11,6 +15,8 @@ type Props = {
 
 export function HomeActionButtons({ language, className }: Props) {
   const buttonText = getActionButtonText(language);
+  const refreshRandomCatsAction = refreshRandomCats.bind(null, language);
+  const showLatestCatsAction = showLatestCats.bind(null, language);
 
   return (
     <div
@@ -21,16 +27,22 @@ export function HomeActionButtons({ language, className }: Props) {
         displayText={buttonText.randomCopy}
         showRepeatIcon={true}
       />
-      <IconButton
-        className="w-full md:w-[240px]"
-        displayText={buttonText.refreshCats}
-        showRandomIcon={true}
-      />
-      <IconButton
-        className="w-full md:w-[240px]"
-        displayText={buttonText.latestCats}
-        showCatIcon={true}
-      />
+      <form action={refreshRandomCatsAction} className="w-full md:w-auto">
+        <IconButton
+          className="w-full md:w-[240px]"
+          displayText={buttonText.refreshCats}
+          showRandomIcon={true}
+          type="submit"
+        />
+      </form>
+      <form action={showLatestCatsAction} className="w-full md:w-auto">
+        <IconButton
+          className="w-full md:w-[240px]"
+          displayText={buttonText.latestCats}
+          showCatIcon={true}
+          type="submit"
+        />
+      </form>
     </div>
   );
 }

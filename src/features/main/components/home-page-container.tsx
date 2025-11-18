@@ -4,6 +4,7 @@ import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import type { Language } from "@/features/language";
 import { HomeActionButtons } from "@/features/main/components/home-action-buttons";
+import { LatestLgtmImages } from "@/features/main/components/latest-lgtm-images";
 import { RandomLgtmImages } from "@/features/main/components/random-lgtm-images";
 import { ServiceDescription } from "@/features/main/components/service-description";
 import type { IncludeLanguageAppPath } from "@/features/url";
@@ -11,9 +12,14 @@ import type { IncludeLanguageAppPath } from "@/features/url";
 type Props = {
   readonly language: Language;
   readonly currentUrlPath: IncludeLanguageAppPath;
+  readonly view: "random" | "latest";
 };
 
-export const HomePageContainer = ({ language, currentUrlPath }: Props) => (
+export const HomePageContainer = ({
+  language,
+  currentUrlPath,
+  view,
+}: Props) => (
   <div className="flex min-h-screen w-full flex-col bg-background">
     <Header
       currentUrlPath={currentUrlPath}
@@ -26,7 +32,7 @@ export const HomePageContainer = ({ language, currentUrlPath }: Props) => (
           <ServiceDescription language={language} />
           <HomeActionButtons language={language} />
         </div>
-        <RandomLgtmImages />
+        {view === "random" ? <RandomLgtmImages /> : <LatestLgtmImages />}
       </div>
     </main>
     <Footer language={language} />
