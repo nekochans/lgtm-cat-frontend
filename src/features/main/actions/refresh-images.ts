@@ -14,8 +14,9 @@ import { i18nUrlList } from "@/features/url";
 /**
  * ランダムねこ画像のキャッシュを更新して再表示
  */
+// biome-ignore lint/suspicious/useAwait: Server Actions must be async (Next.js requirement)
 export async function refreshRandomCats(language: Language): Promise<void> {
-  await updateTag(CACHE_TAG_LGTM_IMAGES_RANDOM);
+  updateTag(CACHE_TAG_LGTM_IMAGES_RANDOM);
 
   const targetUrl =
     language === "ja"
@@ -28,8 +29,9 @@ export async function refreshRandomCats(language: Language): Promise<void> {
 /**
  * 最新ねこ画像のキャッシュを更新して表示
  */
+// biome-ignore lint/suspicious/useAwait: Server Actions must be async (Next.js requirement)
 export async function showLatestCats(language: Language): Promise<void> {
-  await updateTag(CACHE_TAG_LGTM_IMAGES_LATEST);
+  updateTag(CACHE_TAG_LGTM_IMAGES_LATEST);
 
   const targetUrl =
     language === "ja"
