@@ -402,8 +402,6 @@ import { HomePageContainer } from "@/features/main/components/home-page-containe
 import { metaTagList, appName } from "@/features/meta-tag";
 import { appBaseUrl, i18nUrlList } from "@/features/url";
 
-export const dynamic = "force-dynamic";
-
 const language = "ja";
 
 export const metadata: Metadata = {
@@ -445,8 +443,6 @@ import { convertLocaleToLanguage } from "@/features/locale";
 import { HomePageContainer } from "@/features/main/components/home-page-container";
 import { metaTagList, appName } from "@/features/meta-tag";
 import { appBaseUrl, i18nUrlList } from "@/features/url";
-
-export const dynamic = "force-dynamic";
 
 const language = "en";
 
