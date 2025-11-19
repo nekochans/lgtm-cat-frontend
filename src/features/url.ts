@@ -117,7 +117,7 @@ type I18nUrlList = {
 
 export const i18nUrlList: I18nUrlList = {
   home: {
-    ja: `${appPathList.home}/`,
+    ja: "/",
     en: "/en/",
   },
   upload: {
