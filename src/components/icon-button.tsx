@@ -1,6 +1,6 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 "use client";
-import { Button } from "@heroui/react";
+import { Button, type ButtonProps } from "@heroui/react";
 import Link from "next/link";
 import type { ComponentProps, JSX } from "react";
 import type { IncludeLanguageAppPath } from "@/features/url";
@@ -63,15 +63,17 @@ function CatIcon() {
   );
 }
 
-type Props = ComponentProps<"button"> & {
-  displayText: string;
-  showGithubIcon?: boolean;
-  showRepeatIcon?: boolean;
-  showRandomIcon?: boolean;
-  showCatIcon?: boolean;
-  isPressed?: boolean;
-  className?: string;
-  link?: IncludeLanguageAppPath;
+type Props = Omit<ComponentProps<"button">, "onClick"> & {
+  readonly displayText: string;
+  readonly showGithubIcon?: boolean;
+  readonly showRepeatIcon?: boolean;
+  readonly showRandomIcon?: boolean;
+  readonly showCatIcon?: boolean;
+  readonly isPressed?: boolean;
+  readonly isLoading?: boolean;
+  readonly className?: string;
+  readonly link?: IncludeLanguageAppPath;
+  readonly onPress?: ButtonProps["onPress"];
 };
 
 export function IconButton({
@@ -82,8 +84,10 @@ export function IconButton({
   showRandomIcon,
   showCatIcon,
   isPressed,
+  isLoading,
   className,
   link,
+  onPress,
 }: Props): JSX.Element {
   // Figmaデザインに基づくスタイル（デザイントークン使用）
   const buttonClasses = `inline-flex items-center justify-center gap-2 rounded-lg px-7 py-2 font-bold font-inter text-xl text-text-br transition-colors duration-200 ${
@@ -119,7 +123,9 @@ export function IconButton({
   return (
     <Button
       className={buttonClasses}
-      isDisabled={isPressed}
+      isDisabled={isPressed === true || isLoading === true}
+      isLoading={isLoading}
+      onPress={onPress}
       startContent={startContent}
       type={type}
     >
