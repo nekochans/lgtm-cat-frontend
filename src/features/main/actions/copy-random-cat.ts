@@ -3,7 +3,7 @@
 "use server";
 
 import { fetchLgtmImagesInRandom } from "@/features/main/functions/fetch-lgtm-images";
-import { appBaseUrl } from "@/features/url";
+import { generateLgtmMarkdown } from "@/features/main/functions/generate-lgtm-markdown";
 import { issueClientCredentialsAccessToken } from "@/lib/cognito/oidc";
 
 export type CopyRandomCatResult =
@@ -26,8 +26,8 @@ export async function copyRandomCat(): Promise<CopyRandomCatResult> {
     const randomIndex = Math.floor(Math.random() * lgtmImages.length);
     const selectedImage = lgtmImages[randomIndex];
 
-    // マークダウンソースを生成
-    const markdown = `[![LGTMeow](${selectedImage.imageUrl})](${appBaseUrl()})`;
+    // マークダウンソースを生成（共通関数を使用）
+    const markdown = generateLgtmMarkdown(selectedImage.imageUrl);
 
     return { success: true, markdown };
   } catch (error) {

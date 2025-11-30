@@ -1,64 +1,70 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { copyRandomCat } from "@/features/main/actions/copy-random-cat";
+import { http } from "msw";
+import { setupServer } from "msw/node";
 import {
-  createLgtmImageId,
-  createLgtmImageUrl,
-} from "@/features/main/types/lgtm-image";
+  afterAll,
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
+import { copyRandomCat } from "@/features/main/actions/copy-random-cat";
+import { fetchLgtmImagesInRandomUrl } from "@/features/main/functions/api-url";
+import { mockIssueClientCredentialsAccessToken } from "@/mocks/api/external/cognito/mock-issue-client-credentials-access-token";
+import { mockFetchLgtmImages } from "@/mocks/api/external/lgtmeow/mock-fetch-lgtm-images";
 
-// モック設定
-vi.mock("@/lib/cognito/oidc", () => ({
-  issueClientCredentialsAccessToken: vi.fn(),
-}));
+// Redis をモック（キャッシュなしを模擬）
+vi.mock("@upstash/redis", () => {
+  const MockRedis = class {
+    get = vi.fn().mockResolvedValue(null);
+    set = vi.fn().mockResolvedValue("OK");
+    expire = vi.fn().mockResolvedValue(1);
+  };
+  return { Redis: MockRedis };
+});
 
-vi.mock("@/features/main/functions/fetch-lgtm-images", () => ({
-  fetchLgtmImagesInRandom: vi.fn(),
-}));
+// appBaseUrl をモック（一貫したURLを返すため）
+vi.mock("@/features/url", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/features/url")>();
+  return {
+    ...actual,
+    appBaseUrl: vi.fn(() => "https://lgtmeow.com"),
+  };
+});
 
-vi.mock("@/features/url", () => ({
-  appBaseUrl: vi.fn(() => "https://lgtmeow.com"),
-}));
+const cognitoTokenEndpoint = process.env.COGNITO_TOKEN_ENDPOINT ?? "";
+
+const mockHandlers = [
+  http.post(cognitoTokenEndpoint, mockIssueClientCredentialsAccessToken),
+  http.get(fetchLgtmImagesInRandomUrl(), mockFetchLgtmImages),
+];
+
+const server = setupServer(...mockHandlers);
 
 describe("copyRandomCat", () => {
+  beforeAll(() => {
+    server.listen();
+  });
+
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   afterEach(() => {
+    server.resetHandlers();
     vi.restoreAllMocks();
   });
 
+  afterAll(() => {
+    server.close();
+  });
+
   it("should return markdown when images are available", async () => {
-    const mockAccessToken = "mock-access-token";
-    const mockImages = [
-      {
-        id: createLgtmImageId(1),
-        imageUrl: createLgtmImageUrl(
-          "https://lgtm-images.lgtmeow.com/test1.webp"
-        ),
-      },
-      {
-        id: createLgtmImageId(2),
-        imageUrl: createLgtmImageUrl(
-          "https://lgtm-images.lgtmeow.com/test2.webp"
-        ),
-      },
-    ];
-
-    const { issueClientCredentialsAccessToken } = await import(
-      "@/lib/cognito/oidc"
-    );
-    const { fetchLgtmImagesInRandom } = await import(
-      "@/features/main/functions/fetch-lgtm-images"
-    );
-
-    vi.mocked(issueClientCredentialsAccessToken).mockResolvedValue(
-      mockAccessToken as never
-    );
-    vi.mocked(fetchLgtmImagesInRandom).mockResolvedValue(mockImages);
-
-    // Math.random をモックして特定のインデックスを選択させる
+    // Math.random をモックして最初の画像を選択させる
     vi.spyOn(Math, "random").mockReturnValue(0);
 
     const result = await copyRandomCat();
@@ -66,25 +72,17 @@ describe("copyRandomCat", () => {
     expect(result.success).toBe(true);
     if (result.success) {
       expect(result.markdown).toBe(
-        "[![LGTMeow](https://lgtm-images.lgtmeow.com/test1.webp)](https://lgtmeow.com)"
+        "[![LGTMeow](https://lgtm-images.lgtmeow.com/2021/03/16/00/71a7a8d4-33c2-4399-9c5b-4ea585c06580.webp)](https://lgtmeow.com)"
       );
     }
   });
 
   it("should return error when no images are available", async () => {
-    const mockAccessToken = "mock-access-token";
-
-    const { issueClientCredentialsAccessToken } = await import(
-      "@/lib/cognito/oidc"
+    server.use(
+      http.get(fetchLgtmImagesInRandomUrl(), () =>
+        Response.json({ lgtmImages: [] }, { status: 200 })
+      )
     );
-    const { fetchLgtmImagesInRandom } = await import(
-      "@/features/main/functions/fetch-lgtm-images"
-    );
-
-    vi.mocked(issueClientCredentialsAccessToken).mockResolvedValue(
-      mockAccessToken as never
-    );
-    vi.mocked(fetchLgtmImagesInRandom).mockResolvedValue([]);
 
     const result = await copyRandomCat();
 
@@ -95,19 +93,17 @@ describe("copyRandomCat", () => {
   });
 
   it("should return error when API call fails", async () => {
-    const { issueClientCredentialsAccessToken } = await import(
-      "@/lib/cognito/oidc"
-    );
-
-    vi.mocked(issueClientCredentialsAccessToken).mockRejectedValue(
-      new Error("API Error")
+    server.use(
+      http.post(cognitoTokenEndpoint, () =>
+        Response.json({ error: "unauthorized" }, { status: 401 })
+      )
     );
 
     const result = await copyRandomCat();
 
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error).toBe("API Error");
+      expect(result.error).toContain("failed to issueAccessToken");
     }
   });
 });
