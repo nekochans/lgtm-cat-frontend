@@ -29,6 +29,8 @@ jobs:
         env:
           LGTMEOW_API_URL: ${{ secrets.LGTMEOW_API_URL }}
           NODE_AUTH_TOKEN: ${{ secrets.AUTH_TOKEN_FOR_GITHUB_PACKAGES }}
+          UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
+          UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
 
       - name: Verify Agents Docs Clean
         run: |
