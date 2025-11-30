@@ -1,12 +1,30 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 
+"use client";
+
+import { addToast } from "@heroui/toast";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { IconButton } from "@/components/icon-button";
 import type { Language } from "@/features/language";
+import { copyRandomCat } from "@/features/main/actions/copy-random-cat";
 import {
   refreshRandomCats,
   showLatestCats,
 } from "@/features/main/actions/refresh-images";
 import { getActionButtonText } from "@/features/main/service-description-text";
+
+/**
+ * Server Action のエラーメッセージをユーザー向けにサニタイズする
+ * API由来の内部メッセージをそのまま表示しないようにする
+ */
+function sanitizeErrorMessage(error: string): string {
+  // 既知のエラーメッセージはそのまま表示
+  if (error === "No images available") {
+    return "No images available. Please try again later.";
+  }
+  // API由来などの予期しないエラーは汎用メッセージに置換
+  return "An unexpected error occurred. Please try again later.";
+}
 
 type Props = {
   readonly language: Language;
@@ -18,15 +36,89 @@ export function HomeActionButtons({ language, className }: Props) {
   const refreshRandomCatsAction = refreshRandomCats.bind(null, language);
   const showLatestCatsAction = showLatestCats.bind(null, language);
 
+  const [isCopied, setIsCopied] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const copyTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleRandomCopy = useCallback(async () => {
+    if (isLoading) {
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const result = await copyRandomCat();
+
+      if (result.success) {
+        try {
+          await navigator.clipboard.writeText(result.markdown);
+          setIsCopied(true);
+
+          if (copyTimerRef.current != null) {
+            clearTimeout(copyTimerRef.current);
+          }
+          copyTimerRef.current = setTimeout(() => {
+            setIsCopied(false);
+          }, 1500);
+        } catch {
+          // クリップボードへの書き込みに失敗した場合
+          addToast({
+            title: "Copy Failed",
+            description:
+              "Failed to copy to clipboard. Please check browser permissions.",
+            color: "danger",
+          });
+        }
+      } else {
+        // Server Action がエラーを返した場合（エラーメッセージをサニタイズ）
+        addToast({
+          title: "Error",
+          description: sanitizeErrorMessage(result.error),
+          color: "danger",
+        });
+      }
+    } catch {
+      // 予期しないエラーの場合（汎用メッセージを表示）
+      addToast({
+        title: "Error",
+        description: "An unexpected error occurred. Please try again later.",
+        color: "danger",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }, [isLoading]);
+
+  useEffect(
+    () => () => {
+      if (copyTimerRef.current != null) {
+        clearTimeout(copyTimerRef.current);
+      }
+    },
+    []
+  );
+
   return (
     <div
       className={`flex flex-col items-center gap-4 md:flex-row md:items-start ${className ?? ""}`}
     >
-      <IconButton
-        className="w-full md:w-[240px]"
-        displayText={buttonText.randomCopy}
-        showRepeatIcon={true}
-      />
+      <div className="relative w-full md:w-auto">
+        <IconButton
+          className="w-full md:w-[240px]"
+          displayText={buttonText.randomCopy}
+          isLoading={isLoading}
+          onPress={handleRandomCopy}
+          showRepeatIcon={true}
+        />
+        {isCopied ? (
+          <div
+            aria-live="polite"
+            className="-translate-x-1/2 absolute top-full left-1/2 mt-2 rounded bg-[#7B2F1D] px-4 py-2 font-semibold text-sm text-white"
+          >
+            Copied!
+          </div>
+        ) : null}
+      </div>
       <form action={refreshRandomCatsAction} className="w-full md:w-auto">
         <IconButton
           className="w-full md:w-[240px]"

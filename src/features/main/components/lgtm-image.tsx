@@ -7,8 +7,8 @@ import type { JSX } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CopyIcon } from "@/components/icons/copy-icon";
 import { HeartIcon } from "@/components/icons/heart-icon";
+import { generateLgtmMarkdown } from "@/features/main/functions/generate-lgtm-markdown";
 import type { LgtmImage as LgtmImageType } from "@/features/main/types/lgtm-image";
-import { appBaseUrl } from "@/features/url";
 
 type Props = {
   readonly id: LgtmImageType["id"];
@@ -23,7 +23,7 @@ export function LgtmImage({ id, imageUrl }: Props): JSX.Element {
   const [isFavoriteActive, setIsFavoriteActive] = useState(false);
 
   const handleCopy = useCallback(() => {
-    const markdown = `[![LGTMeow](${imageUrl})](${appBaseUrl()})`;
+    const markdown = generateLgtmMarkdown(imageUrl);
     navigator.clipboard.writeText(markdown);
     setIsCopied(true);
     if (copyTimerRef.current != null) {

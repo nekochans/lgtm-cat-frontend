@@ -3,7 +3,10 @@
   "extends": ["ultracite/core", "ultracite/next", "ultracite/react"],
   "overrides": [
     {
-      "includes": ["public/mockServiceWorker.js"],
+      "includes": [
+        "public/mockServiceWorker.js",
+        ".claude/settings.local.json"
+      ],
       "linter": {
         "enabled": false
       },

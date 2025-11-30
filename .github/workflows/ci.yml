@@ -50,6 +50,11 @@ jobs:
         env:
           LGTMEOW_API_URL: ${{ secrets.LGTMEOW_API_URL }}
           NODE_AUTH_TOKEN: ${{ secrets.AUTH_TOKEN_FOR_GITHUB_PACKAGES }}
+          UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
+          UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+          COGNITO_CLIENT_ID: ${{ secrets.COGNITO_CLIENT_ID }}
+          COGNITO_CLIENT_SECRET: ${{ secrets.COGNITO_CLIENT_SECRET }}
+          COGNITO_TOKEN_ENDPOINT: ${{ secrets.COGNITO_TOKEN_ENDPOINT }}
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
