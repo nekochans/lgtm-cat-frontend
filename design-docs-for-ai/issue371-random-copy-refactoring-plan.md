@@ -2,10 +2,11 @@
 
 ## 概要
 
-前回実装した「ランダムコピー」機能のリファクタリングを行う。具体的には以下の2点を改善する：
+前回実装した「ランダムコピー」機能のリファクタリングを行う。具体的には以下を改善する：
 
-1. **`copyRandomCat` 関数の引数を依存性注入パターンに改修**
-2. **マークダウン生成ロジックを共通関数として切り出し**
+1. **マークダウン生成ロジックを共通関数として切り出し**（DRY原則の適用）
+
+> **注意**: 当初は `copyRandomCat` 関数を依存性注入パターンに改修する予定だったが、Server Actions は関数を引数として受け取れない（シリアライズ不可）ため、この方針は取りやめた。詳細は「6. 実装時の学び」を参照。
 
 ## GitHub Issue
 
@@ -17,9 +18,8 @@ https://github.com/nekochans/lgtm-cat-frontend/issues/371
 |------------|------|------|
 | `src/features/main/functions/generate-lgtm-markdown.ts` | 新規作成 | マークダウン生成関数 |
 | `src/features/main/functions/__tests__/generate-lgtm-markdown.test.ts` | 新規作成 | マークダウン生成関数のテスト |
-| `src/features/main/actions/copy-random-cat.ts` | 修正 | 引数を依存性注入パターンに変更、共通関数を利用 |
-| `src/features/main/actions/__tests__/copy-random-cat/copy-random-cat.test.ts` | 修正 | 引数変更に伴うテスト修正 |
-| `src/features/main/components/home-action-buttons.tsx` | 修正 | `copyRandomCat` の呼び出し方法を変更 |
+| `src/features/main/actions/copy-random-cat.ts` | 修正 | 共通関数を利用するように変更 |
+| `src/features/main/actions/__tests__/copy-random-cat/copy-random-cat.test.ts` | 修正 | msw を使ったテストに改善 |
 | `src/features/main/components/lgtm-image.tsx` | 修正 | 共通関数を利用するように変更 |
 
 ---
@@ -126,85 +126,34 @@ describe("generateLgtmMarkdown", () => {
 
 ---
 
-## 2. `copyRandomCat` の引数改修
+## 2. `copyRandomCat` の修正
 
-### 2.1 背景と目的
+### 2.1 実装方針
 
-現在の `copyRandomCat` 関数は、`lib` 層の技術的な関数を直接インポートしている：
+当初は依存性注入パターンを検討したが、Server Actions は関数を引数として受け取れないため、直接インポート形式を維持する。共通関数 `generateLgtmMarkdown` のみを利用するように変更する。
 
-**現在の実装（`src/features/main/actions/copy-random-cat.ts`）**:
-```typescript
-import { fetchLgtmImagesInRandom } from "@/features/main/functions/fetch-lgtm-images";
-import { appBaseUrl } from "@/features/url";
-import { issueClientCredentialsAccessToken } from "@/lib/cognito/oidc";
-
-export async function copyRandomCat(): Promise<CopyRandomCatResult> {
-  const accessToken = await issueClientCredentialsAccessToken();
-  const lgtmImages = await fetchLgtmImagesInRandom(accessToken);
-  // ...
-}
-```
-
-これを依存性注入パターンに変更し、テスタビリティと関心の分離を改善する。
-
-### 2.2 型定義の確認
-
-以下の型が既に存在する：
-
-**`src/features/oidc/types/access-token.ts`**:
-```typescript
-export type JwtAccessTokenString = string & {
-  readonly __brand: "jwtAccessTokenString";
-};
-
-export type IssueClientCredentialsAccessToken =
-  () => Promise<JwtAccessTokenString>;
-```
-
-**`src/features/main/types/lgtm-image.ts`**:
-```typescript
-export type FetchLgtmImages = (
-  accessToken: JwtAccessTokenString
-) => Promise<LgtmImage[]>;
-```
-
-### 2.3 修正後のファイル: `src/features/main/actions/copy-random-cat.ts`
+### 2.2 修正後のファイル: `src/features/main/actions/copy-random-cat.ts`
 
 ```typescript
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 
 "use server";
 
+import { fetchLgtmImagesInRandom } from "@/features/main/functions/fetch-lgtm-images";
 import { generateLgtmMarkdown } from "@/features/main/functions/generate-lgtm-markdown";
-import type { FetchLgtmImages } from "@/features/main/types/lgtm-image";
-import type { IssueClientCredentialsAccessToken } from "@/features/oidc/types/access-token";
+import { issueClientCredentialsAccessToken } from "@/lib/cognito/oidc";
 
 export type CopyRandomCatResult =
   | { readonly success: true; readonly markdown: string }
   | { readonly success: false; readonly error: string };
 
 /**
- * copyRandomCat に渡す依存関数のDTO
- */
-export type CopyRandomCatDto = {
-  readonly issueAccessTokenFunc: IssueClientCredentialsAccessToken;
-  readonly fetchLgtmImagesFunc: FetchLgtmImages;
-};
-
-/**
  * ランダムなLGTM画像を1つ取得し、マークダウンソースを返す
- *
- * @param dto - 依存関数を含むDTO
- * @returns 成功時はマークダウン文字列、失敗時はエラーメッセージ
  */
-export async function copyRandomCat(
-  dto: CopyRandomCatDto
-): Promise<CopyRandomCatResult> {
-  const { issueAccessTokenFunc, fetchLgtmImagesFunc } = dto;
-
+export async function copyRandomCat(): Promise<CopyRandomCatResult> {
   try {
-    const accessToken = await issueAccessTokenFunc();
-    const lgtmImages = await fetchLgtmImagesFunc(accessToken);
+    const accessToken = await issueClientCredentialsAccessToken();
+    const lgtmImages = await fetchLgtmImagesInRandom(accessToken);
 
     if (lgtmImages.length === 0) {
       return { success: false, error: "No images available" };
@@ -230,55 +179,14 @@ export async function copyRandomCat(
 ```
 
 **変更点**:
-1. `issueClientCredentialsAccessToken` と `fetchLgtmImagesInRandom` の直接インポートを削除
-2. `CopyRandomCatDto` 型を新規定義
-3. 引数として `dto: CopyRandomCatDto` を受け取るように変更
-4. マークダウン生成に `generateLgtmMarkdown` 共通関数を使用
-5. `appBaseUrl` のインポートを削除（共通関数内で呼び出されるため）
+1. `appBaseUrl` のインポートを削除（共通関数内で呼び出されるため）
+2. マークダウン生成に `generateLgtmMarkdown` 共通関数を使用
 
 ---
 
 ## 3. 呼び出し元の修正
 
-### 3.1 `src/features/main/components/home-action-buttons.tsx` の修正
-
-**変更箇所（handleRandomCopy 内）**:
-
-```typescript
-// 現在の実装
-const result = await copyRandomCat();
-
-// 修正後の実装
-import { fetchLgtmImagesInRandom } from "@/features/main/functions/fetch-lgtm-images";
-import { issueClientCredentialsAccessToken } from "@/lib/cognito/oidc";
-
-const result = await copyRandomCat({
-  issueAccessTokenFunc: issueClientCredentialsAccessToken,
-  fetchLgtmImagesFunc: fetchLgtmImagesInRandom,
-});
-```
-
-**完全な修正差分**:
-
-追加するインポート文（ファイル先頭付近）:
-```typescript
-import { fetchLgtmImagesInRandom } from "@/features/main/functions/fetch-lgtm-images";
-import { issueClientCredentialsAccessToken } from "@/lib/cognito/oidc";
-```
-
-handleRandomCopy 関数内の変更（49行目付近）:
-```typescript
-// Before
-const result = await copyRandomCat();
-
-// After
-const result = await copyRandomCat({
-  issueAccessTokenFunc: issueClientCredentialsAccessToken,
-  fetchLgtmImagesFunc: fetchLgtmImagesInRandom,
-});
-```
-
-### 3.2 `src/features/main/components/lgtm-image.tsx` の修正
+### 3.1 `src/features/main/components/lgtm-image.tsx` の修正
 
 **変更箇所（handleCopy 内）**:
 
@@ -310,101 +218,102 @@ import { appBaseUrl } from "@/features/url";
 import { generateLgtmMarkdown } from "@/features/main/functions/generate-lgtm-markdown";
 ```
 
-handleCopy 関数内の変更（25-26行目）:
-```typescript
-// Before
-const handleCopy = useCallback(() => {
-  const markdown = `[![LGTMeow](${imageUrl})](${appBaseUrl()})`;
-
-// After
-const handleCopy = useCallback(() => {
-  const markdown = generateLgtmMarkdown(imageUrl);
-```
-
 ---
 
 ## 4. テストの修正
 
 ### 4.1 `src/features/main/actions/__tests__/copy-random-cat/copy-random-cat.test.ts` の修正
 
-**修正後の完全なコード**:
+**msw を使用したテストに改善**:
 
 ```typescript
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { http } from "msw";
+import { setupServer } from "msw/node";
 import {
-  copyRandomCat,
-  type CopyRandomCatDto,
-} from "@/features/main/actions/copy-random-cat";
-import {
-  createLgtmImageId,
-  createLgtmImageUrl,
-} from "@/features/main/types/lgtm-image";
-import { createJwtAccessTokenString } from "@/features/oidc/types/access-token";
+  afterAll,
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
+import { copyRandomCat } from "@/features/main/actions/copy-random-cat";
+import { fetchLgtmImagesInRandomUrl } from "@/features/main/functions/api-url";
+import { mockIssueClientCredentialsAccessToken } from "@/mocks/api/external/cognito/mock-issue-client-credentials-access-token";
+import { mockFetchLgtmImages } from "@/mocks/api/external/lgtmeow/mock-fetch-lgtm-images";
 
-// generateLgtmMarkdown のモック
-vi.mock("@/features/main/functions/generate-lgtm-markdown", () => ({
-  generateLgtmMarkdown: vi.fn(
-    (imageUrl: string) => `[![LGTMeow](${imageUrl})](https://lgtmeow.com)`
-  ),
-}));
+// Redis をモック（キャッシュなしを模擬）
+vi.mock("@upstash/redis", () => {
+  const MockRedis = class {
+    get = vi.fn().mockResolvedValue(null);
+    set = vi.fn().mockResolvedValue("OK");
+    expire = vi.fn().mockResolvedValue(1);
+  };
+  return { Redis: MockRedis };
+});
+
+// appBaseUrl をモック（一貫したURLを返すため）
+vi.mock("@/features/url", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/features/url")>();
+  return {
+    ...actual,
+    appBaseUrl: vi.fn(() => "https://lgtmeow.com"),
+  };
+});
+
+const cognitoTokenEndpoint = process.env.COGNITO_TOKEN_ENDPOINT ?? "";
+
+const mockHandlers = [
+  http.post(cognitoTokenEndpoint, mockIssueClientCredentialsAccessToken),
+  http.get(fetchLgtmImagesInRandomUrl(), mockFetchLgtmImages),
+];
+
+const server = setupServer(...mockHandlers);
 
 describe("copyRandomCat", () => {
+  beforeAll(() => {
+    server.listen();
+  });
+
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   afterEach(() => {
+    server.resetHandlers();
     vi.restoreAllMocks();
   });
 
+  afterAll(() => {
+    server.close();
+  });
+
   it("should return markdown when images are available", async () => {
-    const mockAccessToken = createJwtAccessTokenString("mock-access-token");
-    const mockImages = [
-      {
-        id: createLgtmImageId(1),
-        imageUrl: createLgtmImageUrl(
-          "https://lgtm-images.lgtmeow.com/test1.webp"
-        ),
-      },
-      {
-        id: createLgtmImageId(2),
-        imageUrl: createLgtmImageUrl(
-          "https://lgtm-images.lgtmeow.com/test2.webp"
-        ),
-      },
-    ];
-
-    const mockDto: CopyRandomCatDto = {
-      issueAccessTokenFunc: vi.fn().mockResolvedValue(mockAccessToken),
-      fetchLgtmImagesFunc: vi.fn().mockResolvedValue(mockImages),
-    };
-
-    // Math.random をモックして特定のインデックスを選択させる
+    // Math.random をモックして最初の画像を選択させる
     vi.spyOn(Math, "random").mockReturnValue(0);
 
-    const result = await copyRandomCat(mockDto);
+    const result = await copyRandomCat();
 
     expect(result.success).toBe(true);
     if (result.success) {
       expect(result.markdown).toBe(
-        "[![LGTMeow](https://lgtm-images.lgtmeow.com/test1.webp)](https://lgtmeow.com)"
+        "[![LGTMeow](https://lgtm-images.lgtmeow.com/2021/03/16/00/71a7a8d4-33c2-4399-9c5b-4ea585c06580.webp)](https://lgtmeow.com)"
       );
     }
-    expect(mockDto.issueAccessTokenFunc).toHaveBeenCalledTimes(1);
-    expect(mockDto.fetchLgtmImagesFunc).toHaveBeenCalledWith(mockAccessToken);
   });
 
   it("should return error when no images are available", async () => {
-    const mockAccessToken = createJwtAccessTokenString("mock-access-token");
+    server.use(
+      http.get(fetchLgtmImagesInRandomUrl(), () =>
+        Response.json({ lgtmImages: [] }, { status: 200 })
+      )
+    );
 
-    const mockDto: CopyRandomCatDto = {
-      issueAccessTokenFunc: vi.fn().mockResolvedValue(mockAccessToken),
-      fetchLgtmImagesFunc: vi.fn().mockResolvedValue([]),
-    };
-
-    const result = await copyRandomCat(mockDto);
+    const result = await copyRandomCat();
 
     expect(result.success).toBe(false);
     if (!result.success) {
@@ -412,45 +321,29 @@ describe("copyRandomCat", () => {
     }
   });
 
-  it("should return error when issueAccessTokenFunc fails", async () => {
-    const mockDto: CopyRandomCatDto = {
-      issueAccessTokenFunc: vi.fn().mockRejectedValue(new Error("Token Error")),
-      fetchLgtmImagesFunc: vi.fn(),
-    };
+  it("should return error when API call fails", async () => {
+    server.use(
+      http.post(cognitoTokenEndpoint, () =>
+        Response.json({ error: "unauthorized" }, { status: 401 })
+      )
+    );
 
-    const result = await copyRandomCat(mockDto);
-
-    expect(result.success).toBe(false);
-    if (!result.success) {
-      expect(result.error).toBe("Token Error");
-    }
-    expect(mockDto.fetchLgtmImagesFunc).not.toHaveBeenCalled();
-  });
-
-  it("should return error when fetchLgtmImagesFunc fails", async () => {
-    const mockAccessToken = createJwtAccessTokenString("mock-access-token");
-
-    const mockDto: CopyRandomCatDto = {
-      issueAccessTokenFunc: vi.fn().mockResolvedValue(mockAccessToken),
-      fetchLgtmImagesFunc: vi.fn().mockRejectedValue(new Error("Fetch Error")),
-    };
-
-    const result = await copyRandomCat(mockDto);
+    const result = await copyRandomCat();
 
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error).toBe("Fetch Error");
+      expect(result.error).toContain("failed to issueAccessToken");
     }
   });
 });
 ```
 
-**変更点**:
-1. 外部モジュールのモックを削除し、DTO経由でモック関数を注入
-2. `createJwtAccessTokenString` を使用して型安全なモックを作成
-3. `mockDto.issueAccessTokenFunc` と `mockDto.fetchLgtmImagesFunc` の呼び出し検証を追加
-4. `issueAccessTokenFunc` 失敗時のテストケースを追加（より細かいエラーケースのカバー）
-5. `generateLgtmMarkdown` のモックを追加
+**テストの改善点**:
+1. `vi.mock()` ではなく `msw` を使用してHTTPリクエストをモック
+2. 既存のモックハンドラー（`mockIssueClientCredentialsAccessToken`, `mockFetchLgtmImages`）を再利用
+3. Redis はクラスとして `vi.mock()` でモック（キャッシュなしを模擬）
+4. `generateLgtmMarkdown` はモックせず、実際の実装を使用
+5. `appBaseUrl` は `importOriginal` を使用して部分的にモック
 
 ---
 
@@ -463,27 +356,52 @@ describe("copyRandomCat", () => {
 2. `src/features/main/functions/__tests__/generate-lgtm-markdown.test.ts` を新規作成
 3. `npm run test` で新規テストがパスすることを確認
 
-### ステップ2: `copyRandomCat` の引数改修
-1. `src/features/main/actions/copy-random-cat.ts` を修正
-2. `src/features/main/actions/__tests__/copy-random-cat/copy-random-cat.test.ts` を修正
+### ステップ2: `copyRandomCat` の修正
+1. `src/features/main/actions/copy-random-cat.ts` を修正（共通関数を使用）
+2. `src/features/main/actions/__tests__/copy-random-cat/copy-random-cat.test.ts` を修正（msw を使用）
 3. `npm run test` でテストがパスすることを確認
 
 ### ステップ3: 呼び出し元の修正
-1. `src/features/main/components/home-action-buttons.tsx` を修正
-2. `src/features/main/components/lgtm-image.tsx` を修正
+1. `src/features/main/components/lgtm-image.tsx` を修正
 
 ### ステップ4: 品質管理の実行
 1. `npm run format` でコードをフォーマット
 2. `npm run lint` でLintチェック
 3. `npm run test` で全テストがパスすることを確認
 4. Playwright MCP でブラウザ動作確認
-5. Storybook での表示確認
 
 ---
 
-## 6. 品質管理手順
+## 6. 実装時の学び
 
-### 6.1 コードフォーマット
+### 6.1 Server Actions と依存性注入パターンの非互換性
+
+**問題**: 当初の設計では `copyRandomCat` 関数を依存性注入パターンに改修する予定だったが、実装時に以下のエラーが発生した：
+
+```
+Error: Attempted to call a temporary Client Reference from the server but it is on the client.
+It's not possible to invoke a client function from the server, it can only be rendered as a
+Component or passed to props of a Client Component.
+```
+
+**原因**: Server Actions（`"use server"` ディレクティブ）は、クライアントとサーバー間でデータをシリアライズして送信する。JavaScript の関数はシリアライズ不可能なため、引数として渡すことができない。
+
+**解決策**:
+- 依存性注入パターンを取りやめ、直接インポート形式を維持
+- テストでは `msw` を使用してHTTPリクエストをモック
+- `generateLgtmMarkdown` 共通関数の切り出しのみを実施
+
+### 6.2 msw を使用したテストのメリット
+
+- より実践的なテスト（実際のHTTP通信に近い形でテスト可能）
+- 既存のモックハンドラーを再利用できる
+- `vi.mock()` より保守性が高い
+
+---
+
+## 7. 品質管理手順
+
+### 7.1 コードフォーマット
 
 ```bash
 npm run format
@@ -491,7 +409,7 @@ npm run format
 
 **期待される結果**: エラーなし
 
-### 6.2 Lint チェック
+### 7.2 Lint チェック
 
 ```bash
 npm run lint
@@ -499,7 +417,7 @@ npm run lint
 
 **期待される結果**: エラーなし
 
-### 6.3 テスト実行
+### 7.3 テスト実行
 
 ```bash
 npm run test
@@ -507,9 +425,9 @@ npm run test
 
 **期待される結果**: すべてのテストがパス
 
-### 6.4 Playwright MCP を使用したブラウザ確認
+### 7.4 Playwright MCP を使用したブラウザ確認
 
-#### 6.4.1 日本語版の確認
+#### 7.4.1 日本語版の確認
 
 **確認URL**: `http://localhost:2222`
 
@@ -520,51 +438,18 @@ npm run test
 4. 「Copied!」フィードバックが表示されることを確認
 5. 1.5秒後に「Copied!」が非表示になることを確認
 
-#### 6.4.2 英語版の確認
-
-**確認URL**: `http://localhost:2222/en/`
+#### 7.4.2 LgtmImage コンポーネントのコピー機能確認
 
 **確認手順**:
-1. ブラウザを起動して `http://localhost:2222/en/` に移動
-2. スナップショットを取得して「Copy Random Cat」ボタンの存在を確認
-3. 「Copy Random Cat」ボタンをクリック
-4. 「Copied!」フィードバックが表示されることを確認
-5. 1.5秒後に「Copied!」が非表示になることを確認
-
-#### 6.4.3 LgtmImage コンポーネントのコピー機能確認
-
-**確認手順**:
-1. 日本語版または英語版のトップページで画像をクリック
+1. 日本語版のトップページで画像をクリック
 2. 「Copied!」フィードバックが表示されることを確認
 3. クリップボードの内容がマークダウン形式であることを確認
 
-### 6.5 Storybook での確認
-
-**確認URL**: `http://localhost:6006/`
-
-**確認手順**:
-1. LgtmImage のストーリーを開く
-2. 画像をクリックしてコピー機能が動作することを確認
-3. 「Copied!」フィードバックが表示されることを確認
-
-### 6.6 Chrome DevTools MCP でのデバッグ（必要に応じて）
-
-デザイン崩れやスタイルの問題が発生した場合：
-1. Chrome DevTools MCP で対象ページを開く
-2. Elements パネルでスタイルを確認
-3. 必要に応じてスタイルを調整
-
 ---
 
-## 7. 依存関係の確認
+## 8. 依存関係の確認
 
-### 7.1 新規インポートが必要なモジュール
-
-**`home-action-buttons.tsx` に追加**:
-```typescript
-import { fetchLgtmImagesInRandom } from "@/features/main/functions/fetch-lgtm-images";
-import { issueClientCredentialsAccessToken } from "@/lib/cognito/oidc";
-```
+### 8.1 新規インポートが必要なモジュール
 
 **`lgtm-image.tsx` に追加**:
 ```typescript
@@ -576,12 +461,10 @@ import { generateLgtmMarkdown } from "@/features/main/functions/generate-lgtm-ma
 import { appBaseUrl } from "@/features/url";
 ```
 
-### 7.2 既存モジュールの依存関係
+### 8.2 既存モジュールの依存関係
 
 | モジュール | パス | 用途 |
 |----------|------|------|
-| `IssueClientCredentialsAccessToken` | `@/features/oidc/types/access-token` | アクセストークン取得関数の型 |
-| `FetchLgtmImages` | `@/features/main/types/lgtm-image` | 画像取得関数の型 |
 | `LgtmImageUrl` | `@/features/main/types/lgtm-image` | 画像URL の Branded Type |
 | `appBaseUrl` | `@/features/url` | アプリベースURL取得 |
 | `issueClientCredentialsAccessToken` | `@/lib/cognito/oidc` | アクセストークン取得の実装 |
@@ -589,42 +472,23 @@ import { appBaseUrl } from "@/features/url";
 
 ---
 
-## 8. リスク分析
+## 9. リスク分析
 
-### 8.1 後方互換性
+### 9.1 後方互換性
 
-- `copyRandomCat` の引数変更により、呼び出し元の修正が必要
-- 呼び出し箇所は以下の2箇所のみ（限定的な影響範囲）:
-  - `home-action-buttons.tsx`
-  - `copy-random-cat.test.ts`
+- `copyRandomCat` のシグネチャは変更なし（引数なしのまま）
+- 呼び出し元の修正は不要
 
-### 8.2 デグレードリスク
+### 9.2 デグレードリスク
 
 **低い**:
 - マークダウン生成ロジック自体は変更なし（共通関数への切り出しのみ）
 - テストで動作を保証
 
-### 8.3 セキュリティ考慮
+### 9.3 セキュリティ考慮
 
 - アクセストークン取得は引き続きサーバーサイドで実行
 - クライアントへのトークン露出なし
-
----
-
-## 9. 実装時の注意事項
-
-### 9.1 必ず確認すべき事項
-
-1. **型の正確な使用**: `LgtmImageUrl` 型を正しく使用する
-2. **インポートパスの確認**: 各ファイルで正しいパスからインポートしているか確認
-3. **テストの網羅性**: 新規関数と修正箇所のテストが十分か確認
-4. **`"use server"` ディレクティブ**: Server Action ファイルに必ず含める
-
-### 9.2 禁止事項
-
-1. **ビジネスロジックの変更**: マークダウンのフォーマット自体は変更しない
-2. **既存の動作の変更**: リファクタリングであり、機能追加ではない
-3. **不要なファイルの作成**: 指定されたファイルのみを作成・修正する
 
 ---
 
@@ -633,10 +497,11 @@ import { appBaseUrl } from "@/features/url";
 このリファクタリングにより、以下の改善を実現する：
 
 1. ✅ **DRY原則の適用**: マークダウン生成ロジックを共通化
-2. ✅ **テスタビリティの向上**: 依存性注入パターンによりモックが容易に
-3. ✅ **関心の分離**: `lib` 層への直接依存を `features` 層で解決
-4. ✅ **型安全性の維持**: Branded Types を活用した型安全な実装
+2. ✅ **テストの改善**: msw を使用したより実践的なテスト
+3. ✅ **型安全性の維持**: Branded Types を活用した型安全な実装
 
-**作成・修正ファイル数**: 6ファイル
+**作成・修正ファイル数**: 5ファイル
 - 新規: 2ファイル
-- 修正: 4ファイル
+- 修正: 3ファイル
+
+**学び**: Server Actions は関数を引数として受け取れないため、依存性注入パターンは適用できない。代わりに msw を使用したテストで十分なテスタビリティを確保できる。
