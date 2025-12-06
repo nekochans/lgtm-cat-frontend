@@ -3,7 +3,7 @@ import type { Metadata, NextPage } from "next";
 import { convertLocaleToLanguage } from "@/features/locale";
 import { UploadPageContainer } from "@/features/main/components/upload-page-container";
 import { appName, metaTagList } from "@/features/meta-tag";
-import { appBaseUrl, i18nUrlList } from "@/features/url";
+import { appBaseUrl, appPathList, i18nUrlList } from "@/features/url";
 
 const language = "en";
 
@@ -37,7 +37,10 @@ export const metadata: Metadata = {
 };
 
 const EnUploadPage: NextPage = () => (
-  <UploadPageContainer currentUrlPath="/" language={language} />
+  <UploadPageContainer
+    currentUrlPath={appPathList.upload}
+    language={language}
+  />
 );
 
 export default EnUploadPage;
