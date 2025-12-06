@@ -164,7 +164,12 @@ export function UploadForm({ language }: Props): JSX.Element {
 
       {/* ねこイラスト（右下） */}
       <div className="pointer-events-none absolute right-4 bottom-4">
-        <LgtmCatIcon aria-hidden height={80} width={100} />
+        <LgtmCatIcon
+          aria-hidden
+          className="rotate-12"
+          height={80}
+          width={100}
+        />
       </div>
     </div>
   );
