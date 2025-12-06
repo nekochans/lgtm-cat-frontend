@@ -2,11 +2,11 @@
 
 "use client";
 
-import { addToast } from "@heroui/toast";
 import type { JSX } from "react";
 import { useCallback, useEffect, useState } from "react";
 import { LgtmCatIcon } from "@/components/lgtm-cat-icon";
 import type { Language } from "@/features/language";
+import { mockUpload } from "../functions/mock-upload";
 import type { UploadFormState, UploadValidationResult } from "../types/upload";
 import {
   createImageSizeTooLargeErrorMessage,
@@ -18,6 +18,8 @@ import { UploadDropArea } from "./upload-drop-area";
 import { UploadErrorMessage } from "./upload-error-message";
 import { UploadNotes } from "./upload-notes";
 import { UploadPreview } from "./upload-preview";
+import { UploadProgress } from "./upload-progress";
+import { UploadSuccess } from "./upload-success";
 
 type Props = {
   readonly language: Language;
@@ -31,7 +33,9 @@ export function UploadForm({ language }: Props): JSX.Element {
   const [formState, setFormState] = useState<UploadFormState>("idle");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [errorMessages, setErrorMessages] = useState<readonly string[]>([]);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   // プレビューURLのクリーンアップ
   useEffect(
@@ -92,27 +96,49 @@ export function UploadForm({ language }: Props): JSX.Element {
     }
     setSelectedFile(null);
     setPreviewUrl(null);
+    setUploadedImageUrl(null);
     setErrorMessages([]);
+    setUploadProgress(0);
     setFormState("idle");
   }, [previewUrl]);
 
-  const handleUpload = useCallback(() => {
-    // TODO: 将来の実装でR2バケットへのアップロード処理を追加
-    // 現時点ではアップロードボタンを押してもトーストで通知するのみ
-    addToast({
-      title: language === "ja" ? "お知らせ" : "Notice",
-      description:
-        language === "ja"
-          ? "アップロード機能は現在準備中です。"
-          : "Upload feature is currently under preparation.",
-      color: "warning",
+  const handleUpload = useCallback(async () => {
+    if (selectedFile == null || previewUrl == null) {
+      return;
+    }
+
+    setFormState("uploading");
+    setUploadProgress(0);
+
+    const result = await mockUpload(selectedFile, previewUrl, (progress) => {
+      setUploadProgress(progress);
     });
-  }, [language]);
+
+    if (result.success) {
+      setUploadedImageUrl(result.imageUrl);
+      setFormState("success");
+    } else {
+      setErrorMessages(unexpectedErrorMessage(language));
+      setFormState("error");
+    }
+  }, [selectedFile, previewUrl, language]);
 
   const handleErrorDismiss = useCallback(() => {
     setErrorMessages([]);
     setFormState("idle");
   }, []);
+
+  const handleSuccessClose = useCallback(() => {
+    if (previewUrl != null) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    setSelectedFile(null);
+    setPreviewUrl(null);
+    setUploadedImageUrl(null);
+    setErrorMessages([]);
+    setUploadProgress(0);
+    setFormState("idle");
+  }, [previewUrl]);
 
   return (
     <div className="relative overflow-hidden rounded-2xl border-[6px] border-white border-solid bg-white">
@@ -136,8 +162,8 @@ export function UploadForm({ language }: Props): JSX.Element {
           </div>
         )}
 
-        {/* ドロップエリア or プレビュー */}
-        {formState === "idle" || formState === "error" ? (
+        {/* ドロップエリア（初期状態・エラー状態） */}
+        {(formState === "idle" || formState === "error") && (
           <>
             <UploadDropArea
               isDisabled={false}
@@ -146,8 +172,9 @@ export function UploadForm({ language }: Props): JSX.Element {
             />
             <UploadNotes language={language} />
           </>
-        ) : null}
+        )}
 
+        {/* プレビュー表示 */}
         {formState === "preview" &&
           previewUrl != null &&
           selectedFile != null && (
@@ -160,17 +187,40 @@ export function UploadForm({ language }: Props): JSX.Element {
               previewUrl={previewUrl}
             />
           )}
+
+        {/* アップロード中 */}
+        {formState === "uploading" &&
+          previewUrl != null &&
+          selectedFile != null && (
+            <UploadProgress
+              fileName={selectedFile.name}
+              language={language}
+              previewUrl={previewUrl}
+              progress={uploadProgress}
+            />
+          )}
+
+        {/* アップロード成功 */}
+        {formState === "success" && uploadedImageUrl != null && (
+          <UploadSuccess
+            imageUrl={uploadedImageUrl}
+            language={language}
+            onClose={handleSuccessClose}
+          />
+        )}
       </div>
 
-      {/* ねこイラスト（右下） */}
-      <div className="pointer-events-none absolute right-4 bottom-4">
-        <LgtmCatIcon
-          aria-hidden
-          className="rotate-12"
-          height={80}
-          width={100}
-        />
-      </div>
+      {/* ねこイラスト（右下） - 成功画面以外で表示 */}
+      {formState !== "success" && (
+        <div className="pointer-events-none absolute right-4 bottom-4">
+          <LgtmCatIcon
+            aria-hidden
+            className="rotate-12"
+            height={80}
+            width={100}
+          />
+        </div>
+      )}
     </div>
   );
 }

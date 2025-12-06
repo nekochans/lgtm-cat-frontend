@@ -53,3 +53,15 @@ export type UploadFormState =
   | "uploading" // アップロード中（将来実装用）
   | "success" // 成功（将来実装用）
   | "error"; // エラー表示中
+
+/**
+ * モックアップロードの結果
+ */
+export type MockUploadResult =
+  | { readonly success: true; readonly imageUrl: string }
+  | { readonly success: false; readonly errorMessage: string };
+
+/**
+ * アップロード進捗のコールバック型
+ */
+export type UploadProgressCallback = (progress: number) => void;

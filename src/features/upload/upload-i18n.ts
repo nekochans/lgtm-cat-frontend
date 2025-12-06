@@ -169,3 +169,127 @@ export function unexpectedErrorMessage(language: Language): readonly string[] {
       return assertNever(language);
   }
 }
+
+export function uploadingText(language: Language): string {
+  switch (language) {
+    case "ja":
+      return "ただいまアップロード中...";
+    case "en":
+      return "Uploading...";
+    default:
+      return assertNever(language);
+  }
+}
+
+export function uploadSuccessTitle(language: Language): string {
+  switch (language) {
+    case "ja":
+      return "アップロード成功しました！";
+    case "en":
+      return "Upload successful!";
+    default:
+      return assertNever(language);
+  }
+}
+
+export function uploadSuccessDescription(
+  language: Language
+): readonly string[] {
+  switch (language) {
+    case "ja":
+      return [
+        "LGTM画像を作成しているので少々お待ち下さい。",
+        "「Markdownソースをコピー」ボタンか画像をクリック",
+        "するとMarkdownソースがコピーされます。",
+      ] as const;
+    case "en":
+      return [
+        "Please wait while we create your LGTM image.",
+        'Click the "Copy Markdown Source" button or the image',
+        "to copy the Markdown source.",
+      ] as const;
+    default:
+      return assertNever(language);
+  }
+}
+
+/**
+ * アップロード成功画面のリンク用テキスト
+ */
+export type ViewLatestImageLinkText = {
+  readonly prefix: string;
+  readonly linkText: string;
+  readonly suffix: string;
+};
+
+/**
+ * アップロード成功画面の「最新画像を見る」リンク用テキストを返す
+ */
+export function viewLatestImageLinkText(
+  language: Language
+): ViewLatestImageLinkText {
+  switch (language) {
+    case "ja":
+      return {
+        prefix: "",
+        linkText: "こちら",
+        suffix: "からアップロードした画像を確認できます。",
+      };
+    case "en":
+      return {
+        prefix: "You can view your uploaded image ",
+        linkText: "here",
+        suffix: ".",
+      };
+    default:
+      return assertNever(language);
+  }
+}
+
+export function closeButtonText(language: Language): string {
+  switch (language) {
+    case "ja":
+      return "閉じる";
+    case "en":
+      return "Close";
+    default:
+      return assertNever(language);
+  }
+}
+
+export function copyMarkdownButtonText(language: Language): string {
+  switch (language) {
+    case "ja":
+      return "Markdownソースをコピー";
+    case "en":
+      return "Copy Markdown Source";
+    default:
+      return assertNever(language);
+  }
+}
+
+export function copiedText(): string {
+  return "Copied!";
+}
+
+export function copyFailedTitle(language: Language): string {
+  switch (language) {
+    case "ja":
+      return "コピー失敗";
+    case "en":
+      return "Copy Failed";
+    default:
+      return assertNever(language);
+  }
+}
+
+export function copyFailedDescription(language: Language): string {
+  switch (language) {
+    case "ja":
+      return "クリップボードへのコピーに失敗しました。ブラウザの権限を確認してください。";
+    case "en":
+      return "Failed to copy to clipboard. Please check browser permissions.";
+    default:
+      return assertNever(language);
+  }
+}
