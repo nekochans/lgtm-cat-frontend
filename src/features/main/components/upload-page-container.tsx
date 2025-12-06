@@ -3,6 +3,7 @@
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import type { Language } from "@/features/language";
+import { UploadForm } from "@/features/upload/components/upload-form";
 import type { IncludeLanguageAppPath } from "@/features/url";
 
 type Props = {
@@ -10,16 +11,20 @@ type Props = {
   readonly currentUrlPath: IncludeLanguageAppPath;
 };
 
-export const UploadPageContainer = ({ language, currentUrlPath }: Props) => (
-  <div className="flex min-h-screen w-full flex-col bg-background">
-    <Header
-      currentUrlPath={currentUrlPath}
-      isLoggedIn={false}
-      language={language}
-    />
-    <main className="flex w-full flex-1 flex-col items-center bg-background">
-      <p>TODO: 後でアップロードComponentを配置する</p>
-    </main>
-    <Footer language={language} />
-  </div>
-);
+export function UploadPageContainer({ language, currentUrlPath }: Props) {
+  return (
+    <div className="flex min-h-screen w-full flex-col bg-background">
+      <Header
+        currentUrlPath={currentUrlPath}
+        isLoggedIn={false}
+        language={language}
+      />
+      <main className="flex w-full flex-1 flex-col items-center bg-background px-4 py-8">
+        <div className="w-full max-w-[700px]">
+          <UploadForm language={language} />
+        </div>
+      </main>
+      <Footer language={language} />
+    </div>
+  );
+}
