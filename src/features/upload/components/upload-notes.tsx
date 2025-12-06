@@ -36,6 +36,8 @@ export function UploadNotes({ language }: Props): JSX.Element {
         <Link
           className="text-cyan-500 hover:underline"
           href={privacyPolicy.link}
+          rel="noopener noreferrer"
+          target="_blank"
         >
           {agreementText.linkText}
         </Link>

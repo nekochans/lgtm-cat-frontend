@@ -635,7 +635,7 @@ export function UploadSuccess({
       </p>
 
       {/* ボタンエリア */}
-      <div className="relative flex items-center justify-center gap-5">
+      <div className="flex items-center justify-center gap-5">
         {/* 閉じるボタン - variantを指定せずカスタムクラスのみで制御（HeroUIデフォルトスタイルとの重複回避） */}
         <Button
           className="h-12 w-[220px] rounded-lg border-2 border-button-tertiary-border bg-button-tertiary-base px-6 font-bold text-base text-button-tertiary-tx hover:bg-button-tertiary-hover"
@@ -643,24 +643,23 @@ export function UploadSuccess({
         >
           {closeButtonText(language)}
         </Button>
-        <div className="relative">
-          <Button
-            className="h-12 w-[220px] rounded-lg bg-button-primary-base px-6 font-bold text-base text-text-wh hover:bg-button-primary-hover"
-            onPress={handleCopyMarkdown}
-          >
-            {copyMarkdownButtonText(language)}
-          </Button>
-          {/* Copied! メッセージ */}
-          {isCopied ? (
-            <div
-              aria-live="polite"
-              className="-translate-x-1/2 absolute top-full left-1/2 mt-2 rounded bg-[#7B2F1D] px-4 py-2 font-semibold text-sm text-white"
-            >
-              {copiedText()}
-            </div>
-          ) : null}
-        </div>
+        <Button
+          className="h-12 w-[220px] rounded-lg bg-button-primary-base px-6 font-bold text-base text-text-wh hover:bg-button-primary-hover"
+          onPress={handleCopyMarkdown}
+        >
+          {copyMarkdownButtonText(language)}
+        </Button>
       </div>
+
+      {/* Copied! メッセージ - 画面中央に固定表示 */}
+      {isCopied ? (
+        <div
+          aria-live="polite"
+          className="fixed top-1/2 left-1/2 z-50 -translate-x-1/2 -translate-y-1/2 rounded bg-[#7B2F1D] px-6 py-3 font-semibold text-lg text-white shadow-lg"
+        >
+          {copiedText()}
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -1416,6 +1415,8 @@ describe("mockUpload", () => {
 | `src/features/upload/components/upload-progress.tsx` | 新規作成 | アップロード中表示コンポーネント |
 | `src/features/upload/components/upload-success.tsx` | 新規作成 | アップロード成功コンポーネント |
 | `src/features/upload/components/upload-form.tsx` | 修正 | 状態管理の拡張、新コンポーネントの統合 |
+| `src/features/upload/components/upload-notes.tsx` | 修正 | プライバシーポリシーリンクに`target="_blank"`を追加 |
+| `src/features/main/components/upload-page-container.tsx` | 修正 | モーダル風の背景オーバーレイを追加 |
 | `src/features/upload/components/upload-progress.stories.tsx` | 新規作成（オプション） | Storybook |
 | `src/features/upload/components/upload-success.stories.tsx` | 新規作成（オプション） | Storybook |
 | `src/features/upload/functions/__tests__/mock-upload.test.ts` | 新規作成 | モックアップロードのテスト |
@@ -1570,6 +1571,44 @@ npm run test
 3. **存在しないファイルのimport禁止**: 全ての依存関係を事前に確認
 4. **テストをスキップしてマージ禁止**: 全てのテストがパスするまで完了としない
 
+### アップロードページの背景仕様
+
+アップロードページ（`UploadPageContainer`）はモーダル風の背景オーバーレイを持つ：
+
+- Header/Footerは通常通り表示
+- main要素に半透明の黒いオーバーレイ（`bg-black/50`）を配置
+- アップロードフォームはオーバーレイの上に`z-10`で表示
+- フォームが浮いているように見えるモーダル風のデザイン
+
+```typescript
+// src/features/main/components/upload-page-container.tsx
+<main className="relative flex w-full flex-1 flex-col items-center px-4 py-8">
+  {/* モーダル風の背景オーバーレイ */}
+  <div className="absolute inset-0 bg-black/50" />
+  {/* フォームコンテナ（オーバーレイの上に表示） */}
+  <div className="relative z-10 w-full max-w-[700px]">
+    <UploadForm language={language} />
+  </div>
+</main>
+```
+
+### プライバシーポリシーリンクの仕様
+
+- `target="_blank"` で新しいタブで開く
+- セキュリティのため `rel="noopener noreferrer"` を付与
+
+```typescript
+// src/features/upload/components/upload-notes.tsx
+<Link
+  className="text-cyan-500 hover:underline"
+  href={privacyPolicy.link}
+  rel="noopener noreferrer"
+  target="_blank"
+>
+  {agreementText.linkText}
+</Link>
+```
+
 ### モックアップロード処理の仕様
 
 | 条件 | 結果 |
@@ -1579,9 +1618,9 @@ npm run test
 
 ### 「Copied!」メッセージの仕様
 
-- 表示位置: 「Markdownソースをコピー」ボタンの直下中央
+- 表示位置: 画面中央（fixed positioning）
 - 表示時間: 1.5秒
-- スタイル: 背景#7B2F1D、白文字、角丸、font-semibold
+- スタイル: 背景#7B2F1D、白文字、角丸、font-semibold、text-lg、shadow-lg、z-50
 
 ## まとめ
 

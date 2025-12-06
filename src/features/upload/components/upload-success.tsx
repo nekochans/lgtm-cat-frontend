@@ -134,7 +134,7 @@ export function UploadSuccess({
       </p>
 
       {/* ボタンエリア */}
-      <div className="relative flex items-center justify-center gap-5">
+      <div className="flex items-center justify-center gap-5">
         {/* 閉じるボタン - variantを指定せずカスタムクラスのみで制御（HeroUIデフォルトスタイルとの重複回避） */}
         <Button
           className="h-12 w-[220px] rounded-lg border-2 border-button-tertiary-border bg-button-tertiary-base px-6 font-bold text-base text-button-tertiary-tx hover:bg-button-tertiary-hover"
@@ -142,24 +142,23 @@ export function UploadSuccess({
         >
           {closeButtonText(language)}
         </Button>
-        <div className="relative">
-          <Button
-            className="h-12 w-[220px] rounded-lg bg-button-primary-base px-6 font-bold text-base text-text-wh hover:bg-button-primary-hover"
-            onPress={handleCopyMarkdown}
-          >
-            {copyMarkdownButtonText(language)}
-          </Button>
-          {/* Copied! メッセージ */}
-          {isCopied ? (
-            <div
-              aria-live="polite"
-              className="-translate-x-1/2 absolute top-full left-1/2 mt-2 rounded bg-[#7B2F1D] px-4 py-2 font-semibold text-sm text-white"
-            >
-              {copiedText()}
-            </div>
-          ) : null}
-        </div>
+        <Button
+          className="h-12 w-[220px] rounded-lg bg-button-primary-base px-6 font-bold text-base text-text-wh hover:bg-button-primary-hover"
+          onPress={handleCopyMarkdown}
+        >
+          {copyMarkdownButtonText(language)}
+        </Button>
       </div>
+
+      {/* Copied! メッセージ - 画面中央に固定表示 */}
+      {isCopied ? (
+        <div
+          aria-live="polite"
+          className="-translate-x-1/2 -translate-y-1/2 fixed top-1/2 left-1/2 z-50 rounded bg-[#7B2F1D] px-6 py-3 font-semibold text-lg text-white shadow-lg"
+        >
+          {copiedText()}
+        </div>
+      ) : null}
     </div>
   );
 }

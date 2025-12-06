@@ -19,8 +19,11 @@ export function UploadPageContainer({ language, currentUrlPath }: Props) {
         isLoggedIn={false}
         language={language}
       />
-      <main className="flex w-full flex-1 flex-col items-center bg-background px-4 py-8">
-        <div className="w-full max-w-[700px]">
+      <main className="relative flex w-full flex-1 flex-col items-center px-4 py-8">
+        {/* モーダル風の背景オーバーレイ */}
+        <div className="absolute inset-0 bg-black/50" />
+        {/* フォームコンテナ（オーバーレイの上に表示） */}
+        <div className="relative z-10 w-full max-w-[700px]">
           <UploadForm language={language} />
         </div>
       </main>
