@@ -2,11 +2,15 @@
 import type { JSX } from "react";
 
 type Props = {
-  className?: string;
-  "aria-hidden"?: boolean;
+  readonly width?: number;
+  readonly height?: number;
+  readonly className?: string;
+  readonly "aria-hidden"?: boolean;
 };
 
 export function LgtmCatIcon({
+  width = 36,
+  height = 27,
   className,
   "aria-hidden": ariaHidden,
 }: Props): JSX.Element {
@@ -15,9 +19,9 @@ export function LgtmCatIcon({
       aria-hidden={ariaHidden}
       className={className}
       fill="none"
-      height="27"
+      height={height}
       viewBox="0 0 36 27"
-      width="36"
+      width={width}
       xmlns="http://www.w3.org/2000/svg"
     >
       <title>LGTM cat icon</title>
