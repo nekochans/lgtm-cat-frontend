@@ -10,7 +10,7 @@ import type { JSX } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Language } from "@/features/language";
 import { generateLgtmMarkdown } from "@/features/main/functions/generate-lgtm-markdown";
-import { createLgtmImageUrl } from "@/features/main/types/lgtm-image";
+import type { LgtmImageUrl } from "@/features/main/types/lgtm-image";
 import { createIncludeLanguageAppPath } from "@/features/url";
 import {
   closeButtonText,
@@ -25,7 +25,7 @@ import {
 
 type Props = {
   readonly language: Language;
-  readonly lgtmImageUrl: string;
+  readonly lgtmImageUrl: LgtmImageUrl;
   readonly previewImageUrl: string;
   readonly onClose: () => void;
 };
@@ -59,9 +59,8 @@ export function UploadSuccess({
 
   const handleCopyMarkdown = useCallback(async () => {
     try {
-      // LgtmImageUrl型に変換してMarkdownを生成
-      const brandedLgtmImageUrl = createLgtmImageUrl(lgtmImageUrl);
-      const markdown = generateLgtmMarkdown(brandedLgtmImageUrl);
+      // Markdownを生成（lgtmImageUrlは既にLgtmImageUrl型）
+      const markdown = generateLgtmMarkdown(lgtmImageUrl);
 
       await navigator.clipboard.writeText(markdown);
       setIsCopied(true);

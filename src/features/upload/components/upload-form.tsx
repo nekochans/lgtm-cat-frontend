@@ -6,6 +6,7 @@ import type { JSX } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { LgtmCatIcon } from "@/components/lgtm-cat-icon";
 import type { Language } from "@/features/language";
+import type { LgtmImageUrl } from "@/features/main/types/lgtm-image";
 import { generateUploadUrl } from "../actions/generate-upload-url";
 import { validateAndCreateLgtmImage } from "../actions/validate-and-create-lgtm-image";
 import { uploadToR2 } from "../functions/upload-to-r2";
@@ -73,7 +74,7 @@ export function UploadForm({ language }: Props): JSX.Element {
   const [formState, setFormState] = useState<UploadFormState>("idle");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [lgtmImageUrl, setLgtmImageUrl] = useState<string | null>(null);
+  const [lgtmImageUrl, setLgtmImageUrl] = useState<LgtmImageUrl | null>(null);
   const [previewImageUrlForSuccess, setPreviewImageUrlForSuccess] = useState<
     string | null
   >(null);

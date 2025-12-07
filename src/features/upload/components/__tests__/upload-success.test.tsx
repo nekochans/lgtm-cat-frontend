@@ -3,7 +3,12 @@
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { createLgtmImageUrl } from "@/features/main/types/lgtm-image";
 import { UploadSuccess } from "../upload-success";
+
+const testLgtmImageUrl = createLgtmImageUrl(
+  "https://lgtm-images.lgtmeow.com/test.webp"
+);
 
 // happy-dom環境ではnavigator.clipboardが存在しないため、グローバルにモックを設定
 Object.defineProperty(navigator, "clipboard", {
@@ -22,7 +27,7 @@ describe("UploadSuccess", () => {
       render(
         <UploadSuccess
           language="ja"
-          lgtmImageUrl="https://lgtm-images.lgtmeow.com/test.webp"
+          lgtmImageUrl={testLgtmImageUrl}
           onClose={vi.fn()}
           previewImageUrl="blob:http://localhost/test-image"
         />
@@ -37,7 +42,7 @@ describe("UploadSuccess", () => {
       render(
         <UploadSuccess
           language="ja"
-          lgtmImageUrl="https://lgtm-images.lgtmeow.com/test.webp"
+          lgtmImageUrl={testLgtmImageUrl}
           onClose={vi.fn()}
           previewImageUrl="blob:http://localhost/test-image"
         />
@@ -55,7 +60,7 @@ describe("UploadSuccess", () => {
       render(
         <UploadSuccess
           language="ja"
-          lgtmImageUrl="https://lgtm-images.lgtmeow.com/test.webp"
+          lgtmImageUrl={testLgtmImageUrl}
           onClose={vi.fn()}
           previewImageUrl="blob:http://localhost/test-image"
         />
@@ -72,7 +77,7 @@ describe("UploadSuccess", () => {
       render(
         <UploadSuccess
           language="en"
-          lgtmImageUrl="https://lgtm-images.lgtmeow.com/test.webp"
+          lgtmImageUrl={testLgtmImageUrl}
           onClose={vi.fn()}
           previewImageUrl="blob:http://localhost/test-image"
         />
@@ -85,7 +90,7 @@ describe("UploadSuccess", () => {
       render(
         <UploadSuccess
           language="en"
-          lgtmImageUrl="https://lgtm-images.lgtmeow.com/test.webp"
+          lgtmImageUrl={testLgtmImageUrl}
           onClose={vi.fn()}
           previewImageUrl="blob:http://localhost/test-image"
         />
@@ -101,7 +106,7 @@ describe("UploadSuccess", () => {
       render(
         <UploadSuccess
           language="en"
-          lgtmImageUrl="https://lgtm-images.lgtmeow.com/test.webp"
+          lgtmImageUrl={testLgtmImageUrl}
           onClose={vi.fn()}
           previewImageUrl="blob:http://localhost/test-image"
         />
@@ -121,7 +126,7 @@ describe("UploadSuccess", () => {
       render(
         <UploadSuccess
           language="ja"
-          lgtmImageUrl="https://lgtm-images.lgtmeow.com/test.webp"
+          lgtmImageUrl={testLgtmImageUrl}
           onClose={onClose}
           previewImageUrl="blob:http://localhost/test-image"
         />
@@ -140,7 +145,7 @@ describe("UploadSuccess", () => {
       render(
         <UploadSuccess
           language="ja"
-          lgtmImageUrl="https://lgtm-images.lgtmeow.com/test.webp"
+          lgtmImageUrl={testLgtmImageUrl}
           onClose={vi.fn()}
           previewImageUrl="blob:http://localhost/test-image"
         />
@@ -160,7 +165,7 @@ describe("UploadSuccess", () => {
       render(
         <UploadSuccess
           language="ja"
-          lgtmImageUrl="https://lgtm-images.lgtmeow.com/test.webp"
+          lgtmImageUrl={testLgtmImageUrl}
           onClose={vi.fn()}
           previewImageUrl="blob:http://localhost/test-image"
         />

@@ -1,6 +1,7 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 
 import type { Meta, StoryObj } from "@storybook/react";
+import { createLgtmImageUrl } from "@/features/main/types/lgtm-image";
 import { UploadSuccess } from "./upload-success";
 
 const meta = {
@@ -31,7 +32,9 @@ type Story = StoryObj<typeof meta>;
 export const Japanese: Story = {
   args: {
     language: "ja",
-    lgtmImageUrl: "https://placehold.co/373x371/fed7aa/7c2d12?text=LGTM+Cat",
+    lgtmImageUrl: createLgtmImageUrl(
+      "https://placehold.co/373x371/fed7aa/7c2d12?text=LGTM+Cat"
+    ),
     previewImageUrl: "https://placehold.co/373x371/fed7aa/7c2d12?text=Preview",
   },
 };
@@ -39,7 +42,9 @@ export const Japanese: Story = {
 export const English: Story = {
   args: {
     language: "en",
-    lgtmImageUrl: "https://placehold.co/373x371/fed7aa/7c2d12?text=LGTM+Cat",
+    lgtmImageUrl: createLgtmImageUrl(
+      "https://placehold.co/373x371/fed7aa/7c2d12?text=LGTM+Cat"
+    ),
     previewImageUrl: "https://placehold.co/373x371/fed7aa/7c2d12?text=Preview",
   },
 };

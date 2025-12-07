@@ -3,6 +3,10 @@
 "use server";
 
 import type { Language } from "@/features/language";
+import {
+  createLgtmImageUrl,
+  type LgtmImageUrl,
+} from "@/features/main/types/lgtm-image";
 import { generateR2PresignedGetUrl } from "@/lib/cloudflare/r2/presigned-url";
 import { createLgtmImage } from "../functions/create-lgtm-image";
 import { validateCatImage } from "../functions/validate-cat-image";
@@ -22,7 +26,7 @@ import {
 export type ValidateAndCreateLgtmImageResult =
   | {
       readonly success: true;
-      readonly createdLgtmImageUrl: string;
+      readonly createdLgtmImageUrl: LgtmImageUrl;
       readonly previewImageUrl: string;
     }
   | {
@@ -109,7 +113,7 @@ export async function validateAndCreateLgtmImage(
 
     return {
       success: true,
-      createdLgtmImageUrl: createResult.response.imageUrl,
+      createdLgtmImageUrl: createLgtmImageUrl(createResult.response.imageUrl),
       previewImageUrl: signedGetUrl,
     };
   } catch {
