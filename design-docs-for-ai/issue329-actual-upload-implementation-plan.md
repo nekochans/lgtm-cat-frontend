@@ -180,7 +180,6 @@ import {
   S3Client,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { v4 as uuidv4 } from "uuid";
 import type {
   GeneratePresignedGetUrl,
   GeneratePresignedPutUrl,
@@ -260,7 +259,7 @@ export const generateR2PresignedPutUrl: GeneratePresignedPutUrl = async (
 
   // MIMEタイプから拡張子を取得
   const extension = contentType.split("/")[1] ?? "webp";
-  const objectKey = `uploads/${uuidv4()}.${extension}`;
+  const objectKey = `uploads/${crypto.randomUUID()}.${extension}`;
 
   // 署名付きPUT URLを生成
   const putCommand = new PutObjectCommand({
@@ -1323,11 +1322,11 @@ export const UploadErrorNotCatImage: Story = {
 
 ```bash
 npm install @aws-sdk/client-s3 @aws-sdk/s3-request-presigner
-npm install uuid
-npm install -D @types/uuid
 ```
 
 **補足**: `@aws-sdk/s3-request-presigner` は署名付きURL生成に必要です。R2はS3互換APIを提供しているため、AWS SDKを使用します。
+
+**UUID生成について**: UUID v4の生成には外部パッケージではなく、Node.js / ブラウザでネイティブに利用可能な `crypto.randomUUID()` を使用します。これにより依存関係を削減できます。
 
 ### 7.2 既存パッケージ（追加不要）
 
