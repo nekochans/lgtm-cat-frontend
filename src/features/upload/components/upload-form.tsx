@@ -3,14 +3,17 @@
 "use client";
 
 import type { JSX } from "react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { LgtmCatIcon } from "@/components/lgtm-cat-icon";
 import type { Language } from "@/features/language";
-import { mockUpload } from "../functions/mock-upload";
+import { generateUploadUrl } from "../actions/generate-upload-url";
+import { validateAndCreateLgtmImage } from "../actions/validate-and-create-lgtm-image";
+import { uploadToR2 } from "../functions/upload-to-r2";
 import type { UploadFormState, UploadValidationResult } from "../types/upload";
 import {
   createImageSizeTooLargeErrorMessage,
   createNotAllowedImageExtensionErrorMessage,
+  errorMessageR2UploadFailed,
   unexpectedErrorMessage,
 } from "../upload-i18n";
 import { validateUploadFile } from "../upload-validator";
@@ -20,6 +23,43 @@ import { UploadNotes } from "./upload-notes";
 import { UploadPreview } from "./upload-preview";
 import { UploadProgress } from "./upload-progress";
 import { UploadSuccess } from "./upload-success";
+
+/**
+ * プログレス管理用のヘルパー型
+ */
+type ProgressManager = {
+  readonly start: (increment: number, max: number, intervalMs: number) => void;
+  readonly stop: () => void;
+  readonly setProgress: (value: number) => void;
+};
+
+/**
+ * プログレス管理ヘルパーを作成
+ */
+function createProgressManager(
+  setUploadProgress: (updater: (prev: number) => number) => void,
+  intervalRef: React.RefObject<ReturnType<typeof setInterval> | null>
+): ProgressManager {
+  return {
+    start: (increment: number, max: number, intervalMs: number) => {
+      if (intervalRef.current != null) {
+        clearInterval(intervalRef.current);
+      }
+      intervalRef.current = setInterval(() => {
+        setUploadProgress((prev) => Math.min(prev + increment, max));
+      }, intervalMs);
+    },
+    stop: () => {
+      if (intervalRef.current != null) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    },
+    setProgress: (value: number) => {
+      setUploadProgress(() => value);
+    },
+  };
+}
 
 type Props = {
   readonly language: Language;
@@ -36,6 +76,15 @@ export function UploadForm({ language }: Props): JSX.Element {
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [errorMessages, setErrorMessages] = useState<readonly string[]>([]);
   const [uploadProgress, setUploadProgress] = useState(0);
+
+  // プログレスインターバル管理用のref
+  const progressIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
+    null
+  );
+  const progressManager = useMemo(
+    () => createProgressManager(setUploadProgress, progressIntervalRef),
+    []
+  );
 
   // プレビューURLのクリーンアップ
   useEffect(
@@ -108,20 +157,65 @@ export function UploadForm({ language }: Props): JSX.Element {
     }
 
     setFormState("uploading");
-    setUploadProgress(0);
+    progressManager.setProgress(0);
 
-    const result = await mockUpload(selectedFile, previewUrl, (progress) => {
-      setUploadProgress(progress);
-    });
+    try {
+      // Step 1: 署名付きPUT URLを取得（プログレス: 0-30%）
+      progressManager.start(5, 30, 200);
+      const urlResult = await generateUploadUrl(
+        selectedFile.type,
+        selectedFile.size,
+        language
+      );
 
-    if (result.success) {
-      setUploadedImageUrl(result.imageUrl);
-      setFormState("success");
-    } else {
+      if (!urlResult.success) {
+        setErrorMessages(urlResult.errorMessages);
+        setFormState("error");
+        return;
+      }
+
+      // Step 2: ブラウザからR2へ直接アップロード（プログレス: 30-60%）
+      progressManager.stop();
+      progressManager.setProgress(30);
+      progressManager.start(10, 60, 300);
+
+      const uploadResult = await uploadToR2(
+        selectedFile,
+        urlResult.presignedPutUrl
+      );
+
+      if (!uploadResult.success) {
+        setErrorMessages([errorMessageR2UploadFailed(language)]);
+        setFormState("error");
+        return;
+      }
+
+      // Step 3: 猫画像判定とLGTM画像作成（プログレス: 60-90%）
+      progressManager.stop();
+      progressManager.setProgress(60);
+      progressManager.start(10, 90, 500);
+
+      const result = await validateAndCreateLgtmImage(
+        urlResult.objectKey,
+        language
+      );
+
+      progressManager.setProgress(100);
+
+      if (result.success) {
+        setUploadedImageUrl(result.createdLgtmImageUrl);
+        setFormState("success");
+      } else {
+        setErrorMessages(result.errorMessages);
+        setFormState("error");
+      }
+    } catch {
       setErrorMessages(unexpectedErrorMessage(language));
       setFormState("error");
+    } finally {
+      progressManager.stop();
     }
-  }, [selectedFile, previewUrl, language]);
+  }, [selectedFile, previewUrl, language, progressManager]);
 
   const handleErrorDismiss = useCallback(() => {
     setErrorMessages([]);
