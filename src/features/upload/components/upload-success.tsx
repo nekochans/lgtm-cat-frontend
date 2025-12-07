@@ -25,7 +25,8 @@ import {
 
 type Props = {
   readonly language: Language;
-  readonly imageUrl: string;
+  readonly lgtmImageUrl: string;
+  readonly previewImageUrl: string;
   readonly onClose: () => void;
 };
 
@@ -35,7 +36,8 @@ type Props = {
  */
 export function UploadSuccess({
   language,
-  imageUrl,
+  lgtmImageUrl,
+  previewImageUrl,
   onClose,
 }: Props): JSX.Element {
   const [isCopied, setIsCopied] = useState(false);
@@ -58,8 +60,8 @@ export function UploadSuccess({
   const handleCopyMarkdown = useCallback(async () => {
     try {
       // LgtmImageUrl型に変換してMarkdownを生成
-      const lgtmImageUrl = createLgtmImageUrl(imageUrl);
-      const markdown = generateLgtmMarkdown(lgtmImageUrl);
+      const brandedLgtmImageUrl = createLgtmImageUrl(lgtmImageUrl);
+      const markdown = generateLgtmMarkdown(brandedLgtmImageUrl);
 
       await navigator.clipboard.writeText(markdown);
       setIsCopied(true);
@@ -80,7 +82,7 @@ export function UploadSuccess({
         color: "danger",
       });
     }
-  }, [imageUrl, language]);
+  }, [lgtmImageUrl, language]);
 
   const handleImageClick = useCallback(() => {
     handleCopyMarkdown();
@@ -99,7 +101,7 @@ export function UploadSuccess({
           className="object-contain"
           fill
           sizes="373px"
-          src={imageUrl}
+          src={previewImageUrl}
         />
       </button>
 

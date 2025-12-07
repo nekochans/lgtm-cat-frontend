@@ -21,9 +21,10 @@ describe("UploadSuccess", () => {
     it("成功メッセージが日本語で表示される", () => {
       render(
         <UploadSuccess
-          imageUrl="blob:http://localhost/test-image"
           language="ja"
+          lgtmImageUrl="https://lgtm-images.lgtmeow.com/test.webp"
           onClose={vi.fn()}
+          previewImageUrl="blob:http://localhost/test-image"
         />
       );
 
@@ -35,9 +36,10 @@ describe("UploadSuccess", () => {
     it("ボタンテキストが日本語で表示される", () => {
       render(
         <UploadSuccess
-          imageUrl="blob:http://localhost/test-image"
           language="ja"
+          lgtmImageUrl="https://lgtm-images.lgtmeow.com/test.webp"
           onClose={vi.fn()}
+          previewImageUrl="blob:http://localhost/test-image"
         />
       );
 
@@ -52,9 +54,10 @@ describe("UploadSuccess", () => {
     it("最新画像へのリンクが日本語で表示される", () => {
       render(
         <UploadSuccess
-          imageUrl="blob:http://localhost/test-image"
           language="ja"
+          lgtmImageUrl="https://lgtm-images.lgtmeow.com/test.webp"
           onClose={vi.fn()}
+          previewImageUrl="blob:http://localhost/test-image"
         />
       );
 
@@ -68,9 +71,10 @@ describe("UploadSuccess", () => {
     it("成功メッセージが英語で表示される", () => {
       render(
         <UploadSuccess
-          imageUrl="blob:http://localhost/test-image"
           language="en"
+          lgtmImageUrl="https://lgtm-images.lgtmeow.com/test.webp"
           onClose={vi.fn()}
+          previewImageUrl="blob:http://localhost/test-image"
         />
       );
 
@@ -80,9 +84,10 @@ describe("UploadSuccess", () => {
     it("ボタンテキストが英語で表示される", () => {
       render(
         <UploadSuccess
-          imageUrl="blob:http://localhost/test-image"
           language="en"
+          lgtmImageUrl="https://lgtm-images.lgtmeow.com/test.webp"
           onClose={vi.fn()}
+          previewImageUrl="blob:http://localhost/test-image"
         />
       );
 
@@ -95,9 +100,10 @@ describe("UploadSuccess", () => {
     it("最新画像へのリンクが英語で表示される", () => {
       render(
         <UploadSuccess
-          imageUrl="blob:http://localhost/test-image"
           language="en"
+          lgtmImageUrl="https://lgtm-images.lgtmeow.com/test.webp"
           onClose={vi.fn()}
+          previewImageUrl="blob:http://localhost/test-image"
         />
       );
 
@@ -114,9 +120,10 @@ describe("UploadSuccess", () => {
 
       render(
         <UploadSuccess
-          imageUrl="blob:http://localhost/test-image"
           language="ja"
+          lgtmImageUrl="https://lgtm-images.lgtmeow.com/test.webp"
           onClose={onClose}
+          previewImageUrl="blob:http://localhost/test-image"
         />
       );
 
@@ -132,9 +139,10 @@ describe("UploadSuccess", () => {
 
       render(
         <UploadSuccess
-          imageUrl="blob:http://localhost/test-image"
           language="ja"
+          lgtmImageUrl="https://lgtm-images.lgtmeow.com/test.webp"
           onClose={vi.fn()}
+          previewImageUrl="blob:http://localhost/test-image"
         />
       );
 
@@ -151,9 +159,10 @@ describe("UploadSuccess", () => {
 
       render(
         <UploadSuccess
-          imageUrl="blob:http://localhost/test-image"
           language="ja"
+          lgtmImageUrl="https://lgtm-images.lgtmeow.com/test.webp"
           onClose={vi.fn()}
+          previewImageUrl="blob:http://localhost/test-image"
         />
       );
 

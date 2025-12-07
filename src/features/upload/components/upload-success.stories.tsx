@@ -31,13 +31,15 @@ type Story = StoryObj<typeof meta>;
 export const Japanese: Story = {
   args: {
     language: "ja",
-    imageUrl: "https://placehold.co/373x371/fed7aa/7c2d12?text=LGTM+Cat",
+    lgtmImageUrl: "https://placehold.co/373x371/fed7aa/7c2d12?text=LGTM+Cat",
+    previewImageUrl: "https://placehold.co/373x371/fed7aa/7c2d12?text=Preview",
   },
 };
 
 export const English: Story = {
   args: {
     language: "en",
-    imageUrl: "https://placehold.co/373x371/fed7aa/7c2d12?text=LGTM+Cat",
+    lgtmImageUrl: "https://placehold.co/373x371/fed7aa/7c2d12?text=LGTM+Cat",
+    previewImageUrl: "https://placehold.co/373x371/fed7aa/7c2d12?text=Preview",
   },
 };

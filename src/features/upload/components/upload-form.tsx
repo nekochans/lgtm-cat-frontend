@@ -73,7 +73,10 @@ export function UploadForm({ language }: Props): JSX.Element {
   const [formState, setFormState] = useState<UploadFormState>("idle");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
+  const [lgtmImageUrl, setLgtmImageUrl] = useState<string | null>(null);
+  const [previewImageUrlForSuccess, setPreviewImageUrlForSuccess] = useState<
+    string | null
+  >(null);
   const [errorMessages, setErrorMessages] = useState<readonly string[]>([]);
   const [uploadProgress, setUploadProgress] = useState(0);
 
@@ -145,7 +148,8 @@ export function UploadForm({ language }: Props): JSX.Element {
     }
     setSelectedFile(null);
     setPreviewUrl(null);
-    setUploadedImageUrl(null);
+    setLgtmImageUrl(null);
+    setPreviewImageUrlForSuccess(null);
     setErrorMessages([]);
     setUploadProgress(0);
     setFormState("idle");
@@ -203,7 +207,8 @@ export function UploadForm({ language }: Props): JSX.Element {
       progressManager.setProgress(100);
 
       if (result.success) {
-        setUploadedImageUrl(result.createdLgtmImageUrl);
+        setLgtmImageUrl(result.createdLgtmImageUrl);
+        setPreviewImageUrlForSuccess(result.previewImageUrl);
         setFormState("success");
       } else {
         setErrorMessages(result.errorMessages);
@@ -228,7 +233,8 @@ export function UploadForm({ language }: Props): JSX.Element {
     }
     setSelectedFile(null);
     setPreviewUrl(null);
-    setUploadedImageUrl(null);
+    setLgtmImageUrl(null);
+    setPreviewImageUrlForSuccess(null);
     setErrorMessages([]);
     setUploadProgress(0);
     setFormState("idle");
@@ -295,13 +301,16 @@ export function UploadForm({ language }: Props): JSX.Element {
           )}
 
         {/* アップロード成功 */}
-        {formState === "success" && uploadedImageUrl != null && (
-          <UploadSuccess
-            imageUrl={uploadedImageUrl}
-            language={language}
-            onClose={handleSuccessClose}
-          />
-        )}
+        {formState === "success" &&
+          lgtmImageUrl != null &&
+          previewImageUrlForSuccess != null && (
+            <UploadSuccess
+              language={language}
+              lgtmImageUrl={lgtmImageUrl}
+              onClose={handleSuccessClose}
+              previewImageUrl={previewImageUrlForSuccess}
+            />
+          )}
       </div>
 
       {/* ねこイラスト（右下） - 成功画面以外で表示 */}

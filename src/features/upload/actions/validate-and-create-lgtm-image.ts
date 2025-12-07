@@ -23,6 +23,7 @@ export type ValidateAndCreateLgtmImageResult =
   | {
       readonly success: true;
       readonly createdLgtmImageUrl: string;
+      readonly previewImageUrl: string;
     }
   | {
       readonly success: false;
@@ -109,6 +110,7 @@ export async function validateAndCreateLgtmImage(
     return {
       success: true,
       createdLgtmImageUrl: createResult.response.imageUrl,
+      previewImageUrl: signedGetUrl,
     };
   } catch {
     return {
