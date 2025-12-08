@@ -2,7 +2,9 @@
 
 "use server";
 
+import { revalidateTag } from "next/cache";
 import type { Language } from "@/features/language";
+import { CACHE_TAG_LGTM_IMAGES_LATEST } from "@/features/main/constants/cache-tags";
 import {
   createLgtmImageUrl,
   type LgtmImageUrl,
@@ -116,6 +118,10 @@ export const validateAndCreateLgtmImageAction: ValidateAndCreateLgtmImageAction 
           errorMessages: [errorMessageUnknown(language)],
         };
       }
+
+      // 4. LGTM画像作成成功時、最新画像一覧のキャッシュを無効化
+      // profile="max" でstale-while-revalidateセマンティクスを使用（Next.js 16推奨）
+      revalidateTag(CACHE_TAG_LGTM_IMAGES_LATEST, "max");
 
       return {
         success: true,
