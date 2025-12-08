@@ -19,6 +19,11 @@ import { mockIsAcceptableCatImageNotCatImage } from "@/mocks/api/external/lgtmeo
 import { mockIsAcceptableCatImagePayloadTooLargeError } from "@/mocks/api/external/lgtmeow/mock-is-acceptable-cat-image-payload-too-large-error";
 import { validateAndCreateLgtmImageAction } from "../validate-and-create-lgtm-image-action";
 
+// next/cacheをモック（revalidateTagはServer Action内で使用）
+vi.mock("next/cache", () => ({
+  revalidateTag: vi.fn(),
+}));
+
 // Cognito認証をモック
 vi.mock("@/lib/cognito/oidc", () => ({
   issueClientCredentialsAccessToken: vi.fn(() =>
