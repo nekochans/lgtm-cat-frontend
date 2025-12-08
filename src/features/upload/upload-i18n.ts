@@ -293,3 +293,129 @@ export function copyFailedDescription(language: Language): string {
       return assertNever(language);
   }
 }
+
+/**
+ * エラーメッセージ: 猫画像ではない
+ */
+export function errorMessageNotCatImage(language: Language): string {
+  switch (language) {
+    case "ja":
+      return "この画像は猫の画像として認識されませんでした。猫が写っている画像を選択してください。";
+    case "en":
+      return "This image was not recognized as a cat image. Please select an image with a cat.";
+    default:
+      return assertNever(language);
+  }
+}
+
+/**
+ * エラーメッセージ: 不適切な画像
+ */
+export function errorMessageNotModerationImage(language: Language): string {
+  switch (language) {
+    case "ja":
+      return "この画像は利用規約に違反する可能性があります。別の画像を選択してください。";
+    case "en":
+      return "This image may violate our terms of service. Please select a different image.";
+    default:
+      return assertNever(language);
+  }
+}
+
+/**
+ * エラーメッセージ: 人の顔が含まれている
+ */
+export function errorMessagePersonFaceInImage(language: Language): string {
+  switch (language) {
+    case "ja":
+      return "画像に人の顔が含まれています。猫だけが写っている画像を選択してください。";
+    case "en":
+      return "The image contains a human face. Please select an image with only a cat.";
+    default:
+      return assertNever(language);
+  }
+}
+
+/**
+ * エラーメッセージ: 許可されていない拡張子
+ */
+export function errorMessageNotAcceptable(language: Language): string {
+  switch (language) {
+    case "ja":
+      return "この画像形式は対応していません。JPEG、PNG、WebP形式の画像を選択してください。";
+    case "en":
+      return "This image format is not supported. Please select a JPEG, PNG, or WebP image.";
+    default:
+      return assertNever(language);
+  }
+}
+
+/**
+ * エラーメッセージ: ファイルサイズが大きすぎる（API判定）
+ */
+export function errorMessagePayloadTooLarge(language: Language): string {
+  switch (language) {
+    case "ja":
+      return "画像ファイルのサイズが大きすぎます。より小さいファイルを選択してください。";
+    case "en":
+      return "The image file is too large. Please select a smaller file.";
+    default:
+      return assertNever(language);
+  }
+}
+
+/**
+ * エラーメッセージ: 不明なエラー
+ */
+export function errorMessageUnknown(language: Language): string {
+  switch (language) {
+    case "ja":
+      return "アップロード中にエラーが発生しました。しばらく経ってから再度お試しください。";
+    case "en":
+      return "An error occurred during upload. Please try again later.";
+    default:
+      return assertNever(language);
+  }
+}
+
+/**
+ * エラーメッセージ: MIMEタイプが許可されていない（サーバー側前検証）
+ */
+export function errorMessageInvalidMimeType(language: Language): string {
+  switch (language) {
+    case "ja":
+      return "この画像形式は対応していません。JPEG、PNG形式の画像を選択してください。";
+    case "en":
+      return "This image format is not supported. Please select a JPEG or PNG image.";
+    default:
+      return assertNever(language);
+  }
+}
+
+/**
+ * エラーメッセージ: ファイルサイズが大きすぎる（サーバー側前検証）
+ */
+export function errorMessageFileTooLarge(language: Language): string {
+  switch (language) {
+    case "ja":
+      return "ファイルサイズが5MBを超えています。5MB以下の画像を選択してください。";
+    case "en":
+      return "File size exceeds 5MB. Please select an image under 5MB.";
+    default:
+      return assertNever(language);
+  }
+}
+
+/**
+ * エラーメッセージ: ストレージアップロード失敗
+ */
+export function errorMessageStorageUploadFailed(language: Language): string {
+  switch (language) {
+    case "ja":
+      return "画像のアップロードに失敗しました。しばらく経ってから再度お試しください。";
+    case "en":
+      return "Failed to upload the image. Please try again later.";
+    default:
+      return assertNever(language);
+  }
+}

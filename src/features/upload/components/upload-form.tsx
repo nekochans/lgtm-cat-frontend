@@ -3,14 +3,24 @@
 "use client";
 
 import type { JSX } from "react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { LgtmCatIcon } from "@/components/lgtm-cat-icon";
 import type { Language } from "@/features/language";
-import { mockUpload } from "../functions/mock-upload";
-import type { UploadFormState, UploadValidationResult } from "../types/upload";
+import type { LgtmImageUrl } from "@/features/main/types/lgtm-image";
+import { uploadToR2 as defaultUploadToStorage } from "@/lib/cloudflare/r2/upload-to-r2";
+import { generateUploadUrlAction as defaultGenerateUploadUrlAction } from "../actions/generate-upload-url-action";
+import { validateAndCreateLgtmImageAction as defaultValidateAndCreateLgtmImageAction } from "../actions/validate-and-create-lgtm-image-action";
+import type {
+  GenerateUploadUrlAction,
+  UploadFormState,
+  UploadToStorageFunc,
+  UploadValidationResult,
+  ValidateAndCreateLgtmImageAction,
+} from "../types/upload";
 import {
   createImageSizeTooLargeErrorMessage,
   createNotAllowedImageExtensionErrorMessage,
+  errorMessageStorageUploadFailed,
   unexpectedErrorMessage,
 } from "../upload-i18n";
 import { validateUploadFile } from "../upload-validator";
@@ -21,21 +31,114 @@ import { UploadPreview } from "./upload-preview";
 import { UploadProgress } from "./upload-progress";
 import { UploadSuccess } from "./upload-success";
 
+/**
+ * プログレス管理用のヘルパー型
+ */
+type ProgressManager = {
+  readonly start: (increment: number, max: number, intervalMs: number) => void;
+  readonly stop: () => void;
+  readonly setProgress: (value: number) => void;
+};
+
+/**
+ * プログレス管理ヘルパーを作成
+ */
+function createProgressManager(
+  setUploadProgress: (updater: (prev: number) => number) => void,
+  intervalRef: React.RefObject<ReturnType<typeof setInterval> | null>
+): ProgressManager {
+  return {
+    start: (increment: number, max: number, intervalMs: number) => {
+      if (intervalRef.current != null) {
+        clearInterval(intervalRef.current);
+      }
+      intervalRef.current = setInterval(() => {
+        setUploadProgress((prev) => Math.min(prev + increment, max));
+      }, intervalMs);
+    },
+    stop: () => {
+      if (intervalRef.current != null) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    },
+    setProgress: (value: number) => {
+      setUploadProgress(() => value);
+    },
+  };
+}
+
 type Props = {
   readonly language: Language;
+  /**
+   * 依存関係の注入（Storybook等でのモック用）
+   * 省略時は実際のServer Actions/関数が使用される
+   */
+  readonly generateUploadUrlAction?: GenerateUploadUrlAction;
+  /**
+   * ストレージへのアップロード関数（Storybook等でのモック用）
+   *
+   * 注: TS71007警告が出るが、この関数はServer Actionではなく
+   * クライアントサイドで実行される通常の関数のため、
+   * "Action" サフィックスは付けない。警告は意図的に無視する。
+   */
+  readonly uploadToStorage?: UploadToStorageFunc;
+  readonly validateAndCreateLgtmImageAction?: ValidateAndCreateLgtmImageAction;
+  /**
+   * 初期状態の設定（Storybook用）
+   * 実際の使用時は指定不要
+   */
+  readonly initialState?: UploadFormState;
+  readonly initialPreviewUrl?: string | null;
+  readonly initialSelectedFile?: File | null;
+  readonly initialLgtmImageUrl?: LgtmImageUrl | null;
+  readonly initialPreviewImageUrlForSuccess?: string | null;
+  readonly initialErrorMessages?: readonly string[];
+  readonly initialUploadProgress?: number;
 };
 
 /**
  * アップロードフォームメインコンポーネント
  * Figmaデザイン（node-id: 214:1070）に基づく
  */
-export function UploadForm({ language }: Props): JSX.Element {
-  const [formState, setFormState] = useState<UploadFormState>("idle");
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
-  const [errorMessages, setErrorMessages] = useState<readonly string[]>([]);
-  const [uploadProgress, setUploadProgress] = useState(0);
+export function UploadForm({
+  language,
+  generateUploadUrlAction = defaultGenerateUploadUrlAction,
+  uploadToStorage = defaultUploadToStorage,
+  validateAndCreateLgtmImageAction = defaultValidateAndCreateLgtmImageAction,
+  initialState = "idle",
+  initialPreviewUrl = null,
+  initialSelectedFile = null,
+  initialLgtmImageUrl = null,
+  initialPreviewImageUrlForSuccess = null,
+  initialErrorMessages = [],
+  initialUploadProgress = 0,
+}: Props): JSX.Element {
+  const [formState, setFormState] = useState<UploadFormState>(initialState);
+  const [selectedFile, setSelectedFile] = useState<File | null>(
+    initialSelectedFile
+  );
+  const [previewUrl, setPreviewUrl] = useState<string | null>(
+    initialPreviewUrl
+  );
+  const [lgtmImageUrl, setLgtmImageUrl] = useState<LgtmImageUrl | null>(
+    initialLgtmImageUrl
+  );
+  const [previewImageUrlForSuccess, setPreviewImageUrlForSuccess] = useState<
+    string | null
+  >(initialPreviewImageUrlForSuccess);
+  const [errorMessages, setErrorMessages] =
+    useState<readonly string[]>(initialErrorMessages);
+  const [uploadProgress, setUploadProgress] = useState(initialUploadProgress);
+
+  // プログレスインターバル管理用のref
+  const progressIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
+    null
+  );
+  const progressManager = useMemo(
+    () => createProgressManager(setUploadProgress, progressIntervalRef),
+    []
+  );
 
   // プレビューURLのクリーンアップ
   useEffect(
@@ -96,7 +199,8 @@ export function UploadForm({ language }: Props): JSX.Element {
     }
     setSelectedFile(null);
     setPreviewUrl(null);
-    setUploadedImageUrl(null);
+    setLgtmImageUrl(null);
+    setPreviewImageUrlForSuccess(null);
     setErrorMessages([]);
     setUploadProgress(0);
     setFormState("idle");
@@ -108,20 +212,74 @@ export function UploadForm({ language }: Props): JSX.Element {
     }
 
     setFormState("uploading");
-    setUploadProgress(0);
+    progressManager.setProgress(0);
 
-    const result = await mockUpload(selectedFile, previewUrl, (progress) => {
-      setUploadProgress(progress);
-    });
+    try {
+      // Step 1: 署名付きPUT URLを取得（プログレス: 0-30%）
+      progressManager.start(5, 30, 200);
+      const urlResult = await generateUploadUrlAction(
+        selectedFile.type,
+        selectedFile.size,
+        language
+      );
 
-    if (result.success) {
-      setUploadedImageUrl(result.imageUrl);
-      setFormState("success");
-    } else {
+      if (!urlResult.success) {
+        setErrorMessages(urlResult.errorMessages);
+        setFormState("error");
+        return;
+      }
+
+      // Step 2: ブラウザからストレージへ直接アップロード（プログレス: 30-60%）
+      progressManager.stop();
+      progressManager.setProgress(30);
+      progressManager.start(10, 60, 300);
+
+      const uploadResult = await uploadToStorage(
+        selectedFile,
+        urlResult.presignedPutUrl
+      );
+
+      if (!uploadResult.success) {
+        setErrorMessages([errorMessageStorageUploadFailed(language)]);
+        setFormState("error");
+        return;
+      }
+
+      // Step 3: 猫画像判定とLGTM画像作成（プログレス: 60-90%）
+      progressManager.stop();
+      progressManager.setProgress(60);
+      progressManager.start(10, 90, 500);
+
+      const result = await validateAndCreateLgtmImageAction(
+        urlResult.objectKey,
+        language
+      );
+
+      progressManager.setProgress(100);
+
+      if (result.success) {
+        setLgtmImageUrl(result.createdLgtmImageUrl);
+        setPreviewImageUrlForSuccess(result.previewImageUrl);
+        setFormState("success");
+      } else {
+        setErrorMessages(result.errorMessages);
+        setFormState("error");
+      }
+    } catch {
       setErrorMessages(unexpectedErrorMessage(language));
       setFormState("error");
+    } finally {
+      progressManager.stop();
     }
-  }, [selectedFile, previewUrl, language]);
+  }, [
+    selectedFile,
+    previewUrl,
+    language,
+    progressManager,
+    generateUploadUrlAction,
+    uploadToStorage,
+    validateAndCreateLgtmImageAction,
+  ]);
 
   const handleErrorDismiss = useCallback(() => {
     setErrorMessages([]);
@@ -134,7 +292,8 @@ export function UploadForm({ language }: Props): JSX.Element {
     }
     setSelectedFile(null);
     setPreviewUrl(null);
-    setUploadedImageUrl(null);
+    setLgtmImageUrl(null);
+    setPreviewImageUrlForSuccess(null);
     setErrorMessages([]);
     setUploadProgress(0);
     setFormState("idle");
@@ -201,13 +360,16 @@ export function UploadForm({ language }: Props): JSX.Element {
           )}
 
         {/* アップロード成功 */}
-        {formState === "success" && uploadedImageUrl != null && (
-          <UploadSuccess
-            imageUrl={uploadedImageUrl}
-            language={language}
-            onClose={handleSuccessClose}
-          />
-        )}
+        {formState === "success" &&
+          lgtmImageUrl != null &&
+          previewImageUrlForSuccess != null && (
+            <UploadSuccess
+              language={language}
+              lgtmImageUrl={lgtmImageUrl}
+              onClose={handleSuccessClose}
+              previewImageUrl={previewImageUrlForSuccess}
+            />
+          )}
       </div>
 
       {/* ねこイラスト（右下） - 成功画面以外で表示 */}

@@ -55,13 +55,38 @@ export type UploadFormState =
   | "error"; // エラー表示中
 
 /**
- * モックアップロードの結果
+ * 依存性注入用の型定義
+ * Storybook等でモック可能にするため、Server Actions相当の関数を外部から注入できるようにする
  */
-export type MockUploadResult =
-  | { readonly success: true; readonly imageUrl: string }
-  | { readonly success: false; readonly errorMessage: string };
+
+// Re-export for convenience
+export type { GenerateUploadUrlResult } from "../actions/generate-upload-url-action";
+export type { ValidateAndCreateLgtmImageResult } from "../actions/validate-and-create-lgtm-image-action";
+export type { UploadToStorageFunc, UploadToStorageResult } from "./storage";
 
 /**
- * アップロード進捗のコールバック型
+ * generateUploadUrlAction関数の型
+ *
+ * Server Actionとして使用するため、関数名の末尾に "Action" を付与
+ * これによりTS71007警告を回避
  */
-export type UploadProgressCallback = (progress: number) => void;
+export type GenerateUploadUrlAction = (
+  contentType: string,
+  fileSize: number,
+  language: import("@/features/language").Language
+) => Promise<
+  import("../actions/generate-upload-url-action").GenerateUploadUrlResult
+>;
+
+/**
+ * validateAndCreateLgtmImageAction関数の型
+ *
+ * Server Actionとして使用するため、関数名の末尾に "Action" を付与
+ * これによりTS71007警告を回避
+ */
+export type ValidateAndCreateLgtmImageAction = (
+  objectKey: string,
+  language: import("@/features/language").Language
+) => Promise<
+  import("../actions/validate-and-create-lgtm-image-action").ValidateAndCreateLgtmImageResult
+>;

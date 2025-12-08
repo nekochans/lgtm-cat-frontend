@@ -3,7 +3,12 @@
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { createLgtmImageUrl } from "@/features/main/types/lgtm-image";
 import { UploadSuccess } from "../upload-success";
+
+const testLgtmImageUrl = createLgtmImageUrl(
+  "https://lgtm-images.lgtmeow.com/test.webp"
+);
 
 // happy-dom環境ではnavigator.clipboardが存在しないため、グローバルにモックを設定
 Object.defineProperty(navigator, "clipboard", {
@@ -21,9 +26,10 @@ describe("UploadSuccess", () => {
     it("成功メッセージが日本語で表示される", () => {
       render(
         <UploadSuccess
-          imageUrl="blob:http://localhost/test-image"
           language="ja"
+          lgtmImageUrl={testLgtmImageUrl}
           onClose={vi.fn()}
+          previewImageUrl="blob:http://localhost/test-image"
         />
       );
 
@@ -35,9 +41,10 @@ describe("UploadSuccess", () => {
     it("ボタンテキストが日本語で表示される", () => {
       render(
         <UploadSuccess
-          imageUrl="blob:http://localhost/test-image"
           language="ja"
+          lgtmImageUrl={testLgtmImageUrl}
           onClose={vi.fn()}
+          previewImageUrl="blob:http://localhost/test-image"
         />
       );
 
@@ -52,9 +59,10 @@ describe("UploadSuccess", () => {
     it("最新画像へのリンクが日本語で表示される", () => {
       render(
         <UploadSuccess
-          imageUrl="blob:http://localhost/test-image"
           language="ja"
+          lgtmImageUrl={testLgtmImageUrl}
           onClose={vi.fn()}
+          previewImageUrl="blob:http://localhost/test-image"
         />
       );
 
@@ -68,9 +76,10 @@ describe("UploadSuccess", () => {
     it("成功メッセージが英語で表示される", () => {
       render(
         <UploadSuccess
-          imageUrl="blob:http://localhost/test-image"
           language="en"
+          lgtmImageUrl={testLgtmImageUrl}
           onClose={vi.fn()}
+          previewImageUrl="blob:http://localhost/test-image"
         />
       );
 
@@ -80,9 +89,10 @@ describe("UploadSuccess", () => {
     it("ボタンテキストが英語で表示される", () => {
       render(
         <UploadSuccess
-          imageUrl="blob:http://localhost/test-image"
           language="en"
+          lgtmImageUrl={testLgtmImageUrl}
           onClose={vi.fn()}
+          previewImageUrl="blob:http://localhost/test-image"
         />
       );
 
@@ -95,9 +105,10 @@ describe("UploadSuccess", () => {
     it("最新画像へのリンクが英語で表示される", () => {
       render(
         <UploadSuccess
-          imageUrl="blob:http://localhost/test-image"
           language="en"
+          lgtmImageUrl={testLgtmImageUrl}
           onClose={vi.fn()}
+          previewImageUrl="blob:http://localhost/test-image"
         />
       );
 
@@ -114,9 +125,10 @@ describe("UploadSuccess", () => {
 
       render(
         <UploadSuccess
-          imageUrl="blob:http://localhost/test-image"
           language="ja"
+          lgtmImageUrl={testLgtmImageUrl}
           onClose={onClose}
+          previewImageUrl="blob:http://localhost/test-image"
         />
       );
 
@@ -132,9 +144,10 @@ describe("UploadSuccess", () => {
 
       render(
         <UploadSuccess
-          imageUrl="blob:http://localhost/test-image"
           language="ja"
+          lgtmImageUrl={testLgtmImageUrl}
           onClose={vi.fn()}
+          previewImageUrl="blob:http://localhost/test-image"
         />
       );
 
@@ -151,9 +164,10 @@ describe("UploadSuccess", () => {
 
       render(
         <UploadSuccess
-          imageUrl="blob:http://localhost/test-image"
           language="ja"
+          lgtmImageUrl={testLgtmImageUrl}
           onClose={vi.fn()}
+          previewImageUrl="blob:http://localhost/test-image"
         />
       );
 

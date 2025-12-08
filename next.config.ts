@@ -13,6 +13,10 @@ const baseConfig: NextConfig = {
         protocol: "https",
         hostname: "stg-lgtm-images.lgtmeow.com",
       },
+      {
+        protocol: "https",
+        hostname: "*.r2.cloudflarestorage.com",
+      },
     ],
   },
   reactCompiler: true,

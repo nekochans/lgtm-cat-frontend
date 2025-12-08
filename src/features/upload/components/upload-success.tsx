@@ -10,7 +10,7 @@ import type { JSX } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Language } from "@/features/language";
 import { generateLgtmMarkdown } from "@/features/main/functions/generate-lgtm-markdown";
-import { createLgtmImageUrl } from "@/features/main/types/lgtm-image";
+import type { LgtmImageUrl } from "@/features/main/types/lgtm-image";
 import { createIncludeLanguageAppPath } from "@/features/url";
 import {
   closeButtonText,
@@ -25,7 +25,8 @@ import {
 
 type Props = {
   readonly language: Language;
-  readonly imageUrl: string;
+  readonly lgtmImageUrl: LgtmImageUrl;
+  readonly previewImageUrl: string;
   readonly onClose: () => void;
 };
 
@@ -35,7 +36,8 @@ type Props = {
  */
 export function UploadSuccess({
   language,
-  imageUrl,
+  lgtmImageUrl,
+  previewImageUrl,
   onClose,
 }: Props): JSX.Element {
   const [isCopied, setIsCopied] = useState(false);
@@ -57,8 +59,7 @@ export function UploadSuccess({
 
   const handleCopyMarkdown = useCallback(async () => {
     try {
-      // LgtmImageUrl型に変換してMarkdownを生成
-      const lgtmImageUrl = createLgtmImageUrl(imageUrl);
+      // Markdownを生成（lgtmImageUrlは既にLgtmImageUrl型）
       const markdown = generateLgtmMarkdown(lgtmImageUrl);
 
       await navigator.clipboard.writeText(markdown);
@@ -80,7 +81,7 @@ export function UploadSuccess({
         color: "danger",
       });
     }
-  }, [imageUrl, language]);
+  }, [lgtmImageUrl, language]);
 
   const handleImageClick = useCallback(() => {
     handleCopyMarkdown();
@@ -99,7 +100,7 @@ export function UploadSuccess({
           className="object-contain"
           fill
           sizes="373px"
-          src={imageUrl}
+          src={previewImageUrl}
         />
       </button>
 
