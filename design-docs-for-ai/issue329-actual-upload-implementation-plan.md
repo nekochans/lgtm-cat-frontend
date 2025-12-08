@@ -1015,58 +1015,6 @@ export function mockCreateLgtmImageError(): HttpResponse {
 }
 ```
 
-### 5.3 MSWハンドラ定義 (`src/mocks/handlers/upload-handlers.ts`)
-
-> **レビュー指摘対応**: LGTM生成APIエラー用のハンドラファクトリを追加。
-
-```typescript
-// 絶対厳守：編集前に必ずAI実装ルールを読む
-
-import { http } from "msw";
-import { mockIsAcceptableCatImage } from "../api/external/lgtmeow/mock-is-acceptable-cat-image";
-import { mockUploadCatImage } from "../api/external/lgtmeow/mock-upload-cat-image";
-import { mockCreateLgtmImageError } from "../api/external/lgtmeow/mock-create-lgtm-image-error";
-
-const apiBaseUrl = "https://api.lgtmeow.com";
-
-/**
- * 成功パターンのハンドラ
- */
-export const uploadSuccessHandlers = [
-  http.post(`${apiBaseUrl}/cat-images/validate-url`, mockIsAcceptableCatImage),
-  http.post(`${apiBaseUrl}/v2/lgtm-images`, mockUploadCatImage),
-];
-
-/**
- * 猫画像判定APIのエラーパターン用ハンドラを作成するヘルパー
- */
-export function createValidationErrorHandlers(
-  validateMockResolver: Parameters<typeof http.post>[1]
-) {
-  return [
-    http.post(`${apiBaseUrl}/cat-images/validate-url`, validateMockResolver),
-    http.post(`${apiBaseUrl}/v2/lgtm-images`, mockUploadCatImage),
-  ];
-}
-
-/**
- * LGTM画像作成APIのエラーパターン用ハンドラを作成するヘルパー
- */
-export function createLgtmCreationErrorHandlers(
-  lgtmMockResolver: Parameters<typeof http.post>[1] = mockCreateLgtmImageError
-) {
-  return [
-    http.post(`${apiBaseUrl}/cat-images/validate-url`, mockIsAcceptableCatImage),
-    http.post(`${apiBaseUrl}/v2/lgtm-images`, lgtmMockResolver),
-  ];
-}
-
-/**
- * LGTM画像作成APIがエラーを返すハンドラ（デフォルト500エラー）
- */
-export const uploadLgtmCreationErrorHandlers = createLgtmCreationErrorHandlers();
-```
-
 ---
 
 ## 6. テスト実装
@@ -1400,9 +1348,8 @@ npm install @aws-sdk/client-s3 @aws-sdk/s3-request-presigner
 11. **Server Action: validateAndCreateLgtmImageの実装** (`validate-and-create-lgtm-image.ts`)
 12. **upload-form.tsxの修正**
 13. **LGTM画像作成エラー用モックの作成** (`mock-create-lgtm-image-error.ts`)
-14. **MSWハンドラの作成** (`upload-handlers.ts`)
-15. **ユニットテストの作成**
-16. **Storybookでの動作確認**
+14. **ユニットテストの作成**
+15. **Storybookでの動作確認**
 
 ### 10.1 ディレクトリ構造
 

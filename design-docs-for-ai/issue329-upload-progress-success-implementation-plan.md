@@ -123,9 +123,6 @@ src/
 │       └── r2/
 │           ├── presigned-url.ts                        # R2署名付きURL生成
 │           └── upload-to-r2.ts                         # ブラウザからR2へのアップロード
-└── mocks/
-    └── handlers/
-        └── upload-handlers.ts                          # MSWハンドラー（Storybook用）
 ```
 
 ### 修正ファイル
