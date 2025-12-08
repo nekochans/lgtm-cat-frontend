@@ -64,7 +64,7 @@ export type UploadToStorageResult =
  * @param file - アップロードするファイル
  * @param presignedPutUrl - 署名付きPUT URL
  */
-export type UploadToStorageFn = (
+export type UploadToStorageFunc = (
   file: File,
   presignedPutUrl: string
 ) => Promise<UploadToStorageResult>;

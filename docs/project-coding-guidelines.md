@@ -371,9 +371,9 @@ for (const item of items) {
 
 ```typescript
 // ✅ 推奨: 型を明示して宣言
-import type { UploadToStorageFn } from "@/features/upload/types/storage";
+import type { UploadToStorageFunc } from "@/features/upload/types/storage";
 
-export const uploadToR2: UploadToStorageFn = async (
+export const uploadToR2: UploadToStorageFunc = async (
   file: File,
   presignedPutUrl: string,
 ): Promise<UploadToStorageResult> => {

@@ -13,7 +13,7 @@ import { validateAndCreateLgtmImageAction as defaultValidateAndCreateLgtmImageAc
 import type {
   GenerateUploadUrlAction,
   UploadFormState,
-  UploadToStorageFn,
+  UploadToStorageFunc,
   UploadValidationResult,
   ValidateAndCreateLgtmImageAction,
 } from "../types/upload";
@@ -82,7 +82,7 @@ type Props = {
    * クライアントサイドで実行される通常の関数のため、
    * "Action" サフィックスは付けない。警告は意図的に無視する。
    */
-  readonly uploadToStorage?: UploadToStorageFn;
+  readonly uploadToStorage?: UploadToStorageFunc;
   readonly validateAndCreateLgtmImageAction?: ValidateAndCreateLgtmImageAction;
   /**
    * 初期状態の設定（Storybook用）

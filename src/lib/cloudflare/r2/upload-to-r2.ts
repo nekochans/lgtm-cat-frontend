@@ -1,7 +1,7 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 
 import type {
-  UploadToStorageFn,
+  UploadToStorageFunc,
   UploadToStorageResult,
 } from "@/features/upload/types/storage";
 
@@ -14,7 +14,7 @@ import type {
  *
  * UploadToStorageFn 型に準拠した実装
  */
-export const uploadToR2: UploadToStorageFn = async (
+export const uploadToR2: UploadToStorageFunc = async (
   file: File,
   presignedPutUrl: string
 ): Promise<UploadToStorageResult> => {

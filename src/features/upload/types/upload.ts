@@ -62,7 +62,7 @@ export type UploadFormState =
 // Re-export for convenience
 export type { GenerateUploadUrlResult } from "../actions/generate-upload-url-action";
 export type { ValidateAndCreateLgtmImageResult } from "../actions/validate-and-create-lgtm-image-action";
-export type { UploadToStorageFn, UploadToStorageResult } from "./storage";
+export type { UploadToStorageFunc, UploadToStorageResult } from "./storage";
 
 /**
  * generateUploadUrlAction関数の型
