@@ -50,8 +50,8 @@
 
 | ファイルパス | 概要 |
 |-------------|------|
-| `src/features/upload/actions/generate-upload-url.ts` | Server Action: 署名付きPUT URL生成 |
-| `src/features/upload/actions/validate-and-create-lgtm-image.ts` | Server Action: 猫画像判定とLGTM画像作成 |
+| `src/features/upload/actions/generate-upload-url-action.ts` | Server Action: 署名付きPUT URL生成 |
+| `src/features/upload/actions/validate-and-create-lgtm-image-action.ts` | Server Action: 猫画像判定とLGTM画像作成 |
 | `src/features/upload/types/storage.ts` | ストレージクライアントの抽象型定義（ポリモーフィズム） |
 | `src/lib/cloudflare/r2/presigned-url.ts` | R2 Presigned URL生成実装 |
 | `src/lib/cloudflare/r2/index.ts` | R2モジュールのエクスポート |
@@ -60,8 +60,8 @@
 | `src/features/upload/functions/upload-to-r2.ts` | ブラウザからR2へ直接アップロードする関数 |
 | `src/features/upload/types/api-response.ts` | API レスポンス型定義 |
 | `src/mocks/api/external/lgtmeow/mock-create-lgtm-image-error.ts` | LGTM画像作成エラー用モック |
-| `src/features/upload/actions/__tests__/generate-upload-url.test.ts` | generateUploadUrl のユニットテスト |
-| `src/features/upload/actions/__tests__/validate-and-create-lgtm-image.test.ts` | validateAndCreateLgtmImage のユニットテスト |
+| `src/features/upload/actions/__tests__/generate-upload-url-action.test.ts` | generateUploadUrlAction のユニットテスト |
+| `src/features/upload/actions/__tests__/validate-and-create-lgtm-image-action.test.ts` | validateAndCreateLgtmImageAction のユニットテスト |
 
 ---
 
@@ -521,7 +521,7 @@ export async function createLgtmImage(
 }
 ```
 
-### 3.8 Server Action: 署名付きPUT URL生成 (`src/features/upload/actions/generate-upload-url.ts`)
+### 3.8 Server Action: 署名付きPUT URL生成 (`src/features/upload/actions/generate-upload-url-action.ts`)
 
 > **重要**: AWS SDK v3 は Node.js 環境が必要です。Edge runtime では動作しないため、`runtime = "nodejs"` を明示します。
 
@@ -571,11 +571,11 @@ export type GenerateUploadUrlResult =
  *
  * 注: 画像データは受け取らない（Server Actionのボディサイズ制限対策）
  */
-export async function generateUploadUrl(
+export const generateUploadUrlAction: GenerateUploadUrlAction = async (
   contentType: string,
   fileSize: number,
   language: Language
-): Promise<GenerateUploadUrlResult> {
+): Promise<GenerateUploadUrlResult> => {
   // 1. [前検証] MIMEタイプチェック
   if (!allowedMimeTypes.includes(contentType as typeof allowedMimeTypes[number])) {
     return {
@@ -610,7 +610,7 @@ export async function generateUploadUrl(
 }
 ```
 
-### 3.9 Server Action: 猫画像判定とLGTM画像作成 (`src/features/upload/actions/validate-and-create-lgtm-image.ts`)
+### 3.9 Server Action: 猫画像判定とLGTM画像作成 (`src/features/upload/actions/validate-and-create-lgtm-image-action.ts`)
 
 ```typescript
 // 絶対厳守：編集前に必ずAI実装ルールを読む
@@ -682,10 +682,10 @@ function getErrorMessageFromReason(
  *
  * 注: objectKeyのみを受け取る（画像データは既にR2にアップロード済み）
  */
-export async function validateAndCreateLgtmImage(
+export const validateAndCreateLgtmImageAction: ValidateAndCreateLgtmImageAction = async (
   objectKey: string,
   language: Language
-): Promise<ValidateAndCreateLgtmImageResult> {
+): Promise<ValidateAndCreateLgtmImageResult> => {
   try {
     // 1. 署名付きGET URLを生成
     const { getUrl: signedGetUrl } = await generateR2PresignedGetUrl(objectKey);
@@ -1344,8 +1344,8 @@ npm install @aws-sdk/client-s3 @aws-sdk/s3-request-presigner
 7. **猫画像判定API関数の実装** (`validate-cat-image.ts`)
 8. **LGTM画像作成API関数の実装** (`create-lgtm-image.ts`)
 9. **i18nへのエラーメッセージ追加** (`upload-i18n.ts`)
-10. **Server Action: generateUploadUrlの実装** (`generate-upload-url.ts`)
-11. **Server Action: validateAndCreateLgtmImageの実装** (`validate-and-create-lgtm-image.ts`)
+10. **Server Action: generateUploadUrlActionの実装** (`generate-upload-url-action.ts`)
+11. **Server Action: validateAndCreateLgtmImageActionの実装** (`validate-and-create-lgtm-image-action.ts`)
 12. **upload-form.tsxの修正**
 13. **LGTM画像作成エラー用モックの作成** (`mock-create-lgtm-image-error.ts`)
 14. **ユニットテストの作成**
@@ -1360,11 +1360,11 @@ src/
 ├── features/
 │   └── upload/
 │       ├── actions/
-│       │   ├── generate-upload-url.ts           # Server Action: URL生成
-│       │   ├── validate-and-create-lgtm-image.ts # Server Action: 判定&作成
+│       │   ├── generate-upload-url-action.ts           # Server Action: URL生成
+│       │   ├── validate-and-create-lgtm-image-action.ts # Server Action: 判定&作成
 │       │   └── __tests__/
-│       │       ├── generate-upload-url.test.ts
-│       │       └── validate-and-create-lgtm-image.test.ts
+│       │       ├── generate-upload-url-action.test.ts
+│       │       └── validate-and-create-lgtm-image-action.test.ts
 │       ├── functions/
 │       │   ├── upload-to-r2.ts                   # ブラウザからR2への直接アップロード
 │       │   ├── validate-cat-image.ts             # 猫画像判定API
