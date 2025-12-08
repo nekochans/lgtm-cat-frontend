@@ -1,7 +1,5 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 
-import type { UploadToStorageFn as StorageFn } from "./storage";
-
 /**
  * 許可される画像の拡張子
  */
@@ -57,18 +55,6 @@ export type UploadFormState =
   | "error"; // エラー表示中
 
 /**
- * モックアップロードの結果
- */
-export type MockUploadResult =
-  | { readonly success: true; readonly imageUrl: string }
-  | { readonly success: false; readonly errorMessage: string };
-
-/**
- * アップロード進捗のコールバック型
- */
-export type UploadProgressCallback = (progress: number) => void;
-
-/**
  * 依存性注入用の型定義
  * Storybook等でモック可能にするため、Server Actions相当の関数を外部から注入できるようにする
  */
@@ -104,12 +90,3 @@ export type ValidateAndCreateLgtmImageAction = (
 ) => Promise<
   import("../actions/validate-and-create-lgtm-image-action").ValidateAndCreateLgtmImageResult
 >;
-
-/**
- * UploadForm依存関係（Storybook等でのモック用）
- */
-export type UploadFormDependencies = {
-  readonly generateUploadUrlAction: GenerateUploadUrlAction;
-  readonly uploadToStorage: StorageFn;
-  readonly validateAndCreateLgtmImageAction: ValidateAndCreateLgtmImageAction;
-};
