@@ -74,8 +74,8 @@ export type UploadProgressCallback = (progress: number) => void;
  */
 
 // Re-export for convenience
-export type { GenerateUploadUrlResult } from "../actions/generate-upload-url";
-export type { ValidateAndCreateLgtmImageResult } from "../actions/validate-and-create-lgtm-image";
+export type { GenerateUploadUrlResult } from "../actions/generate-upload-url-action";
+export type { ValidateAndCreateLgtmImageResult } from "../actions/validate-and-create-lgtm-image-action";
 export type { UploadToStorageFn, UploadToStorageResult } from "./storage";
 
 /**
@@ -88,7 +88,9 @@ export type GenerateUploadUrlAction = (
   contentType: string,
   fileSize: number,
   language: import("@/features/language").Language
-) => Promise<import("../actions/generate-upload-url").GenerateUploadUrlResult>;
+) => Promise<
+  import("../actions/generate-upload-url-action").GenerateUploadUrlResult
+>;
 
 /**
  * validateAndCreateLgtmImageAction関数の型
@@ -100,7 +102,7 @@ export type ValidateAndCreateLgtmImageAction = (
   objectKey: string,
   language: import("@/features/language").Language
 ) => Promise<
-  import("../actions/validate-and-create-lgtm-image").ValidateAndCreateLgtmImageResult
+  import("../actions/validate-and-create-lgtm-image-action").ValidateAndCreateLgtmImageResult
 >;
 
 /**

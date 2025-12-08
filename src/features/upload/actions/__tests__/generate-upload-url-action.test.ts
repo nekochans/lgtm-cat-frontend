@@ -1,7 +1,7 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { generateUploadUrlAction } from "../generate-upload-url";
+import { generateUploadUrlAction } from "../generate-upload-url-action";
 
 // R2クライアントのモック
 const mockGenerateR2PresignedPutUrl = vi.fn();

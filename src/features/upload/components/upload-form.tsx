@@ -8,8 +8,8 @@ import { LgtmCatIcon } from "@/components/lgtm-cat-icon";
 import type { Language } from "@/features/language";
 import type { LgtmImageUrl } from "@/features/main/types/lgtm-image";
 import { uploadToR2 as defaultUploadToStorage } from "@/lib/cloudflare/r2/upload-to-r2";
-import { generateUploadUrlAction as defaultGenerateUploadUrlAction } from "../actions/generate-upload-url";
-import { validateAndCreateLgtmImageAction as defaultValidateAndCreateLgtmImageAction } from "../actions/validate-and-create-lgtm-image";
+import { generateUploadUrlAction as defaultGenerateUploadUrlAction } from "../actions/generate-upload-url-action";
+import { validateAndCreateLgtmImageAction as defaultValidateAndCreateLgtmImageAction } from "../actions/validate-and-create-lgtm-image-action";
 import type {
   GenerateUploadUrlAction,
   UploadFormState,

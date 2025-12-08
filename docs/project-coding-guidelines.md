@@ -382,7 +382,9 @@ export async function uploadToR2(
 
 ## Server Actionの命名規則
 
-Next.js の Server Action として使用する関数は、名前の末尾に **`Action`** を付けてください。
+Next.js の Server Action として使用する関数は、**関数名・型名・ファイル名** すべての末尾に **`Action`** または **`-action`** を付けてください。
+
+### 関数名と型名
 
 ```typescript
 // ✅ 推奨: 末尾に Action を付与
@@ -413,9 +415,22 @@ export async function generateUploadUrl(
 }
 ```
 
+### ファイル名
+
+```
+✅ 推奨: 末尾に -action を付与
+generate-upload-url-action.ts
+validate-and-create-lgtm-image-action.ts
+
+❌ 非推奨: -action を付けない
+generate-upload-url.ts
+validate-and-create-lgtm-image.ts
+```
+
 **理由:**
 
 - Next.js の TS71007 警告を回避できる
 - クライアントコンポーネントの props に渡す際の警告を防ぐ
-- Server Action であることが関数名から明確になる
+- Server Action であることが関数名・ファイル名から明確になる
 - 通常の関数とServer Actionを区別できる
+- 関数名とファイル名を一致させる規則との整合性を保てる

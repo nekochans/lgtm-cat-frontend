@@ -17,7 +17,7 @@ import { mockCreateLgtmImageError } from "@/mocks/api/external/lgtmeow/mock-crea
 import { mockIsAcceptableCatImage } from "@/mocks/api/external/lgtmeow/mock-is-acceptable-cat-image";
 import { mockIsAcceptableCatImageNotCatImage } from "@/mocks/api/external/lgtmeow/mock-is-acceptable-cat-image-not-cat-image";
 import { mockIsAcceptableCatImagePayloadTooLargeError } from "@/mocks/api/external/lgtmeow/mock-is-acceptable-cat-image-payload-too-large-error";
-import { validateAndCreateLgtmImageAction } from "../validate-and-create-lgtm-image";
+import { validateAndCreateLgtmImageAction } from "../validate-and-create-lgtm-image-action";
 
 // Cognito認証をモック
 vi.mock("@/lib/cognito/oidc", () => ({
