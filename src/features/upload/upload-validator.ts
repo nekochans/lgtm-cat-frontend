@@ -1,6 +1,8 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 
 import {
+  type AllowedImageExtension,
+  type AllowedMimeType,
   allowedImageExtensions,
   allowedMimeTypes,
   maxImageSizeBytes,
@@ -10,7 +12,7 @@ import {
 /**
  * ファイルのMIMEタイプが許可されているかチェック
  */
-function isAllowedMimeType(mimeType: string): boolean {
+function isAllowedMimeType(mimeType: string): mimeType is AllowedMimeType {
   return allowedMimeTypes.includes(
     mimeType as (typeof allowedMimeTypes)[number]
   );
@@ -27,7 +29,9 @@ function getFileExtension(fileName: string): string {
 /**
  * ファイルの拡張子が許可されているかチェック
  */
-function isAllowedExtension(extension: string): boolean {
+function isAllowedExtension(
+  extension: string
+): extension is AllowedImageExtension {
   return allowedImageExtensions.includes(
     extension as (typeof allowedImageExtensions)[number]
   );
