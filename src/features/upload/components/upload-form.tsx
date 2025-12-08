@@ -8,14 +8,14 @@ import { LgtmCatIcon } from "@/components/lgtm-cat-icon";
 import type { Language } from "@/features/language";
 import type { LgtmImageUrl } from "@/features/main/types/lgtm-image";
 import { uploadToR2 as defaultUploadToStorage } from "@/lib/cloudflare/r2/upload-to-r2";
-import { generateUploadUrl as defaultGenerateUploadUrl } from "../actions/generate-upload-url";
-import { validateAndCreateLgtmImage as defaultValidateAndCreateLgtmImage } from "../actions/validate-and-create-lgtm-image";
+import { generateUploadUrlAction as defaultGenerateUploadUrlAction } from "../actions/generate-upload-url";
+import { validateAndCreateLgtmImageAction as defaultValidateAndCreateLgtmImageAction } from "../actions/validate-and-create-lgtm-image";
 import type {
-  GenerateUploadUrlFn,
+  GenerateUploadUrlAction,
   UploadFormState,
   UploadToStorageFn,
   UploadValidationResult,
-  ValidateAndCreateLgtmImageFn,
+  ValidateAndCreateLgtmImageAction,
 } from "../types/upload";
 import {
   createImageSizeTooLargeErrorMessage,
@@ -74,9 +74,16 @@ type Props = {
    * 依存関係の注入（Storybook等でのモック用）
    * 省略時は実際のServer Actions/関数が使用される
    */
-  readonly generateUploadUrl?: GenerateUploadUrlFn;
+  readonly generateUploadUrlAction?: GenerateUploadUrlAction;
+  /**
+   * ストレージへのアップロード関数（Storybook等でのモック用）
+   *
+   * 注: TS71007警告が出るが、この関数はServer Actionではなく
+   * クライアントサイドで実行される通常の関数のため、
+   * "Action" サフィックスは付けない。警告は意図的に無視する。
+   */
   readonly uploadToStorage?: UploadToStorageFn;
-  readonly validateAndCreateLgtmImage?: ValidateAndCreateLgtmImageFn;
+  readonly validateAndCreateLgtmImageAction?: ValidateAndCreateLgtmImageAction;
   /**
    * 初期状態の設定（Storybook用）
    * 実際の使用時は指定不要
@@ -96,9 +103,9 @@ type Props = {
  */
 export function UploadForm({
   language,
-  generateUploadUrl = defaultGenerateUploadUrl,
+  generateUploadUrlAction = defaultGenerateUploadUrlAction,
   uploadToStorage = defaultUploadToStorage,
-  validateAndCreateLgtmImage = defaultValidateAndCreateLgtmImage,
+  validateAndCreateLgtmImageAction = defaultValidateAndCreateLgtmImageAction,
   initialState = "idle",
   initialPreviewUrl = null,
   initialSelectedFile = null,
@@ -210,7 +217,7 @@ export function UploadForm({
     try {
       // Step 1: 署名付きPUT URLを取得（プログレス: 0-30%）
       progressManager.start(5, 30, 200);
-      const urlResult = await generateUploadUrl(
+      const urlResult = await generateUploadUrlAction(
         selectedFile.type,
         selectedFile.size,
         language
@@ -243,7 +250,7 @@ export function UploadForm({
       progressManager.setProgress(60);
       progressManager.start(10, 90, 500);
 
-      const result = await validateAndCreateLgtmImage(
+      const result = await validateAndCreateLgtmImageAction(
         urlResult.objectKey,
         language
       );
@@ -269,9 +276,9 @@ export function UploadForm({
     previewUrl,
     language,
     progressManager,
-    generateUploadUrl,
+    generateUploadUrlAction,
     uploadToStorage,
-    validateAndCreateLgtmImage,
+    validateAndCreateLgtmImageAction,
   ]);
 
   const handleErrorDismiss = useCallback(() => {

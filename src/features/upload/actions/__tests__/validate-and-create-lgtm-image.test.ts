@@ -17,7 +17,7 @@ import { mockCreateLgtmImageError } from "@/mocks/api/external/lgtmeow/mock-crea
 import { mockIsAcceptableCatImage } from "@/mocks/api/external/lgtmeow/mock-is-acceptable-cat-image";
 import { mockIsAcceptableCatImageNotCatImage } from "@/mocks/api/external/lgtmeow/mock-is-acceptable-cat-image-not-cat-image";
 import { mockIsAcceptableCatImagePayloadTooLargeError } from "@/mocks/api/external/lgtmeow/mock-is-acceptable-cat-image-payload-too-large-error";
-import { validateAndCreateLgtmImage } from "../validate-and-create-lgtm-image";
+import { validateAndCreateLgtmImageAction } from "../validate-and-create-lgtm-image";
 
 // Cognito認証をモック
 vi.mock("@/lib/cognito/oidc", () => ({
@@ -60,12 +60,15 @@ afterEach(() => {
 });
 afterAll(() => server.close());
 
-describe("validateAndCreateLgtmImage", () => {
+describe("validateAndCreateLgtmImageAction", () => {
   const testObjectKey = "uploads/test-uuid.jpg";
 
   describe("正常系", () => {
     it("成功した場合、createdLgtmImageUrlを返す", async () => {
-      const result = await validateAndCreateLgtmImage(testObjectKey, "ja");
+      const result = await validateAndCreateLgtmImageAction(
+        testObjectKey,
+        "ja"
+      );
 
       expect(result.success).toBe(true);
       if (result.success) {
@@ -85,7 +88,10 @@ describe("validateAndCreateLgtmImage", () => {
         )
       );
 
-      const result = await validateAndCreateLgtmImage(testObjectKey, "ja");
+      const result = await validateAndCreateLgtmImageAction(
+        testObjectKey,
+        "ja"
+      );
 
       expect(result.success).toBe(false);
       if (!result.success) {
@@ -101,7 +107,10 @@ describe("validateAndCreateLgtmImage", () => {
         )
       );
 
-      const result = await validateAndCreateLgtmImage(testObjectKey, "ja");
+      const result = await validateAndCreateLgtmImageAction(
+        testObjectKey,
+        "ja"
+      );
 
       expect(result.success).toBe(false);
       if (!result.success) {
@@ -116,7 +125,10 @@ describe("validateAndCreateLgtmImage", () => {
         http.post(`${apiBaseUrl}/v2/lgtm-images`, mockCreateLgtmImageError)
       );
 
-      const result = await validateAndCreateLgtmImage(testObjectKey, "ja");
+      const result = await validateAndCreateLgtmImageAction(
+        testObjectKey,
+        "ja"
+      );
 
       expect(result.success).toBe(false);
       if (!result.success) {

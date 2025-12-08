@@ -79,18 +79,24 @@ export type { ValidateAndCreateLgtmImageResult } from "../actions/validate-and-c
 export type { UploadToStorageFn, UploadToStorageResult } from "./storage";
 
 /**
- * generateUploadUrl関数の型
+ * generateUploadUrlAction関数の型
+ *
+ * Server Actionとして使用するため、関数名の末尾に "Action" を付与
+ * これによりTS71007警告を回避
  */
-export type GenerateUploadUrlFn = (
+export type GenerateUploadUrlAction = (
   contentType: string,
   fileSize: number,
   language: import("@/features/language").Language
 ) => Promise<import("../actions/generate-upload-url").GenerateUploadUrlResult>;
 
 /**
- * validateAndCreateLgtmImage関数の型
+ * validateAndCreateLgtmImageAction関数の型
+ *
+ * Server Actionとして使用するため、関数名の末尾に "Action" を付与
+ * これによりTS71007警告を回避
  */
-export type ValidateAndCreateLgtmImageFn = (
+export type ValidateAndCreateLgtmImageAction = (
   objectKey: string,
   language: import("@/features/language").Language
 ) => Promise<
@@ -101,7 +107,7 @@ export type ValidateAndCreateLgtmImageFn = (
  * UploadForm依存関係（Storybook等でのモック用）
  */
 export type UploadFormDependencies = {
-  readonly generateUploadUrl: GenerateUploadUrlFn;
+  readonly generateUploadUrlAction: GenerateUploadUrlAction;
   readonly uploadToStorage: StorageFn;
-  readonly validateAndCreateLgtmImage: ValidateAndCreateLgtmImageFn;
+  readonly validateAndCreateLgtmImageAction: ValidateAndCreateLgtmImageAction;
 };

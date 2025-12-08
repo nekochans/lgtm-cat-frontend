@@ -1,7 +1,7 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { generateUploadUrl } from "../generate-upload-url";
+import { generateUploadUrlAction } from "../generate-upload-url";
 
 // R2クライアントのモック
 const mockGenerateR2PresignedPutUrl = vi.fn();
@@ -10,7 +10,7 @@ vi.mock("@/lib/cloudflare/r2/presigned-url", () => ({
   generateR2PresignedPutUrl: () => mockGenerateR2PresignedPutUrl(),
 }));
 
-describe("generateUploadUrl", () => {
+describe("generateUploadUrlAction", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockGenerateR2PresignedPutUrl.mockResolvedValue({
@@ -21,7 +21,11 @@ describe("generateUploadUrl", () => {
 
   describe("正常系", () => {
     it("有効なMIMEタイプとサイズで署名付きPUT URLを返す", async () => {
-      const result = await generateUploadUrl("image/jpeg", 1024 * 1024, "ja");
+      const result = await generateUploadUrlAction(
+        "image/jpeg",
+        1024 * 1024,
+        "ja"
+      );
 
       expect(result.success).toBe(true);
       if (result.success) {
@@ -33,7 +37,11 @@ describe("generateUploadUrl", () => {
 
   describe("異常系 - 前検証", () => {
     it("MIMEタイプが許可されていない場合、エラーを返す", async () => {
-      const result = await generateUploadUrl("image/gif", 1024 * 1024, "ja");
+      const result = await generateUploadUrlAction(
+        "image/gif",
+        1024 * 1024,
+        "ja"
+      );
 
       expect(result.success).toBe(false);
       if (!result.success) {
@@ -44,7 +52,7 @@ describe("generateUploadUrl", () => {
     });
 
     it("ファイルサイズが5MBを超える場合、エラーを返す", async () => {
-      const result = await generateUploadUrl(
+      const result = await generateUploadUrlAction(
         "image/jpeg",
         6 * 1024 * 1024,
         "ja"
@@ -63,7 +71,11 @@ describe("generateUploadUrl", () => {
     it("R2への呼び出しが失敗した場合、エラーを返す", async () => {
       mockGenerateR2PresignedPutUrl.mockRejectedValue(new Error("R2 error"));
 
-      const result = await generateUploadUrl("image/jpeg", 1024 * 1024, "ja");
+      const result = await generateUploadUrlAction(
+        "image/jpeg",
+        1024 * 1024,
+        "ja"
+      );
 
       expect(result.success).toBe(false);
       if (!result.success) {

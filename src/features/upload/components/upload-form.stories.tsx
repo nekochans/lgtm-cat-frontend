@@ -32,14 +32,14 @@ function createDummyFile(name: string, type: string): File {
  */
 function createSuccessMocks() {
   return {
-    generateUploadUrl: async () =>
+    generateUploadUrlAction: async () =>
       Promise.resolve({
         success: true as const,
         presignedPutUrl: "https://mock-storage.example.com/upload",
         objectKey: "mock-object-key",
       }),
     uploadToStorage: async () => Promise.resolve({ success: true as const }),
-    validateAndCreateLgtmImage: async () =>
+    validateAndCreateLgtmImageAction: async () =>
       Promise.resolve({
         success: true as const,
         createdLgtmImageUrl: createLgtmImageUrl(
@@ -60,7 +60,7 @@ function createErrorMocks(language: Language) {
   return {
     notCatImage: {
       ...successMocks,
-      validateAndCreateLgtmImage: async () =>
+      validateAndCreateLgtmImageAction: async () =>
         Promise.resolve({
           success: false as const,
           errorMessages: [errorMessageNotCatImage(language)],
@@ -68,7 +68,7 @@ function createErrorMocks(language: Language) {
     },
     notModerationImage: {
       ...successMocks,
-      validateAndCreateLgtmImage: async () =>
+      validateAndCreateLgtmImageAction: async () =>
         Promise.resolve({
           success: false as const,
           errorMessages: [errorMessageNotModerationImage(language)],
@@ -76,7 +76,7 @@ function createErrorMocks(language: Language) {
     },
     payloadTooLarge: {
       ...successMocks,
-      validateAndCreateLgtmImage: async () =>
+      validateAndCreateLgtmImageAction: async () =>
         Promise.resolve({
           success: false as const,
           errorMessages: [errorMessagePayloadTooLarge(language)],
@@ -84,7 +84,7 @@ function createErrorMocks(language: Language) {
     },
     personFaceInImage: {
       ...successMocks,
-      validateAndCreateLgtmImage: async () =>
+      validateAndCreateLgtmImageAction: async () =>
         Promise.resolve({
           success: false as const,
           errorMessages: [errorMessagePersonFaceInImage(language)],

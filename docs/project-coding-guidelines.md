@@ -346,3 +346,76 @@ for (const item of items) {
   processItem(item);
 }
 ```
+
+## 関数型への準拠を明示する
+
+抽象的なインターフェース型に準拠する関数を実装する場合は、関数宣言時に型を明示してください。
+
+```typescript
+// ✅ 推奨: 型を明示して宣言
+import type { UploadToStorageFn } from "@/features/upload/types/storage";
+
+export const uploadToR2: UploadToStorageFn = async (
+  file: File,
+  presignedPutUrl: string,
+): Promise<UploadToStorageResult> => {
+  // 実装
+};
+```
+
+```typescript
+// ❌ 非推奨: 型を明示しない宣言
+export async function uploadToR2(
+  file: File,
+  presignedPutUrl: string,
+): Promise<UploadToStorageResult> {
+  // 実装
+}
+```
+
+**理由:**
+
+- インターフェースへの準拠が明確になる
+- 型の不一致をコンパイル時に検出できる
+- 依存性注入（DI）パターンとの親和性が高い
+- Storybook等でのモック実装が容易になる
+
+## Server Actionの命名規則
+
+Next.js の Server Action として使用する関数は、名前の末尾に **`Action`** を付けてください。
+
+```typescript
+// ✅ 推奨: 末尾に Action を付与
+export const generateUploadUrlAction: GenerateUploadUrlAction = async (
+  contentType: string,
+  fileSize: number,
+  language: Language,
+): Promise<GenerateUploadUrlResult> => {
+  // 実装
+};
+
+// 型定義も同様に
+export type GenerateUploadUrlAction = (
+  contentType: string,
+  fileSize: number,
+  language: Language,
+) => Promise<GenerateUploadUrlResult>;
+```
+
+```typescript
+// ❌ 非推奨: Action を付けない
+export async function generateUploadUrl(
+  contentType: string,
+  fileSize: number,
+  language: Language,
+): Promise<GenerateUploadUrlResult> {
+  // 実装
+}
+```
+
+**理由:**
+
+- Next.js の TS71007 警告を回避できる
+- クライアントコンポーネントの props に渡す際の警告を防ぐ
+- Server Action であることが関数名から明確になる
+- 通常の関数とServer Actionを区別できる

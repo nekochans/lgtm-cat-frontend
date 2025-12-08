@@ -11,6 +11,7 @@ import { generateR2PresignedGetUrl } from "@/lib/cloudflare/r2/presigned-url";
 import { createLgtmImage } from "../functions/create-lgtm-image";
 import { validateCatImage } from "../functions/validate-cat-image";
 import type { NotAcceptableReason } from "../types/api-response";
+import type { ValidateAndCreateLgtmImageAction } from "../types/upload";
 import {
   errorMessageNotAcceptable,
   errorMessageNotCatImage,
@@ -21,7 +22,7 @@ import {
 } from "../upload-i18n";
 
 /**
- * validateAndCreateLgtmImage の結果型
+ * validateAndCreateLgtmImageAction の結果型
  */
 export type ValidateAndCreateLgtmImageResult =
   | {
@@ -64,62 +65,67 @@ function getErrorMessageFromReason(
  * 3. LGTM画像作成APIを呼び出し
  *
  * 注: objectKeyのみを受け取る（画像データは既にR2にアップロード済み）
+ *
+ * ValidateAndCreateLgtmImageAction 型に準拠した実装
  */
-export async function validateAndCreateLgtmImage(
-  objectKey: string,
-  language: Language
-): Promise<ValidateAndCreateLgtmImageResult> {
-  try {
-    // 1. 署名付きGET URLを生成
-    const { getUrl: signedGetUrl } = await generateR2PresignedGetUrl(objectKey);
+export const validateAndCreateLgtmImageAction: ValidateAndCreateLgtmImageAction =
+  async (
+    objectKey: string,
+    language: Language
+  ): Promise<ValidateAndCreateLgtmImageResult> => {
+    try {
+      // 1. 署名付きGET URLを生成
+      const { getUrl: signedGetUrl } =
+        await generateR2PresignedGetUrl(objectKey);
 
-    // 2. 猫画像判定APIを呼び出し
-    const validateResult = await validateCatImage(signedGetUrl);
+      // 2. 猫画像判定APIを呼び出し
+      const validateResult = await validateCatImage(signedGetUrl);
 
-    if (!validateResult.success) {
-      const errorMessage =
-        validateResult.error.name === "PayloadTooLargeError"
-          ? errorMessagePayloadTooLarge(language)
-          : errorMessageUnknown(language);
+      if (!validateResult.success) {
+        const errorMessage =
+          validateResult.error.name === "PayloadTooLargeError"
+            ? errorMessagePayloadTooLarge(language)
+            : errorMessageUnknown(language);
+
+        return {
+          success: false,
+          errorMessages: [errorMessage],
+        };
+      }
+
+      // 猫画像でない場合はエラー
+      if (!validateResult.response.isAcceptableCatImage) {
+        const reason =
+          (validateResult.response
+            .notAcceptableReason as NotAcceptableReason) ??
+          "an error has occurred";
+        const errorMessage = getErrorMessageFromReason(reason, language);
+
+        return {
+          success: false,
+          errorMessages: [errorMessage],
+        };
+      }
+
+      // 3. LGTM画像作成APIを呼び出し
+      const createResult = await createLgtmImage(signedGetUrl);
+
+      if (!createResult.success) {
+        return {
+          success: false,
+          errorMessages: [errorMessageUnknown(language)],
+        };
+      }
 
       return {
-        success: false,
-        errorMessages: [errorMessage],
+        success: true,
+        createdLgtmImageUrl: createLgtmImageUrl(createResult.response.imageUrl),
+        previewImageUrl: signedGetUrl,
       };
-    }
-
-    // 猫画像でない場合はエラー
-    if (!validateResult.response.isAcceptableCatImage) {
-      const reason =
-        (validateResult.response.notAcceptableReason as NotAcceptableReason) ??
-        "an error has occurred";
-      const errorMessage = getErrorMessageFromReason(reason, language);
-
-      return {
-        success: false,
-        errorMessages: [errorMessage],
-      };
-    }
-
-    // 3. LGTM画像作成APIを呼び出し
-    const createResult = await createLgtmImage(signedGetUrl);
-
-    if (!createResult.success) {
+    } catch {
       return {
         success: false,
         errorMessages: [errorMessageUnknown(language)],
       };
     }
-
-    return {
-      success: true,
-      createdLgtmImageUrl: createLgtmImageUrl(createResult.response.imageUrl),
-      previewImageUrl: signedGetUrl,
-    };
-  } catch {
-    return {
-      success: false,
-      errorMessages: [errorMessageUnknown(language)],
-    };
-  }
-}
+  };
