@@ -46,3 +46,25 @@ export class StorageError extends Error {
     StorageError.prototype.name = "StorageError";
   }
 }
+
+/**
+ * ストレージへのアップロード結果の型
+ * R2, S3, GCS など様々なストレージプロバイダーで共通して使用
+ */
+export type UploadToStorageResult =
+  | { readonly success: true }
+  | { readonly success: false; readonly error: Error };
+
+/**
+ * ストレージへのアップロード関数の型定義
+ *
+ * この型に準拠する関数を実装することで、
+ * R2, S3, GCS など様々なストレージプロバイダーに対応可能
+ *
+ * @param file - アップロードするファイル
+ * @param presignedPutUrl - 署名付きPUT URL
+ */
+export type UploadToStorageFn = (
+  file: File,
+  presignedPutUrl: string
+) => Promise<UploadToStorageResult>;

@@ -7,20 +7,20 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { LgtmCatIcon } from "@/components/lgtm-cat-icon";
 import type { Language } from "@/features/language";
 import type { LgtmImageUrl } from "@/features/main/types/lgtm-image";
+import { uploadToR2 as defaultUploadToStorage } from "@/lib/cloudflare/r2/upload-to-r2";
 import { generateUploadUrl as defaultGenerateUploadUrl } from "../actions/generate-upload-url";
 import { validateAndCreateLgtmImage as defaultValidateAndCreateLgtmImage } from "../actions/validate-and-create-lgtm-image";
-import { uploadToR2 as defaultUploadToR2 } from "../functions/upload-to-r2";
 import type {
   GenerateUploadUrlFn,
   UploadFormState,
-  UploadToR2Fn,
+  UploadToStorageFn,
   UploadValidationResult,
   ValidateAndCreateLgtmImageFn,
 } from "../types/upload";
 import {
   createImageSizeTooLargeErrorMessage,
   createNotAllowedImageExtensionErrorMessage,
-  errorMessageR2UploadFailed,
+  errorMessageStorageUploadFailed,
   unexpectedErrorMessage,
 } from "../upload-i18n";
 import { validateUploadFile } from "../upload-validator";
@@ -75,7 +75,7 @@ type Props = {
    * 省略時は実際のServer Actions/関数が使用される
    */
   readonly generateUploadUrl?: GenerateUploadUrlFn;
-  readonly uploadToR2?: UploadToR2Fn;
+  readonly uploadToStorage?: UploadToStorageFn;
   readonly validateAndCreateLgtmImage?: ValidateAndCreateLgtmImageFn;
   /**
    * 初期状態の設定（Storybook用）
@@ -97,7 +97,7 @@ type Props = {
 export function UploadForm({
   language,
   generateUploadUrl = defaultGenerateUploadUrl,
-  uploadToR2 = defaultUploadToR2,
+  uploadToStorage = defaultUploadToStorage,
   validateAndCreateLgtmImage = defaultValidateAndCreateLgtmImage,
   initialState = "idle",
   initialPreviewUrl = null,
@@ -222,18 +222,18 @@ export function UploadForm({
         return;
       }
 
-      // Step 2: ブラウザからR2へ直接アップロード（プログレス: 30-60%）
+      // Step 2: ブラウザからストレージへ直接アップロード（プログレス: 30-60%）
       progressManager.stop();
       progressManager.setProgress(30);
       progressManager.start(10, 60, 300);
 
-      const uploadResult = await uploadToR2(
+      const uploadResult = await uploadToStorage(
         selectedFile,
         urlResult.presignedPutUrl
       );
 
       if (!uploadResult.success) {
-        setErrorMessages([errorMessageR2UploadFailed(language)]);
+        setErrorMessages([errorMessageStorageUploadFailed(language)]);
         setFormState("error");
         return;
       }
@@ -270,7 +270,7 @@ export function UploadForm({
     language,
     progressManager,
     generateUploadUrl,
-    uploadToR2,
+    uploadToStorage,
     validateAndCreateLgtmImage,
   ]);
 

@@ -407,9 +407,9 @@ export function errorMessageFileTooLarge(language: Language): string {
 }
 
 /**
- * エラーメッセージ: R2アップロード失敗
+ * エラーメッセージ: ストレージアップロード失敗
  */
-export function errorMessageR2UploadFailed(language: Language): string {
+export function errorMessageStorageUploadFailed(language: Language): string {
   switch (language) {
     case "ja":
       return "画像のアップロードに失敗しました。しばらく経ってから再度お試しください。";

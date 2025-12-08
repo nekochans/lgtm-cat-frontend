@@ -1,5 +1,7 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 
+import type { UploadToStorageFn as StorageFn } from "./storage";
+
 /**
  * 許可される画像の拡張子
  */
@@ -74,7 +76,7 @@ export type UploadProgressCallback = (progress: number) => void;
 // Re-export for convenience
 export type { GenerateUploadUrlResult } from "../actions/generate-upload-url";
 export type { ValidateAndCreateLgtmImageResult } from "../actions/validate-and-create-lgtm-image";
-export type { UploadToR2Result } from "../functions/upload-to-r2";
+export type { UploadToStorageFn, UploadToStorageResult } from "./storage";
 
 /**
  * generateUploadUrl関数の型
@@ -84,14 +86,6 @@ export type GenerateUploadUrlFn = (
   fileSize: number,
   language: import("@/features/language").Language
 ) => Promise<import("../actions/generate-upload-url").GenerateUploadUrlResult>;
-
-/**
- * uploadToR2関数の型
- */
-export type UploadToR2Fn = (
-  file: File,
-  presignedPutUrl: string
-) => Promise<import("../functions/upload-to-r2").UploadToR2Result>;
 
 /**
  * validateAndCreateLgtmImage関数の型
@@ -108,6 +102,6 @@ export type ValidateAndCreateLgtmImageFn = (
  */
 export type UploadFormDependencies = {
   readonly generateUploadUrl: GenerateUploadUrlFn;
-  readonly uploadToR2: UploadToR2Fn;
+  readonly uploadToStorage: StorageFn;
   readonly validateAndCreateLgtmImage: ValidateAndCreateLgtmImageFn;
 };

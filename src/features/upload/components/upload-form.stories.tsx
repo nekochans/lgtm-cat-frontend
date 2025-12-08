@@ -16,7 +16,6 @@ import {
   errorMessageNotModerationImage,
   errorMessagePayloadTooLarge,
   errorMessagePersonFaceInImage,
-  errorMessageR2UploadFailed,
 } from "../upload-i18n";
 import { UploadForm } from "./upload-form";
 
@@ -36,10 +35,10 @@ function createSuccessMocks() {
     generateUploadUrl: async () =>
       Promise.resolve({
         success: true as const,
-        presignedPutUrl: "https://mock-r2.example.com/upload",
+        presignedPutUrl: "https://mock-storage.example.com/upload",
         objectKey: "mock-object-key",
       }),
-    uploadToR2: async () => Promise.resolve({ success: true as const }),
+    uploadToStorage: async () => Promise.resolve({ success: true as const }),
     validateAndCreateLgtmImage: async () =>
       Promise.resolve({
         success: true as const,
@@ -91,9 +90,9 @@ function createErrorMocks(language: Language) {
           errorMessages: [errorMessagePersonFaceInImage(language)],
         }),
     },
-    r2UploadFailed: {
+    storageUploadFailed: {
       ...successMocks,
-      uploadToR2: async () =>
+      uploadToStorage: async () =>
         Promise.resolve({
           success: false as const,
           error: new Error("Upload failed"),
@@ -294,12 +293,12 @@ export const InteractiveErrorPersonFaceInImage: Story = {
 };
 
 /**
- * インタラクティブ - R2アップロード失敗エラー
+ * インタラクティブ - ストレージアップロード失敗エラー
  */
-export const InteractiveErrorR2UploadFailed: Story = {
+export const InteractiveErrorStorageUploadFailed: Story = {
   args: {
     language: "ja",
-    ...errorMocksJa.r2UploadFailed,
+    ...errorMocksJa.storageUploadFailed,
   },
 };
 
