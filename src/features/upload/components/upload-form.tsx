@@ -7,10 +7,16 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { LgtmCatIcon } from "@/components/lgtm-cat-icon";
 import type { Language } from "@/features/language";
 import type { LgtmImageUrl } from "@/features/main/types/lgtm-image";
-import { generateUploadUrl } from "../actions/generate-upload-url";
-import { validateAndCreateLgtmImage } from "../actions/validate-and-create-lgtm-image";
-import { uploadToR2 } from "../functions/upload-to-r2";
-import type { UploadFormState, UploadValidationResult } from "../types/upload";
+import { generateUploadUrl as defaultGenerateUploadUrl } from "../actions/generate-upload-url";
+import { validateAndCreateLgtmImage as defaultValidateAndCreateLgtmImage } from "../actions/validate-and-create-lgtm-image";
+import { uploadToR2 as defaultUploadToR2 } from "../functions/upload-to-r2";
+import type {
+  GenerateUploadUrlFn,
+  UploadFormState,
+  UploadToR2Fn,
+  UploadValidationResult,
+  ValidateAndCreateLgtmImageFn,
+} from "../types/upload";
 import {
   createImageSizeTooLargeErrorMessage,
   createNotAllowedImageExtensionErrorMessage,
@@ -64,22 +70,59 @@ function createProgressManager(
 
 type Props = {
   readonly language: Language;
+  /**
+   * 依存関係の注入（Storybook等でのモック用）
+   * 省略時は実際のServer Actions/関数が使用される
+   */
+  readonly generateUploadUrl?: GenerateUploadUrlFn;
+  readonly uploadToR2?: UploadToR2Fn;
+  readonly validateAndCreateLgtmImage?: ValidateAndCreateLgtmImageFn;
+  /**
+   * 初期状態の設定（Storybook用）
+   * 実際の使用時は指定不要
+   */
+  readonly initialState?: UploadFormState;
+  readonly initialPreviewUrl?: string | null;
+  readonly initialSelectedFile?: File | null;
+  readonly initialLgtmImageUrl?: LgtmImageUrl | null;
+  readonly initialPreviewImageUrlForSuccess?: string | null;
+  readonly initialErrorMessages?: readonly string[];
+  readonly initialUploadProgress?: number;
 };
 
 /**
  * アップロードフォームメインコンポーネント
  * Figmaデザイン（node-id: 214:1070）に基づく
  */
-export function UploadForm({ language }: Props): JSX.Element {
-  const [formState, setFormState] = useState<UploadFormState>("idle");
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [lgtmImageUrl, setLgtmImageUrl] = useState<LgtmImageUrl | null>(null);
+export function UploadForm({
+  language,
+  generateUploadUrl = defaultGenerateUploadUrl,
+  uploadToR2 = defaultUploadToR2,
+  validateAndCreateLgtmImage = defaultValidateAndCreateLgtmImage,
+  initialState = "idle",
+  initialPreviewUrl = null,
+  initialSelectedFile = null,
+  initialLgtmImageUrl = null,
+  initialPreviewImageUrlForSuccess = null,
+  initialErrorMessages = [],
+  initialUploadProgress = 0,
+}: Props): JSX.Element {
+  const [formState, setFormState] = useState<UploadFormState>(initialState);
+  const [selectedFile, setSelectedFile] = useState<File | null>(
+    initialSelectedFile
+  );
+  const [previewUrl, setPreviewUrl] = useState<string | null>(
+    initialPreviewUrl
+  );
+  const [lgtmImageUrl, setLgtmImageUrl] = useState<LgtmImageUrl | null>(
+    initialLgtmImageUrl
+  );
   const [previewImageUrlForSuccess, setPreviewImageUrlForSuccess] = useState<
     string | null
-  >(null);
-  const [errorMessages, setErrorMessages] = useState<readonly string[]>([]);
-  const [uploadProgress, setUploadProgress] = useState(0);
+  >(initialPreviewImageUrlForSuccess);
+  const [errorMessages, setErrorMessages] =
+    useState<readonly string[]>(initialErrorMessages);
+  const [uploadProgress, setUploadProgress] = useState(initialUploadProgress);
 
   // プログレスインターバル管理用のref
   const progressIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
@@ -221,7 +264,15 @@ export function UploadForm({ language }: Props): JSX.Element {
     } finally {
       progressManager.stop();
     }
-  }, [selectedFile, previewUrl, language, progressManager]);
+  }, [
+    selectedFile,
+    previewUrl,
+    language,
+    progressManager,
+    generateUploadUrl,
+    uploadToR2,
+    validateAndCreateLgtmImage,
+  ]);
 
   const handleErrorDismiss = useCallback(() => {
     setErrorMessages([]);

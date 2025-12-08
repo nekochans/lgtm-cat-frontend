@@ -3,7 +3,7 @@
 /**
  * R2へのアップロード結果
  */
-type UploadToR2Result =
+export type UploadToR2Result =
   | { readonly success: true }
   | { readonly success: false; readonly error: Error };
 

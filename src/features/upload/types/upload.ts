@@ -65,3 +65,49 @@ export type MockUploadResult =
  * アップロード進捗のコールバック型
  */
 export type UploadProgressCallback = (progress: number) => void;
+
+/**
+ * 依存性注入用の型定義
+ * Storybook等でモック可能にするため、Server Actions相当の関数を外部から注入できるようにする
+ */
+
+// Re-export for convenience
+export type { GenerateUploadUrlResult } from "../actions/generate-upload-url";
+export type { ValidateAndCreateLgtmImageResult } from "../actions/validate-and-create-lgtm-image";
+export type { UploadToR2Result } from "../functions/upload-to-r2";
+
+/**
+ * generateUploadUrl関数の型
+ */
+export type GenerateUploadUrlFn = (
+  contentType: string,
+  fileSize: number,
+  language: import("@/features/language").Language
+) => Promise<import("../actions/generate-upload-url").GenerateUploadUrlResult>;
+
+/**
+ * uploadToR2関数の型
+ */
+export type UploadToR2Fn = (
+  file: File,
+  presignedPutUrl: string
+) => Promise<import("../functions/upload-to-r2").UploadToR2Result>;
+
+/**
+ * validateAndCreateLgtmImage関数の型
+ */
+export type ValidateAndCreateLgtmImageFn = (
+  objectKey: string,
+  language: import("@/features/language").Language
+) => Promise<
+  import("../actions/validate-and-create-lgtm-image").ValidateAndCreateLgtmImageResult
+>;
+
+/**
+ * UploadForm依存関係（Storybook等でのモック用）
+ */
+export type UploadFormDependencies = {
+  readonly generateUploadUrl: GenerateUploadUrlFn;
+  readonly uploadToR2: UploadToR2Fn;
+  readonly validateAndCreateLgtmImage: ValidateAndCreateLgtmImageFn;
+};
