@@ -1,0 +1,3 @@
+reviews:
+  path_filters:
+    - "!design-docs-for-ai/**"
