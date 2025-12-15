@@ -279,10 +279,10 @@ export function HeaderMobile({
         </div>
       </header>
 
-      {/* メニューDrawer（右からスライドイン） */}
+      {/* メニューDrawer（右からスライドイン、幅285pxでFigmaデザインに合わせる） */}
       <Drawer
         classNames={{
-          base: "bg-primary",
+          base: "w-[285px] bg-primary",
         }}
         hideCloseButton
         isOpen={isMenuOpen}
