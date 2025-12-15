@@ -3,13 +3,14 @@
 
 import type { JSX } from "react";
 import { HeaderDesktop } from "@/components/header-desktop";
+import { HeaderMobile } from "@/components/header-mobile";
 import type { Language } from "@/features/language";
 import type { IncludeLanguageAppPath } from "@/features/url";
 
 type Props = {
-  language: Language;
-  currentUrlPath: IncludeLanguageAppPath;
-  isLoggedIn: boolean;
+  readonly language: Language;
+  readonly currentUrlPath: IncludeLanguageAppPath;
+  readonly isLoggedIn: boolean;
 };
 
 export function Header({
@@ -18,11 +19,23 @@ export function Header({
   isLoggedIn,
 }: Props): JSX.Element {
   return (
-    // TODO: 新しく https://github.com/nekochans/lgtm-cat-frontend/issues/348 でHeaderMobile を作成してレスポンシブ対応を実施する
-    <HeaderDesktop
-      currentUrlPath={currentUrlPath}
-      isLoggedIn={isLoggedIn}
-      language={language}
-    />
+    <>
+      {/* モバイル: md未満で表示 */}
+      <div className="md:hidden">
+        <HeaderMobile
+          currentUrlPath={currentUrlPath}
+          isLoggedIn={isLoggedIn}
+          language={language}
+        />
+      </div>
+      {/* デスクトップ: md以上で表示 */}
+      <div className="hidden md:block">
+        <HeaderDesktop
+          currentUrlPath={currentUrlPath}
+          isLoggedIn={isLoggedIn}
+          language={language}
+        />
+      </div>
+    </>
   );
 }

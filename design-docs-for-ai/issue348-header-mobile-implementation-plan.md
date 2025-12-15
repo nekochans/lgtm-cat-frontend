@@ -1,10 +1,10 @@
-# Issue #348: HeaderMobile レスポンシブ対応 - 詳細実装計画書
+# Issue #348: HeaderMobile レスポンシブ対応 - 詳細実装計画書（Drawer版）
 
 ## 📋 概要
 
 ### 目的
 
-`src/components/header.tsx` のレスポンシブ対応を実施する。モバイル用の `HeaderMobile` コンポーネントを新規作成し、ブレークポイントで `HeaderDesktop` と切り替える。
+`src/components/header-mobile.tsx` を HeroUI の `Drawer` コンポーネントを使用した実装に変更する。メニューは**右側からスライドイン**し、**要素外クリックやESCキーで閉じる**形式に対応する。
 
 ### 関連Issue
 
@@ -13,33 +13,43 @@ https://github.com/nekochans/lgtm-cat-frontend/issues/348
 ### 技術スタック
 
 - **UIライブラリ**: `@heroui/react` (既にインストール済み)
+  - **Drawer コンポーネント**: メニューパネルに使用
+  - **useDisclosure フック**: 開閉状態の管理
 - **スタイリング**: Tailwind CSS 4
 - **フレームワーク**: Next.js 16 App Router
 - **React**: v19
+
+### 変更の背景
+
+Figmaデザイン（node: `484-5241`）に基づき、メニューパネルを右側から開くDrawer形式に変更する。これにより以下のUX改善が実現される：
+
+1. **直感的な操作**: 右からスライドインするアニメーション
+2. **標準的な閉じ方**: 要素外クリック、ESCキー、×ボタンで閉じる
+3. **オーバーレイ**: 背景が薄暗くなり、メニューにフォーカスが当たる
 
 ---
 
 ## 📁 ファイル構成
 
-### 新規作成ファイル
-
-| 種別 | ファイルパス | コンポーネント名 | 説明 |
-|------|-------------|------------------|------|
-| モバイル用ヘッダー | `src/components/header-mobile.tsx` | `HeaderMobile` | モバイル用ヘッダーコンポーネント |
-| アイコン | `src/components/icons/menu-icon.tsx` | `MenuIcon` | ハンバーガーメニューアイコン |
-| アイコン | `src/components/icons/close-icon.tsx` | `CloseIcon` | クローズ（×）アイコン |
-| アイコン | `src/components/icons/cat-nyan-icon.tsx` | `CatNyanIcon` | にゃんリスト用猫アイコン |
-| Storybook | `src/components/header-desktop.stories.tsx` | - | HeaderDesktopのStorybook |
-| Storybook | `src/components/header-mobile.stories.tsx` | - | HeaderMobileのStorybook |
-
-### 修正ファイル
+### 修正対象ファイル
 
 | ファイルパス | 変更内容 |
 |-------------|----------|
-| `src/components/header.tsx` | ブレークポイントで HeaderDesktop と HeaderMobile を切り替え |
-| `src/components/header-logo.tsx` | `size` プロパティを追加（"desktop" \| "mobile"）してモバイル用サイズに対応 |
-| `src/components/header-i18n.ts` | `homeText` 関数を追加 |
-| `src/components/icons/heart-icon.tsx` | `color` プロパティに "white" を追加 |
+| `src/components/header-mobile.tsx` | Drawer コンポーネントを使用した実装に変更 |
+
+### 既存ファイル（変更なし）
+
+以下のファイルは前回の実装で作成済みであり、今回の変更では修正不要：
+
+- `src/components/icons/menu-icon.tsx` - ハンバーガーメニューアイコン
+- `src/components/icons/close-icon.tsx` - クローズアイコン
+- `src/components/icons/cat-nyan-icon.tsx` - にゃんリスト用猫アイコン
+- `src/components/header-logo.tsx` - size プロパティ対応済み
+- `src/components/icons/heart-icon.tsx` - color: "white" 対応済み
+- `src/components/header-i18n.ts` - i18n関数追加済み
+- `src/components/header.tsx` - ブレークポイント切り替え対応済み
+- `src/components/header-desktop.stories.tsx` - Storybook作成済み
+- `src/components/header-mobile.stories.tsx` - Storybook作成済み
 
 ---
 
@@ -67,18 +77,21 @@ https://github.com/nekochans/lgtm-cat-frontend/issues/348
 - justify-between で左右配置
 ```
 
-### HeaderMobile - ヘッダーバー（開いた状態）
+### HeaderMobile - Drawer（開いた状態）
 
-**Figma Node**: `226-2324`
+**Figma Node**: `484-5241`
 
 ```
-構成要素:
-- LGTMeow ロゴ
-- 地球儀アイコン
-- クローズアイコン（×）
+Drawer の特徴:
+- 右側からスライドインするアニメーション
+- 背景に薄暗いオーバーレイ（backdrop）
+- 要素外クリックまたはESCキーで閉じる
+- ヘッダーバーの×アイコンでも閉じる
 
-変更点:
-- ハンバーガーアイコン → クローズアイコンに変化
+構成要素:
+- ヘッダーバー（LGTMeow ロゴ + 地球儀アイコン + ×アイコン）
+- メニューコンテンツ（ログイン状態に応じて変化）
+- 言語選択メニュー（オプション）
 ```
 
 ### メニューパネル（未ログイン状態 - 日本語）
@@ -440,11 +453,11 @@ export function homeText(language: Language): string {
 
 ---
 
-### 7. HeaderMobile（新規作成）
+### 7. HeaderMobile（Drawer版に修正）
 
 **ファイルパス**: `src/components/header-mobile.tsx`
 
-#### Props定義
+#### Props定義（変更なし）
 
 ```typescript
 type Props = {
@@ -454,31 +467,42 @@ type Props = {
 };
 ```
 
-#### インポート
+#### インポート（Drawer関連を追加）
 
 ```typescript
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 "use client";
 
-import { Button } from "@heroui/react";
-import Link from "next/link";
-import { type JSX, useState } from "react";
 import {
+  Button,
+  Drawer,
+  DrawerBody,
+  DrawerContent,
+  DrawerHeader,
+  useDisclosure,
+} from "@heroui/react";
+import Link from "next/link";
+import type { JSX } from "react";
+import {
+  closeMenuAriaLabel,
   favoriteListText,
   homeText,
   howToUseText,
+  loginText,
   logoutText,
   meowlistText,
+  openMenuAriaLabel,
+  switchLanguageAriaLabel,
   uploadText,
 } from "@/components/header-i18n";
 import { HeaderLogo } from "@/components/header-logo";
 import { CatNyanIcon } from "@/components/icons/cat-nyan-icon";
 import { CloseIcon } from "@/components/icons/close-icon";
+import { GithubIcon } from "@/components/icons/github-icon";
 import { GlobeIcon } from "@/components/icons/globe-icon";
 import { HeartIcon } from "@/components/icons/heart-icon";
 import { MenuIcon } from "@/components/icons/menu-icon";
 import { RightIcon } from "@/components/icons/right-icon";
-import { GithubIcon } from "@/components/icons/github-icon";
 import { type Language, removeLanguageFromAppPath } from "@/features/language";
 import {
   createIncludeLanguageAppPath,
@@ -486,24 +510,43 @@ import {
 } from "@/features/url";
 ```
 
-#### 状態管理
+#### 状態管理（useDisclosureフックを使用）
 
 ```typescript
-const [isMenuOpen, setIsMenuOpen] = useState(false);
+// メニューDrawerの開閉状態
+const { isOpen: isMenuOpen, onOpen: onMenuOpen, onClose: onMenuClose } = useDisclosure();
+// 言語メニューの開閉状態（Drawer内のアコーディオン的な動作）
 const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
 ```
 
 #### コンポーネント構造
 
-1. **ヘッダーバー**: ロゴ + 地球儀アイコン + メニュー/クローズアイコン
-2. **メニューパネル**: 条件付きで表示（`isMenuOpen` が `true` の時）
-3. **言語メニュー**: 条件付きで表示（`isLanguageMenuOpen` が `true` の時）
+1. **ヘッダーバー**: ロゴ + 地球儀アイコン + メニューアイコン（常に表示）
+2. **Drawer**: 右側から開くメニューパネル
+   - **DrawerHeader**: Drawer内のヘッダー（×ボタン付き）
+   - **DrawerBody**: メニューコンテンツ（言語選択 + ナビリンク）
 
-#### スタイリング指針
+#### Drawer の設定
+
+```typescript
+<Drawer
+  hideCloseButton  // デフォルトのクローズボタンを非表示
+  isOpen={isMenuOpen}
+  placement="right"  // 右側から開く
+  onClose={onMenuClose}
+  classNames={{
+    base: "bg-primary",  // Drawer全体の背景色
+    header: "bg-primary border-b border-orange-300",  // ヘッダー部分
+    body: "bg-primary px-5 pb-5",  // ボディ部分
+  }}
+>
+```
+
+#### スタイリング指針（変更なし）
 
 - ヘッダーバー背景: `bg-primary`
-- メニューパネル背景: `bg-primary`
-- ボタン背景（未ログイン時ログインボタン / ログイン時HOMEボタン）: `bg-button-secondary-base`
+- Drawer背景: `bg-primary`
+- ボタン背景（未ログイン時ログインボタン / ログイン時Logoutボタン）: `bg-button-secondary-base`
 - ボタンテキスト: `text-text-br`
 - ナビリンクテキスト: `text-background` (white系)
 - ボーダー: `border-orange-200`
@@ -695,22 +738,32 @@ export const LoggedInHeaderMobileInEnglish: Story = {
 
 ## 📝 実装順序
 
-以下の順序で実装することを推奨:
+**今回の変更は HeaderMobile のみ**です。以下のファイルは前回の実装で作成済み：
 
-1. **MenuIcon** - ハンバーガーメニューアイコン
-2. **CloseIcon** - クローズアイコン
-3. **CatNyanIcon** - にゃんリスト用猫アイコン
-4. **HeaderLogo** - `size` プロパティを追加（既存ファイル修正）
-5. **HeartIcon** - `color` プロパティに "white" を追加（既存ファイル修正）
-6. **header-i18n.ts** - `homeText` 関数追加
-7. **HeaderMobile** - メインコンポーネント
-8. **header.tsx** - ブレークポイント切り替え修正
-9. **header-desktop.stories.tsx** - Storybook
-10. **header-mobile.stories.tsx** - Storybook
+- ✅ MenuIcon, CloseIcon, CatNyanIcon - 作成済み
+- ✅ HeaderLogo - size プロパティ追加済み
+- ✅ HeartIcon - color: "white" 追加済み
+- ✅ header-i18n.ts - homeText, loginText, aria-label関数 追加済み
+- ✅ header.tsx - ブレークポイント切り替え対応済み
+- ✅ Storybook - 作成済み
+
+### 今回の実装手順
+
+1. **HeaderMobile を Drawer版に修正** - `src/components/header-mobile.tsx`
+2. **品質管理の実行** - format, lint, test
+3. **動作確認** - ブラウザで確認
 
 ---
 
-## 📋 HeaderMobile 詳細実装
+## 📋 HeaderMobile 詳細実装（Drawer版）
+
+### 重要な仕様変更（2025-12-15更新）
+
+**言語メニューの表示仕様**:
+- ヘッダーバーの地球儀アイコンは**メニューを開く**動作のみ（Drawerを開く）
+- 言語メニューは**Drawer内の地球儀アイコンをクリックした時のみ**表示される
+- 通常時のDrawer内: ログインボタン + ナビリンク（言語メニューなし）
+- 地球儀クリック後: ログインボタン + 言語メニュー + ナビリンク
 
 ### コンポーネント全体構造
 
@@ -718,15 +771,26 @@ export const LoggedInHeaderMobileInEnglish: Story = {
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 "use client";
 
-import { Button } from "@heroui/react";
+import {
+  Button,
+  Drawer,
+  DrawerBody,
+  DrawerContent,
+  DrawerHeader,
+  useDisclosure,
+} from "@heroui/react";
 import Link from "next/link";
 import { type JSX, useState } from "react";
 import {
+  closeMenuAriaLabel,
   favoriteListText,
   homeText,
   howToUseText,
+  loginText,
   logoutText,
   meowlistText,
+  openMenuAriaLabel,
+  switchLanguageAriaLabel,
   uploadText,
 } from "@/components/header-i18n";
 import { HeaderLogo } from "@/components/header-logo";
@@ -754,180 +818,272 @@ export function HeaderMobile({
   currentUrlPath,
   isLoggedIn,
 }: Props): JSX.Element {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  // HeroUI の useDisclosure フックでDrawerの開閉状態を管理
+  const {
+    isOpen: isMenuOpen,
+    onOpen: onMenuOpen,
+    onClose: onMenuClose,
+  } = useDisclosure();
+  // 言語メニューの開閉状態（Drawer内の地球儀クリックで切り替え）
   const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
 
   const removedLanguagePath = removeLanguageFromAppPath(currentUrlPath);
-
-  const handleMenuToggle = () => {
-    setIsMenuOpen((prev) => !prev);
-    // メニューを閉じる時は言語メニューも閉じる
-    if (isMenuOpen) {
-      setIsLanguageMenuOpen(false);
-    }
-  };
 
   const handleLanguageToggle = () => {
     setIsLanguageMenuOpen((prev) => !prev);
   };
 
   const handleCloseMenus = () => {
-    setIsMenuOpen(false);
+    onMenuClose();
     setIsLanguageMenuOpen(false);
   };
 
   return (
     <>
-      {/* ヘッダーバー */}
+      {/* ヘッダーバー（常に表示） */}
       <header className="w-full border-orange-300 border-b bg-primary">
         <div className="flex h-12 items-center justify-between px-4">
           <HeaderLogo language={language} size="mobile" />
           <div className="flex items-center gap-3">
+            {/* 地球儀アイコン: メニューを開く（言語メニューも開いた状態で） */}
             <button
-              aria-label="言語切替"
+              aria-label={switchLanguageAriaLabel(language)}
               className="p-1"
-              onClick={handleLanguageToggle}
+              onClick={() => {
+                setIsLanguageMenuOpen(true);
+                onMenuOpen();
+              }}
               type="button"
             >
               <GlobeIcon />
             </button>
+            {/* メニューアイコン: メニューを開く（言語メニューは閉じた状態で） */}
             <button
-              aria-label={isMenuOpen ? "メニューを閉じる" : "メニューを開く"}
+              aria-label={openMenuAriaLabel(language)}
               className="p-1"
-              onClick={handleMenuToggle}
+              onClick={onMenuOpen}
               type="button"
             >
-              {isMenuOpen ? <CloseIcon /> : <MenuIcon />}
+              <MenuIcon />
             </button>
           </div>
         </div>
       </header>
 
-      {/* 言語メニュー */}
-      {isLanguageMenuOpen && (
-        <nav className="w-full bg-primary px-5 pb-5">
-          <Link
-            className={`flex h-[70px] items-center gap-3 border-orange-200 border-b px-5 py-3 text-base text-background ${
-              language === "ja" ? "bg-orange-400" : ""
-            }`}
-            href={removedLanguagePath}
-            onClick={handleCloseMenus}
-          >
-            {language === "ja" && <RightIcon />}
-            <span className={language === "ja" ? "" : "pl-5"}>日本語</span>
-          </Link>
-          <Link
-            className={`flex h-[70px] items-center gap-3 border-orange-200 border-b px-5 py-3 text-base text-background ${
-              language === "en" ? "bg-orange-400" : ""
-            }`}
-            href={`/en${removedLanguagePath}`}
-            onClick={handleCloseMenus}
-          >
-            {language === "en" && <RightIcon />}
-            <span className={language === "en" ? "" : "pl-5"}>English</span>
-          </Link>
-        </nav>
-      )}
-
-      {/* メニューパネル */}
-      {isMenuOpen && (
-        <nav className="w-full bg-primary px-5 pb-5">
-          {/* 未ログイン時: ログインボタン */}
-          {!isLoggedIn && (
+      {/* メニューDrawer（右からスライドイン） */}
+      <Drawer
+        classNames={{
+          base: "bg-primary",
+        }}
+        hideCloseButton
+        isOpen={isMenuOpen}
+        onClose={handleCloseMenus}
+        placement="right"
+      >
+        <DrawerContent>
+          {(onClose) => (
             <>
-              <Button
-                as={Link}
-                className="mb-4 flex w-full items-center justify-center gap-2 rounded-lg bg-button-secondary-base px-7 py-2 font-bold text-text-br text-xl"
-                href={createIncludeLanguageAppPath("login", language)}
-                onClick={handleCloseMenus}
-              >
-                <GithubIcon color="default" height={20} width={20} />
-                {language === "en" ? "Login" : "ログイン"}
-              </Button>
+              {/* Drawer内のヘッダー */}
+              <DrawerHeader className="flex items-center justify-between border-orange-300 border-b bg-primary px-4 py-2">
+                <HeaderLogo language={language} size="mobile" />
+                <div className="flex items-center gap-3">
+                  {/* Drawer内の地球儀アイコン: 言語メニューの開閉を切り替え */}
+                  <button
+                    aria-label={switchLanguageAriaLabel(language)}
+                    className="p-1"
+                    onClick={handleLanguageToggle}
+                    type="button"
+                  >
+                    <GlobeIcon />
+                  </button>
+                  <button
+                    aria-label={closeMenuAriaLabel(language)}
+                    className="p-1"
+                    onClick={onClose}
+                    type="button"
+                  >
+                    <CloseIcon />
+                  </button>
+                </div>
+              </DrawerHeader>
 
-              <Link
-                className="flex h-[70px] items-center border-orange-200 border-b px-5 py-3 text-base text-background"
-                href={createIncludeLanguageAppPath("home", language)}
-                onClick={handleCloseMenus}
-              >
-                {homeText(language)}
-              </Link>
-              <Link
-                className="flex h-[70px] items-center border-orange-200 border-b px-5 py-3 text-base text-background"
-                href={createIncludeLanguageAppPath("upload", language)}
-                onClick={handleCloseMenus}
-              >
-                {uploadText(language)}
-              </Link>
-              <Link
-                className="flex h-[70px] items-center border-orange-200 border-b px-5 py-3 text-base text-background"
-                // TODO: /how-to-use ページ実装後は `createIncludeLanguageAppPath` を使ってパスを生成するように修正する
-                href="/how-to-use"
-                onClick={handleCloseMenus}
-              >
-                {howToUseText(language)}
-              </Link>
+              {/* Drawer内のボディ（メニューコンテンツ） */}
+              <DrawerBody className="bg-primary px-5 pb-5">
+                {/* 未ログイン時: ログインボタン + 言語メニュー（条件付き） + ナビリンク */}
+                {!isLoggedIn && (
+                  <>
+                    <Button
+                      as={Link}
+                      className="mb-4 flex w-full items-center justify-center gap-2 rounded-lg bg-button-secondary-base px-7 py-2 font-bold text-text-br text-xl"
+                      href={createIncludeLanguageAppPath("login", language)}
+                      onClick={handleCloseMenus}
+                    >
+                      <GithubIcon color="default" height={20} width={20} />
+                      {loginText(language)}
+                    </Button>
+
+                    {/* 言語メニュー（地球儀クリック時のみ表示） */}
+                    {isLanguageMenuOpen && (
+                      <nav className="mb-4">
+                        <Link
+                          className={`flex h-[70px] items-center gap-3 border-orange-200 border-b px-5 py-3 text-background text-base ${
+                            language === "ja" ? "bg-orange-400" : ""
+                          }`}
+                          href={removedLanguagePath}
+                          onClick={handleCloseMenus}
+                        >
+                          {language === "ja" && <RightIcon />}
+                          <span className={language === "ja" ? "" : "pl-5"}>日本語</span>
+                        </Link>
+                        <Link
+                          className={`flex h-[70px] items-center gap-3 border-orange-200 border-b px-5 py-3 text-background text-base ${
+                            language === "en" ? "bg-orange-400" : ""
+                          }`}
+                          href={`/en${removedLanguagePath}`}
+                          onClick={handleCloseMenus}
+                        >
+                          {language === "en" && <RightIcon />}
+                          <span className={language === "en" ? "" : "pl-5"}>English</span>
+                        </Link>
+                      </nav>
+                    )}
+
+                    <Link
+                      className="flex h-[70px] items-center border-orange-200 border-b px-5 py-3 text-background text-base"
+                      href={createIncludeLanguageAppPath("home", language)}
+                      onClick={handleCloseMenus}
+                    >
+                      {homeText(language)}
+                    </Link>
+                    <Link
+                      className="flex h-[70px] items-center border-orange-200 border-b px-5 py-3 text-background text-base"
+                      href={createIncludeLanguageAppPath("upload", language)}
+                      onClick={handleCloseMenus}
+                    >
+                      {uploadText(language)}
+                    </Link>
+                    <Link
+                      className="flex h-[70px] items-center border-orange-200 border-b px-5 py-3 text-background text-base"
+                      // TODO: /how-to-use ページ実装後は `createIncludeLanguageAppPath` を使ってパスを生成するように修正する
+                      href="/how-to-use"
+                      onClick={handleCloseMenus}
+                    >
+                      {howToUseText(language)}
+                    </Link>
+                  </>
+                )}
+
+                {/* ログイン時: Logoutボタン + 言語メニュー（条件付き） + ナビリンク */}
+                {isLoggedIn && (
+                  <>
+                    <Button
+                      as={Link}
+                      className="mb-4 flex w-full items-center justify-center gap-2 rounded-lg bg-button-secondary-base px-6 py-2 font-bold text-text-br text-xl"
+                      // TODO: https://github.com/nekochans/lgtm-cat/issues/14 でログイン機能が出来た際にこのページを実装するので実装後は `createIncludeLanguageAppPath` を使ってパスを生成するように修正する
+                      href="/logout"
+                      onClick={handleCloseMenus}
+                    >
+                      {logoutText(language)}
+                    </Button>
+
+                    {/* 言語メニュー（地球儀クリック時のみ表示） */}
+                    {isLanguageMenuOpen && (
+                      <nav className="mb-4">
+                        <Link
+                          className={`flex h-[70px] items-center gap-3 border-orange-200 border-b px-5 py-3 text-background text-base ${
+                            language === "ja" ? "bg-orange-400" : ""
+                          }`}
+                          href={removedLanguagePath}
+                          onClick={handleCloseMenus}
+                        >
+                          {language === "ja" && <RightIcon />}
+                          <span className={language === "ja" ? "" : "pl-5"}>日本語</span>
+                        </Link>
+                        <Link
+                          className={`flex h-[70px] items-center gap-3 border-orange-200 border-b px-5 py-3 text-background text-base ${
+                            language === "en" ? "bg-orange-400" : ""
+                          }`}
+                          href={`/en${removedLanguagePath}`}
+                          onClick={handleCloseMenus}
+                        >
+                          {language === "en" && <RightIcon />}
+                          <span className={language === "en" ? "" : "pl-5"}>English</span>
+                        </Link>
+                      </nav>
+                    )}
+
+                    <Link
+                      className="flex h-[70px] items-center gap-3 border-orange-200 border-b px-5 py-4 text-background text-sm"
+                      // TODO: https://github.com/nekochans/lgtm-cat/issues/14 でログイン機能が出来た際にこのページを実装するので実装後は `createIncludeLanguageAppPath` を使ってパスを生成するように修正する
+                      href="/favorites"
+                      onClick={handleCloseMenus}
+                    >
+                      <HeartIcon color="white" height={24} width={24} />
+                      {favoriteListText(language)}
+                    </Link>
+                    <Link
+                      className="flex h-[70px] items-center gap-3 border-orange-200 border-b px-5 py-4 text-background text-sm"
+                      // TODO: https://github.com/nekochans/lgtm-cat/issues/14 でログイン機能が出来た際にこのページを実装するので実装後は `createIncludeLanguageAppPath` を使ってパスを生成するように修正する
+                      href="/cat-list"
+                      onClick={handleCloseMenus}
+                    >
+                      <CatNyanIcon color="white" height={24} width={24} />
+                      {meowlistText(language)}
+                    </Link>
+                  </>
+                )}
+              </DrawerBody>
             </>
           )}
-
-          {/* ログイン時: Logoutボタン + ナビリンク */}
-          {isLoggedIn && (
-            <>
-              <Button
-                as={Link}
-                className="mb-4 flex w-full items-center justify-center gap-2 rounded-lg bg-button-secondary-base px-6 py-2 font-bold text-text-br text-xl"
-                // TODO: https://github.com/nekochans/lgtm-cat/issues/14 でログイン機能が出来た際にこのページを実装するので実装後は `createIncludeLanguageAppPath` を使ってパスを生成するように修正する
-                href="/logout"
-                onClick={handleCloseMenus}
-              >
-                {logoutText(language)}
-              </Button>
-
-              <Link
-                className="flex h-[70px] items-center gap-3 border-orange-200 border-b px-5 py-4 text-sm text-background"
-                // TODO: https://github.com/nekochans/lgtm-cat/issues/14 でログイン機能が出来た際にこのページを実装するので実装後は `createIncludeLanguageAppPath` を使ってパスを生成するように修正する
-                href="/favorites"
-                onClick={handleCloseMenus}
-              >
-                <HeartIcon color="white" height={24} width={24} />
-                {favoriteListText(language)}
-              </Link>
-              <Link
-                className="flex h-[70px] items-center gap-3 border-orange-200 border-b px-5 py-4 text-sm text-background"
-                // TODO: https://github.com/nekochans/lgtm-cat/issues/14 でログイン機能が出来た際にこのページを実装するので実装後は `createIncludeLanguageAppPath` を使ってパスを生成するように修正する
-                href="/cat-list"
-                onClick={handleCloseMenus}
-              >
-                <CatNyanIcon color="white" height={24} width={24} />
-                {meowlistText(language)}
-              </Link>
-            </>
-          )}
-        </nav>
-      )}
+        </DrawerContent>
+      </Drawer>
     </>
   );
 }
 ```
 
+### Drawer の主要設定
+
+| プロパティ | 値 | 説明 |
+|-----------|-----|------|
+| `placement` | `"right"` | 右側から開く |
+| `hideCloseButton` | `true` | デフォルトのクローズボタンを非表示（カスタムボタン使用） |
+| `isOpen` | `isMenuOpen` | 開閉状態（useDisclosure で管理） |
+| `onClose` | `handleCloseMenus` | 閉じる時のハンドラー |
+| `classNames.base` | `"bg-primary"` | Drawer全体の背景色 |
+
+### 言語メニューの動作仕様
+
+| 操作 | 動作 |
+|------|------|
+| ヘッダーバーの地球儀クリック | Drawerを開く + 言語メニューを表示した状態で開く |
+| ヘッダーバーのメニューアイコンクリック | Drawerを開く（言語メニューは非表示） |
+| Drawer内の地球儀クリック | 言語メニューの表示/非表示を切り替え |
+| 言語リンククリック | 言語を切り替え + Drawerを閉じる |
+
+### 閉じる方法
+
+Drawerは以下の方法で閉じることができます：
+
+1. **×ボタンクリック**: DrawerHeader内のCloseIconボタン
+2. **オーバーレイクリック**: Drawer外の薄暗い部分をクリック
+3. **ESCキー**: キーボードのESCキーを押す
+4. **リンククリック**: メニュー内のリンクをクリック（handleCloseMenusで閉じる）
+
 ---
 
 ## 🚨 実装時の注意事項
 
-### 1. 既存コンポーネントの再利用と修正
+### 1. 既存コンポーネント（全て対応済み）
 
-#### そのまま使用するコンポーネント
+以下のコンポーネントは前回の実装で作成・修正済みです：
 
-- `src/components/lgtm-cat-icon.tsx` - 猫アイコン（HeaderLogo内で使用、width/height props対応済み）
-- `src/components/icons/globe-icon.tsx` - 地球儀アイコン（固定サイズ 24x24、白色）
-- `src/components/icons/right-icon.tsx` - 右矢印アイコン（固定サイズ 10x14、白色）
-- `src/components/icons/github-icon.tsx` - GitHubアイコン（width/height/color props対応済み）
-- `src/components/login-button.tsx` - ログインボタン（参考用）
-
-#### 修正が必要なコンポーネント
-
-- `src/components/header-logo.tsx` - **size プロパティを追加** ("desktop" | "mobile")
-- `src/components/icons/heart-icon.tsx` - **color プロパティに "white" を追加**
+- `src/components/icons/menu-icon.tsx` - ハンバーガーメニューアイコン（作成済み）
+- `src/components/icons/close-icon.tsx` - クローズアイコン（作成済み）
+- `src/components/icons/cat-nyan-icon.tsx` - にゃんリスト用猫アイコン（作成済み）
+- `src/components/header-logo.tsx` - size プロパティ追加済み
+- `src/components/icons/heart-icon.tsx` - color: "white" 追加済み
+- `src/components/header-i18n.ts` - homeText, loginText, aria-label関数 追加済み
 
 ### 2. インポートパスの確認
 
@@ -999,10 +1155,14 @@ Playwright MCPを使って `http://localhost:2222` にアクセスし、以下�
 
 - [ ] デスクトップサイズ（768px以上）で `HeaderDesktop` が表示される
 - [ ] モバイルサイズ（768px未満）で `HeaderMobile` が表示される
-- [ ] ハンバーガーメニューをクリックでメニューが開閉する
-- [ ] 地球儀アイコンをクリックで言語メニューが開閉する
+- [ ] ハンバーガーメニューをクリックで**Drawerが右から開く**（言語メニューは非表示）
+- [ ] ヘッダーバーの地球儀アイコンをクリックで**Drawerが開く + 言語メニューが表示される**
+- [ ] Drawer内の×ボタンをクリックで**Drawerが閉じる**
+- [ ] **オーバーレイ（背景の薄暗い部分）をクリックでDrawerが閉じる**
+- [ ] **ESCキーを押してDrawerが閉じる**
+- [ ] Drawer内の地球儀アイコンをクリックで**言語メニューが開閉する**
 - [ ] 言語切替が動作する
-- [ ] 各ナビリンクが正常に遷移する
+- [ ] 各ナビリンクが正常に遷移し、Drawerが閉じる
 - [ ] ログイン/未ログイン状態でメニュー内容が切り替わる
 
 ### 5. Storybookでの表示確認
@@ -1033,22 +1193,31 @@ Chrome DevTools MCP を使ってデザイン崩れがないか確認すること
 
 以下を全て満たすこと:
 
-### 新規ファイル
-- [ ] `HeaderMobile` コンポーネントが新規作成されている (`src/components/header-mobile.tsx`)
-- [ ] `MenuIcon` が新規作成されている (`src/components/icons/menu-icon.tsx`)
-- [ ] `CloseIcon` が新規作成されている (`src/components/icons/close-icon.tsx`)
-- [ ] `CatNyanIcon` が新規作成されている (`src/components/icons/cat-nyan-icon.tsx`)
-- [ ] `HeaderDesktop` の Storybook が作成されている (`src/components/header-desktop.stories.tsx`)
-- [ ] `HeaderMobile` の Storybook が作成されている (`src/components/header-mobile.stories.tsx`)
+### 今回の修正対象
+- [ ] `HeaderMobile` コンポーネントがDrawer版に修正されている (`src/components/header-mobile.tsx`)
 
-### 既存ファイル修正
-- [ ] `header-i18n.ts` に `homeText` 関数が追加されている
-- [ ] `header.tsx` がブレークポイントで HeaderDesktop と HeaderMobile を切り替える実装になっている
-- [ ] `header-logo.tsx` に `size` プロパティが追加されている
-- [ ] `heart-icon.tsx` に `color: "white"` オプションが追加されている
+### 前回の実装（確認済み - 変更不要）
+- [x] `MenuIcon` が作成されている (`src/components/icons/menu-icon.tsx`)
+- [x] `CloseIcon` が作成されている (`src/components/icons/close-icon.tsx`)
+- [x] `CatNyanIcon` が作成されている (`src/components/icons/cat-nyan-icon.tsx`)
+- [x] `HeaderDesktop` の Storybook が作成されている (`src/components/header-desktop.stories.tsx`)
+- [x] `HeaderMobile` の Storybook が作成されている (`src/components/header-mobile.stories.tsx`)
+- [x] `header-i18n.ts` に `homeText`, `loginText`, aria-label関数が追加されている
+- [x] `header.tsx` がブレークポイントで HeaderDesktop と HeaderMobile を切り替える実装になっている
+- [x] `header-logo.tsx` に `size` プロパティが追加されている
+- [x] `heart-icon.tsx` に `color: "white"` オプションが追加されている
+
+### Drawer 動作確認
+- [ ] メニューアイコンをクリックで**Drawerが右側からスライドイン**する（言語メニューは非表示）
+- [ ] ヘッダーバーの地球儀アイコンをクリックで**Drawerが開く + 言語メニューが表示される**
+- [ ] Drawer内の×ボタンをクリックで**Drawerがスライドアウト**する
+- [ ] **オーバーレイ（背景の薄暗い部分）をクリックでDrawerが閉じる**
+- [ ] **ESCキーを押してDrawerが閉じる**
+- [ ] Drawer内の地球儀アイコンをクリックで**言語メニューの表示/非表示が切り替わる**
+- [ ] Drawer内のリンクをクリックするとDrawerが閉じる
 
 ### デザイン・品質
-- [ ] Figmaデザインと視覚的に一致している
+- [ ] Figmaデザイン（node: `484-5241`）と視覚的に一致している
 - [ ] デザイントークン（`bg-primary`, `text-background`, `bg-button-secondary-base` など）が正しく使用されている
 - [ ] 既存の機能（デスクトップ表示）が全て正常に動作する
 
@@ -1064,5 +1233,6 @@ Chrome DevTools MCP を使ってデザイン崩れがないか確認すること
 ---
 
 **作成日**: 2025-12-15
+**更新日**: 2025-12-15（言語メニュー仕様変更 - 地球儀クリック時のみ表示）
 **対象Issue**: #348
 **担当**: AI実装者

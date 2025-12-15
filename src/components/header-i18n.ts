@@ -67,3 +67,58 @@ export function logoutText(language: Language): string {
       return assertNever(language);
   }
 }
+
+export function homeText(language: Language): string {
+  switch (language) {
+    case "ja":
+      return "HOME";
+    case "en":
+      return "HOME";
+    default:
+      return assertNever(language);
+  }
+}
+
+export function loginText(language: Language): string {
+  switch (language) {
+    case "ja":
+      return "ログイン";
+    case "en":
+      return "Login";
+    default:
+      return assertNever(language);
+  }
+}
+
+export function switchLanguageAriaLabel(language: Language): string {
+  switch (language) {
+    case "ja":
+      return "言語切替";
+    case "en":
+      return "Switch language";
+    default:
+      return assertNever(language);
+  }
+}
+
+export function openMenuAriaLabel(language: Language): string {
+  switch (language) {
+    case "ja":
+      return "メニューを開く";
+    case "en":
+      return "Open menu";
+    default:
+      return assertNever(language);
+  }
+}
+
+export function closeMenuAriaLabel(language: Language): string {
+  switch (language) {
+    case "ja":
+      return "メニューを閉じる";
+    case "en":
+      return "Close menu";
+    default:
+      return assertNever(language);
+  }
+}
