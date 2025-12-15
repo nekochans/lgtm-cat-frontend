@@ -89,7 +89,7 @@ Drawer の特徴:
 - ヘッダーバーの×アイコンでも閉じる
 
 構成要素:
-- ヘッダーバー（LGTMeow ロゴ + 地球儀アイコン + ×アイコン）
+- ヘッダーバー（×アイコンのみ、右寄せ）
 - メニューコンテンツ（ログイン状態に応じて変化）
 - 言語選択メニュー（オプション）
 ```
@@ -515,15 +515,15 @@ import {
 ```typescript
 // メニューDrawerの開閉状態
 const { isOpen: isMenuOpen, onOpen: onMenuOpen, onClose: onMenuClose } = useDisclosure();
-// 言語メニューの開閉状態（Drawer内のアコーディオン的な動作）
-const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
+// メニューの種類: "navigation"はハンバーガーメニュー、"language"は言語選択メニュー
+const [menuType, setMenuType] = useState<MenuType>("navigation");
 ```
 
 #### コンポーネント構造
 
 1. **ヘッダーバー**: ロゴ + 地球儀アイコン + メニューアイコン（常に表示）
 2. **Drawer**: 右側から開くメニューパネル
-   - **DrawerHeader**: Drawer内のヘッダー（×ボタン付き）
+   - **DrawerHeader**: ×ボタンのみ（右寄せ）
    - **DrawerBody**: メニューコンテンツ（言語選択 + ナビリンク）
 
 #### Drawer の設定
@@ -533,13 +533,24 @@ const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
   hideCloseButton  // デフォルトのクローズボタンを非表示
   isOpen={isMenuOpen}
   placement="right"  // 右側から開く
-  onClose={onMenuClose}
+  onClose={handleCloseMenus}
   classNames={{
-    base: "bg-primary",  // Drawer全体の背景色
-    header: "bg-primary border-b border-orange-300",  // ヘッダー部分
-    body: "bg-primary px-5 pb-5",  // ボディ部分
+    base: "w-[285px] bg-primary",  // Drawer幅285px + 背景色
   }}
 >
+  <DrawerContent>
+    {(onClose) => (
+      <>
+        <DrawerHeader className="flex items-center justify-end border-orange-300 border-b bg-primary px-4 py-2">
+          {/* ×アイコンのみ、右寄せ */}
+        </DrawerHeader>
+        <DrawerBody className="bg-primary px-5 py-10">
+          {/* メニューコンテンツ */}
+        </DrawerBody>
+      </>
+    )}
+  </DrawerContent>
+</Drawer>
 ```
 
 #### スタイリング指針（変更なし）
@@ -759,288 +770,35 @@ export const LoggedInHeaderMobileInEnglish: Story = {
 
 ### 重要な仕様変更（2025-12-15更新）
 
-**言語メニューの表示仕様**:
-- ヘッダーバーの地球儀アイコンは**メニューを開く**動作のみ（Drawerを開く）
-- 言語メニューは**Drawer内の地球儀アイコンをクリックした時のみ**表示される
-- 通常時のDrawer内: ログインボタン + ナビリンク（言語メニューなし）
-- 地球儀クリック後: ログインボタン + 言語メニュー + ナビリンク
+**メニューの種類と表示仕様**:
+- **ハンバーガーメニュー（MenuType: "navigation"）**: ナビゲーションリンクを表示
+- **言語メニュー（MenuType: "language"）**: 言語選択リンクを表示
+
+**トリガーの動作**:
+- **ヘッダーバーの地球儀アイコン**: Drawerを開く + 言語メニューを表示
+- **ヘッダーバーのハンバーガーアイコン**: Drawerを開く + ナビゲーションメニューを表示
+
+**Drawer内のヘッダー**:
+- ×（閉じる）アイコンのみを表示（右寄せ）
+- ロゴや地球儀アイコンは表示しない
 
 ### コンポーネント全体構造
 
-```typescript
-// 絶対厳守：編集前に必ずAI実装ルールを読む
-"use client";
+実装の詳細は `src/components/header-mobile.tsx` を参照してください。
 
-import {
-  Button,
-  Drawer,
-  DrawerBody,
-  DrawerContent,
-  DrawerHeader,
-  useDisclosure,
-} from "@heroui/react";
-import Link from "next/link";
-import { type JSX, useState } from "react";
-import {
-  closeMenuAriaLabel,
-  favoriteListText,
-  homeText,
-  howToUseText,
-  loginText,
-  logoutText,
-  meowlistText,
-  openMenuAriaLabel,
-  switchLanguageAriaLabel,
-  uploadText,
-} from "@/components/header-i18n";
-import { HeaderLogo } from "@/components/header-logo";
-import { CatNyanIcon } from "@/components/icons/cat-nyan-icon";
-import { CloseIcon } from "@/components/icons/close-icon";
-import { GithubIcon } from "@/components/icons/github-icon";
-import { GlobeIcon } from "@/components/icons/globe-icon";
-import { HeartIcon } from "@/components/icons/heart-icon";
-import { MenuIcon } from "@/components/icons/menu-icon";
-import { RightIcon } from "@/components/icons/right-icon";
-import { type Language, removeLanguageFromAppPath } from "@/features/language";
-import {
-  createIncludeLanguageAppPath,
-  type IncludeLanguageAppPath,
-} from "@/features/url";
+主要な実装ポイント：
 
-type Props = {
-  readonly language: Language;
-  readonly currentUrlPath: IncludeLanguageAppPath;
-  readonly isLoggedIn: boolean;
-};
+1. **状態管理**:
+   - `useDisclosure`: Drawerの開閉状態
+   - `menuType: "navigation" | "language"`: メニューの種類
 
-export function HeaderMobile({
-  language,
-  currentUrlPath,
-  isLoggedIn,
-}: Props): JSX.Element {
-  // HeroUI の useDisclosure フックでDrawerの開閉状態を管理
-  const {
-    isOpen: isMenuOpen,
-    onOpen: onMenuOpen,
-    onClose: onMenuClose,
-  } = useDisclosure();
-  // 言語メニューの開閉状態（Drawer内の地球儀クリックで切り替え）
-  const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
+2. **DrawerHeader**:
+   - ×（閉じる）アイコンのみを右寄せで表示
+   - ロゴや地球儀アイコンは表示しない
 
-  const removedLanguagePath = removeLanguageFromAppPath(currentUrlPath);
-
-  const handleLanguageToggle = () => {
-    setIsLanguageMenuOpen((prev) => !prev);
-  };
-
-  const handleCloseMenus = () => {
-    onMenuClose();
-    setIsLanguageMenuOpen(false);
-  };
-
-  return (
-    <>
-      {/* ヘッダーバー（常に表示） */}
-      <header className="w-full border-orange-300 border-b bg-primary">
-        <div className="flex h-12 items-center justify-between px-4">
-          <HeaderLogo language={language} size="mobile" />
-          <div className="flex items-center gap-3">
-            {/* 地球儀アイコン: メニューを開く（言語メニューも開いた状態で） */}
-            <button
-              aria-label={switchLanguageAriaLabel(language)}
-              className="p-1"
-              onClick={() => {
-                setIsLanguageMenuOpen(true);
-                onMenuOpen();
-              }}
-              type="button"
-            >
-              <GlobeIcon />
-            </button>
-            {/* メニューアイコン: メニューを開く（言語メニューは閉じた状態で） */}
-            <button
-              aria-label={openMenuAriaLabel(language)}
-              className="p-1"
-              onClick={onMenuOpen}
-              type="button"
-            >
-              <MenuIcon />
-            </button>
-          </div>
-        </div>
-      </header>
-
-      {/* メニューDrawer（右からスライドイン） */}
-      <Drawer
-        classNames={{
-          base: "bg-primary",
-        }}
-        hideCloseButton
-        isOpen={isMenuOpen}
-        onClose={handleCloseMenus}
-        placement="right"
-      >
-        <DrawerContent>
-          {(onClose) => (
-            <>
-              {/* Drawer内のヘッダー */}
-              <DrawerHeader className="flex items-center justify-between border-orange-300 border-b bg-primary px-4 py-2">
-                <HeaderLogo language={language} size="mobile" />
-                <div className="flex items-center gap-3">
-                  {/* Drawer内の地球儀アイコン: 言語メニューの開閉を切り替え */}
-                  <button
-                    aria-label={switchLanguageAriaLabel(language)}
-                    className="p-1"
-                    onClick={handleLanguageToggle}
-                    type="button"
-                  >
-                    <GlobeIcon />
-                  </button>
-                  <button
-                    aria-label={closeMenuAriaLabel(language)}
-                    className="p-1"
-                    onClick={onClose}
-                    type="button"
-                  >
-                    <CloseIcon />
-                  </button>
-                </div>
-              </DrawerHeader>
-
-              {/* Drawer内のボディ（メニューコンテンツ） */}
-              <DrawerBody className="bg-primary px-5 pb-5">
-                {/* 未ログイン時: ログインボタン + 言語メニュー（条件付き） + ナビリンク */}
-                {!isLoggedIn && (
-                  <>
-                    <Button
-                      as={Link}
-                      className="mb-4 flex w-full items-center justify-center gap-2 rounded-lg bg-button-secondary-base px-7 py-2 font-bold text-text-br text-xl"
-                      href={createIncludeLanguageAppPath("login", language)}
-                      onClick={handleCloseMenus}
-                    >
-                      <GithubIcon color="default" height={20} width={20} />
-                      {loginText(language)}
-                    </Button>
-
-                    {/* 言語メニュー（地球儀クリック時のみ表示） */}
-                    {isLanguageMenuOpen && (
-                      <nav className="mb-4">
-                        <Link
-                          className={`flex h-[70px] items-center gap-3 border-orange-200 border-b px-5 py-3 text-background text-base ${
-                            language === "ja" ? "bg-orange-400" : ""
-                          }`}
-                          href={removedLanguagePath}
-                          onClick={handleCloseMenus}
-                        >
-                          {language === "ja" && <RightIcon />}
-                          <span className={language === "ja" ? "" : "pl-5"}>日本語</span>
-                        </Link>
-                        <Link
-                          className={`flex h-[70px] items-center gap-3 border-orange-200 border-b px-5 py-3 text-background text-base ${
-                            language === "en" ? "bg-orange-400" : ""
-                          }`}
-                          href={`/en${removedLanguagePath}`}
-                          onClick={handleCloseMenus}
-                        >
-                          {language === "en" && <RightIcon />}
-                          <span className={language === "en" ? "" : "pl-5"}>English</span>
-                        </Link>
-                      </nav>
-                    )}
-
-                    <Link
-                      className="flex h-[70px] items-center border-orange-200 border-b px-5 py-3 text-background text-base"
-                      href={createIncludeLanguageAppPath("home", language)}
-                      onClick={handleCloseMenus}
-                    >
-                      {homeText(language)}
-                    </Link>
-                    <Link
-                      className="flex h-[70px] items-center border-orange-200 border-b px-5 py-3 text-background text-base"
-                      href={createIncludeLanguageAppPath("upload", language)}
-                      onClick={handleCloseMenus}
-                    >
-                      {uploadText(language)}
-                    </Link>
-                    <Link
-                      className="flex h-[70px] items-center border-orange-200 border-b px-5 py-3 text-background text-base"
-                      // TODO: /how-to-use ページ実装後は `createIncludeLanguageAppPath` を使ってパスを生成するように修正する
-                      href="/how-to-use"
-                      onClick={handleCloseMenus}
-                    >
-                      {howToUseText(language)}
-                    </Link>
-                  </>
-                )}
-
-                {/* ログイン時: Logoutボタン + 言語メニュー（条件付き） + ナビリンク */}
-                {isLoggedIn && (
-                  <>
-                    <Button
-                      as={Link}
-                      className="mb-4 flex w-full items-center justify-center gap-2 rounded-lg bg-button-secondary-base px-6 py-2 font-bold text-text-br text-xl"
-                      // TODO: https://github.com/nekochans/lgtm-cat/issues/14 でログイン機能が出来た際にこのページを実装するので実装後は `createIncludeLanguageAppPath` を使ってパスを生成するように修正する
-                      href="/logout"
-                      onClick={handleCloseMenus}
-                    >
-                      {logoutText(language)}
-                    </Button>
-
-                    {/* 言語メニュー（地球儀クリック時のみ表示） */}
-                    {isLanguageMenuOpen && (
-                      <nav className="mb-4">
-                        <Link
-                          className={`flex h-[70px] items-center gap-3 border-orange-200 border-b px-5 py-3 text-background text-base ${
-                            language === "ja" ? "bg-orange-400" : ""
-                          }`}
-                          href={removedLanguagePath}
-                          onClick={handleCloseMenus}
-                        >
-                          {language === "ja" && <RightIcon />}
-                          <span className={language === "ja" ? "" : "pl-5"}>日本語</span>
-                        </Link>
-                        <Link
-                          className={`flex h-[70px] items-center gap-3 border-orange-200 border-b px-5 py-3 text-background text-base ${
-                            language === "en" ? "bg-orange-400" : ""
-                          }`}
-                          href={`/en${removedLanguagePath}`}
-                          onClick={handleCloseMenus}
-                        >
-                          {language === "en" && <RightIcon />}
-                          <span className={language === "en" ? "" : "pl-5"}>English</span>
-                        </Link>
-                      </nav>
-                    )}
-
-                    <Link
-                      className="flex h-[70px] items-center gap-3 border-orange-200 border-b px-5 py-4 text-background text-sm"
-                      // TODO: https://github.com/nekochans/lgtm-cat/issues/14 でログイン機能が出来た際にこのページを実装するので実装後は `createIncludeLanguageAppPath` を使ってパスを生成するように修正する
-                      href="/favorites"
-                      onClick={handleCloseMenus}
-                    >
-                      <HeartIcon color="white" height={24} width={24} />
-                      {favoriteListText(language)}
-                    </Link>
-                    <Link
-                      className="flex h-[70px] items-center gap-3 border-orange-200 border-b px-5 py-4 text-background text-sm"
-                      // TODO: https://github.com/nekochans/lgtm-cat/issues/14 でログイン機能が出来た際にこのページを実装するので実装後は `createIncludeLanguageAppPath` を使ってパスを生成するように修正する
-                      href="/cat-list"
-                      onClick={handleCloseMenus}
-                    >
-                      <CatNyanIcon color="white" height={24} width={24} />
-                      {meowlistText(language)}
-                    </Link>
-                  </>
-                )}
-              </DrawerBody>
-            </>
-          )}
-        </DrawerContent>
-      </Drawer>
-    </>
-  );
-}
-```
+3. **DrawerBody**:
+   - `menuType` に応じてナビゲーションメニューまたは言語メニューを切り替え表示
+   - `LanguageMenuNav`, `UnloggedInMenu`, `LoggedInMenu` の各コンポーネントで構成
 
 ### Drawer の主要設定
 
@@ -1050,16 +808,16 @@ export function HeaderMobile({
 | `hideCloseButton` | `true` | デフォルトのクローズボタンを非表示（カスタムボタン使用） |
 | `isOpen` | `isMenuOpen` | 開閉状態（useDisclosure で管理） |
 | `onClose` | `handleCloseMenus` | 閉じる時のハンドラー |
-| `classNames.base` | `"bg-primary"` | Drawer全体の背景色 |
+| `classNames.base` | `"w-[285px] bg-primary"` | Drawer幅285px + 背景色（Figmaデザインに準拠） |
 
-### 言語メニューの動作仕様
+### メニューの動作仕様
 
 | 操作 | 動作 |
 |------|------|
-| ヘッダーバーの地球儀クリック | Drawerを開く + 言語メニューを表示した状態で開く |
-| ヘッダーバーのメニューアイコンクリック | Drawerを開く（言語メニューは非表示） |
-| Drawer内の地球儀クリック | 言語メニューの表示/非表示を切り替え |
+| ヘッダーバーの地球儀クリック | Drawerを開く + 言語メニュー（menuType: "language"）を表示 |
+| ヘッダーバーのメニューアイコンクリック | Drawerを開く + ナビゲーションメニュー（menuType: "navigation"）を表示 |
 | 言語リンククリック | 言語を切り替え + Drawerを閉じる |
+| ナビリンククリック | 画面遷移 + Drawerを閉じる |
 
 ### 閉じる方法
 
@@ -1155,12 +913,11 @@ Playwright MCPを使って `http://localhost:2222` にアクセスし、以下�
 
 - [ ] デスクトップサイズ（768px以上）で `HeaderDesktop` が表示される
 - [ ] モバイルサイズ（768px未満）で `HeaderMobile` が表示される
-- [ ] ハンバーガーメニューをクリックで**Drawerが右から開く**（言語メニューは非表示）
+- [ ] ハンバーガーメニューをクリックで**Drawerが右から開く**（ナビゲーションメニューを表示）
 - [ ] ヘッダーバーの地球儀アイコンをクリックで**Drawerが開く + 言語メニューが表示される**
 - [ ] Drawer内の×ボタンをクリックで**Drawerが閉じる**
 - [ ] **オーバーレイ（背景の薄暗い部分）をクリックでDrawerが閉じる**
 - [ ] **ESCキーを押してDrawerが閉じる**
-- [ ] Drawer内の地球儀アイコンをクリックで**言語メニューが開閉する**
 - [ ] 言語切替が動作する
 - [ ] 各ナビリンクが正常に遷移し、Drawerが閉じる
 - [ ] ログイン/未ログイン状態でメニュー内容が切り替わる
@@ -1208,12 +965,11 @@ Chrome DevTools MCP を使ってデザイン崩れがないか確認すること
 - [x] `heart-icon.tsx` に `color: "white"` オプションが追加されている
 
 ### Drawer 動作確認
-- [ ] メニューアイコンをクリックで**Drawerが右側からスライドイン**する（言語メニューは非表示）
+- [ ] メニューアイコンをクリックで**Drawerが右側からスライドイン**する（ナビゲーションメニューを表示）
 - [ ] ヘッダーバーの地球儀アイコンをクリックで**Drawerが開く + 言語メニューが表示される**
 - [ ] Drawer内の×ボタンをクリックで**Drawerがスライドアウト**する
 - [ ] **オーバーレイ（背景の薄暗い部分）をクリックでDrawerが閉じる**
 - [ ] **ESCキーを押してDrawerが閉じる**
-- [ ] Drawer内の地球儀アイコンをクリックで**言語メニューの表示/非表示が切り替わる**
 - [ ] Drawer内のリンクをクリックするとDrawerが閉じる
 
 ### デザイン・品質
@@ -1233,6 +989,6 @@ Chrome DevTools MCP を使ってデザイン崩れがないか確認すること
 ---
 
 **作成日**: 2025-12-15
-**更新日**: 2025-12-15（言語メニュー仕様変更 - 地球儀クリック時のみ表示）
+**更新日**: 2025-12-15（Drawer内ヘッダー仕様変更 - ×アイコンのみ表示、menuTypeによるメニュー切り替え）
 **対象Issue**: #348
 **担当**: AI実装者
