@@ -228,11 +228,6 @@ export function HeaderMobile({
 
   const removedLanguagePath = removeLanguageFromAppPath(currentUrlPath);
 
-  // メニュータイプをトグル（navigation ⇔ language）
-  const handleMenuTypeToggle = () => {
-    setMenuType((prev) => (prev === "navigation" ? "language" : "navigation"));
-  };
-
   const handleCloseMenus = () => {
     onMenuClose();
     setMenuType("navigation");
@@ -292,28 +287,16 @@ export function HeaderMobile({
         <DrawerContent>
           {(onClose) => (
             <>
-              {/* Drawer内のヘッダー */}
-              <DrawerHeader className="flex items-center justify-between border-orange-300 border-b bg-primary px-4 py-2">
-                <HeaderLogo language={language} size="mobile" />
-                <div className="flex items-center gap-3">
-                  {/* Drawer内の地球儀アイコン: メニュータイプを切り替え */}
-                  <button
-                    aria-label={switchLanguageAriaLabel(language)}
-                    className="p-1"
-                    onClick={handleMenuTypeToggle}
-                    type="button"
-                  >
-                    <GlobeIcon />
-                  </button>
-                  <button
-                    aria-label={closeMenuAriaLabel(language)}
-                    className="p-1"
-                    onClick={onClose}
-                    type="button"
-                  >
-                    <CloseIcon />
-                  </button>
-                </div>
+              {/* Drawer内のヘッダー（閉じるアイコンのみ、右寄せ） */}
+              <DrawerHeader className="flex items-center justify-end border-orange-300 border-b bg-primary px-4 py-2">
+                <button
+                  aria-label={closeMenuAriaLabel(language)}
+                  className="p-1"
+                  onClick={onClose}
+                  type="button"
+                >
+                  <CloseIcon />
+                </button>
               </DrawerHeader>
 
               {/* Drawer内のボディ（メニューコンテンツ） */}
