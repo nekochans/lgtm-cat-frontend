@@ -2,9 +2,9 @@
 import type { JSX } from "react";
 
 type Props = {
-  width?: number;
-  height?: number;
-  color?: "default" | "favorite";
+  readonly width?: number;
+  readonly height?: number;
+  readonly color?: "default" | "favorite" | "white";
 };
 
 export function HeartIcon({
@@ -12,10 +12,16 @@ export function HeartIcon({
   height = 20,
   color = "default",
 }: Props): JSX.Element {
-  const palette =
-    color === "favorite"
-      ? { fill: "#EF4444", stroke: "#3C4F64" }
-      : { fill: "#FFFFFF", stroke: "#CBD5E1" };
+  const palette = (() => {
+    switch (color) {
+      case "favorite":
+        return { fill: "#EF4444", stroke: "#3C4F64" };
+      case "white":
+        return { fill: "#FFF7ED", stroke: "#FFF7ED" };
+      default:
+        return { fill: "#FFFFFF", stroke: "#CBD5E1" };
+    }
+  })();
 
   return (
     <svg
