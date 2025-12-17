@@ -76,7 +76,7 @@ function LanguageMenuNav({
       </Link>
       <Link
         className={`flex h-[70px] items-center gap-3 border-orange-200 border-b px-5 py-3 text-background text-base ${enClassName}`}
-        href={`/en${removedLanguagePath}`}
+        href={removedLanguagePath === "/" ? "/en" : `/en${removedLanguagePath}`}
         onClick={onLinkClick}
       >
         {isEnglish && <RightIcon />}

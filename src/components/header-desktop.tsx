@@ -150,7 +150,11 @@ export function HeaderDesktop({
                   className={`data-[hover=true]:!bg-orange-300 rounded-lg px-3 py-2 font-bold text-background text-xl ${
                     language === "en" ? "!bg-orange-400" : ""
                   }`}
-                  href={`/en${removedLanguagePath}`}
+                  href={
+                    removedLanguagePath === "/"
+                      ? "/en"
+                      : `/en${removedLanguagePath}`
+                  }
                   key="en"
                   startContent={language === "en" ? <RightIcon /> : null}
                 >
