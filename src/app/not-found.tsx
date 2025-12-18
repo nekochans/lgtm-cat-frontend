@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import type { JSX } from "react";
+import { Suspense } from "react";
 import { NotFoundPageContainer } from "@/features/errors/components/not-found-page-container";
 import type { Language } from "@/features/language";
 import { notFoundMetaTag } from "@/features/meta-tag";
@@ -64,10 +65,36 @@ function detectLanguageFromHeaders(headersList: Headers): Language {
   return "ja";
 }
 
-export default async function NotFound(): Promise<JSX.Element> {
+/**
+ * 404ページのローディング中に表示するfallback
+ * 極めて短時間しか表示されないため、最小限のスタイルのみ
+ */
+function NotFoundFallback(): JSX.Element {
+  return (
+    <div className="flex min-h-screen w-full flex-col bg-orange-50">
+      <div className="flex flex-1 items-center justify-center">
+        <div className="text-gray-500">Loading...</div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * 動的データ（headers）を取得してコンテンツを表示するコンポーネント
+ * Suspense内で使用することでNext.js 16のcacheComponents要件を満たす
+ */
+async function NotFoundContent(): Promise<JSX.Element> {
   // Next.js 16では headers() は非同期関数
   const headersList = await headers();
   const language = detectLanguageFromHeaders(headersList);
 
   return <NotFoundPageContainer language={language} />;
+}
+
+export default function NotFound(): JSX.Element {
+  return (
+    <Suspense fallback={<NotFoundFallback />}>
+      <NotFoundContent />
+    </Suspense>
+  );
 }
