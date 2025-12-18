@@ -133,8 +133,8 @@ export const i18nUrlList: I18nUrlList = {
     en: `/en${appPathList.privacy}/`,
   },
   maintenance: {
-    ja: `${appPathList.privacy}/`,
-    en: `/en${appPathList.privacy}/`,
+    ja: `${appPathList.maintenance}/`,
+    en: `/en${appPathList.maintenance}/`,
   },
   "external-transmission-policy": {
     ja: `${appPathList["external-transmission-policy"]}/`,
