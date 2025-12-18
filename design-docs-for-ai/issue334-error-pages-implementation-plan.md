@@ -154,17 +154,62 @@ https://github.com/nekochans/lgtm-cat-frontend/issues/334
 
 ## ファイル構成
 
+### アーキテクチャ概要
+
+本実装では**コンテナパターン**を採用しています：
+
+- **ページファイル（`src/app/`配下）**: メタデータ定義とコンテナコンポーネントの呼び出しのみを担当
+- **コンテナコンポーネント（`src/features/errors/components/`配下）**: ビジネスロジックとUI構成を担当
+- **共通レイアウト（`ErrorLayout`）**: Header/main/Footerの共通構造を提供
+- **共通UIコンポーネント（`ErrorPageContent`）**: タイトル・メッセージ・ねこ・ボタンの表示を担当
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ ページファイル (src/app/not-found.tsx など)                  │
+│   - metadata定義                                            │
+│   - 言語判定ロジック                                         │
+│   - コンテナコンポーネントの呼び出し                          │
+└─────────────────────────┬───────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────────┐
+│ コンテナコンポーネント (NotFoundPageContainer など)           │
+│   - ErrorLayoutでラップ                                     │
+│   - i18nテキストの取得                                       │
+│   - ErrorPageContentへのprops受け渡し                        │
+└─────────────────────────┬───────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────────┐
+│ ErrorLayout                                                 │
+│   ┌─────────────────────────────────────────────────────┐   │
+│   │ Header                                              │   │
+│   ├─────────────────────────────────────────────────────┤   │
+│   │ main (max-w-[1020px])                               │   │
+│   │   └─ children (ErrorPageContent)                    │   │
+│   ├─────────────────────────────────────────────────────┤   │
+│   │ Footer                                              │   │
+│   └─────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────┘
+```
+
 ### 新規作成ファイル
 
 | ファイルパス | 説明 |
 |-------------|------|
 | `src/components/error-page-content.tsx` | エラーページ共通UIコンポーネント |
-| `src/components/error-page-content.stories.tsx` | 上記のStorybook |
+| `src/features/errors/components/error-layout.tsx` | エラーページ共通レイアウト（Header/main/Footer） |
+| `src/features/errors/components/error-page-container.tsx` | 500エラーページコンテナ |
+| `src/features/errors/components/error-page-container.stories.tsx` | 上記のStorybook |
+| `src/features/errors/components/not-found-page-container.tsx` | 404ページコンテナ |
+| `src/features/errors/components/not-found-page-container.stories.tsx` | 上記のStorybook |
+| `src/features/errors/components/maintenance-page-container.tsx` | 503メンテナンスページコンテナ |
+| `src/features/errors/components/maintenance-page-container.stories.tsx` | 上記のStorybook |
+| `src/features/errors/error-i18n.ts` | エラーページ用i18nテキスト定義 |
 | `src/app/not-found.tsx` | 404ページ（Server Component） |
 | `src/app/(default)/error.tsx` | 500ページ（Client Component） |
 | `src/app/(default)/maintenance/page.tsx` | 503メンテナンスページ（日本語） |
 | `src/app/(default)/en/maintenance/page.tsx` | 503メンテナンスページ（英語） |
-| `src/features/errors/error-i18n.ts` | エラーページ用i18nテキスト定義 |
 
 ### 既存ファイル（変更なし・流用）
 
@@ -211,7 +256,53 @@ maintenance: {
 
 ## コンポーネント実装詳細
 
-### 1. error-i18n.ts（i18nテキスト定義）
+### 1. error-layout.tsx（共通レイアウトコンポーネント）
+
+**ファイルパス**: `src/features/errors/components/error-layout.tsx`
+
+```typescript
+// 絶対厳守：編集前に必ずAI実装ルールを読む
+
+import type { ReactNode } from "react";
+import { Footer } from "@/components/footer";
+import { Header } from "@/components/header";
+import type { Language } from "@/features/language";
+import type { IncludeLanguageAppPath } from "@/features/url";
+
+type Props = {
+  readonly language: Language;
+  readonly currentUrlPath: IncludeLanguageAppPath;
+  readonly children: ReactNode;
+};
+
+export function ErrorLayout({ language, currentUrlPath, children }: Props) {
+  return (
+    <div className="flex min-h-screen w-full flex-col bg-orange-50">
+      <Header
+        currentUrlPath={currentUrlPath}
+        isLoggedIn={false}
+        language={language}
+      />
+      <main className="flex w-full flex-1 flex-col items-center">
+        <div className="flex w-full max-w-[1020px] flex-col items-center">
+          {children}
+        </div>
+      </main>
+      <Footer language={language} />
+    </div>
+  );
+}
+```
+
+**説明**:
+- エラーページ（404/500/503）で共通して使用するレイアウトコンポーネント
+- Header、main、Footerの構造を提供
+- `children`でページ固有のコンテンツ（ErrorPageContent）を受け取る
+- `currentUrlPath`は`IncludeLanguageAppPath`型（branded type）を使用
+
+---
+
+### 2. error-i18n.ts（i18nテキスト定義）
 
 **ファイルパス**: `src/features/errors/error-i18n.ts`
 
@@ -291,12 +382,14 @@ export function maintenancePageTexts(language: Language): ErrorPageTexts {
 
 ---
 
-### 2. error-page-content.tsx（共通UIコンポーネント）
+### 3. error-page-content.tsx（共通UIコンポーネント）
 
 **ファイルパス**: `src/components/error-page-content.tsx`
 
 ```typescript
 // 絶対厳守：編集前に必ずAI実装ルールを読む
+"use client";
+
 import type { JSX, ReactNode } from "react";
 import { LinkButton } from "@/components/link-button";
 import type { Language } from "@/features/language";
@@ -332,9 +425,7 @@ export function ErrorPageContent({
         </p>
       </div>
       {/* ねこイラストは装飾的要素のため、catComponentでaria-hidden="true"を設定 */}
-      <div className="flex items-center justify-center">
-        {catComponent}
-      </div>
+      <div className="flex items-center justify-center">{catComponent}</div>
       {/* Figma仕様: ボタン幅 モバイル300px / デスクトップ400px */}
       <LinkButton
         className="w-full max-w-[300px] md:max-w-[400px]"
@@ -356,7 +447,54 @@ export function ErrorPageContent({
 
 ---
 
-### 3. not-found.tsx（404ページ）
+### 4. not-found-page-container.tsx（404ページコンテナ）
+
+**ファイルパス**: `src/features/errors/components/not-found-page-container.tsx`
+
+```typescript
+// 絶対厳守：編集前に必ずAI実装ルールを読む
+
+import { LookingUpCat } from "@/components/cats/looking-up-cat";
+import { ErrorPageContent } from "@/components/error-page-content";
+import { ErrorLayout } from "@/features/errors/components/error-layout";
+import { notFoundPageTexts } from "@/features/errors/error-i18n";
+import type { Language } from "@/features/language";
+
+type Props = {
+  readonly language: Language;
+};
+
+export function NotFoundPageContainer({ language }: Props) {
+  const texts = notFoundPageTexts(language);
+  const currentUrlPath = language === "en" ? "/en" : "/";
+
+  return (
+    <ErrorLayout currentUrlPath={currentUrlPath} language={language}>
+      <ErrorPageContent
+        buttonText={texts.buttonText}
+        catComponent={
+          <LookingUpCat
+            aria-hidden="true"
+            className="h-auto w-[180px] md:w-[245px]"
+          />
+        }
+        language={language}
+        message={texts.message}
+        title={texts.title}
+      />
+    </ErrorLayout>
+  );
+}
+```
+
+**説明**:
+- 404ページのUIロジックを担当するコンテナコンポーネント
+- `ErrorLayout`でラップし、`ErrorPageContent`にpropsを渡す
+- `LookingUpCat`コンポーネントを使用
+
+---
+
+### 5. not-found.tsx（404ページ）
 
 **ファイルパス**: `src/app/not-found.tsx`
 
@@ -365,11 +503,7 @@ export function ErrorPageContent({
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import type { JSX } from "react";
-import { LookingUpCat } from "@/components/cats/looking-up-cat";
-import { ErrorPageContent } from "@/components/error-page-content";
-import { Footer } from "@/components/footer";
-import { Header } from "@/components/header";
-import { notFoundPageTexts } from "@/features/errors/error-i18n";
+import { NotFoundPageContainer } from "@/features/errors/components/not-found-page-container";
 import type { Language } from "@/features/language";
 import { notFoundMetaTag } from "@/features/meta-tag";
 
@@ -435,26 +569,8 @@ export default async function NotFound(): Promise<JSX.Element> {
   // Next.js 16では headers() は非同期関数
   const headersList = await headers();
   const language = detectLanguageFromHeaders(headersList);
-  const texts = notFoundPageTexts(language);
-  const currentUrlPath = language === "en" ? "/en" : "/";
 
-  return (
-    <div className="flex min-h-screen w-full flex-col bg-orange-50">
-      <Header currentUrlPath={currentUrlPath} isLoggedIn={false} language={language} />
-      <main className="flex w-full flex-1 flex-col items-center">
-        <div className="flex w-full max-w-[1020px] flex-col items-center">
-          <ErrorPageContent
-            buttonText={texts.buttonText}
-            catComponent={<LookingUpCat aria-hidden="true" className="h-auto w-[180px] md:w-[245px]" />}
-            language={language}
-            message={texts.message}
-            title={texts.title}
-          />
-        </div>
-      </main>
-      <Footer language={language} />
-    </div>
-  );
+  return <NotFoundPageContainer language={language} />;
 }
 ```
 
@@ -464,7 +580,7 @@ export default async function NotFound(): Promise<JSX.Element> {
 - ルートの`app/not-found.tsx`は全体の未マッチURLを処理
 - `headers()`を使用して複数のヘッダーから言語を判定（パスヘッダー > referer > 日本語フォールバック）
 - Next.js 16では`headers()`は非同期関数のため`await`が必要
-- async functionとして実装（`headers()`がPromiseを返すため）
+- **コンテナパターン**: `NotFoundPageContainer`を呼び出すのみ
 
 **言語判定の優先順位**:
 1. `x-pathname`ヘッダー（ミドルウェアで設定可能）
@@ -477,9 +593,9 @@ export default async function NotFound(): Promise<JSX.Element> {
 
 ---
 
-### 4. error.tsx（500ページ）
+### 6. error-page-container.tsx（500ページコンテナ）
 
-**ファイルパス**: `src/app/(default)/error.tsx`
+**ファイルパス**: `src/features/errors/components/error-page-container.tsx`
 
 ```typescript
 // 絶対厳守：編集前に必ずAI実装ルールを読む
@@ -491,8 +607,7 @@ import type { JSX } from "react";
 import { useEffect, useMemo } from "react";
 import { RunningCat } from "@/components/cats/running-cat";
 import { ErrorPageContent } from "@/components/error-page-content";
-import { Footer } from "@/components/footer";
-import { Header } from "@/components/header";
+import { ErrorLayout } from "@/features/errors/components/error-layout";
 import { errorPageTexts } from "@/features/errors/error-i18n";
 import type { Language } from "@/features/language";
 import { customErrorTitle } from "@/features/meta-tag";
@@ -513,9 +628,15 @@ function detectLanguageFromPathname(pathname: string | null): Language {
   return pathname.startsWith("/en") ? "en" : "ja";
 }
 
-export default function Error({ error }: Props): JSX.Element {
+export function ErrorPageContainer({
+  error,
+  reset: _reset,
+}: Props): JSX.Element {
   const pathname = usePathname();
-  const language = useMemo(() => detectLanguageFromPathname(pathname), [pathname]);
+  const language = useMemo(
+    () => detectLanguageFromPathname(pathname),
+    [pathname]
+  );
   const texts = useMemo(() => errorPageTexts(language), [language]);
   const currentUrlPath = language === "en" ? "/en" : "/";
 
@@ -526,22 +647,21 @@ export default function Error({ error }: Props): JSX.Element {
   return (
     <>
       <title>{customErrorTitle(language)}</title>
-      <meta name="robots" content="noindex,nofollow" />
-      <div className="flex min-h-screen w-full flex-col bg-orange-50">
-        <Header currentUrlPath={currentUrlPath} isLoggedIn={false} language={language} />
-        <main className="flex w-full flex-1 flex-col items-center">
-          <div className="flex w-full max-w-[1020px] flex-col items-center">
-            <ErrorPageContent
-              buttonText={texts.buttonText}
-              catComponent={<RunningCat aria-hidden="true" className="h-auto w-[250px] md:w-[370px]" />}
-              language={language}
-              message={texts.message}
-              title={texts.title}
+      <meta content="noindex,nofollow" name="robots" />
+      <ErrorLayout currentUrlPath={currentUrlPath} language={language}>
+        <ErrorPageContent
+          buttonText={texts.buttonText}
+          catComponent={
+            <RunningCat
+              aria-hidden="true"
+              className="h-auto w-[250px] md:w-[370px]"
             />
-          </div>
-        </main>
-        <Footer language={language} />
-      </div>
+          }
+          language={language}
+          message={texts.message}
+          title={texts.title}
+        />
+      </ErrorLayout>
     </>
   );
 }
@@ -550,39 +670,110 @@ export default function Error({ error }: Props): JSX.Element {
 **説明**:
 - **Client Component必須**（`'use client'`）
 - `metadata`のexportは**不可**のため、Reactの`<title>`コンポーネントを使用
-- **検索エンジン対策**: `<meta name="robots" content="noindex,nofollow" />`を追加
+- **検索エンジン対策**: `<meta content="noindex,nofollow" name="robots" />`を追加
 - `usePathname()`を使用してURLパスから言語を判定
-- パスが`/en`で始まる場合は英語、それ以外は日本語にフォールバック
-- `error`と`reset`のpropsを受け取る（`reset`は今回未使用だが型定義は必要）
 - Sentryへのエラー報告を`useEffect`で実装
+- `ErrorLayout`でラップし、`ErrorPageContent`にpropsを渡す
+- `RunningCat`コンポーネントを使用
 
 **reset関数について**:
 - `reset()`は再レンダリングを試行する関数で、一時的なエラーからの回復に使用可能
-- 現在の実装ではホームへの誘導を優先しているため未使用
+- 現在の実装ではホームへの誘導を優先しているため未使用（`_reset`として受け取り）
 - 将来的に「もう一度試す」ボタンを追加する場合は、この関数を呼び出す実装に変更可能
 
 ---
 
-### 5. maintenance/page.tsx（503メンテナンスページ・日本語）
+### 7. error.tsx（500ページ）
+
+**ファイルパス**: `src/app/(default)/error.tsx`
+
+```typescript
+// 絶対厳守：編集前に必ずAI実装ルールを読む
+"use client";
+
+import type { JSX } from "react";
+import { ErrorPageContainer } from "@/features/errors/components/error-page-container";
+
+type Props = {
+  readonly error: Error & { digest?: string };
+  readonly reset: () => void;
+};
+
+export default function ErrorPage({ error, reset }: Props): JSX.Element {
+  return <ErrorPageContainer error={error} reset={reset} />;
+}
+```
+
+**説明**:
+- **Client Component必須**（`'use client'`）
+- **コンテナパターン**: `ErrorPageContainer`を呼び出すのみ
+- ページファイルは薄いラッパーとして機能
+
+---
+
+### 8. maintenance-page-container.tsx（503メンテナンスページコンテナ）
+
+**ファイルパス**: `src/features/errors/components/maintenance-page-container.tsx`
+
+```typescript
+// 絶対厳守：編集前に必ずAI実装ルールを読む
+
+import { FishHoldingCat } from "@/components/cats/fish-holding-cat";
+import { ErrorPageContent } from "@/components/error-page-content";
+import { ErrorLayout } from "@/features/errors/components/error-layout";
+import { maintenancePageTexts } from "@/features/errors/error-i18n";
+import type { Language } from "@/features/language";
+import { createIncludeLanguageAppPath } from "@/features/url";
+
+type Props = {
+  readonly language: Language;
+};
+
+export function MaintenancePageContainer({ language }: Props) {
+  const texts = maintenancePageTexts(language);
+
+  return (
+    <ErrorLayout
+      currentUrlPath={createIncludeLanguageAppPath("maintenance", language)}
+      language={language}
+    >
+      <ErrorPageContent
+        buttonText={texts.buttonText}
+        catComponent={
+          <FishHoldingCat
+            aria-hidden="true"
+            className="h-auto w-[230px] md:w-[350px]"
+          />
+        }
+        language={language}
+        message={texts.message}
+        title={texts.title}
+      />
+    </ErrorLayout>
+  );
+}
+```
+
+**説明**:
+- 503メンテナンスページのUIロジックを担当するコンテナコンポーネント
+- `ErrorLayout`でラップし、`ErrorPageContent`にpropsを渡す
+- `FishHoldingCat`コンポーネントを使用
+- `createIncludeLanguageAppPath`で言語に応じたURLパスを生成
+
+---
+
+### 9. maintenance/page.tsx（503メンテナンスページ・日本語）
 
 **ファイルパス**: `src/app/(default)/maintenance/page.tsx`
 
 ```typescript
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { Metadata, NextPage } from "next";
-import { FishHoldingCat } from "@/components/cats/fish-holding-cat";
-import { ErrorPageContent } from "@/components/error-page-content";
-import { Footer } from "@/components/footer";
-import { Header } from "@/components/header";
-import { maintenancePageTexts } from "@/features/errors/error-i18n";
+import { MaintenancePageContainer } from "@/features/errors/components/maintenance-page-container";
+import type { Language } from "@/features/language";
 import { convertLocaleToLanguage } from "@/features/locale";
 import { appName, metaTagList } from "@/features/meta-tag";
-import {
-  appBaseUrl,
-  createIncludeLanguageAppPath,
-  i18nUrlList,
-} from "@/features/url";
-import type { Language } from "@/features/language";
+import { appBaseUrl, i18nUrlList } from "@/features/url";
 
 const language: Language = "ja";
 
@@ -617,57 +808,32 @@ export const metadata: Metadata = {
   },
 };
 
-const MaintenancePage: NextPage = () => {
-  const texts = maintenancePageTexts(language);
-
-  return (
-    <div className="flex min-h-screen w-full flex-col bg-orange-50">
-      <Header
-        currentUrlPath={createIncludeLanguageAppPath("maintenance", language)}
-        isLoggedIn={false}
-        language={language}
-      />
-      <main className="flex w-full flex-1 flex-col items-center">
-        <div className="flex w-full max-w-[1020px] flex-col items-center">
-          <ErrorPageContent
-            buttonText={texts.buttonText}
-            catComponent={<FishHoldingCat aria-hidden="true" className="h-auto w-[230px] md:w-[350px]" />}
-            language={language}
-            message={texts.message}
-            title={texts.title}
-          />
-        </div>
-      </main>
-      <Footer language={language} />
-    </div>
-  );
-};
+const MaintenancePage: NextPage = () => (
+  <MaintenancePageContainer language={language} />
+);
 
 export default MaintenancePage;
 ```
 
+**説明**:
+- **コンテナパターン**: `MaintenancePageContainer`を呼び出すのみ
+- `metadata`でSEO設定とOGP設定を行う
+- ページファイルは薄いラッパーとして機能
+
 ---
 
-### 6. en/maintenance/page.tsx（503メンテナンスページ・英語）
+### 10. en/maintenance/page.tsx（503メンテナンスページ・英語）
 
 **ファイルパス**: `src/app/(default)/en/maintenance/page.tsx`
 
 ```typescript
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { Metadata, NextPage } from "next";
-import { FishHoldingCat } from "@/components/cats/fish-holding-cat";
-import { ErrorPageContent } from "@/components/error-page-content";
-import { Footer } from "@/components/footer";
-import { Header } from "@/components/header";
-import { maintenancePageTexts } from "@/features/errors/error-i18n";
+import { MaintenancePageContainer } from "@/features/errors/components/maintenance-page-container";
+import type { Language } from "@/features/language";
 import { convertLocaleToLanguage } from "@/features/locale";
 import { appName, metaTagList } from "@/features/meta-tag";
-import {
-  appBaseUrl,
-  createIncludeLanguageAppPath,
-  i18nUrlList,
-} from "@/features/url";
-import type { Language } from "@/features/language";
+import { appBaseUrl, i18nUrlList } from "@/features/url";
 
 const language: Language = "en";
 
@@ -702,59 +868,37 @@ export const metadata: Metadata = {
   },
 };
 
-const EnMaintenancePage: NextPage = () => {
-  const texts = maintenancePageTexts(language);
-
-  return (
-    <div className="flex min-h-screen w-full flex-col bg-orange-50">
-      <Header
-        currentUrlPath={createIncludeLanguageAppPath("maintenance", language)}
-        isLoggedIn={false}
-        language={language}
-      />
-      <main className="flex w-full flex-1 flex-col items-center">
-        <div className="flex w-full max-w-[1020px] flex-col items-center">
-          <ErrorPageContent
-            buttonText={texts.buttonText}
-            catComponent={<FishHoldingCat aria-hidden="true" className="h-auto w-[230px] md:w-[350px]" />}
-            language={language}
-            message={texts.message}
-            title={texts.title}
-          />
-        </div>
-      </main>
-      <Footer language={language} />
-    </div>
-  );
-};
+const EnMaintenancePage: NextPage = () => (
+  <MaintenancePageContainer language={language} />
+);
 
 export default EnMaintenancePage;
 ```
 
+**説明**:
+- **コンテナパターン**: `MaintenancePageContainer`を呼び出すのみ
+- 日本語版との違いは`language`変数のみ
+
 ---
 
-### 7. error-page-content.stories.tsx（Storybook）
+### 11. Storybook（各コンテナコンポーネント用）
 
-**ファイルパス**: `src/components/error-page-content.stories.tsx`
+Storybookファイルは各コンテナコンポーネントと同じディレクトリに配置：
+
+- `src/features/errors/components/error-page-container.stories.tsx`
+- `src/features/errors/components/not-found-page-container.stories.tsx`
+- `src/features/errors/components/maintenance-page-container.stories.tsx`
+
+**ファイルパス例**: `src/features/errors/components/not-found-page-container.stories.tsx`
 
 ```typescript
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { Meta, StoryObj } from "@storybook/react";
-import { FishHoldingCat } from "@/components/cats/fish-holding-cat";
-import { LookingUpCat } from "@/components/cats/looking-up-cat";
-import { RunningCat } from "@/components/cats/running-cat";
-import { Footer } from "@/components/footer";
-import { Header } from "@/components/header";
-import {
-  errorPageTexts,
-  maintenancePageTexts,
-  notFoundPageTexts,
-} from "@/features/errors/error-i18n";
-import { ErrorPageContent } from "./error-page-content";
+import { NotFoundPageContainer } from "./not-found-page-container";
 
 const meta = {
-  component: ErrorPageContent,
-  title: "components/ErrorPageContent",
+  component: NotFoundPageContainer,
+  title: "features/errors/NotFoundPageContainer",
   parameters: {
     layout: "fullscreen",
     viewport: {
@@ -762,154 +906,29 @@ const meta = {
     },
   },
   tags: ["autodocs"],
-} satisfies Meta<typeof ErrorPageContent>;
+} satisfies Meta<typeof NotFoundPageContainer>;
 
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-// ========================================
-// 404 Not Found
-// ========================================
-
-export const NotFound404Japanese: Story = {
+export const Japanese: Story = {
   args: {
     language: "ja",
-    ...notFoundPageTexts("ja"),
-    catComponent: <LookingUpCat aria-hidden="true" className="h-auto w-[180px] md:w-[245px]" />,
   },
-  decorators: [
-    (Story) => (
-      <div className="flex min-h-screen w-full flex-col bg-orange-50">
-        <Header currentUrlPath="/" isLoggedIn={false} language="ja" />
-        <main className="flex w-full flex-1 flex-col items-center">
-          <div className="flex w-full max-w-[1020px] flex-col items-center">
-            <Story />
-          </div>
-        </main>
-        <Footer language="ja" />
-      </div>
-    ),
-  ],
 };
 
-export const NotFound404English: Story = {
+export const English: Story = {
   args: {
     language: "en",
-    ...notFoundPageTexts("en"),
-    catComponent: <LookingUpCat aria-hidden="true" className="h-auto w-[180px] md:w-[245px]" />,
   },
-  decorators: [
-    (Story) => (
-      <div className="flex min-h-screen w-full flex-col bg-orange-50">
-        <Header currentUrlPath="/en" isLoggedIn={false} language="en" />
-        <main className="flex w-full flex-1 flex-col items-center">
-          <div className="flex w-full max-w-[1020px] flex-col items-center">
-            <Story />
-          </div>
-        </main>
-        <Footer language="en" />
-      </div>
-    ),
-  ],
-};
-
-// ========================================
-// 500 Internal Server Error
-// ========================================
-
-export const Error500Japanese: Story = {
-  args: {
-    language: "ja",
-    ...errorPageTexts("ja"),
-    catComponent: <RunningCat aria-hidden="true" className="h-auto w-[250px] md:w-[370px]" />,
-  },
-  decorators: [
-    (Story) => (
-      <div className="flex min-h-screen w-full flex-col bg-orange-50">
-        <Header currentUrlPath="/" isLoggedIn={false} language="ja" />
-        <main className="flex w-full flex-1 flex-col items-center">
-          <div className="flex w-full max-w-[1020px] flex-col items-center">
-            <Story />
-          </div>
-        </main>
-        <Footer language="ja" />
-      </div>
-    ),
-  ],
-};
-
-export const Error500English: Story = {
-  args: {
-    language: "en",
-    ...errorPageTexts("en"),
-    catComponent: <RunningCat aria-hidden="true" className="h-auto w-[250px] md:w-[370px]" />,
-  },
-  decorators: [
-    (Story) => (
-      <div className="flex min-h-screen w-full flex-col bg-orange-50">
-        <Header currentUrlPath="/en" isLoggedIn={false} language="en" />
-        <main className="flex w-full flex-1 flex-col items-center">
-          <div className="flex w-full max-w-[1020px] flex-col items-center">
-            <Story />
-          </div>
-        </main>
-        <Footer language="en" />
-      </div>
-    ),
-  ],
-};
-
-// ========================================
-// 503 Maintenance
-// ========================================
-
-export const Maintenance503Japanese: Story = {
-  args: {
-    language: "ja",
-    ...maintenancePageTexts("ja"),
-    catComponent: <FishHoldingCat aria-hidden="true" className="h-auto w-[230px] md:w-[350px]" />,
-  },
-  decorators: [
-    (Story) => (
-      <div className="flex min-h-screen w-full flex-col bg-orange-50">
-        <Header currentUrlPath="/maintenance" isLoggedIn={false} language="ja" />
-        <main className="flex w-full flex-1 flex-col items-center">
-          <div className="flex w-full max-w-[1020px] flex-col items-center">
-            <Story />
-          </div>
-        </main>
-        <Footer language="ja" />
-      </div>
-    ),
-  ],
-};
-
-export const Maintenance503English: Story = {
-  args: {
-    language: "en",
-    ...maintenancePageTexts("en"),
-    catComponent: <FishHoldingCat aria-hidden="true" className="h-auto w-[230px] md:w-[350px]" />,
-  },
-  decorators: [
-    (Story) => (
-      <div className="flex min-h-screen w-full flex-col bg-orange-50">
-        <Header currentUrlPath="/en/maintenance" isLoggedIn={false} language="en" />
-        <main className="flex w-full flex-1 flex-col items-center">
-          <div className="flex w-full max-w-[1020px] flex-col items-center">
-            <Story />
-          </div>
-        </main>
-        <Footer language="en" />
-      </div>
-    ),
-  ],
 };
 ```
 
 **説明**:
-- 各エラーページ（404/500/503）の日本語・英語版のストーリーを定義
-- `decorators`を使用してHeader/Footerを含む完全なページレイアウトを表示
+- 各コンテナコンポーネントごとにStorybookを作成
+- コンテナが`ErrorLayout`を含むため、decoratorsでHeader/Footerをラップする必要がない
+- 日本語・英語のストーリーを`language`引数で切り替え
 - `layout: "fullscreen"`でフルページ表示
 
 ---
@@ -919,18 +938,17 @@ export const Maintenance503English: Story = {
 ```
 src/
 ├── app/
-│   ├── not-found.tsx                       ← 新規作成（404ページ）
+│   ├── not-found.tsx                       ← 新規作成（404ページ - コンテナを呼び出すのみ）
 │   ├── global-error.tsx                    ← 既存（変更なし）
 │   └── (default)/
-│       ├── error.tsx                       ← 新規作成（500ページ）
+│       ├── error.tsx                       ← 新規作成（500ページ - コンテナを呼び出すのみ）
 │       ├── maintenance/
-│       │   └── page.tsx                    ← 新規作成（503日本語）
+│       │   └── page.tsx                    ← 新規作成（503日本語 - コンテナを呼び出すのみ）
 │       └── en/
 │           └── maintenance/
-│               └── page.tsx                ← 新規作成（503英語）
+│               └── page.tsx                ← 新規作成（503英語 - コンテナを呼び出すのみ）
 ├── components/
-│   ├── error-page-content.tsx              ← 新規作成
-│   ├── error-page-content.stories.tsx      ← 新規作成
+│   ├── error-page-content.tsx              ← 新規作成（共通UIコンポーネント）
 │   ├── link-button.tsx                     ← 既存（変更なし）
 │   ├── header.tsx                          ← 既存（変更なし）
 │   ├── footer.tsx                          ← 既存（変更なし）
@@ -940,7 +958,15 @@ src/
 │       └── fish-holding-cat.tsx            ← 既存（変更なし）
 └── features/
     ├── errors/
-    │   └── error-i18n.ts                   ← 新規作成
+    │   ├── error-i18n.ts                   ← 新規作成（i18nテキスト定義）
+    │   └── components/
+    │       ├── error-layout.tsx            ← 新規作成（共通レイアウト）
+    │       ├── error-page-container.tsx    ← 新規作成（500ページコンテナ）
+    │       ├── error-page-container.stories.tsx  ← 新規作成
+    │       ├── not-found-page-container.tsx     ← 新規作成（404ページコンテナ）
+    │       ├── not-found-page-container.stories.tsx  ← 新規作成
+    │       ├── maintenance-page-container.tsx   ← 新規作成（503ページコンテナ）
+    │       └── maintenance-page-container.stories.tsx  ← 新規作成
     ├── meta-tag.ts                         ← 既存（変更なし）
     └── url.ts                              ← 既存（バグ修正）
 ```
@@ -956,7 +982,7 @@ src/
 ### Step 2: ディレクトリ作成
 
 ```bash
-mkdir -p src/features/errors
+mkdir -p src/features/errors/components
 mkdir -p src/app/\(default\)/maintenance
 mkdir -p src/app/\(default\)/en/maintenance
 ```
@@ -969,22 +995,28 @@ mkdir -p src/app/\(default\)/en/maintenance
 
 `src/components/error-page-content.tsx`を作成
 
-### Step 5: 404ページ作成
+### Step 5: 共通レイアウトコンポーネント作成
 
-`src/app/not-found.tsx`を作成
+`src/features/errors/components/error-layout.tsx`を作成
 
-### Step 6: 500ページ作成
+### Step 6: コンテナコンポーネント作成
 
-`src/app/(default)/error.tsx`を作成
+1. `src/features/errors/components/not-found-page-container.tsx`を作成
+2. `src/features/errors/components/error-page-container.tsx`を作成
+3. `src/features/errors/components/maintenance-page-container.tsx`を作成
 
-### Step 7: 503メンテナンスページ作成
+### Step 7: ページファイル作成
 
-1. `src/app/(default)/maintenance/page.tsx`（日本語）を作成
-2. `src/app/(default)/en/maintenance/page.tsx`（英語）を作成
+1. `src/app/not-found.tsx`（404ページ）を作成
+2. `src/app/(default)/error.tsx`（500ページ）を作成
+3. `src/app/(default)/maintenance/page.tsx`（503日本語）を作成
+4. `src/app/(default)/en/maintenance/page.tsx`（503英語）を作成
 
 ### Step 8: Storybook作成
 
-`src/components/error-page-content.stories.tsx`を作成
+1. `src/features/errors/components/not-found-page-container.stories.tsx`を作成
+2. `src/features/errors/components/error-page-container.stories.tsx`を作成
+3. `src/features/errors/components/maintenance-page-container.stories.tsx`を作成
 
 ### Step 9: 品質管理の実行
 
@@ -1064,14 +1096,16 @@ Playwright MCPを使って `http://localhost:2222` にアクセスし、以下�
 
 Playwright MCPを使って `http://localhost:6006/` にアクセスし、以下を確認：
 
-- [ ] `components/ErrorPageContent` のストーリーが表示される
-- [ ] `NotFound404Japanese` が正常に表示される
-- [ ] `NotFound404English` が正常に表示される
-- [ ] `Error500Japanese` が正常に表示される
-- [ ] `Error500English` が正常に表示される
-- [ ] `Maintenance503Japanese` が正常に表示される
-- [ ] `Maintenance503English` が正常に表示される
-- [ ] 各ストーリーでHeader/Footerが表示される
+- [ ] `features/errors/NotFoundPageContainer` のストーリーが表示される
+  - [ ] `Japanese` が正常に表示される
+  - [ ] `English` が正常に表示される
+- [ ] `features/errors/ErrorPageContainer` のストーリーが表示される
+  - [ ] `Japanese` が正常に表示される
+  - [ ] `English` が正常に表示される
+- [ ] `features/errors/MaintenancePageContainer` のストーリーが表示される
+  - [ ] `Japanese` が正常に表示される
+  - [ ] `English` が正常に表示される
+- [ ] 各ストーリーでHeader/Footerが表示される（ErrorLayoutに含まれる）
 
 ### 6. デザイン崩れの調査
 
@@ -1229,7 +1263,13 @@ type Props = {
 
 - [ ] `src/features/errors/error-i18n.ts` が作成されている
 - [ ] `src/components/error-page-content.tsx` が作成されている
-- [ ] `src/components/error-page-content.stories.tsx` が作成されている
+- [ ] `src/features/errors/components/error-layout.tsx` が作成されている
+- [ ] `src/features/errors/components/not-found-page-container.tsx` が作成されている
+- [ ] `src/features/errors/components/not-found-page-container.stories.tsx` が作成されている
+- [ ] `src/features/errors/components/error-page-container.tsx` が作成されている
+- [ ] `src/features/errors/components/error-page-container.stories.tsx` が作成されている
+- [ ] `src/features/errors/components/maintenance-page-container.tsx` が作成されている
+- [ ] `src/features/errors/components/maintenance-page-container.stories.tsx` が作成されている
 - [ ] `src/app/not-found.tsx` が作成されている
 - [ ] `src/app/(default)/error.tsx` が作成されている
 - [ ] `src/app/(default)/maintenance/page.tsx` が作成されている
@@ -1262,8 +1302,8 @@ type Props = {
 
 ### Storybook
 
-- [ ] 全6つのストーリーが正常に表示される
-- [ ] 各ストーリーでHeader/Footerが含まれている
+- [ ] 全6つのストーリー（各コンテナ×2言語）が正常に表示される
+- [ ] 各ストーリーでHeader/Footerが含まれている（ErrorLayoutによる）
 
 ---
 
@@ -1278,6 +1318,7 @@ type Props = {
 | 2025-12-18 | 外部レビュー反映 | Figma文言との差異修正（404日本語/英語）、ボタン幅をw-full付きに変更、404/500の多言語対応追加（headers()/usePathname()使用）、500ページにnoindex,nofollow追加、品質管理手順に多言語確認項目追加 |
 | 2025-12-18 | 外部レビュー2回目反映 | 404の言語判定ロジックを改善（パスヘッダー > referer > 日本語フォールバック）、Next.js 16のheaders()非同期仕様を明記、404/500の言語判定方針記述の整合性確保、404メタデータの日本語固定を仕様として明文化 |
 | 2025-12-18 | 技術検証実施 | `generateMetadata`が`not-found.tsx`で動作することを確認。ただし`headers()`でリクエストパスを取得できないため、メタデータは日本語固定を正式採用。技術検証結果を「metadataについて」セクションに追記 |
+| 2025-12-18 | 実装反映 | コンテナパターン採用を反映。`ErrorLayout`コンポーネント追加、`*-page-container.tsx`コンテナコンポーネント追加、ページファイルはコンテナを呼び出すのみに変更。Storybookファイルを`src/features/errors/components/`に配置。アーキテクチャ概要図を追加 |
 
 ---
 
