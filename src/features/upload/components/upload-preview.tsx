@@ -36,25 +36,25 @@ export function UploadPreview({
   return (
     <div className="flex flex-col items-center justify-center gap-5">
       {/* プレビュー画像 */}
-      <div className="relative h-[371px] w-[373px]">
+      <div className="relative h-[280px] w-[280px] md:h-[371px] md:w-[371px]">
         <Image
           alt={`Preview of ${fileName}`}
           className="object-contain"
           fill
-          sizes="373px"
+          sizes="(max-width: 768px) 280px, 371px"
           src={previewUrl}
         />
       </div>
 
       {/* 確認テキスト */}
-      <p className="font-bold text-text-br text-xl leading-7">
+      <p className="px-2 text-center font-bold text-base text-text-br leading-6 md:px-0 md:text-xl md:leading-7">
         {previewConfirmationText(language)}
       </p>
 
       {/* ボタン */}
-      <div className="flex items-center justify-center gap-5">
+      <div className="flex w-full flex-col items-center justify-center gap-3 px-4 md:w-auto md:flex-row md:gap-5 md:px-0">
         <Button
-          className="h-12 w-[220px] rounded-lg border-2 border-button-tertiary-border bg-button-tertiary-base px-6 font-bold text-base text-button-tertiary-tx hover:bg-button-tertiary-hover"
+          className="h-12 w-full rounded-lg border-2 border-button-tertiary-border bg-button-tertiary-base px-6 font-bold text-base text-button-tertiary-tx hover:bg-button-tertiary-hover md:w-[220px]"
           isDisabled={isUploading}
           onPress={onCancel}
           variant="bordered"
@@ -62,7 +62,7 @@ export function UploadPreview({
           {cancelButtonText(language)}
         </Button>
         <Button
-          className="h-12 w-[220px] rounded-lg bg-button-primary-base px-6 font-bold text-base text-text-wh hover:bg-button-primary-hover"
+          className="h-12 w-full rounded-lg bg-button-primary-base px-6 font-bold text-base text-text-wh hover:bg-button-primary-hover md:w-[220px]"
           isDisabled={isUploading}
           isLoading={isUploading}
           onPress={onUpload}

@@ -114,7 +114,7 @@ const meta = {
   tags: ["autodocs"],
   decorators: [
     (StoryComponent) => (
-      <div className="w-[700px] bg-background p-4">
+      <div className="w-full max-w-[700px] bg-background p-4">
         <StoryComponent />
       </div>
     ),
