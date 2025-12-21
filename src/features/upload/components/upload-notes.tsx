@@ -25,13 +25,15 @@ export function UploadNotes({ language }: Props): JSX.Element {
 
   return (
     <div className="flex flex-col items-center justify-center gap-5 text-text-br">
-      <p className="font-bold text-xl leading-7">{cautionText(language)}</p>
-      <ul className="list-disc pl-6 font-normal text-base leading-6">
+      <p className="font-bold text-base leading-6 md:text-xl md:leading-7">
+        {cautionText(language)}
+      </p>
+      <ul className="list-disc pl-5 font-normal text-xs leading-4 md:pl-6 md:text-base md:leading-6">
         {notes.map((note, index) => (
           <li key={`note-${index}-${note.slice(0, 10)}`}>{note}</li>
         ))}
       </ul>
-      <p className="max-w-[476px] text-center font-normal text-base leading-6">
+      <p className="max-w-full px-2 text-center font-normal text-xs leading-4 md:max-w-[476px] md:px-0 md:text-base md:leading-6">
         {agreementText.prefix}
         <Link
           className="text-cyan-500 hover:underline"

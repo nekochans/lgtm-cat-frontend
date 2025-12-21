@@ -303,13 +303,13 @@ export function UploadForm({
     <div className="relative overflow-hidden rounded-2xl border-[6px] border-white border-solid bg-white">
       {/* メインコンテンツエリア */}
       <div
-        className={`flex min-h-[600px] flex-col items-center justify-center gap-[10px] rounded-2xl border-[5px] border-dashed p-7 ${
+        className={`flex min-h-[360px] flex-col items-center justify-center gap-2.5 rounded-2xl border-[5px] border-dashed p-4 md:min-h-[600px] md:gap-[10px] md:p-7 ${
           formState === "error" ? "border-rose-400" : "border-primary"
         }`}
       >
         {/* エラー表示 */}
         {formState === "error" && errorMessages.length > 0 && (
-          <div className="mb-4 w-full max-w-[500px]">
+          <div className="mb-4 w-full max-w-full px-2 md:max-w-[500px] md:px-0">
             <UploadErrorMessage messages={errorMessages} />
             <button
               className="mt-2 text-sm text-text-br underline hover:no-underline"
@@ -372,9 +372,21 @@ export function UploadForm({
           )}
       </div>
 
-      {/* ねこイラスト（右下） - 成功画面以外で表示 */}
+      {/* ねこイラスト（右下）
+          モバイル: idle状態のみ表示（ボタンとの重なり回避）
+          デスクトップ: 成功画面以外で表示 */}
+      {formState === "idle" && (
+        <div className="pointer-events-none absolute right-4 bottom-4 md:hidden">
+          <LgtmCatIcon
+            aria-hidden
+            className="rotate-12"
+            height={80}
+            width={100}
+          />
+        </div>
+      )}
       {formState !== "success" && (
-        <div className="pointer-events-none absolute right-4 bottom-4">
+        <div className="pointer-events-none absolute right-4 bottom-4 hidden md:block">
           <LgtmCatIcon
             aria-hidden
             className="rotate-12"

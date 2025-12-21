@@ -91,7 +91,7 @@ export function UploadSuccess({
     <div className="flex flex-col items-center justify-center gap-5">
       {/* プレビュー画像（クリックでコピー） */}
       <button
-        className="relative h-[371px] w-[373px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+        className="relative h-[280px] w-[280px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 md:h-[371px] md:w-[371px]"
         onClick={handleImageClick}
         type="button"
       >
@@ -99,18 +99,18 @@ export function UploadSuccess({
           alt="Uploaded LGTM image"
           className="object-contain"
           fill
-          sizes="373px"
+          sizes="(max-width: 768px) 280px, 371px"
           src={previewImageUrl}
         />
       </button>
 
       {/* 成功メッセージ */}
-      <p className="font-bold text-3xl text-primary leading-9">
+      <p className="px-2 text-center font-bold text-primary text-xl leading-7 md:px-0 md:text-3xl md:leading-9">
         {uploadSuccessTitle(language)}
       </p>
 
       {/* 説明テキスト - Figma仕様: 20px/line、上下マージンなし */}
-      <div className="text-center font-normal text-text-br text-xl leading-7">
+      <div className="px-2 text-center font-normal text-sm text-text-br leading-5 md:px-0 md:text-xl md:leading-7">
         {descriptionLines.map((line) =>
           line === "" ? (
             <br key="empty-line-break" />
@@ -123,7 +123,7 @@ export function UploadSuccess({
       </div>
 
       {/* 最新画像へのリンク */}
-      <p className="text-center font-normal text-text-br text-xl leading-7">
+      <p className="px-2 text-center font-normal text-sm text-text-br leading-5 md:px-0 md:text-xl md:leading-7">
         {linkText.prefix}
         <Link
           className="text-primary underline hover:no-underline"
@@ -135,16 +135,16 @@ export function UploadSuccess({
       </p>
 
       {/* ボタンエリア */}
-      <div className="flex items-center justify-center gap-5">
+      <div className="flex w-full flex-col items-center justify-center gap-3 px-4 md:w-auto md:flex-row md:gap-5 md:px-0">
         {/* 閉じるボタン - variantを指定せずカスタムクラスのみで制御（HeroUIデフォルトスタイルとの重複回避） */}
         <Button
-          className="h-12 w-[220px] rounded-lg border-2 border-button-tertiary-border bg-button-tertiary-base px-6 font-bold text-base text-button-tertiary-tx hover:bg-button-tertiary-hover"
+          className="h-12 w-full rounded-lg border-2 border-button-tertiary-border bg-button-tertiary-base px-6 font-bold text-base text-button-tertiary-tx hover:bg-button-tertiary-hover md:w-[220px]"
           onPress={onClose}
         >
           {closeButtonText(language)}
         </Button>
         <Button
-          className="h-12 w-[220px] rounded-lg bg-button-primary-base px-6 font-bold text-base text-text-wh hover:bg-button-primary-hover"
+          className="h-12 w-full rounded-lg bg-button-primary-base px-6 font-bold text-base text-text-wh hover:bg-button-primary-hover md:w-[220px]"
           onPress={handleCopyMarkdown}
         >
           {copyMarkdownButtonText(language)}

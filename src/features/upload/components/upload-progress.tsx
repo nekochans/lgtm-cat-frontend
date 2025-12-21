@@ -28,18 +28,18 @@ export function UploadProgress({
   return (
     <div className="flex flex-col items-center justify-center gap-5">
       {/* プレビュー画像 */}
-      <div className="relative h-[371px] w-[373px]">
+      <div className="relative h-[280px] w-[280px] md:h-[371px] md:w-[371px]">
         <Image
           alt={`Uploading ${fileName}`}
           className="object-contain"
           fill
-          sizes="373px"
+          sizes="(max-width: 768px) 280px, 371px"
           src={previewUrl}
         />
       </div>
 
       {/* アップロード中テキスト */}
-      <p className="font-bold text-text-br text-xl leading-7">
+      <p className="font-bold text-base text-text-br leading-6 md:text-xl md:leading-7">
         {uploadingText(language)}
       </p>
 
@@ -47,8 +47,8 @@ export function UploadProgress({
       <Progress
         aria-label={uploadingText(language)}
         classNames={{
-          base: "w-[400px]",
-          track: "h-7 bg-zinc-200",
+          base: "w-full max-w-[280px] md:max-w-[400px]",
+          track: "h-6 md:h-7 bg-zinc-200",
           indicator: "bg-orange-400",
         }}
         showValueLabel={false}

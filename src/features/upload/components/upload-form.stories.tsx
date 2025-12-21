@@ -2,8 +2,10 @@
 
 import type { Meta, StoryObj } from "@storybook/react";
 import { http } from "msw";
+import { PageLayout } from "@/components/page-layout";
 import type { Language } from "@/features/language";
 import { createLgtmImageUrl } from "@/features/main/types/lgtm-image";
+import type { IncludeLanguageAppPath } from "@/features/url";
 import { mockIsAcceptableCatImage } from "@/mocks/api/external/lgtmeow/mock-is-acceptable-cat-image";
 import { mockIsAcceptableCatImageNotCatImage } from "@/mocks/api/external/lgtmeow/mock-is-acceptable-cat-image-not-cat-image";
 import { mockIsAcceptableCatImageNotModerationImage } from "@/mocks/api/external/lgtmeow/mock-is-acceptable-cat-image-not-moderation-image";
@@ -113,11 +115,24 @@ const meta = {
   },
   tags: ["autodocs"],
   decorators: [
-    (StoryComponent) => (
-      <div className="w-[700px] bg-background p-4">
-        <StoryComponent />
-      </div>
-    ),
+    (StoryComponent, context) => {
+      const language = (context.args.language as Language) ?? "ja";
+      const currentUrlPath: IncludeLanguageAppPath = `/${language}/upload`;
+      return (
+        <PageLayout
+          currentUrlPath={currentUrlPath}
+          isLoggedIn={false}
+          language={language}
+        >
+          {/* モーダル風の背景オーバーレイ */}
+          <div className="absolute inset-0 bg-black/50" />
+          {/* フォームコンテナ（オーバーレイの上に表示） */}
+          <div className="relative z-10 w-full max-w-[700px]">
+            <StoryComponent />
+          </div>
+        </PageLayout>
+      );
+    },
   ],
 } satisfies Meta<typeof UploadForm>;
 
