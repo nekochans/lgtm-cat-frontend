@@ -113,7 +113,7 @@ export function HomeActionButtons({ language, className }: Props) {
         {isCopied ? (
           <div
             aria-live="polite"
-            className="-translate-x-1/2 absolute top-full left-1/2 mt-2 rounded bg-[#7B2F1D] px-4 py-2 font-semibold text-sm text-white"
+            className="-translate-x-1/2 absolute bottom-full left-1/2 mb-2 rounded bg-[#7B2F1D] px-4 py-2 font-semibold text-sm text-white"
           >
             Copied!
           </div>
