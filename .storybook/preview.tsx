@@ -2,6 +2,7 @@
 import type { Preview } from "@storybook/react";
 import { initialize, mswLoader } from "msw-storybook-addon";
 import { INITIAL_VIEWPORTS } from "storybook/viewport";
+import { mPlusRounded1c } from "../src/app/fonts";
 import { Providers } from "../src/components/heroui/providers";
 import "../src/app/globals.css";
 
@@ -29,9 +30,11 @@ const preview: Preview = {
   },
   decorators: [
     (Story) => (
-      <Providers>
-        <Story />
-      </Providers>
+      <div className={mPlusRounded1c.variable}>
+        <Providers>
+          <Story />
+        </Providers>
+      </div>
     ),
   ],
   loaders: [mswLoader],
