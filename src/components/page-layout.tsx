@@ -25,8 +25,10 @@ export function PageLayout({
 }: Props) {
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
+      {/* TODO: ログイン機能実装後は hideLoginButton を削除する */}
       <Header
         currentUrlPath={currentUrlPath}
+        hideLoginButton={true}
         isLoggedIn={isLoggedIn}
         language={language}
       />

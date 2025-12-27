@@ -34,12 +34,15 @@ import {
 type Props = {
   readonly language: Language;
   readonly currentUrlPath: IncludeLanguageAppPath;
+  // TODO: ログイン機能実装後は hideLoginButton Propsを削除する
+  readonly hideLoginButton?: boolean;
   readonly isLoggedIn: boolean;
 };
 
 export function HeaderDesktop({
   language,
   currentUrlPath,
+  hideLoginButton,
   isLoggedIn,
 }: Props): JSX.Element {
   const terms = createTermsOfUseLinksFromLanguages(language);
@@ -213,7 +216,8 @@ export function HeaderDesktop({
                 </DropdownMenu>
               </Dropdown>
             ) : (
-              <LoginButton language={language} />
+              // TODO: ログイン機能実装後は hideLoginButton による条件分岐を削除する
+              !hideLoginButton && <LoginButton language={language} />
             )}
           </div>
         </div>
