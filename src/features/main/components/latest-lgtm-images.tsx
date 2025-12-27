@@ -23,5 +23,6 @@ const fetchLgtmImages = async () => {
 export const LatestLgtmImages = async () => {
   const lgtmImages = await fetchLgtmImages();
 
-  return <LgtmImages images={lgtmImages} />;
+  // TODO: ログイン機能、お気に入り機能実装後は hideHeartIcon を削除する
+  return <LgtmImages hideHeartIcon={true} images={lgtmImages} />;
 };
