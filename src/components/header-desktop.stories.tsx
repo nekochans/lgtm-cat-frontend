@@ -41,3 +41,13 @@ export const LoggedInHeaderDesktopInEnglish: Story = {
     isLoggedIn: true,
   },
 };
+
+// TODO: ログイン機能実装後はこのStoryを削除する
+export const HiddenLoginButtonDesktopInJapanese: Story = {
+  args: {
+    currentUrlPath: "/",
+    hideLoginButton: true,
+    isLoggedIn: false,
+    language: "ja",
+  },
+};

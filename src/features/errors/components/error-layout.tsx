@@ -15,8 +15,10 @@ type Props = {
 export function ErrorLayout({ language, currentUrlPath, children }: Props) {
   return (
     <div className="flex min-h-screen w-full flex-col bg-orange-50">
+      {/* TODO: ログイン機能実装後は hideLoginButton を削除する */}
       <Header
         currentUrlPath={currentUrlPath}
+        hideLoginButton={true}
         isLoggedIn={false}
         language={language}
       />

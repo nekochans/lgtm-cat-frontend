@@ -40,6 +40,8 @@ import {
 type Props = {
   readonly language: Language;
   readonly currentUrlPath: IncludeLanguageAppPath;
+  // TODO: ログイン機能実装後は hideLoginButton Propsを削除する
+  readonly hideLoginButton?: boolean;
   readonly isLoggedIn: boolean;
 };
 
@@ -91,6 +93,8 @@ type UnloggedInMenuProps = {
   readonly removedLanguagePath: string;
   readonly menuType: MenuType;
   readonly onCloseMenus: () => void;
+  // TODO: ログイン機能実装後は hideLoginButton Propsを削除する
+  readonly hideLoginButton?: boolean;
 };
 
 function UnloggedInMenu({
@@ -98,18 +102,22 @@ function UnloggedInMenu({
   removedLanguagePath,
   menuType,
   onCloseMenus,
+  hideLoginButton,
 }: UnloggedInMenuProps): JSX.Element {
   return (
     <>
-      <Button
-        as={Link}
-        className="mb-4 flex w-full items-center justify-center gap-2 rounded-lg bg-button-secondary-base px-7 py-2 font-bold text-text-br text-xl"
-        href={createIncludeLanguageAppPath("login", language)}
-        onClick={onCloseMenus}
-      >
-        <GithubIcon color="default" height={20} width={20} />
-        {loginText(language)}
-      </Button>
+      {/* TODO: ログイン機能実装後は hideLoginButton による条件分岐を削除する */}
+      {!hideLoginButton && (
+        <Button
+          as={Link}
+          className="mb-4 flex w-full items-center justify-center gap-2 rounded-lg bg-button-secondary-base px-7 py-2 font-bold text-text-br text-xl"
+          href={createIncludeLanguageAppPath("login", language)}
+          onClick={onCloseMenus}
+        >
+          <GithubIcon color="default" height={20} width={20} />
+          {loginText(language)}
+        </Button>
+      )}
 
       {/* 言語メニュー: 言語選択のみ表示 */}
       {menuType === "language" && (
@@ -215,6 +223,7 @@ function LoggedInMenu({
 export function HeaderMobile({
   language,
   currentUrlPath,
+  hideLoginButton,
   isLoggedIn,
 }: Props): JSX.Element {
   // HeroUI の useDisclosure フックでDrawerの開閉状態を管理
@@ -303,6 +312,7 @@ export function HeaderMobile({
               <DrawerBody className="bg-primary px-5 py-10">
                 {!isLoggedIn && (
                   <UnloggedInMenu
+                    hideLoginButton={hideLoginButton}
                     language={language}
                     menuType={menuType}
                     onCloseMenus={handleCloseMenus}
