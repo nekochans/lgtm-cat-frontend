@@ -34,7 +34,10 @@ export function HeaderLogo({ language, size = "desktop" }: Props): JSX.Element {
         height={iconSize.height}
         width={iconSize.width}
       />
-      <h1 className={`font-bold text-orange-50 no-underline ${textClasses}`}>
+      <h1
+        className={`font-bold text-orange-50 no-underline ${textClasses}`}
+        style={{ fontFamily: "var(--font-m-plus-rounded-1c)" }}
+      >
         <Text>LGTMeow</Text>
       </h1>
     </Link>

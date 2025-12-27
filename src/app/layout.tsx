@@ -6,6 +6,7 @@ import { Providers } from "@/components/heroui/providers";
 import { convertLocaleToLanguage } from "@/features/locale";
 import { appName, metaTagList } from "@/features/meta-tag";
 import { appBaseUrl, i18nUrlList } from "@/features/url";
+import { mPlusRounded1c } from "./fonts";
 
 type Props = {
   readonly children: ReactNode;
@@ -44,7 +45,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Props): JSX.Element {
   return (
-    <html lang={language} suppressHydrationWarning>
+    <html
+      className={mPlusRounded1c.variable}
+      lang={language}
+      suppressHydrationWarning
+    >
       <body>
         <Providers>{children}</Providers>
       </body>
