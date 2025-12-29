@@ -1,8 +1,10 @@
-import * as Sentry from '@sentry/nextjs';
+// 絶対厳守：編集前に必ずAI実装ルールを読む
+
+import { getCurrentScope } from "@sentry/nextjs";
 
 export const mightSetRequestIdToSentry = (response: Response): void => {
-  const xRequestId = response.headers.get('x-request-id');
+  const xRequestId = response.headers.get("x-request-id");
   if (xRequestId != null) {
-    Sentry.getCurrentScope().setTag('x_request_id', xRequestId);
+    getCurrentScope().setTag("x_request_id", xRequestId);
   }
 };
