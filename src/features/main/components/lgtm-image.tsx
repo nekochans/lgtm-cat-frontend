@@ -11,11 +11,13 @@ import { generateLgtmMarkdown } from "@/features/main/functions/generate-lgtm-ma
 import type { LgtmImage as LgtmImageType } from "@/features/main/types/lgtm-image";
 
 type Props = {
+  // TODO: ログイン機能、お気に入り機能実装後は hideHeartIcon Propsを削除する
+  readonly hideHeartIcon?: boolean;
   readonly id: LgtmImageType["id"];
   readonly imageUrl: LgtmImageType["imageUrl"];
 };
 
-export function LgtmImage({ id, imageUrl }: Props): JSX.Element {
+export function LgtmImage({ hideHeartIcon, id, imageUrl }: Props): JSX.Element {
   const [isFavorite, setIsFavorite] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const copyTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -105,26 +107,29 @@ export function LgtmImage({ id, imageUrl }: Props): JSX.Element {
             width={20}
           />
         </Button>
-        <Button
-          aria-label="Add to favorites"
-          className="min-w-0 bg-white/80 p-2 backdrop-blur-sm hover:bg-white/90"
-          isIconOnly
-          onPress={handleToggleFavorite}
-          onPressEnd={handleFavoritePressEnd}
-          onPressStart={handleFavoritePressStart}
-          radius="sm"
-          size="sm"
-        >
-          <HeartIcon
-            color={
-              isFavorite === true || isFavoriteActive === true
-                ? "favorite"
-                : "default"
-            }
-            height={20}
-            width={20}
-          />
-        </Button>
+        {/* TODO: ログイン機能、お気に入り機能実装後は hideHeartIcon による条件分岐を削除する */}
+        {!hideHeartIcon && (
+          <Button
+            aria-label="Add to favorites"
+            className="min-w-0 bg-white/80 p-2 backdrop-blur-sm hover:bg-white/90"
+            isIconOnly
+            onPress={handleToggleFavorite}
+            onPressEnd={handleFavoritePressEnd}
+            onPressStart={handleFavoritePressStart}
+            radius="sm"
+            size="sm"
+          >
+            <HeartIcon
+              color={
+                isFavorite === true || isFavoriteActive === true
+                  ? "favorite"
+                  : "default"
+              }
+              height={20}
+              width={20}
+            />
+          </Button>
+        )}
       </div>
       {isCopied ? (
         <div

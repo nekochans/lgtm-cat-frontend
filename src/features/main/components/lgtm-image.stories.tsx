@@ -40,3 +40,12 @@ export const AnotherImage: Story = {
     imageUrl: createLgtmImageUrl(secondImage.url),
   },
 };
+
+// TODO: ログイン機能、お気に入り機能実装後はこのStoryを削除する
+export const HiddenHeartIcon: Story = {
+  args: {
+    hideHeartIcon: true,
+    id: createLgtmImageId(Number(firstImage.id)),
+    imageUrl: createLgtmImageUrl(firstImage.url),
+  },
+};

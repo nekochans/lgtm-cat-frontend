@@ -35,6 +35,14 @@ export const FewImages: Story = {
   },
 };
 
+// TODO: ログイン機能、お気に入り機能実装後はこのStoryを削除する
+export const HiddenHeartIcon: Story = {
+  args: {
+    hideHeartIcon: true,
+    images: mockImages,
+  },
+};
+
 export const Empty: Story = {
   args: {
     images: [],
