@@ -2,8 +2,8 @@
 import type { Metadata, NextPage } from "next";
 import { ExternalTransmissionPolicyPageContainer } from "@/features/external-transmission-policy/components/external-transmission-policy-page-container";
 import { loadMarkdown } from "@/features/load-markdown";
-import { convertLocaleToLanguage } from "@/features/locale";
 import { appName, metaTagList } from "@/features/meta-tag";
+import { convertLanguageToOpenGraphLocale } from "@/features/open-graph-locale";
 import {
   appBaseUrl,
   createIncludeLanguageAppPath,
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
         alt: metaTagList(language)["external-transmission-policy"].title,
       },
     ],
-    locale: convertLocaleToLanguage(language),
+    locale: convertLanguageToOpenGraphLocale(language),
     type: "website",
   },
   metadataBase: new URL(appBaseUrl()),

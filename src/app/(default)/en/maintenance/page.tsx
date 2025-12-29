@@ -2,8 +2,8 @@
 import type { Metadata, NextPage } from "next";
 import { MaintenancePageContainer } from "@/features/errors/components/maintenance-page-container";
 import type { Language } from "@/features/language";
-import { convertLocaleToLanguage } from "@/features/locale";
 import { appName, metaTagList } from "@/features/meta-tag";
+import { convertLanguageToOpenGraphLocale } from "@/features/open-graph-locale";
 import { appBaseUrl, i18nUrlList } from "@/features/url";
 
 const language: Language = "en";
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
         alt: metaTagList(language).maintenance.title,
       },
     ],
-    locale: convertLocaleToLanguage(language),
+    locale: convertLanguageToOpenGraphLocale(language),
     type: "website",
   },
   metadataBase: new URL(appBaseUrl()),

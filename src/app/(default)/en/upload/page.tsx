@@ -1,8 +1,8 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { Metadata, NextPage } from "next";
-import { convertLocaleToLanguage } from "@/features/locale";
 import { UploadPageContainer } from "@/features/main/components/upload-page-container";
 import { appName, metaTagList } from "@/features/meta-tag";
+import { convertLanguageToOpenGraphLocale } from "@/features/open-graph-locale";
 import { appBaseUrl, appPathList, i18nUrlList } from "@/features/url";
 
 const language = "en";
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
         alt: metaTagList(language).upload.title,
       },
     ],
-    locale: convertLocaleToLanguage(language),
+    locale: convertLanguageToOpenGraphLocale(language),
     type: "website",
   },
   metadataBase: new URL(appBaseUrl()),

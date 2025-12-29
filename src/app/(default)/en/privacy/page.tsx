@@ -1,8 +1,8 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { Metadata, NextPage } from "next";
 import { loadMarkdown } from "@/features/load-markdown";
-import { convertLocaleToLanguage } from "@/features/locale";
 import { appName, metaTagList } from "@/features/meta-tag";
+import { convertLanguageToOpenGraphLocale } from "@/features/open-graph-locale";
 import { PrivacyPageContainer } from "@/features/privacy/components/privacy-page-container";
 import {
   appBaseUrl,
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
         alt: metaTagList(language).privacy.title,
       },
     ],
-    locale: convertLocaleToLanguage(language),
+    locale: convertLanguageToOpenGraphLocale(language),
     type: "website",
   },
   metadataBase: new URL(appBaseUrl()),
