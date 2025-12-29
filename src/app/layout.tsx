@@ -3,8 +3,8 @@ import type { Metadata } from "next";
 import type { JSX, ReactNode } from "react";
 import "./globals.css";
 import { Providers } from "@/components/heroui/providers";
-import { convertLocaleToLanguage } from "@/features/locale";
 import { appName, metaTagList } from "@/features/meta-tag";
+import { convertLanguageToOpenGraphLocale } from "@/features/open-graph-locale";
 import { appBaseUrl, i18nUrlList } from "@/features/url";
 import { mPlusRounded1c } from "./fonts";
 
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
         alt: metaTagList(language).home.title,
       },
     ],
-    locale: convertLocaleToLanguage(language),
+    locale: convertLanguageToOpenGraphLocale(language),
     type: "website",
   },
   metadataBase: new URL(appBaseUrl()),
