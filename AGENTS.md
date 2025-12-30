@@ -25,9 +25,11 @@
 
 ## プロジェクト構成とモジュール
 
-- Next.js 16 App Router を採用し、`src/app` にページ、`src/components` に共通 UI、`src/features` にドメインごとのロジックと `__tests__` を配置します。
-- `src/utils` はヘルパー、`src/docs` は静的コンテンツ、`src/mocks` は MSW ハンドラー、`stories` と `.storybook` は Storybook 設定です。
-- 公開アセットは `public/`、解析や仕様の補足は `docs/`、Sentry 関連は `sentry.*.config.ts` にまとまっています。
+以下のファイルに記載されております。
+
+Claude Codeは @src/CLAUDE.md を参照してください。
+
+Codexは @src/AGENTS.md を参照してください。
 
 ## ビルド・テスト・開発コマンド
 
@@ -37,6 +39,18 @@
 - `npm run test` : Vitest のユニットテストと Storybook 連携テストを一括実行します。
 - `npm run test:coverage` : CI 同等のカバレッジレポートを出力します。
 - `npm run storybook` / `npm run chromatic` : UI をローカル確認し、Chromatic にビジュアル差分を送信します。
+
+## **重要な品質管理実行手順**
+
+特別な指示がない場合は **必ず** 以下の順番で品質管理を実行します。
+
+1. `npm run format` を実行してコードをフォーマットする
+2. `npm run lint` を実行してコードをチェックする
+3. `npm run test` を実行して全てパスする事を確認する
+4. Chrome DevTools MCP を使って `http://localhost:2222` にアクセスして表示確認を行う
+5. Chrome DevTools MCP を使って `http://localhost:6006/` にアクセスして修正したComponentが正常に表示されるか確認を行う
+
+別途ここに書いてある品質管理手順以外の手順が指示されている場合はそちらを優先してください。
 
 ## 関連ドキュメント
 

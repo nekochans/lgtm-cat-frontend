@@ -1,10 +1,10 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import Link from "next/link";
 import type { JSX } from "react";
-import { createExternalTransmissionPolicyLinksFromLanguages } from "@/features/external-transmission-policy";
+import { createExternalTransmissionPolicyLinksFromLanguages } from "@/features/external-transmission-policy/functions/external-transmission-policy";
 import type { Language } from "@/features/language";
-import { createPrivacyPolicyLinksFromLanguages } from "@/features/privacy-policy";
-import { createTermsOfUseLinksFromLanguages } from "@/features/terms-of-use";
+import { createPrivacyPolicyLinksFromLanguages } from "@/features/privacy/functions/privacy-policy";
+import { createTermsOfUseLinksFromLanguages } from "@/features/terms/functions/terms-of-use";
 
 export type Props = {
   language: Language;

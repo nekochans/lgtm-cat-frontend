@@ -18,7 +18,7 @@ import {
   errorMessageNotModerationImage,
   errorMessagePayloadTooLarge,
   errorMessagePersonFaceInImage,
-} from "../upload-i18n";
+} from "../functions/upload-i18n";
 import { UploadForm } from "./upload-form";
 
 /**

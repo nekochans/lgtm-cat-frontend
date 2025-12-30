@@ -10,7 +10,7 @@ import {
   cancelButtonText,
   previewConfirmationText,
   uploadButtonText,
-} from "../upload-i18n";
+} from "../functions/upload-i18n";
 
 type Props = {
   readonly language: Language;

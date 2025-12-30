@@ -1,7 +1,7 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 
 import { describe, expect, it } from "vitest";
-import { validateUploadFile } from "../upload-validator";
+import { validateUploadFile } from "../functions/upload-validator";
 
 describe("validateUploadFile", () => {
   describe("許可されたファイル", () => {

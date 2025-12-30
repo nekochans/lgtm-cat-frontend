@@ -7,7 +7,7 @@ import {
   allowedMimeTypes,
   maxImageSizeBytes,
   type UploadValidationResult,
-} from "./types/upload";
+} from "@/features/upload/types/upload";
 
 /**
  * ファイルのMIMEタイプが許可されているかチェック

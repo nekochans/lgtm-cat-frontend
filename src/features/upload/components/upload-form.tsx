@@ -10,6 +10,13 @@ import type { LgtmImageUrl } from "@/features/main/types/lgtm-image";
 import { uploadToR2 as defaultUploadToStorage } from "@/lib/cloudflare/r2/upload-to-r2";
 import { generateUploadUrlAction as defaultGenerateUploadUrlAction } from "../actions/generate-upload-url-action";
 import { validateAndCreateLgtmImageAction as defaultValidateAndCreateLgtmImageAction } from "../actions/validate-and-create-lgtm-image-action";
+import {
+  createImageSizeTooLargeErrorMessage,
+  createNotAllowedImageExtensionErrorMessage,
+  errorMessageStorageUploadFailed,
+  unexpectedErrorMessage,
+} from "../functions/upload-i18n";
+import { validateUploadFile } from "../functions/upload-validator";
 import type {
   GenerateUploadUrlAction,
   UploadFormState,
@@ -17,13 +24,6 @@ import type {
   UploadValidationResult,
   ValidateAndCreateLgtmImageAction,
 } from "../types/upload";
-import {
-  createImageSizeTooLargeErrorMessage,
-  createNotAllowedImageExtensionErrorMessage,
-  errorMessageStorageUploadFailed,
-  unexpectedErrorMessage,
-} from "../upload-i18n";
-import { validateUploadFile } from "../upload-validator";
 import { UploadDropArea } from "./upload-drop-area";
 import { UploadErrorMessage } from "./upload-error-message";
 import { UploadNotes } from "./upload-notes";

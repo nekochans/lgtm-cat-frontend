@@ -26,14 +26,29 @@ export async function loadMarkdown(
 ): Promise<string> {
   "use cache";
   cacheLife({
-    // 静的コンテンツのため長期キャッシュ（デプロイで更新）
+    // 静的コンテンツのため長期キャッシュ (デプロイで更新)
     stale: 2_592_000, // 30日間フレッシュ扱い
     revalidate: 2_592_000, // 30日ごとに再検証
     expire: 31_536_000, // 1年で強制失効
   });
 
+  // DocType から対応するディレクトリパスへのマッピング
+  const docTypeToDir: Record<DocType, string> = {
+    terms: "terms",
+    privacy: "privacy",
+    "external-transmission": "external-transmission-policy",
+  };
+
+  const dirName = docTypeToDir[docType];
   const fileName = language === "en" ? `${docType}.en.md` : `${docType}.ja.md`;
-  const filePath = join(process.cwd(), "src", "docs", fileName);
+  const filePath = join(
+    process.cwd(),
+    "src",
+    "features",
+    dirName,
+    "markdown",
+    fileName
+  );
 
   try {
     const content = await readFile(filePath, "utf-8");

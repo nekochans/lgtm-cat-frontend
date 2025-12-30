@@ -13,7 +13,10 @@ import {
 } from "react";
 import { UploadCloudIcon } from "@/components/icons/upload-cloud-icon";
 import type { Language } from "@/features/language";
-import { imageDropAreaText, uploadInputButtonText } from "../upload-i18n";
+import {
+  imageDropAreaText,
+  uploadInputButtonText,
+} from "../functions/upload-i18n";
 
 type Props = {
   readonly language: Language;
