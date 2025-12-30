@@ -33,27 +33,37 @@ export function LgtmImage({ hideHeartIcon, id, imageUrl }: Props): JSX.Element {
    * @param sendGaEvent GAイベント送信関数
    */
   const copyMarkdownAndSendEvent = useCallback(
-    (sendGaEvent: () => void) => {
+    async (sendGaEvent: () => void) => {
       const markdown = generateLgtmMarkdown(imageUrl);
-      navigator.clipboard.writeText(markdown);
-      setIsCopied(true);
 
-      // GAイベント送信
-      sendGaEvent();
+      try {
+        await navigator.clipboard.writeText(markdown);
+        setIsCopied(true);
 
-      if (copyTimerRef.current != null) {
-        clearTimeout(copyTimerRef.current);
+        // GAイベント送信
+        try {
+          sendGaEvent();
+        } catch {
+          // GTMイベント送信失敗は無視
+        }
+
+        if (copyTimerRef.current != null) {
+          clearTimeout(copyTimerRef.current);
+        }
+        copyTimerRef.current = setTimeout(() => {
+          setIsCopied(false);
+        }, 1500);
+      } catch {
+        // クリップボード書き込み失敗時は何もしない
+        // (HTTPSでない環境、権限拒否などで失敗する可能性がある)
       }
-      copyTimerRef.current = setTimeout(() => {
-        setIsCopied(false);
-      }, 1500);
     },
     [imageUrl]
   );
 
   // 画像クリック時のハンドラ
-  const handleCopy = useCallback(() => {
-    copyMarkdownAndSendEvent(sendCopyMarkdownFromTopImages);
+  const handleCopy = useCallback(async () => {
+    await copyMarkdownAndSendEvent(sendCopyMarkdownFromTopImages);
   }, [copyMarkdownAndSendEvent]);
 
   const handleToggleFavorite = useCallback(() => {
@@ -61,8 +71,8 @@ export function LgtmImage({ hideHeartIcon, id, imageUrl }: Props): JSX.Element {
   }, []);
 
   // コピーアイコンクリック時のハンドラ
-  const handleCopyIconPress = useCallback(() => {
-    copyMarkdownAndSendEvent(sendCopyMarkdownFromCopyButton);
+  const handleCopyIconPress = useCallback(async () => {
+    await copyMarkdownAndSendEvent(sendCopyMarkdownFromCopyButton);
   }, [copyMarkdownAndSendEvent]);
 
   const handleCopyPressStart = useCallback(() => {
