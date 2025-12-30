@@ -3,7 +3,8 @@
 "use client";
 
 import { addToast } from "@heroui/toast";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { IconButton } from "@/components/icon-button";
 import type { Language } from "@/features/language";
 import { copyRandomCat } from "@/features/main/actions/copy-random-cat";
@@ -12,17 +13,22 @@ import {
   showLatestCats,
 } from "@/features/main/actions/refresh-images";
 import { getActionButtonText } from "@/features/main/service-description-text";
+import type { RefreshImagesActionState } from "@/features/main/types/action-state";
+import {
+  sendClickTopFetchNewArrivalCatButton,
+  sendClickTopFetchRandomCatButton,
+  sendCopyMarkdownFromRandomButton,
+} from "@/utils/gtm";
+import { withCallbacks } from "@/utils/with-callbacks";
 
 /**
  * Server Action のエラーメッセージをユーザー向けにサニタイズする
  * API由来の内部メッセージをそのまま表示しないようにする
  */
 function sanitizeErrorMessage(error: string): string {
-  // 既知のエラーメッセージはそのまま表示
   if (error === "No images available") {
     return "No images available. Please try again later.";
   }
-  // API由来などの予期しないエラーは汎用メッセージに置換
   return "An unexpected error occurred. Please try again later.";
 }
 
@@ -32,15 +38,65 @@ type Props = {
 };
 
 export function HomeActionButtons({ language, className }: Props) {
+  const router = useRouter();
   const buttonText = getActionButtonText(language);
-  const refreshRandomCatsAction = refreshRandomCats.bind(null, language);
-  const showLatestCatsAction = showLatestCats.bind(null, language);
+
+  // refreshRandomCats用のuseActionState
+  const [, refreshAction, isRefreshPending] = useActionState(
+    withCallbacks(
+      async (
+        prevState: RefreshImagesActionState,
+        _formData: FormData
+      ): Promise<RefreshImagesActionState> =>
+        refreshRandomCats(prevState, language),
+      {
+        onSuccess: (result) => {
+          sendClickTopFetchRandomCatButton();
+          router.push(result.redirectUrl);
+        },
+        onError: () => {
+          addToast({
+            title: "Error",
+            description: "Failed to refresh images. Please try again later.",
+            color: "danger",
+          });
+        },
+      }
+    ),
+    null
+  );
+
+  // showLatestCats用のuseActionState
+  const [, latestAction, isLatestPending] = useActionState(
+    withCallbacks(
+      async (
+        prevState: RefreshImagesActionState,
+        _formData: FormData
+      ): Promise<RefreshImagesActionState> =>
+        showLatestCats(prevState, language),
+      {
+        onSuccess: (result) => {
+          sendClickTopFetchNewArrivalCatButton();
+          router.push(result.redirectUrl);
+        },
+        onError: () => {
+          addToast({
+            title: "Error",
+            description:
+              "Failed to load latest images. Please try again later.",
+            color: "danger",
+          });
+        },
+      }
+    ),
+    null
+  );
 
   const [isCopied, setIsCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const copyTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const handleRandomCopy = useCallback(async () => {
+  const handleRandomCopy = async () => {
     if (isLoading) {
       return;
     }
@@ -54,6 +110,9 @@ export function HomeActionButtons({ language, className }: Props) {
           await navigator.clipboard.writeText(result.markdown);
           setIsCopied(true);
 
+          // GAイベント送信: ランダムコピー成功時
+          sendCopyMarkdownFromRandomButton();
+
           if (copyTimerRef.current != null) {
             clearTimeout(copyTimerRef.current);
           }
@@ -61,7 +120,6 @@ export function HomeActionButtons({ language, className }: Props) {
             setIsCopied(false);
           }, 1500);
         } catch {
-          // クリップボードへの書き込みに失敗した場合
           addToast({
             title: "Copy Failed",
             description:
@@ -70,7 +128,6 @@ export function HomeActionButtons({ language, className }: Props) {
           });
         }
       } else {
-        // Server Action がエラーを返した場合（エラーメッセージをサニタイズ）
         addToast({
           title: "Error",
           description: sanitizeErrorMessage(result.error),
@@ -78,7 +135,6 @@ export function HomeActionButtons({ language, className }: Props) {
         });
       }
     } catch {
-      // 予期しないエラーの場合（汎用メッセージを表示）
       addToast({
         title: "Error",
         description: "An unexpected error occurred. Please try again later.",
@@ -87,7 +143,7 @@ export function HomeActionButtons({ language, className }: Props) {
     } finally {
       setIsLoading(false);
     }
-  }, [isLoading]);
+  };
 
   useEffect(
     () => () => {
@@ -119,18 +175,20 @@ export function HomeActionButtons({ language, className }: Props) {
           </div>
         ) : null}
       </div>
-      <form action={refreshRandomCatsAction} className="w-full md:w-auto">
+      <form action={refreshAction} className="w-full md:w-auto">
         <IconButton
           className="w-full md:w-[240px]"
           displayText={buttonText.refreshCats}
+          isLoading={isRefreshPending}
           showRandomIcon={true}
           type="submit"
         />
       </form>
-      <form action={showLatestCatsAction} className="w-full md:w-auto">
+      <form action={latestAction} className="w-full md:w-auto">
         <IconButton
           className="w-full md:w-[240px]"
           displayText={buttonText.latestCats}
+          isLoading={isLatestPending}
           showCatIcon={true}
           type="submit"
         />

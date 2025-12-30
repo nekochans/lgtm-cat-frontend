@@ -1,4 +1,5 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
+import { GoogleTagManager } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import type { JSX, ReactNode } from "react";
 import "./globals.css";
@@ -6,6 +7,7 @@ import { Providers } from "@/components/heroui/providers";
 import { appName, metaTagList } from "@/features/meta-tag";
 import { convertLanguageToOpenGraphLocale } from "@/features/open-graph-locale";
 import { appBaseUrl, i18nUrlList } from "@/features/url";
+import { googleTagManagerId } from "@/utils/gtm";
 import { mPlusRounded1c } from "./fonts";
 
 type Props = {
@@ -50,6 +52,7 @@ export default function RootLayout({ children }: Props): JSX.Element {
       lang={language}
       suppressHydrationWarning
     >
+      <GoogleTagManager gtmId={googleTagManagerId()} />
       <body>
         <Providers>{children}</Providers>
       </body>

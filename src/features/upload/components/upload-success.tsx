@@ -12,6 +12,7 @@ import type { Language } from "@/features/language";
 import { generateLgtmMarkdown } from "@/features/main/functions/generate-lgtm-markdown";
 import type { LgtmImageUrl } from "@/features/main/types/lgtm-image";
 import { createIncludeLanguageAppPath } from "@/features/url";
+import { sendCopyMarkdownFromCreatedImage } from "@/utils/gtm";
 import {
   closeButtonText,
   copiedText,
@@ -64,6 +65,9 @@ export function UploadSuccess({
 
       await navigator.clipboard.writeText(markdown);
       setIsCopied(true);
+
+      // GAイベント送信: 作成画像からコピー時
+      sendCopyMarkdownFromCreatedImage();
 
       // 既存のタイマーをクリア
       if (copyTimerRef.current != null) {

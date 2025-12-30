@@ -6,14 +6,9 @@ import { CACHE_TAG_LGTM_IMAGES_RANDOM } from "@/features/main/constants/cache-ta
 import { i18nUrlList } from "@/features/url";
 
 const updateTagMock = vi.fn();
-const redirectMock = vi.fn();
 
 vi.mock("next/cache", () => ({
   updateTag: (...args: unknown[]) => updateTagMock(...args),
-}));
-
-vi.mock("next/navigation", () => ({
-  redirect: (...args: unknown[]) => redirectMock(...args),
 }));
 
 describe("refreshRandomCats", () => {
@@ -21,21 +16,36 @@ describe("refreshRandomCats", () => {
     vi.clearAllMocks();
   });
 
-  it("updates random tag and redirects to ja path", async () => {
-    await refreshRandomCats("ja");
+  it("updates random tag and returns ja redirect URL", async () => {
+    const result = await refreshRandomCats(null, "ja");
 
     expect(updateTagMock).toHaveBeenCalledWith(CACHE_TAG_LGTM_IMAGES_RANDOM);
-    expect(redirectMock).toHaveBeenCalledWith(
-      `${i18nUrlList.home.ja}?view=random`
-    );
+    expect(result).toEqual({
+      status: "SUCCESS",
+      redirectUrl: `${i18nUrlList.home.ja}?view=random`,
+    });
   });
 
-  it("updates random tag and redirects to en path", async () => {
-    await refreshRandomCats("en");
+  it("updates random tag and returns en redirect URL", async () => {
+    const result = await refreshRandomCats(null, "en");
 
     expect(updateTagMock).toHaveBeenCalledWith(CACHE_TAG_LGTM_IMAGES_RANDOM);
-    expect(redirectMock).toHaveBeenCalledWith(
-      `${i18nUrlList.home.en}?view=random`
-    );
+    expect(result).toEqual({
+      status: "SUCCESS",
+      redirectUrl: `${i18nUrlList.home.en}?view=random`,
+    });
+  });
+
+  it("returns error state when updateTag throws", async () => {
+    updateTagMock.mockImplementation(() => {
+      throw new Error("Cache update failed");
+    });
+
+    const result = await refreshRandomCats(null, "ja");
+
+    expect(result).toEqual({
+      status: "ERROR",
+      message: "Failed to refresh images",
+    });
   });
 });
