@@ -6,14 +6,9 @@ import { CACHE_TAG_LGTM_IMAGES_LATEST } from "@/features/main/constants/cache-ta
 import { i18nUrlList } from "@/features/url";
 
 const updateTagMock = vi.fn();
-const redirectMock = vi.fn();
 
 vi.mock("next/cache", () => ({
   updateTag: (...args: unknown[]) => updateTagMock(...args),
-}));
-
-vi.mock("next/navigation", () => ({
-  redirect: (...args: unknown[]) => redirectMock(...args),
 }));
 
 describe("showLatestCats", () => {
@@ -21,21 +16,36 @@ describe("showLatestCats", () => {
     vi.clearAllMocks();
   });
 
-  it("updates latest tag and redirects to ja path", async () => {
-    await showLatestCats("ja");
+  it("updates latest tag and returns ja redirect URL", async () => {
+    const result = await showLatestCats(null, "ja");
 
     expect(updateTagMock).toHaveBeenCalledWith(CACHE_TAG_LGTM_IMAGES_LATEST);
-    expect(redirectMock).toHaveBeenCalledWith(
-      `${i18nUrlList.home.ja}?view=latest`
-    );
+    expect(result).toEqual({
+      status: "SUCCESS",
+      redirectUrl: `${i18nUrlList.home.ja}?view=latest`,
+    });
   });
 
-  it("updates latest tag and redirects to en path", async () => {
-    await showLatestCats("en");
+  it("updates latest tag and returns en redirect URL", async () => {
+    const result = await showLatestCats(null, "en");
 
     expect(updateTagMock).toHaveBeenCalledWith(CACHE_TAG_LGTM_IMAGES_LATEST);
-    expect(redirectMock).toHaveBeenCalledWith(
-      `${i18nUrlList.home.en}?view=latest`
-    );
+    expect(result).toEqual({
+      status: "SUCCESS",
+      redirectUrl: `${i18nUrlList.home.en}?view=latest`,
+    });
+  });
+
+  it("returns error state when updateTag throws", async () => {
+    updateTagMock.mockImplementation(() => {
+      throw new Error("Cache update failed");
+    });
+
+    const result = await showLatestCats(null, "ja");
+
+    expect(result).toEqual({
+      status: "ERROR",
+      message: "Failed to show latest images",
+    });
   });
 });
