@@ -9,6 +9,10 @@ import { CopyIcon } from "@/components/icons/copy-icon";
 import { HeartIcon } from "@/components/icons/heart-icon";
 import { generateLgtmMarkdown } from "@/features/main/functions/generate-lgtm-markdown";
 import type { LgtmImage as LgtmImageType } from "@/features/main/types/lgtm-image";
+import {
+  sendCopyMarkdownFromCopyButton,
+  sendCopyMarkdownFromTopImages,
+} from "@/utils/gtm";
 
 type Props = {
   // TODO: ログイン機能、お気に入り機能実装後は hideHeartIcon Propsを削除する
@@ -24,25 +28,42 @@ export function LgtmImage({ hideHeartIcon, id, imageUrl }: Props): JSX.Element {
   const [isCopyActive, setIsCopyActive] = useState(false);
   const [isFavoriteActive, setIsFavoriteActive] = useState(false);
 
+  /**
+   * マークダウンをクリップボードにコピーし、GAイベントを送信する共通処理
+   * @param sendGaEvent GAイベント送信関数
+   */
+  const copyMarkdownAndSendEvent = useCallback(
+    (sendGaEvent: () => void) => {
+      const markdown = generateLgtmMarkdown(imageUrl);
+      navigator.clipboard.writeText(markdown);
+      setIsCopied(true);
+
+      // GAイベント送信
+      sendGaEvent();
+
+      if (copyTimerRef.current != null) {
+        clearTimeout(copyTimerRef.current);
+      }
+      copyTimerRef.current = setTimeout(() => {
+        setIsCopied(false);
+      }, 1500);
+    },
+    [imageUrl]
+  );
+
+  // 画像クリック時のハンドラ
   const handleCopy = useCallback(() => {
-    const markdown = generateLgtmMarkdown(imageUrl);
-    navigator.clipboard.writeText(markdown);
-    setIsCopied(true);
-    if (copyTimerRef.current != null) {
-      clearTimeout(copyTimerRef.current);
-    }
-    copyTimerRef.current = setTimeout(() => {
-      setIsCopied(false);
-    }, 1500);
-  }, [imageUrl]);
+    copyMarkdownAndSendEvent(sendCopyMarkdownFromTopImages);
+  }, [copyMarkdownAndSendEvent]);
 
   const handleToggleFavorite = useCallback(() => {
     setIsFavorite((previous) => !previous);
   }, []);
 
+  // コピーアイコンクリック時のハンドラ
   const handleCopyIconPress = useCallback(() => {
-    handleCopy();
-  }, [handleCopy]);
+    copyMarkdownAndSendEvent(sendCopyMarkdownFromCopyButton);
+  }, [copyMarkdownAndSendEvent]);
 
   const handleCopyPressStart = useCallback(() => {
     setIsCopyActive(true);

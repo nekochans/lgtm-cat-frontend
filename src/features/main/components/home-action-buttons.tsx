@@ -12,6 +12,11 @@ import {
   showLatestCats,
 } from "@/features/main/actions/refresh-images";
 import { getActionButtonText } from "@/features/main/service-description-text";
+import {
+  sendClickTopFetchNewArrivalCatButton,
+  sendClickTopFetchRandomCatButton,
+  sendCopyMarkdownFromRandomButton,
+} from "@/utils/gtm";
 
 /**
  * Server Action のエラーメッセージをユーザー向けにサニタイズする
@@ -54,6 +59,9 @@ export function HomeActionButtons({ language, className }: Props) {
           await navigator.clipboard.writeText(result.markdown);
           setIsCopied(true);
 
+          // GAイベント送信: ランダムコピー成功時
+          sendCopyMarkdownFromRandomButton();
+
           if (copyTimerRef.current != null) {
             clearTimeout(copyTimerRef.current);
           }
@@ -89,6 +97,16 @@ export function HomeActionButtons({ language, className }: Props) {
     }
   }, [isLoading]);
 
+  // 「ねこリフレッシュ」ボタンのsubmitハンドラ
+  const handleRefreshRandomCatsSubmit = useCallback(() => {
+    sendClickTopFetchRandomCatButton();
+  }, []);
+
+  // 「新着順」ボタンのsubmitハンドラ
+  const handleShowLatestCatsSubmit = useCallback(() => {
+    sendClickTopFetchNewArrivalCatButton();
+  }, []);
+
   useEffect(
     () => () => {
       if (copyTimerRef.current != null) {
@@ -119,7 +137,11 @@ export function HomeActionButtons({ language, className }: Props) {
           </div>
         ) : null}
       </div>
-      <form action={refreshRandomCatsAction} className="w-full md:w-auto">
+      <form
+        action={refreshRandomCatsAction}
+        className="w-full md:w-auto"
+        onSubmit={handleRefreshRandomCatsSubmit}
+      >
         <IconButton
           className="w-full md:w-[240px]"
           displayText={buttonText.refreshCats}
@@ -127,7 +149,11 @@ export function HomeActionButtons({ language, className }: Props) {
           type="submit"
         />
       </form>
-      <form action={showLatestCatsAction} className="w-full md:w-auto">
+      <form
+        action={showLatestCatsAction}
+        className="w-full md:w-auto"
+        onSubmit={handleShowLatestCatsSubmit}
+      >
         <IconButton
           className="w-full md:w-[240px]"
           displayText={buttonText.latestCats}
