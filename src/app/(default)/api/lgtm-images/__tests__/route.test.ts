@@ -35,7 +35,7 @@ vi.mock("@/lib/cognito/oidc", () => ({
 }));
 
 // mightSetRequestIdToSentryFromError をモック
-vi.mock("@/lib/sentry/might-set-request-id-to-sentry-from-error", () => ({
+vi.mock("@/utils/sentry/might-set-request-id-to-sentry-from-error", () => ({
   mightSetRequestIdToSentryFromError: vi.fn(),
 }));
 
