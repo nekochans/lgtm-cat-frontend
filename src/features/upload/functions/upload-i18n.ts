@@ -2,7 +2,7 @@
 
 import type { Language } from "@/features/language";
 import { assertNever } from "@/utils/assert-never";
-import { acceptableImageSizeThresholdText } from "./types/upload";
+import { acceptableImageSizeThresholdText } from "../types/upload";
 
 export function imageDropAreaText(language: Language): string {
   switch (language) {

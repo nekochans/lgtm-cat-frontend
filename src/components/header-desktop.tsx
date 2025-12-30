@@ -22,10 +22,10 @@ import { GithubIcon } from "@/components/icons/github-icon";
 import { GlobeIcon } from "@/components/icons/globe-icon";
 import { RightIcon } from "@/components/icons/right-icon";
 import { LoginButton } from "@/components/login-button";
-import { createExternalTransmissionPolicyLinksFromLanguages } from "@/features/external-transmission-policy";
+import { createExternalTransmissionPolicyLinksFromLanguages } from "@/features/external-transmission-policy/functions/external-transmission-policy";
 import { type Language, removeLanguageFromAppPath } from "@/features/language";
-import { createPrivacyPolicyLinksFromLanguages } from "@/features/privacy-policy";
-import { createTermsOfUseLinksFromLanguages } from "@/features/terms-of-use";
+import { createPrivacyPolicyLinksFromLanguages } from "@/features/privacy/functions/privacy-policy";
+import { createTermsOfUseLinksFromLanguages } from "@/features/terms/functions/terms-of-use";
 import {
   createIncludeLanguageAppPath,
   type IncludeLanguageAppPath,

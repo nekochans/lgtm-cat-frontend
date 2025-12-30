@@ -11,9 +11,6 @@ import {
 } from "@/features/main/types/lgtm-image";
 import { generateR2PresignedGetUrl } from "@/lib/cloudflare/r2/presigned-url";
 import { createLgtmImage } from "../functions/create-lgtm-image";
-import { validateCatImage } from "../functions/validate-cat-image";
-import type { NotAcceptableReason } from "../types/api-response";
-import type { ValidateAndCreateLgtmImageAction } from "../types/upload";
 import {
   errorMessageNotAcceptable,
   errorMessageNotCatImage,
@@ -21,7 +18,10 @@ import {
   errorMessagePayloadTooLarge,
   errorMessagePersonFaceInImage,
   errorMessageUnknown,
-} from "../upload-i18n";
+} from "../functions/upload-i18n";
+import { validateCatImage } from "../functions/validate-cat-image";
+import type { NotAcceptableReason } from "../types/api-response";
+import type { ValidateAndCreateLgtmImageAction } from "../types/upload";
 
 /**
  * validateAndCreateLgtmImageAction の結果型

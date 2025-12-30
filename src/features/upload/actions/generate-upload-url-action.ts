@@ -4,13 +4,13 @@
 
 import type { Language } from "@/features/language";
 import { generateR2PresignedPutUrl } from "@/lib/cloudflare/r2/presigned-url";
-import type { GenerateUploadUrlAction } from "../types/upload";
-import { allowedMimeTypes, maxImageSizeBytes } from "../types/upload";
 import {
   errorMessageFileTooLarge,
   errorMessageInvalidMimeType,
   errorMessageUnknown,
-} from "../upload-i18n";
+} from "../functions/upload-i18n";
+import type { GenerateUploadUrlAction } from "../types/upload";
+import { allowedMimeTypes, maxImageSizeBytes } from "../types/upload";
 
 /**
  * generateUploadUrlAction の結果型

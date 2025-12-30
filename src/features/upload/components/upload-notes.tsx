@@ -3,12 +3,12 @@
 import Link from "next/link";
 import type { JSX } from "react";
 import type { Language } from "@/features/language";
-import { createPrivacyPolicyLinksFromLanguages } from "@/features/privacy-policy";
+import { createPrivacyPolicyLinksFromLanguages } from "@/features/privacy/functions/privacy-policy";
 import {
   cautionText,
   noteList,
   privacyPolicyAgreementText,
-} from "../upload-i18n";
+} from "@/features/upload/functions/upload-i18n";
 
 type Props = {
   readonly language: Language;

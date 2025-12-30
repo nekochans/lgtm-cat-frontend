@@ -6,7 +6,7 @@ import { Progress } from "@heroui/react";
 import Image from "next/image";
 import type { JSX } from "react";
 import type { Language } from "@/features/language";
-import { uploadingText } from "../upload-i18n";
+import { uploadingText } from "../functions/upload-i18n";
 
 type Props = {
   readonly language: Language;
