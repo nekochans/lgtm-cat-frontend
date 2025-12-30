@@ -7,7 +7,7 @@ import {
   fetchLgtmImagesInRandom,
 } from "@/features/main/functions/fetch-lgtm-images";
 import { issueClientCredentialsAccessToken } from "@/lib/cognito/oidc";
-import { mightSetRequestIdToSentryFromError } from "@/lib/sentry/might-set-request-id-to-sentry-from-error";
+import { mightSetRequestIdToSentryFromError } from "@/utils/sentry/might-set-request-id-to-sentry-from-error";
 import type { LgtmImageApiErrorResponse } from "./types";
 
 /**

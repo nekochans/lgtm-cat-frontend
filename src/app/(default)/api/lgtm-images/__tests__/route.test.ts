@@ -14,7 +14,7 @@ import {
   vi,
 } from "vitest";
 import { fetchLgtmImagesInRandomUrl } from "@/features/main/functions/api-url";
-import { mightSetRequestIdToSentryFromError } from "@/lib/sentry/might-set-request-id-to-sentry-from-error";
+import { mightSetRequestIdToSentryFromError } from "@/utils/sentry/might-set-request-id-to-sentry-from-error";
 import { mockInternalServerError } from "@/mocks/api/error/mock-internal-server-error";
 import { mockFetchLgtmImages } from "@/mocks/api/external/lgtmeow/mock-fetch-lgtm-images";
 import { GET } from "../route";
