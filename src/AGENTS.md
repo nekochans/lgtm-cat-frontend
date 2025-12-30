@@ -40,7 +40,7 @@ src/
 
 Next.jsのApp Routerを利用する上で必要なルーティング用のファイルなどが格納されます。
 
-https://nextjs.org/docs/app
+[Next.js App Router - 公式ドキュメント](https://nextjs.org/docs/app)
 
 Next.jsに直接関係しないファイルはここには置きません。
 

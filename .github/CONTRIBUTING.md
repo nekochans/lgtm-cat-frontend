@@ -16,7 +16,7 @@
 
 `data-gtm-click` の一覧に関しては以下を参照。
 
-https://github.com/nekochans/lgtm-cat-frontend/blob/f3212759045512afba9a3ed7130281d4fdf3dc4b/src/utils/gtm.ts#L4
+[GTM設定の詳細](https://github.com/nekochans/lgtm-cat-frontend/blob/f3212759045512afba9a3ed7130281d4fdf3dc4b/src/utils/gtm.ts#L4)
 
 ## 重要イベントに関して
 
