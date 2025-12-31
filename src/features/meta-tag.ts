@@ -34,9 +34,9 @@ export function customErrorTitle(language: Language): string {
 function homePageTitle(language: Language): string {
   switch (language) {
     case "ja":
-      return `${defaultTitle} 猫好きのためのLGTM画像共有サービス`;
+      return `${defaultTitle} | 猫好きのためのLGTM画像作成・共有サービス`;
     case "en":
-      return `${defaultTitle} | LGTM image share service for cat lovers`;
+      return `${defaultTitle} | Generate & Share LGTM Images for Cat Lovers`;
     default:
       return assertNever(language);
   }
@@ -133,9 +133,9 @@ function docsMcpPageTitle(language: Language): string {
 function description(language: Language): string {
   switch (language) {
     case "ja":
-      return `${appName}は可愛い猫のLGTM画像を共有出来るサービスです。`;
+      return `${appName}は可愛い猫のLGTM画像を作成して共有できるサービスです。`;
     case "en":
-      return `${appName} is a service that allows you to share LGTM images of cats.`;
+      return `${appName} is a service for generating and sharing cute cat LGTM images.`;
     default:
       return assertNever(language);
   }
