@@ -11,7 +11,7 @@ export type Props = {
 };
 
 const linkStyle =
-  "text-[#43281E] font-inter text-sm font-normal leading-5 hover:underline";
+  "font-inter text-sm font-normal leading-5 text-orange-900 hover:underline";
 
 export function Footer({ language }: Props): JSX.Element {
   const terms = createTermsOfUseLinksFromLanguages(language);
@@ -23,14 +23,27 @@ export function Footer({ language }: Props): JSX.Element {
 
   return (
     <footer className="flex w-full flex-col">
-      <div className="mx-auto flex w-full max-w-[375px] items-center px-0 py-3 md:hidden">
-        <div className="flex flex-1 flex-col items-center justify-center gap-2">
+      {/* ポリシーリンク部分: md:hidden を削除してデスクトップでも表示 */}
+      <div className="mx-auto flex w-full max-w-screen-2xl items-center justify-center px-0 py-3">
+        <div className="flex flex-wrap items-center justify-center gap-2">
           <Link className={linkStyle} href={terms.link} prefetch={false}>
             <p data-gtm-click="footer-terms-link">{terms.text}</p>
           </Link>
+          <span
+            aria-hidden="true"
+            className="font-inter text-orange-900 text-sm"
+          >
+            /
+          </span>
           <Link className={linkStyle} href={privacy.link} prefetch={false}>
             <p data-gtm-click="footer-privacy-link">{privacy.text}</p>
           </Link>
+          <span
+            aria-hidden="true"
+            className="font-inter text-orange-900 text-sm"
+          >
+            /
+          </span>
           <Link
             className={linkStyle}
             href={externalTransmissionPolicy.link}
