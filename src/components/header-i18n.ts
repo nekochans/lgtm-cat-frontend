@@ -101,6 +101,28 @@ export function switchLanguageAriaLabel(language: Language): string {
   }
 }
 
+export function documentsText(language: Language): string {
+  switch (language) {
+    case "ja":
+      return "ドキュメント";
+    case "en":
+      return "Documents";
+    default:
+      return assertNever(language);
+  }
+}
+
+export function mcpText(language: Language): string {
+  switch (language) {
+    case "ja":
+      return "MCPの使い方";
+    case "en":
+      return "How to Use MCP";
+    default:
+      return assertNever(language);
+  }
+}
+
 export function openMenuAriaLabel(language: Language): string {
   switch (language) {
     case "ja":

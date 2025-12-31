@@ -33,6 +33,8 @@ export const appPathList = {
   maintenance: "/maintenance",
   "external-transmission-policy": "/external-transmission-policy",
   login: "/login",
+  "docs-how-to-use": "/docs/how-to-use",
+  "docs-mcp": "/docs/mcp",
 } as const;
 
 export type AppPathName =
@@ -42,7 +44,9 @@ export type AppPathName =
   | "privacy"
   | "maintenance"
   | "external-transmission-policy"
-  | "login";
+  | "login"
+  | "docs-how-to-use"
+  | "docs-mcp";
 
 type AppPath = (typeof appPathList)[keyof typeof appPathList];
 
@@ -107,6 +111,8 @@ export const appUrlList = {
   externalTransmission:
     `${appBaseUrl()}${appPathList["external-transmission-policy"]}` as const,
   login: `${appBaseUrl()}${appPathList.login}` as const,
+  docsHowToUse: `${appBaseUrl()}${appPathList["docs-how-to-use"]}` as const,
+  docsMcp: `${appBaseUrl()}${appPathList["docs-mcp"]}` as const,
 } as const;
 
 type I18nUrlList = {
@@ -143,6 +149,14 @@ export const i18nUrlList: I18nUrlList = {
   login: {
     ja: `${appPathList.login}/`,
     en: `/en${appPathList.login}/`,
+  },
+  "docs-how-to-use": {
+    ja: `${appPathList["docs-how-to-use"]}/`,
+    en: `/en${appPathList["docs-how-to-use"]}/`,
+  },
+  "docs-mcp": {
+    ja: `${appPathList["docs-mcp"]}/`,
+    en: `/en${appPathList["docs-mcp"]}/`,
   },
 };
 

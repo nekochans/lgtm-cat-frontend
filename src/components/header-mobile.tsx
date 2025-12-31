@@ -18,6 +18,7 @@ import {
   howToUseText,
   loginText,
   logoutText,
+  mcpText,
   meowlistText,
   openMenuAriaLabel,
   switchLanguageAriaLabel,
@@ -128,7 +129,7 @@ function UnloggedInMenu({
         />
       )}
 
-      {/* ナビゲーションメニュー: HOME、アップロード、使い方を表示 */}
+      {/* ナビゲーションメニュー: HOME、アップロード、使い方、MCPの使い方を表示 */}
       {menuType === "navigation" && (
         <>
           <Link
@@ -147,11 +148,17 @@ function UnloggedInMenu({
           </Link>
           <Link
             className="flex h-[70px] items-center border-orange-200 border-b px-5 py-3 text-background text-base"
-            // TODO: /how-to-use ページ実装後は `createIncludeLanguageAppPath` を使ってパスを生成するように修正する
-            href="/how-to-use"
+            href={createIncludeLanguageAppPath("docs-how-to-use", language)}
             onClick={onCloseMenus}
           >
             {howToUseText(language)}
+          </Link>
+          <Link
+            className="flex h-[70px] items-center border-orange-200 border-b px-5 py-3 text-background text-base"
+            href={createIncludeLanguageAppPath("docs-mcp", language)}
+            onClick={onCloseMenus}
+          >
+            {mcpText(language)}
           </Link>
         </>
       )}
