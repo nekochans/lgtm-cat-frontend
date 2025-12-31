@@ -21,7 +21,7 @@ export const HomePage = ({ language, currentUrlPath, view }: Props) => (
     language={language}
     mainClassName="flex w-full flex-1 flex-col items-center bg-background"
   >
-    <div className="flex w-full max-w-[1020px] flex-col items-center gap-[80px] px-[40px] py-[60px]">
+    <div className="flex w-full max-w-[1300px] flex-col items-center gap-[80px] px-[40px] py-[60px]">
       <div className="flex w-full flex-col items-center gap-7 rounded-xl px-3 pt-10 pb-8">
         <ServiceDescription language={language} />
         <HomeActionButtons language={language} />
