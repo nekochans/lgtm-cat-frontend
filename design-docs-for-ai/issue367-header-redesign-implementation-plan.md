@@ -7,9 +7,10 @@
 Header の改修とドキュメントページの追加を行い、以下の変更を実施する:
 
 1. HeaderDesktop からポリシーメニューを削除し、「ドキュメント」メニューを追加
-2. HeaderMobile に MCP の使い方リンクを追加
-3. 使い方リンクの URL を `/how-to-use` から `/docs/how-to-use` に変更 (ページは新規作成、ComingSoon 表示)
-4. `/docs/mcp` ページを新規作成 (ComingSoon 表示)
+2. HeaderDesktop から利用規約リンクを削除 (Footerには引き続き表示される)
+3. HeaderMobile に MCP の使い方リンクを追加
+4. 使い方リンクの URL を `/how-to-use` から `/docs/how-to-use` に変更 (ページは新規作成、ComingSoon 表示)
+5. `/docs/mcp` ページを新規作成 (ComingSoon 表示)
 
 **補足**: 現在 `/how-to-use` ページは存在せず、Header にはリンクのみが存在します。本改修では `/docs/how-to-use` と `/docs/mcp` の両ページを ComingSoon として新規作成します。
 
@@ -340,8 +341,8 @@ export function mcpText(language: Language): string {
    - 現在の実装ではナビゲーション内に直接「使い方」リンクが存在する
    - このリンクは削除し、代わりに「ドキュメント」メニュー内に移動する
 
-3. **「利用規約」リンクはそのまま維持**
-   - 既存の利用規約リンクは変更なし
+3. **「利用規約」リンクを削除**
+   - Headerから利用規約リンクを削除 (Footerには引き続き表示される)
 
 4. **「ドキュメント」メニューを追加**
    - ポリシーメニューと同じデザインで「ドキュメント」ドロップダウンを作成
@@ -356,11 +357,13 @@ export function mcpText(language: Language): string {
 | 削除対象 | 行番号 | 説明 |
 |---------|--------|------|
 | 使い方リンク | 67-73行目 | 直接の「使い方」リンク (TODO コメント含む) |
+| 利用規約リンク | 65-70行目 | 利用規約へのリンク (Footerに引き続き表示されるため不要) |
 | ポリシーメニュー | 80-116行目 | Dropdown コンポーネント全体 |
+| terms 変数定義 | 47行目 | `const terms = createTermsOfUseLinksFromLanguages(language);` |
 | privacy 変数定義 | 49行目 | `const privacy = createPrivacyPolicyLinksFromLanguages(language);` |
 | externalTransmissionPolicy 変数定義 | 50-51行目 | `const externalTransmissionPolicy = ...` |
 
-**注意**: `externalTransmissionPolicy` の変数定義を削除しても、Footer では Footer 自身でインポートしているため影響はありません。
+**注意**: `terms`, `externalTransmissionPolicy` の変数定義を削除しても、Footer では Footer 自身でインポートしているため影響はありません。
 
 #### 修正後のナビゲーション部分の構造
 
@@ -372,14 +375,6 @@ export function mcpText(language: Language): string {
     href={createIncludeLanguageAppPath("upload", language)}
   >
     {uploadText(language)}
-  </Link>
-
-  {/* 利用規約リンク - 変更なし */}
-  <Link
-    className="flex items-center justify-center bg-primary p-5 font-bold text-background text-base hover:text-button-tertiary-hover"
-    href={terms.link}
-  >
-    {terms.text}
   </Link>
 
   {/* ドキュメントメニュー - 新規追加 */}
@@ -438,6 +433,7 @@ import { createMcpLinksFromLanguages } from "@/features/docs/functions/mcp";
 import { howToUseText, policyText } from "@/components/header-i18n";
 import { createExternalTransmissionPolicyLinksFromLanguages } from "@/features/external-transmission-policy/functions/external-transmission-policy";
 import { createPrivacyPolicyLinksFromLanguages } from "@/features/privacy/functions/privacy-policy";
+import { createTermsOfUseLinksFromLanguages } from "@/features/terms/functions/terms-of-use";
 ```
 
 **重要な注意事項**:
@@ -448,6 +444,8 @@ import { createPrivacyPolicyLinksFromLanguages } from "@/features/privacy/functi
 
 3. `createExternalTransmissionPolicyLinksFromLanguages` は HeaderDesktop から削除しても、Footer では Footer 自身で独立してインポートしているため影響はありません。
 
+4. `createTermsOfUseLinksFromLanguages` は HeaderDesktop から削除しても、Footer では Footer 自身で独立してインポートしているため影響はありません。
+
 #### コンポーネント内の変数
 
 ```typescript
@@ -456,6 +454,7 @@ const howToUse = createHowToUseLinksFromLanguages(language);
 const mcp = createMcpLinksFromLanguages(language);
 
 // 以下は削除
+// const terms = createTermsOfUseLinksFromLanguages(language);
 // const privacy = createPrivacyPolicyLinksFromLanguages(language);
 // const externalTransmissionPolicy = createExternalTransmissionPolicyLinksFromLanguages(language);
 ```
@@ -936,7 +935,7 @@ Chrome DevTools MCP を使って `http://localhost:2222` にアクセスし、�
 - [ ] 「使い方」リンクが `/docs/how-to-use` にリンクしている
 - [ ] 「MCPの使い方」リンクが `/docs/mcp` にリンクしている
 - [ ] ポリシーメニュー (プライバシーポリシー、外部送信ポリシー) が削除されている
-- [ ] 「利用規約」リンクは引き続き表示されている
+- [ ] 「利用規約」リンクが削除されている (Footerには引き続き表示される)
 
 #### HeaderMobile の確認 (768px未満)
 - [ ] ハンバーガーメニュー内に「使い方」リンクが表示される
@@ -1017,6 +1016,7 @@ Chrome DevTools MCP を使って `http://localhost:6006/` にアクセスし、�
 
 ### HeaderDesktop
 - [ ] 直接の「使い方」リンク (旧 `/how-to-use`) が削除されている
+- [ ] 「利用規約」リンクが削除されている (Footerには引き続き表示される)
 - [ ] ポリシーメニューが削除されている
 - [ ] 「ドキュメント」メニューが追加されている
 - [ ] ドキュメントメニューに「使い方」と「MCPの使い方」リンクが含まれている

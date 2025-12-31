@@ -24,7 +24,6 @@ import { LoginButton } from "@/components/login-button";
 import { createHowToUseLinksFromLanguages } from "@/features/docs/functions/how-to-use";
 import { createMcpLinksFromLanguages } from "@/features/docs/functions/mcp";
 import { type Language, removeLanguageFromAppPath } from "@/features/language";
-import { createTermsOfUseLinksFromLanguages } from "@/features/terms/functions/terms-of-use";
 import {
   createIncludeLanguageAppPath,
   type IncludeLanguageAppPath,
@@ -44,7 +43,6 @@ export function HeaderDesktop({
   hideLoginButton,
   isLoggedIn,
 }: Props): JSX.Element {
-  const terms = createTermsOfUseLinksFromLanguages(language);
   const howToUse = createHowToUseLinksFromLanguages(language);
   const mcp = createMcpLinksFromLanguages(language);
   const removedLanguagePath = removeLanguageFromAppPath(currentUrlPath);
@@ -61,12 +59,6 @@ export function HeaderDesktop({
                 href={createIncludeLanguageAppPath("upload", language)}
               >
                 {uploadText(language)}
-              </Link>
-              <Link
-                className="flex items-center justify-center bg-primary p-5 font-bold text-background text-base hover:text-button-tertiary-hover"
-                href={terms.link}
-              >
-                {terms.text}
               </Link>
               <Dropdown
                 classNames={{
