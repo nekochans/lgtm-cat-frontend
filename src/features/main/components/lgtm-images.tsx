@@ -11,7 +11,7 @@ type Props = {
 
 export function LgtmImages({ hideHeartIcon, images }: Props): JSX.Element {
   return (
-    <div className="flex w-full flex-wrap content-center items-center justify-center gap-[24px]">
+    <div className="grid w-full grid-cols-1 justify-items-center gap-6 md:grid-cols-2 lg:grid-cols-3">
       {images.map((image) => (
         <LgtmImage hideHeartIcon={hideHeartIcon} key={image.id} {...image} />
       ))}
