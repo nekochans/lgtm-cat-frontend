@@ -2,13 +2,13 @@
 "use client";
 
 import type { JSX } from "react";
-import { ErrorPageContainer } from "@/features/errors/components/error-page-container";
+import { ErrorPage } from "@/features/errors/components/error-page";
 
 type Props = {
   readonly error: Error & { digest?: string };
   readonly reset: () => void;
 };
 
-export default function ErrorPage({ error, reset }: Props): JSX.Element {
-  return <ErrorPageContainer error={error} reset={reset} />;
+export default function ErrorBoundary({ error, reset }: Props): JSX.Element {
+  return <ErrorPage error={error} reset={reset} />;
 }

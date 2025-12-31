@@ -1,12 +1,12 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { Meta, StoryObj } from "@storybook/react";
-import { ErrorPageContainer } from "./error-page-container";
+import { ErrorPage } from "./error-page";
 
 const mockError = new Error("Test error for Storybook");
 
 const meta = {
-  component: ErrorPageContainer,
-  title: "features/errors/ErrorPageContainer",
+  component: ErrorPage,
+  title: "features/errors/ErrorPage",
   parameters: {
     layout: "fullscreen",
   },
@@ -18,7 +18,7 @@ const meta = {
       console.log("Reset function called");
     },
   },
-} satisfies Meta<typeof ErrorPageContainer>;
+} satisfies Meta<typeof ErrorPage>;
 
 export default meta;
 

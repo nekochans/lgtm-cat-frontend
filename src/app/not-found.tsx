@@ -1,7 +1,7 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { Metadata } from "next";
 import type { JSX } from "react";
-import { NotFoundPageContainer } from "@/features/errors/components/not-found-page-container";
+import { NotFoundPage } from "@/features/errors/components/not-found-page";
 import { notFoundMetaTag } from "@/features/meta-tag";
 
 // metadataはビルド時に評価されるため、静的な値を使用
@@ -26,5 +26,5 @@ export const metadata: Metadata = {
  * 「多言語化対応が難しいという結論なら常に日本語の404ページを返すという対処法でも問題はない」
  */
 export default function NotFound(): JSX.Element {
-  return <NotFoundPageContainer language="ja" />;
+  return <NotFoundPage language="ja" />;
 }

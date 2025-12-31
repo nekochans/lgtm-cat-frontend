@@ -1,7 +1,7 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { Metadata, NextPage } from "next";
 import { Suspense } from "react";
-import { HomePageContainer } from "@/features/main/components/home-page-container";
+import { HomePage } from "@/features/main/components/home-page";
 import { appName, metaTagList } from "@/features/meta-tag";
 import { convertLanguageToOpenGraphLocale } from "@/features/open-graph-locale";
 import { appBaseUrl, i18nUrlList } from "@/features/url";
@@ -51,9 +51,7 @@ const EnHomePageContent = async ({
   const params = await searchParams;
   const view = params.view ?? "random";
 
-  return (
-    <HomePageContainer currentUrlPath="/en" language={language} view={view} />
-  );
+  return <HomePage currentUrlPath="/en" language={language} view={view} />;
 };
 
 const EnHomePage: NextPage<Props> = ({ searchParams }) => (

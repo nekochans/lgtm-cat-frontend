@@ -1,8 +1,5 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import { type NextRequest, NextResponse } from "next/server";
-import { isBanCountry } from "@/app/edge/country";
-import { isInMaintenance } from "@/app/edge/maintenance";
-import { appBaseUrlHeaderName } from "@/app/edge/url";
 import { httpStatusCode } from "@/constants/http-status-code";
 import {
   isLanguage,
@@ -10,6 +7,9 @@ import {
   removeLanguageFromAppPath,
 } from "@/features/language";
 import { isIncludeLanguageAppPath } from "@/features/url";
+import { isBanCountry } from "@/lib/vercel/edge-functions/country";
+import { isInMaintenance } from "@/lib/vercel/edge-functions/maintenance";
+import { appBaseUrlHeaderName } from "@/lib/vercel/edge-functions/url";
 
 export const config = {
   matcher: [

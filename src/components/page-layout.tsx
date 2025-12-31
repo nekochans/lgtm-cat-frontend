@@ -11,7 +11,11 @@ type Props = {
   readonly language: Language;
   readonly currentUrlPath: IncludeLanguageAppPath;
   readonly isLoggedIn?: boolean;
+  readonly mainClassName?: string;
 };
+
+const defaultMainClassName =
+  "relative flex w-full flex-1 flex-col items-center px-4 py-8";
 
 /**
  * アプリケーション共通のページレイアウトコンポーネント
@@ -22,6 +26,7 @@ export function PageLayout({
   language,
   currentUrlPath,
   isLoggedIn = false,
+  mainClassName = defaultMainClassName,
 }: Props) {
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
@@ -32,9 +37,7 @@ export function PageLayout({
         isLoggedIn={isLoggedIn}
         language={language}
       />
-      <main className="relative flex w-full flex-1 flex-col items-center px-4 py-8">
-        {children}
-      </main>
+      <main className={mainClassName}>{children}</main>
       <Footer language={language} />
     </div>
   );

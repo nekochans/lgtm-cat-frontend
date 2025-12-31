@@ -1,6 +1,6 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { Metadata, NextPage } from "next";
-import { DocsHowToUsePageContainer } from "@/features/docs/components/docs-how-to-use-page-container";
+import { DocsHowToUsePage } from "@/features/docs/components/docs-how-to-use-page";
 import { appName, metaTagList } from "@/features/meta-tag";
 import { convertLanguageToOpenGraphLocale } from "@/features/open-graph-locale";
 import {
@@ -38,11 +38,11 @@ export const metadata: Metadata = {
   },
 };
 
-const DocsHowToUsePage: NextPage = () => (
-  <DocsHowToUsePageContainer
+const EnDocsHowToUse: NextPage = () => (
+  <DocsHowToUsePage
     currentUrlPath={createIncludeLanguageAppPath("docs-how-to-use", language)}
     language={language}
   />
 );
 
-export default DocsHowToUsePage;
+export default EnDocsHowToUse;

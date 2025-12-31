@@ -1,6 +1,6 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { Metadata, NextPage } from "next";
-import { ExternalTransmissionPolicyPageContainer } from "@/features/external-transmission-policy/components/external-transmission-policy-page-container";
+import { ExternalTransmissionPolicyPage } from "@/features/external-transmission-policy/components/external-transmission-policy-page";
 import { loadMarkdown } from "@/features/load-markdown";
 import { appName, metaTagList } from "@/features/meta-tag";
 import { convertLanguageToOpenGraphLocale } from "@/features/open-graph-locale";
@@ -39,11 +39,11 @@ export const metadata: Metadata = {
   },
 };
 
-const EnExternalTransmissionPolicyPage: NextPage = async () => {
+const EnExternalTransmissionPolicy: NextPage = async () => {
   const markdownContent = await loadMarkdown("external-transmission", language);
 
   return (
-    <ExternalTransmissionPolicyPageContainer
+    <ExternalTransmissionPolicyPage
       currentUrlPath={createIncludeLanguageAppPath(
         "external-transmission-policy",
         language
@@ -54,4 +54,4 @@ const EnExternalTransmissionPolicyPage: NextPage = async () => {
   );
 };
 
-export default EnExternalTransmissionPolicyPage;
+export default EnExternalTransmissionPolicy;

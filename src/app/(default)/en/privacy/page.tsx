@@ -3,7 +3,7 @@ import type { Metadata, NextPage } from "next";
 import { loadMarkdown } from "@/features/load-markdown";
 import { appName, metaTagList } from "@/features/meta-tag";
 import { convertLanguageToOpenGraphLocale } from "@/features/open-graph-locale";
-import { PrivacyPageContainer } from "@/features/privacy/components/privacy-page-container";
+import { PrivacyPage } from "@/features/privacy/components/privacy-page";
 import {
   appBaseUrl,
   createIncludeLanguageAppPath,
@@ -39,11 +39,11 @@ export const metadata: Metadata = {
   },
 };
 
-const EnPrivacyPage: NextPage = async () => {
+const EnPrivacy: NextPage = async () => {
   const markdownContent = await loadMarkdown("privacy", language);
 
   return (
-    <PrivacyPageContainer
+    <PrivacyPage
       currentUrlPath={createIncludeLanguageAppPath("privacy", language)}
       language={language}
       markdownContent={markdownContent}
@@ -51,4 +51,4 @@ const EnPrivacyPage: NextPage = async () => {
   );
 };
 
-export default EnPrivacyPage;
+export default EnPrivacy;
