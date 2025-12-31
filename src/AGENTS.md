@@ -18,7 +18,7 @@ src/
 ├── features/
 │   └── main/
 │       ├── components/
-│       │   ├── home-page-container.tsx      # ホームページコンテナ
+│       │   ├── home-page.tsx                 # ホームページ
 │       │   ├── home-action-buttons.tsx      # アクションボタン群
 │       │   ├── random-lgtm-images.tsx       # ランダム画像表示
 │       │   ├── latest-lgtm-images.tsx       # 最新画像表示

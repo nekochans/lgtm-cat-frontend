@@ -3,7 +3,7 @@ import type { Metadata, NextPage } from "next";
 import { loadMarkdown } from "@/features/load-markdown";
 import { appName, metaTagList } from "@/features/meta-tag";
 import { convertLanguageToOpenGraphLocale } from "@/features/open-graph-locale";
-import { TermsPageContainer } from "@/features/terms/components/terms-page-container";
+import { TermsPage } from "@/features/terms/components/terms-page";
 import {
   appBaseUrl,
   createIncludeLanguageAppPath,
@@ -39,11 +39,11 @@ export const metadata: Metadata = {
   },
 };
 
-const TermsPage: NextPage = async () => {
+const Terms: NextPage = async () => {
   const markdownContent = await loadMarkdown("terms", language);
 
   return (
-    <TermsPageContainer
+    <TermsPage
       currentUrlPath={createIncludeLanguageAppPath("terms", language)}
       language={language}
       markdownContent={markdownContent}
@@ -51,4 +51,4 @@ const TermsPage: NextPage = async () => {
   );
 };
 
-export default TermsPage;
+export default Terms;

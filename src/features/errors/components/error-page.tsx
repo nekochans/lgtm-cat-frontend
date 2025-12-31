@@ -28,10 +28,7 @@ function detectLanguageFromPathname(pathname: string | null): Language {
   return pathname.startsWith("/en") ? "en" : "ja";
 }
 
-export function ErrorPageContainer({
-  error,
-  reset: _reset,
-}: Props): JSX.Element {
+export function ErrorPage({ error, reset: _reset }: Props): JSX.Element {
   const pathname = usePathname();
   const language = useMemo(
     () => detectLanguageFromPathname(pathname),

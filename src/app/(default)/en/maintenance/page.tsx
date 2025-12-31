@@ -1,6 +1,6 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { Metadata, NextPage } from "next";
-import { MaintenancePageContainer } from "@/features/errors/components/maintenance-page-container";
+import { MaintenancePage } from "@/features/errors/components/maintenance-page";
 import type { Language } from "@/features/language";
 import { appName, metaTagList } from "@/features/meta-tag";
 import { convertLanguageToOpenGraphLocale } from "@/features/open-graph-locale";
@@ -39,8 +39,6 @@ export const metadata: Metadata = {
   },
 };
 
-const EnMaintenancePage: NextPage = () => (
-  <MaintenancePageContainer language={language} />
-);
+const EnMaintenance: NextPage = () => <MaintenancePage language={language} />;
 
-export default EnMaintenancePage;
+export default EnMaintenance;

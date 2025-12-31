@@ -1,27 +1,30 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 
-import { LookingUpCat } from "@/components/cats/looking-up-cat";
+import { FishHoldingCat } from "@/components/cats/fish-holding-cat";
 import { ErrorPageContent } from "@/components/error-page-content";
 import { ErrorLayout } from "@/features/errors/components/error-layout";
-import { notFoundPageTexts } from "@/features/errors/error-i18n";
+import { maintenancePageTexts } from "@/features/errors/error-i18n";
 import type { Language } from "@/features/language";
+import { createIncludeLanguageAppPath } from "@/features/url";
 
 type Props = {
   readonly language: Language;
 };
 
-export function NotFoundPageContainer({ language }: Props) {
-  const texts = notFoundPageTexts(language);
-  const currentUrlPath = language === "en" ? "/en" : "/";
+export function MaintenancePage({ language }: Props) {
+  const texts = maintenancePageTexts(language);
 
   return (
-    <ErrorLayout currentUrlPath={currentUrlPath} language={language}>
+    <ErrorLayout
+      currentUrlPath={createIncludeLanguageAppPath("maintenance", language)}
+      language={language}
+    >
       <ErrorPageContent
         buttonText={texts.buttonText}
         catComponent={
-          <LookingUpCat
+          <FishHoldingCat
             aria-hidden="true"
-            className="h-auto w-[180px] md:w-[245px]"
+            className="h-auto w-[230px] md:w-[350px]"
           />
         }
         language={language}

@@ -1,15 +1,15 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { Meta, StoryObj } from "@storybook/react";
-import { MaintenancePageContainer } from "./maintenance-page-container";
+import { NotFoundPage } from "./not-found-page";
 
 const meta = {
-  component: MaintenancePageContainer,
-  title: "features/errors/MaintenancePageContainer",
+  component: NotFoundPage,
+  title: "features/errors/NotFoundPage",
   parameters: {
     layout: "fullscreen",
   },
   tags: ["autodocs"],
-} satisfies Meta<typeof MaintenancePageContainer>;
+} satisfies Meta<typeof NotFoundPage>;
 
 export default meta;
 

@@ -1,6 +1,6 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { Metadata, NextPage } from "next";
-import { DocsMcpPageContainer } from "@/features/docs/components/docs-mcp-page-container";
+import { DocsMcpPage } from "@/features/docs/components/docs-mcp-page";
 import { appName, metaTagList } from "@/features/meta-tag";
 import { convertLanguageToOpenGraphLocale } from "@/features/open-graph-locale";
 import {
@@ -38,11 +38,11 @@ export const metadata: Metadata = {
   },
 };
 
-const DocsMcpPage: NextPage = () => (
-  <DocsMcpPageContainer
+const DocsMcp: NextPage = () => (
+  <DocsMcpPage
     currentUrlPath={createIncludeLanguageAppPath("docs-mcp", language)}
     language={language}
   />
 );
 
-export default DocsMcpPage;
+export default DocsMcp;

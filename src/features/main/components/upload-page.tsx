@@ -2,6 +2,7 @@
 
 import { PageLayout } from "@/components/page-layout";
 import type { Language } from "@/features/language";
+import { UploadForm } from "@/features/upload/components/upload-form";
 import type { IncludeLanguageAppPath } from "@/features/url";
 
 type Props = {
@@ -9,20 +10,18 @@ type Props = {
   readonly currentUrlPath: IncludeLanguageAppPath;
 };
 
-export function DocsMcpPageContainer({ language, currentUrlPath }: Props) {
+export function UploadPage({ language, currentUrlPath }: Props) {
   return (
     <PageLayout
       currentUrlPath={currentUrlPath}
       isLoggedIn={false}
       language={language}
     >
-      <div className="flex flex-col items-center justify-center py-20">
-        <h1 className="font-bold text-3xl text-orange-900">Coming Soon</h1>
-        <p className="mt-4 text-orange-800">
-          {language === "ja"
-            ? "MCPの使い方ページは準備中です"
-            : "How to Use MCP page is under construction"}
-        </p>
+      {/* モーダル風の背景オーバーレイ */}
+      <div className="absolute inset-0 bg-black/50" />
+      {/* フォームコンテナ（オーバーレイの上に表示） */}
+      <div className="relative z-10 w-full max-w-[700px]">
+        <UploadForm language={language} />
       </div>
     </PageLayout>
   );

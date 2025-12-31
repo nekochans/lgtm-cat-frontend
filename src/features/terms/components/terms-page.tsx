@@ -1,5 +1,7 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 
+import type { JSX } from "react";
+import { MarkdownContent } from "@/components/markdown-content";
 import { PageLayout } from "@/components/page-layout";
 import type { Language } from "@/features/language";
 import type { IncludeLanguageAppPath } from "@/features/url";
@@ -7,22 +9,23 @@ import type { IncludeLanguageAppPath } from "@/features/url";
 type Props = {
   readonly language: Language;
   readonly currentUrlPath: IncludeLanguageAppPath;
+  readonly markdownContent: string;
 };
 
-export function DocsHowToUsePageContainer({ language, currentUrlPath }: Props) {
+export function TermsPage({
+  language,
+  currentUrlPath,
+  markdownContent,
+}: Props): JSX.Element {
   return (
     <PageLayout
       currentUrlPath={currentUrlPath}
       isLoggedIn={false}
       language={language}
+      mainClassName="flex w-full flex-1 flex-col items-center bg-background"
     >
-      <div className="flex flex-col items-center justify-center py-20">
-        <h1 className="font-bold text-3xl text-orange-900">Coming Soon</h1>
-        <p className="mt-4 text-orange-800">
-          {language === "ja"
-            ? "使い方ページは準備中です"
-            : "How to Use page is under construction"}
-        </p>
+      <div className="flex w-full max-w-[1020px] flex-col items-center gap-5 px-10 py-[60px]">
+        <MarkdownContent content={markdownContent} />
       </div>
     </PageLayout>
   );
