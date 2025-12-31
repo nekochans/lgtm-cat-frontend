@@ -108,6 +108,28 @@ function loginPageTitle(language: Language): string {
   }
 }
 
+function docsHowToUsePageTitle(language: Language): string {
+  switch (language) {
+    case "ja":
+      return `${defaultTitle} 使い方`;
+    case "en":
+      return `${defaultTitle} How to Use`;
+    default:
+      return assertNever(language);
+  }
+}
+
+function docsMcpPageTitle(language: Language): string {
+  switch (language) {
+    case "ja":
+      return `${defaultTitle} MCPの使い方`;
+    case "en":
+      return `${defaultTitle} How to Use MCP`;
+    default:
+      return assertNever(language);
+  }
+}
+
 function description(language: Language): string {
   switch (language) {
     case "ja":
@@ -174,6 +196,18 @@ export function metaTagList(language: Language): MetaTagList {
       title: loginPageTitle(language),
       ogpImgUrl: appUrlList.ogpImg,
       ogpTargetUrl: createI18nUrl("login", language),
+      appName,
+    },
+    "docs-how-to-use": {
+      title: docsHowToUsePageTitle(language),
+      ogpImgUrl: appUrlList.ogpImg,
+      ogpTargetUrl: createI18nUrl("docs-how-to-use", language),
+      appName,
+    },
+    "docs-mcp": {
+      title: docsMcpPageTitle(language),
+      ogpImgUrl: appUrlList.ogpImg,
+      ogpTargetUrl: createI18nUrl("docs-mcp", language),
       appName,
     },
   };

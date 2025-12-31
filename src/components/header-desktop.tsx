@@ -9,11 +9,10 @@ import {
 import Link from "next/link";
 import type { JSX } from "react";
 import {
+  documentsText,
   favoriteListText,
-  howToUseText,
   logoutText,
   meowlistText,
-  policyText,
   uploadText,
 } from "@/components/header-i18n";
 import { HeaderLogo } from "@/components/header-logo";
@@ -22,9 +21,9 @@ import { GithubIcon } from "@/components/icons/github-icon";
 import { GlobeIcon } from "@/components/icons/globe-icon";
 import { RightIcon } from "@/components/icons/right-icon";
 import { LoginButton } from "@/components/login-button";
-import { createExternalTransmissionPolicyLinksFromLanguages } from "@/features/external-transmission-policy/functions/external-transmission-policy";
+import { createHowToUseLinksFromLanguages } from "@/features/docs/functions/how-to-use";
+import { createMcpLinksFromLanguages } from "@/features/docs/functions/mcp";
 import { type Language, removeLanguageFromAppPath } from "@/features/language";
-import { createPrivacyPolicyLinksFromLanguages } from "@/features/privacy/functions/privacy-policy";
 import { createTermsOfUseLinksFromLanguages } from "@/features/terms/functions/terms-of-use";
 import {
   createIncludeLanguageAppPath,
@@ -46,9 +45,8 @@ export function HeaderDesktop({
   isLoggedIn,
 }: Props): JSX.Element {
   const terms = createTermsOfUseLinksFromLanguages(language);
-  const privacy = createPrivacyPolicyLinksFromLanguages(language);
-  const externalTransmissionPolicy =
-    createExternalTransmissionPolicyLinksFromLanguages(language);
+  const howToUse = createHowToUseLinksFromLanguages(language);
+  const mcp = createMcpLinksFromLanguages(language);
   const removedLanguagePath = removeLanguageFromAppPath(currentUrlPath);
 
   return (
@@ -66,13 +64,6 @@ export function HeaderDesktop({
               </Link>
               <Link
                 className="flex items-center justify-center bg-primary p-5 font-bold text-background text-base hover:text-button-tertiary-hover"
-                // TODO: /how-to-use ページ実装後は `createIncludeLanguageAppPath` を使ってパスを生成するように修正する
-                href="/how-to-use"
-              >
-                {howToUseText(language)}
-              </Link>
-              <Link
-                className="flex items-center justify-center bg-primary p-5 font-bold text-background text-base hover:text-button-tertiary-hover"
                 href={terms.link}
               >
                 {terms.text}
@@ -87,30 +78,30 @@ export function HeaderDesktop({
                     className="flex items-center justify-center gap-2 bg-transparent px-5 py-2 font-bold text-background text-base hover:text-button-tertiary-hover data-[hover=true]:bg-transparent"
                     variant="light"
                   >
-                    {policyText(language)}
+                    {documentsText(language)}
                     <DownIcon />
                   </Button>
                 </DropdownTrigger>
                 <DropdownMenu
-                  aria-label="Policy menu"
+                  aria-label="Documents menu"
                   className="min-w-[200px] max-w-[400px] rounded-lg bg-primary p-2"
                   classNames={{ base: "!gap-0", list: "gap-0" }}
                 >
                   <DropdownItem
                     as={Link}
                     className="data-[hover=true]:!bg-orange-300 rounded-lg px-3 py-2 font-bold text-background text-xl"
-                    href={privacy.link}
-                    key="privacy"
+                    href={howToUse.link}
+                    key="how-to-use"
                   >
-                    {privacy.text}
+                    {howToUse.text}
                   </DropdownItem>
                   <DropdownItem
                     as={Link}
                     className="data-[hover=true]:!bg-orange-300 rounded-lg px-3 py-2 font-bold text-background text-xl"
-                    href={externalTransmissionPolicy.link}
-                    key="external-transmission"
+                    href={mcp.link}
+                    key="mcp"
                   >
-                    {externalTransmissionPolicy.text}
+                    {mcp.text}
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
