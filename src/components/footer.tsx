@@ -24,7 +24,7 @@ export function Footer({ language }: Props): JSX.Element {
   return (
     <footer className="flex w-full flex-col">
       {/* ポリシーリンク部分: md:hidden を削除してデスクトップでも表示 */}
-      <div className="mx-auto flex w-full max-w-screen-2xl items-center justify-center px-0 py-3">
+      <div className="mx-auto flex w-full max-w-screen-2xl items-center justify-center bg-white px-0 py-3">
         <div className="flex flex-wrap items-center justify-center gap-2">
           <Link className={linkStyle} href={terms.link} prefetch={false}>
             <p data-gtm-click="footer-terms-link">{terms.text}</p>
