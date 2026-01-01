@@ -1,0 +1,32 @@
+name: create-release-pull-request
+
+on:
+  push:
+    branches:
+      - staging
+
+jobs:
+  git-pr-release:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: setup ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 4.0.0
+      - name: setup git-pr-release
+        run: gem install --no-document git-pr-release
+      - name: create a release pull request
+        run: git-pr-release --squashed
+        env:
+          GIT_PR_RELEASE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GIT_PR_RELEASE_BRANCH_PRODUCTION: main
+          GIT_PR_RELEASE_BRANCH_STAGING: staging
+          GIT_PR_RELEASE_LABELS: release-pull-request
+          TZ: Asia/Tokyo
