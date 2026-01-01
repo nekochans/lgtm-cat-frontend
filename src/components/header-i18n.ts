@@ -7,7 +7,7 @@ export function uploadText(language: Language): string {
     case "ja":
       return "アップロード";
     case "en":
-      return "Upload new Cats";
+      return "Upload Cat";
     default:
       return assertNever(language);
   }
