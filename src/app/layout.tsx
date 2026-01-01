@@ -1,66 +1,61 @@
-import 'ress/ress.css';
-import '../styles/globals.css';
-import '../styles/markdown.css';
-import { GoogleTagManager } from '@/components';
-import {
-  appBaseUrl,
-  appName,
-  convertLocaleToLanguage,
-  i18nUrlList,
-  metaTagList,
-} from '@/features';
-import { googleTagManagerId } from '@/utils';
-import type { Metadata } from 'next';
-import type { JSX, ReactNode } from 'react';
+// 絶対厳守：編集前に必ずAI実装ルールを読む
+import { GoogleTagManager } from "@next/third-parties/google";
+import type { Metadata } from "next";
+import type { JSX, ReactNode } from "react";
+import "./globals.css";
+import { Providers } from "@/components/heroui/providers";
+import { appName, metaTagList } from "@/features/meta-tag";
+import { convertLanguageToOpenGraphLocale } from "@/features/open-graph-locale";
+import { appBaseUrl, i18nUrlList } from "@/features/url";
+import { googleTagManagerId } from "@/utils/gtm";
+import { mPlusRounded1c } from "./fonts";
 
-type Props = {
-  children: ReactNode;
-};
+interface Props {
+  readonly children: ReactNode;
+}
 
-const language = 'ja';
+const language = "ja";
 
 export const metadata: Metadata = {
-  title: metaTagList(language).top.title,
-  description: metaTagList(language).top.description,
+  title: metaTagList(language).home.title,
+  description: metaTagList(language).home.description,
   openGraph: {
-    title: metaTagList(language).top.title,
-    description: metaTagList(language).top.description,
-    url: metaTagList(language).top.ogpTargetUrl,
+    title: metaTagList(language).home.title,
+    description: metaTagList(language).home.description,
+    url: metaTagList(language).home.ogpTargetUrl,
     siteName: appName,
     images: [
       {
-        url: metaTagList(language).top.ogpImgUrl,
+        url: metaTagList(language).home.ogpImgUrl,
         width: 1200,
         height: 630,
-        alt: metaTagList(language).top.title,
+        alt: metaTagList(language).home.title,
       },
     ],
-    locale: convertLocaleToLanguage(language),
-    type: 'website',
+    locale: convertLanguageToOpenGraphLocale(language),
+    type: "website",
   },
   metadataBase: new URL(appBaseUrl()),
   alternates: {
-    canonical: i18nUrlList.top.ja,
+    canonical: i18nUrlList.home.ja,
     languages: {
-      ja: i18nUrlList.top.ja,
-      en: i18nUrlList.top.en,
+      ja: i18nUrlList.home.ja,
+      en: i18nUrlList.home.en,
     },
   },
 };
 
-const RootLayout = ({ children }: Props): JSX.Element => {
+export default function RootLayout({ children }: Props): JSX.Element {
   return (
-    <html lang={language}>
-      <head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&family=Roboto&family=Zen+Kaku+Gothic+New&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <GoogleTagManager googleTagManagerId={googleTagManagerId()} />
-      <body>{children}</body>
+    <html
+      className={mPlusRounded1c.variable}
+      lang={language}
+      suppressHydrationWarning
+    >
+      <GoogleTagManager gtmId={googleTagManagerId()} />
+      <body>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
-};
-
-export default RootLayout;
+}

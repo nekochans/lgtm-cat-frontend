@@ -1,18 +1,19 @@
-'use client';
+// 絶対厳守：編集前に必ずAI実装ルールを読む
+"use client";
 
-import { httpStatusCode } from '@/constants';
-import * as Sentry from '@sentry/nextjs';
-import NextError from 'next/error';
-import { useEffect, type JSX } from 'react';
+import { captureException } from "@sentry/nextjs";
+import NextError from "next/error";
+import { type JSX, useEffect } from "react";
+import { httpStatusCode } from "@/constants/http-status-code";
 
-type Props = {
+interface Props {
   error: Error & { digest?: string };
   reset: () => void;
-};
+}
 
-const GlobalError = ({ error }: Props): JSX.Element => {
+function GlobalError({ error }: Props): JSX.Element {
   useEffect(() => {
-    Sentry.captureException(error);
+    captureException(error);
   }, [error]);
 
   return (
@@ -22,6 +23,6 @@ const GlobalError = ({ error }: Props): JSX.Element => {
       </body>
     </html>
   );
-};
+}
 
 export default GlobalError;

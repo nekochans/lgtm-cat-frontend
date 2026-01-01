@@ -1,43 +1,52 @@
-import { languages, type Language } from './language';
+// 絶対厳守：編集前に必ずAI実装ルールを読む
+import { type Language, languages } from "./language";
+
+const HTTPS_PREFIX = "https://";
+const LOCALHOST_PREFIX = "http://localhost";
 
 export type Url = `http://localhost${string}` | `https://${string}`;
 
-export const isUrl = (value: unknown): value is Url => {
-  if (typeof value !== 'string') {
+export function isUrl(value: unknown): value is Url {
+  if (typeof value !== "string") {
     return false;
   }
 
-  return (
-    value.substring(0, 8) === 'https://' ||
-    value.substring(0, 16) === 'http://localhost'
-  );
-};
+  return value.startsWith(HTTPS_PREFIX) || value.startsWith(LOCALHOST_PREFIX);
+}
 
-export const appBaseUrl = (): Url => {
+const defaultAppUrl = "https://lgtmeow.com";
+
+export function appBaseUrl(): Url {
   if (isUrl(process.env.NEXT_PUBLIC_APP_URL)) {
     return process.env.NEXT_PUBLIC_APP_URL;
   }
 
-  return 'https://lgtmeow.com';
-};
+  return defaultAppUrl;
+}
 
 export const appPathList = {
-  top: '/',
-  upload: '/upload',
-  terms: '/terms',
-  privacy: '/privacy',
-  error: '/error',
-  maintenance: '/maintenance',
-  'external-transmission-policy': '/external-transmission-policy',
+  home: "/",
+  upload: "/upload",
+  terms: "/terms",
+  privacy: "/privacy",
+  error: "/error",
+  maintenance: "/maintenance",
+  "external-transmission-policy": "/external-transmission-policy",
+  login: "/login",
+  "docs-how-to-use": "/docs/how-to-use",
+  "docs-mcp": "/docs/mcp",
 } as const;
 
 export type AppPathName =
-  | 'top'
-  | 'upload'
-  | 'terms'
-  | 'privacy'
-  | 'maintenance'
-  | 'external-transmission-policy';
+  | "home"
+  | "upload"
+  | "terms"
+  | "privacy"
+  | "maintenance"
+  | "external-transmission-policy"
+  | "login"
+  | "docs-how-to-use"
+  | "docs-mcp";
 
 type AppPath = (typeof appPathList)[keyof typeof appPathList];
 
@@ -45,18 +54,18 @@ export type IncludeLanguageAppPath =
   | AppPath
   | `/${Language}${AppPath}`
   | `/${Language}`
-  | '/';
+  | "/";
 
-export const isIncludeLanguageAppPath = (
-  value: unknown,
-): value is IncludeLanguageAppPath => {
+export function isIncludeLanguageAppPath(
+  value: unknown
+): value is IncludeLanguageAppPath {
   const appPaths: string[] = Object.values(appPathList);
 
-  if (typeof value !== 'string') {
+  if (typeof value !== "string") {
     return false;
   }
 
-  if (value === '/') {
+  if (value === "/") {
     return true;
   }
 
@@ -66,7 +75,7 @@ export const isIncludeLanguageAppPath = (
 
   if (
     languages.some((language) =>
-      appPaths.some((path) => value === `/${language}${path}`),
+      appPaths.some((path) => value === `/${language}${path}`)
     )
   ) {
     return true;
@@ -77,30 +86,33 @@ export const isIncludeLanguageAppPath = (
   }
 
   return false;
-};
+}
 
-export const createIncludeLanguageAppPath = (
+export function createIncludeLanguageAppPath(
   appPathName: AppPathName,
-  language: Language,
-): IncludeLanguageAppPath => {
-  if (appPathName === 'top' && language === 'en') {
+  language: Language
+): IncludeLanguageAppPath {
+  if (appPathName === "home" && language === "en") {
     return `/${language}`;
   }
 
-  return language === 'en'
+  return language === "en"
     ? (`/en${appPathList[appPathName]}` as const)
     : appPathList[appPathName];
-};
+}
 
 export const appUrlList = {
-  top: appBaseUrl(),
-  ogpImg: `${appBaseUrl()}/ogp.webp` as const,
+  home: appBaseUrl(),
+  ogpImg: `${appBaseUrl()}/opengraph-image.png` as const,
   upload: `${appBaseUrl()}${appPathList.upload}` as const,
   terms: `${appBaseUrl()}${appPathList.terms}` as const,
   privacy: `${appBaseUrl()}${appPathList.privacy}` as const,
   maintenance: `${appBaseUrl()}${appPathList.maintenance}` as const,
   externalTransmission:
-    `${appBaseUrl()}${appPathList['external-transmission-policy']}` as const,
+    `${appBaseUrl()}${appPathList["external-transmission-policy"]}` as const,
+  login: `${appBaseUrl()}${appPathList.login}` as const,
+  docsHowToUse: `${appBaseUrl()}${appPathList["docs-how-to-use"]}` as const,
+  docsMcp: `${appBaseUrl()}${appPathList["docs-mcp"]}` as const,
 } as const;
 
 type I18nUrlList = {
@@ -110,9 +122,9 @@ type I18nUrlList = {
 };
 
 export const i18nUrlList: I18nUrlList = {
-  top: {
-    ja: `${appPathList.top}/`,
-    en: `/en/`,
+  home: {
+    ja: "/",
+    en: "/en/",
   },
   upload: {
     ja: `${appPathList.upload}/`,
@@ -127,41 +139,33 @@ export const i18nUrlList: I18nUrlList = {
     en: `/en${appPathList.privacy}/`,
   },
   maintenance: {
-    ja: `${appPathList.privacy}/`,
-    en: `/en${appPathList.privacy}/`,
+    ja: `${appPathList.maintenance}/`,
+    en: `/en${appPathList.maintenance}/`,
   },
-  'external-transmission-policy': {
-    ja: `${appPathList['external-transmission-policy']}/`,
-    en: `/en${appPathList['external-transmission-policy']}/`,
+  "external-transmission-policy": {
+    ja: `${appPathList["external-transmission-policy"]}/`,
+    en: `/en${appPathList["external-transmission-policy"]}/`,
+  },
+  login: {
+    ja: `${appPathList.login}/`,
+    en: `/en${appPathList.login}/`,
+  },
+  "docs-how-to-use": {
+    ja: `${appPathList["docs-how-to-use"]}/`,
+    en: `/en${appPathList["docs-how-to-use"]}/`,
+  },
+  "docs-mcp": {
+    ja: `${appPathList["docs-mcp"]}/`,
+    en: `/en${appPathList["docs-mcp"]}/`,
   },
 };
+
+export function createI18nUrl(
+  appPathName: AppPathName,
+  language: Language
+): Url {
+  const baseUrl = appBaseUrl();
+  return `${baseUrl}${i18nUrlList[appPathName][language]}` as Url;
+}
 
 export type AppUrl = (typeof appUrlList)[keyof typeof appUrlList];
-
-export const uploadCatImageUrl = (baseUrl?: Url): Url =>
-  `${isUrl(baseUrl) ? baseUrl : appBaseUrl()}/api/lgtm-images`;
-
-export const fetchLgtmImagesUrl = (baseUrl?: Url): Url =>
-  `${isUrl(baseUrl) ? baseUrl : appBaseUrl()}/api/lgtm-images`;
-
-export const fetchLgtmImagesInRecentlyCreatedUrl = (baseUrl?: Url): Url =>
-  `${isUrl(baseUrl) ? baseUrl : appBaseUrl()}/api/lgtm-images/recently-created`;
-
-export const isAcceptableCatImageUrl = (baseUrl?: Url): Url =>
-  `${isUrl(baseUrl) ? baseUrl : appBaseUrl()}/api/cat-images/validation-results`;
-
-export const lgtmeowApiUrl = (): Url => {
-  if (isUrl(process.env.LGTMEOW_API_URL)) {
-    return process.env.LGTMEOW_API_URL;
-  }
-
-  throw new Error('LGTMEOW_API_URL is not defined');
-};
-
-export const imageRecognitionApiUrl = (): Url => {
-  if (isUrl(process.env.IMAGE_RECOGNITION_API_URL)) {
-    return process.env.IMAGE_RECOGNITION_API_URL;
-  }
-
-  throw new Error('IMAGE_RECOGNITION_API_URL is not defined');
-};

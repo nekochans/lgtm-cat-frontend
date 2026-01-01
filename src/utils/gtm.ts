@@ -1,19 +1,20 @@
+// 絶対厳守：編集前に必ずAI実装ルールを読む
 export type GoogleTagManagerId = `GTM-${string}`;
 
 export type CustomDataAttrGtmClick =
-  | 'header-app-title'
-  | 'top-upload-cat-button'
-  | 'footer-terms-link'
-  | 'footer-privacy-link'
-  | 'global-menu-top-link'
-  | 'global-menu-upload-cat-link'
-  | 'global-menu-terms-link'
-  | 'global-menu-privacy-link'
-  | 'language-menu-en-link'
-  | 'language-menu-ja-link';
+  | "header-app-title"
+  | "top-upload-cat-button"
+  | "footer-terms-link"
+  | "footer-privacy-link"
+  | "global-menu-top-link"
+  | "global-menu-upload-cat-link"
+  | "global-menu-terms-link"
+  | "global-menu-privacy-link"
+  | "language-menu-en-link"
+  | "language-menu-ja-link";
 
-const isGoogleTagManagerId = (value: unknown): value is GoogleTagManagerId => {
-  if (typeof value !== 'string') {
+function isGoogleTagManagerId(value: unknown): value is GoogleTagManagerId {
+  if (typeof value !== "string") {
     return false;
   }
 
@@ -21,82 +22,54 @@ const isGoogleTagManagerId = (value: unknown): value is GoogleTagManagerId => {
 
   const endPosition = 4;
 
-  return value.slice(startPosition, endPosition) === 'GTM-';
-};
+  return value.slice(startPosition, endPosition) === "GTM-";
+}
 
-export const googleTagManagerId = (): GoogleTagManagerId => {
+export function googleTagManagerId(): GoogleTagManagerId {
   if (isGoogleTagManagerId(process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID)) {
     return process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID;
   }
 
-  return 'GTM-T9VPVTR';
-};
-
-declare global {
-  interface Window {
-    dataLayer: Array<Record<string, unknown>>;
-  }
+  return "GTM-T9VPVTR";
 }
 
-export const sendClickTopFetchRandomCatButton = (): void => {
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  if (window.dataLayer) {
-    window.dataLayer.push({
-      event: 'ClickTopFetchRandomCatButton',
-    });
-  }
+type WindowWithDataLayer = Window & {
+  dataLayer?: Record<string, unknown>[];
 };
 
-export const sendClickTopFetchNewArrivalCatButton = (): void => {
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  if (window.dataLayer) {
-    window.dataLayer.push({
-      event: 'ClickTopFetchNewArrivalCatButton',
-    });
+function pushDataLayerEvent(event: string): void {
+  if (typeof window === "undefined") {
+    return;
   }
-};
 
-export const sendUploadedCatImage = (): void => {
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  if (window.dataLayer) {
-    window.dataLayer.push({
-      event: 'UploadedCatImage',
-    });
-  }
-};
+  const dataLayerWindow = window as WindowWithDataLayer;
+  dataLayerWindow.dataLayer?.push({ event });
+}
 
-export const sendCopyMarkdownFromTopImages = (): void => {
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  if (window.dataLayer) {
-    window.dataLayer.push({
-      event: 'CopyMarkdownFromTopImages',
-    });
-  }
-};
+export function sendClickTopFetchRandomCatButton(): void {
+  pushDataLayerEvent("ClickTopFetchRandomCatButton");
+}
 
-export const sendCopyMarkdownFromCreatedImage = (): void => {
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  if (window.dataLayer) {
-    window.dataLayer.push({
-      event: 'CopyMarkdownFromCreatedImage',
-    });
-  }
-};
+export function sendClickTopFetchNewArrivalCatButton(): void {
+  pushDataLayerEvent("ClickTopFetchNewArrivalCatButton");
+}
 
-export const sendCopyMarkdownFromCopyButton = (): void => {
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  if (window.dataLayer) {
-    window.dataLayer.push({
-      event: 'CopyMarkdownFromCopyButton',
-    });
-  }
-};
+export function sendUploadedCatImage(): void {
+  pushDataLayerEvent("UploadedCatImage");
+}
 
-export const sendCopyMarkdownFromRandomButton = (): void => {
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  if (window.dataLayer) {
-    window.dataLayer.push({
-      event: 'CopyMarkdownFromRandomButton',
-    });
-  }
-};
+export function sendCopyMarkdownFromTopImages(): void {
+  pushDataLayerEvent("CopyMarkdownFromTopImages");
+}
+
+export function sendCopyMarkdownFromCreatedImage(): void {
+  pushDataLayerEvent("CopyMarkdownFromCreatedImage");
+}
+
+export function sendCopyMarkdownFromCopyButton(): void {
+  pushDataLayerEvent("CopyMarkdownFromCopyButton");
+}
+
+export function sendCopyMarkdownFromRandomButton(): void {
+  pushDataLayerEvent("CopyMarkdownFromRandomButton");
+}

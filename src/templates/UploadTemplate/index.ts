@@ -1,1 +1,0 @@
-export { UploadTemplate } from './UploadTemplate';

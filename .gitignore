@@ -56,3 +56,24 @@ build-storybook.log
 
 # Stylelint
 .stylelintcache
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+*storybook.log
+
+# AIコーディングエージェントに対するユーザープロンプト置き場
+user-prompt/
+/.serena/
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# Playwright MCP logs
+.playwright-mcp/
+
+# ClaudeCode MCP設定ファイル
+.mcp.json

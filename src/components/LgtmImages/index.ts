@@ -1,1 +1,0 @@
-export { LgtmImages } from './LgtmImages';

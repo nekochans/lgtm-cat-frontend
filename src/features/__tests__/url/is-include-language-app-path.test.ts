@@ -1,0 +1,32 @@
+// 絶対厳守：編集前に必ずAI実装ルールを読む
+import { describe, expect, it } from "vitest";
+import { isIncludeLanguageAppPath } from "@/features/url";
+
+describe("src/features/url.ts isIncludeLanguageAppPath TestCases", () => {
+  interface TestTable {
+    value: unknown;
+    expected: boolean;
+  }
+
+  it.each`
+    value            | expected
+    ${"/"}           | ${true}
+    ${"/en"}         | ${true}
+    ${"/ja"}         | ${true}
+    ${"/en/upload"}  | ${true}
+    ${"/ja/upload"}  | ${true}
+    ${"/terms"}      | ${true}
+    ${"/ja/terms"}   | ${true}
+    ${"/en/terms"}   | ${true}
+    ${"/privacy"}    | ${true}
+    ${"/ja/privacy"} | ${true}
+    ${"/en/privacy"} | ${true}
+    ${"/bn/upload"}  | ${false}
+    ${"/upload/ja"}  | ${false}
+  `(
+    "should return the intended result. value: $value",
+    ({ value, expected }: TestTable) => {
+      expect(isIncludeLanguageAppPath(value)).toStrictEqual(expected);
+    }
+  );
+});
