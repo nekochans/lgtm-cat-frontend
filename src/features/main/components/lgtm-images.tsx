@@ -3,11 +3,11 @@ import type { JSX } from "react";
 import type { LgtmImage as LgtmImageType } from "@/features/main/types/lgtm-image";
 import { LgtmImage } from "./lgtm-image";
 
-type Props = {
+interface Props {
   // TODO: ログイン機能、お気に入り機能実装後は hideHeartIcon Propsを削除する
   readonly hideHeartIcon?: boolean;
   readonly images: readonly LgtmImageType[];
-};
+}
 
 export function LgtmImages({ hideHeartIcon, images }: Props): JSX.Element {
   return (

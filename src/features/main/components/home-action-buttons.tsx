@@ -32,10 +32,10 @@ function sanitizeErrorMessage(error: string): string {
   return "An unexpected error occurred. Please try again later.";
 }
 
-type Props = {
+interface Props {
   readonly language: Language;
   readonly className?: string;
-};
+}
 
 export function HomeActionButtons({ language, className }: Props) {
   const router = useRouter();

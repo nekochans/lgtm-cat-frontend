@@ -3,10 +3,10 @@
 import type { Language } from "@/features/language";
 import { getServiceDescriptionText } from "@/features/main/service-description-text";
 
-type Props = {
+interface Props {
   readonly language: Language;
   readonly className?: string;
-};
+}
 
 export function ServiceDescription({ language, className }: Props) {
   const text = getServiceDescriptionText(language);

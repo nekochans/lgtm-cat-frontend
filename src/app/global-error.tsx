@@ -6,10 +6,10 @@ import NextError from "next/error";
 import { type JSX, useEffect } from "react";
 import { httpStatusCode } from "@/constants/http-status-code";
 
-type Props = {
+interface Props {
   error: Error & { digest?: string };
   reset: () => void;
-};
+}
 
 function GlobalError({ error }: Props): JSX.Element {
   useEffect(() => {

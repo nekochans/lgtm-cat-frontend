@@ -6,10 +6,10 @@ import { LgtmCatIcon } from "@/components/lgtm-cat-icon";
 import type { Language } from "@/features/language";
 import { createIncludeLanguageAppPath } from "@/features/url";
 
-export type Props = {
+export interface Props {
   readonly language: Language;
   readonly size?: "desktop" | "mobile";
-};
+}
 
 export function HeaderLogo({ language, size = "desktop" }: Props): JSX.Element {
   const homeToLink = createIncludeLanguageAppPath("home", language);

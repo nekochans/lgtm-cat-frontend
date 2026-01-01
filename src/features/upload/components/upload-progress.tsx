@@ -8,12 +8,12 @@ import type { JSX } from "react";
 import type { Language } from "@/features/language";
 import { uploadingText } from "../functions/upload-i18n";
 
-type Props = {
+interface Props {
   readonly language: Language;
   readonly previewUrl: string;
   readonly fileName: string;
   readonly progress: number;
-};
+}
 
 /**
  * アップロード中の進捗表示コンポーネント

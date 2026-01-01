@@ -2,9 +2,9 @@
 import type { JSX } from "react";
 import Markdown from "react-markdown";
 
-type Props = {
+interface Props {
   readonly content: string;
-};
+}
 
 export function MarkdownContent({ content }: Props): JSX.Element {
   return (

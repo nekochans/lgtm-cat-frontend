@@ -26,12 +26,12 @@ export class R2Error extends StorageError {
 /**
  * R2設定の型
  */
-type R2Config = {
+interface R2Config {
   readonly endpointUrl: string;
   readonly accessKeyId: string;
   readonly secretAccessKey: string;
   readonly bucketName: string;
-};
+}
 
 /**
  * 環境変数からR2設定を取得

@@ -6,13 +6,13 @@ import type { IncludeLanguageAppPath } from "@/features/url";
 import { Footer } from "./footer";
 import { Header } from "./header";
 
-type Props = {
+interface Props {
   readonly children: ReactNode;
   readonly language: Language;
   readonly currentUrlPath: IncludeLanguageAppPath;
   readonly isLoggedIn?: boolean;
   readonly mainClassName?: string;
-};
+}
 
 const defaultMainClassName =
   "relative flex w-full flex-1 flex-col items-center px-4 py-8";

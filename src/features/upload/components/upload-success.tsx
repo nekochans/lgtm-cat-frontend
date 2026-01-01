@@ -24,12 +24,12 @@ import {
   viewLatestImageLinkText,
 } from "../functions/upload-i18n";
 
-type Props = {
+interface Props {
   readonly language: Language;
   readonly lgtmImageUrl: LgtmImageUrl;
   readonly previewImageUrl: string;
   readonly onClose: () => void;
-};
+}
 
 /**
  * アップロード成功画面コンポーネント

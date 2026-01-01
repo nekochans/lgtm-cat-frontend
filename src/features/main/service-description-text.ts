@@ -3,10 +3,10 @@
 import type { Language } from "@/features/language";
 import { assertNever } from "@/utils/assert-never";
 
-type ServiceDescriptionText = {
+interface ServiceDescriptionText {
   readonly line1: string;
   readonly line2: string;
-};
+}
 
 export function getServiceDescriptionText(
   language: Language

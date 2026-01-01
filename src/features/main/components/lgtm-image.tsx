@@ -14,12 +14,12 @@ import {
   sendCopyMarkdownFromTopImages,
 } from "@/utils/gtm";
 
-type Props = {
+interface Props {
   // TODO: ログイン機能、お気に入り機能実装後は hideHeartIcon Propsを削除する
   readonly hideHeartIcon?: boolean;
   readonly id: LgtmImageType["id"];
   readonly imageUrl: LgtmImageType["imageUrl"];
-};
+}
 
 export function LgtmImage({ hideHeartIcon, id, imageUrl }: Props): JSX.Element {
   const [isFavorite, setIsFavorite] = useState(false);

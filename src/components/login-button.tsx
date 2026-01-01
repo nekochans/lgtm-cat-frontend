@@ -4,9 +4,9 @@ import { IconButton } from "@/components/icon-button";
 import type { Language } from "@/features/language";
 import { createIncludeLanguageAppPath } from "@/features/url";
 
-type Props = {
+interface Props {
   language: Language;
-};
+}
 
 export function LoginButton({ language }: Props): JSX.Element {
   return (

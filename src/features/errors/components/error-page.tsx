@@ -12,10 +12,10 @@ import { errorPageTexts } from "@/features/errors/error-i18n";
 import type { Language } from "@/features/language";
 import { customErrorTitle } from "@/features/meta-tag";
 
-type Props = {
+interface Props {
   readonly error: Error & { digest?: string };
   readonly reset: () => void;
-};
+}
 
 /**
  * パスから言語を判定する

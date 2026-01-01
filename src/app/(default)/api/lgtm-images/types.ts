@@ -3,7 +3,7 @@
 /**
  * エラーレスポンスの型
  */
-export type LgtmImageApiErrorResponse = {
+export interface LgtmImageApiErrorResponse {
   readonly code: number;
   readonly message: string;
-};
+}

@@ -1,11 +1,11 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { JSX } from "react";
 
-type Props = {
+interface Props {
   width?: number;
   height?: number;
   color?: "default" | "active";
-};
+}
 
 export function CopyIcon({
   width = 20,

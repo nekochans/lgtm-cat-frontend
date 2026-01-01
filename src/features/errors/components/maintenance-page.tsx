@@ -7,9 +7,9 @@ import { maintenancePageTexts } from "@/features/errors/error-i18n";
 import type { Language } from "@/features/language";
 import { createIncludeLanguageAppPath } from "@/features/url";
 
-type Props = {
+interface Props {
   readonly language: Language;
-};
+}
 
 export function MaintenancePage({ language }: Props) {
   const texts = maintenancePageTexts(language);

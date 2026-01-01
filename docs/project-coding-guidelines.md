@@ -85,31 +85,50 @@ z.string().ip();
 
 ## 型定義の原則
 
-### Type の使用
+### Interface の使用
 
-原則として **`type`** を使用してください。一貫性のあるコーディングスタイルを保つため、オブジェクト型の定義にも `type` を使用します。
+原則として **`interface`** を使用してください。オブジェクト型の定義には `interface` を使用します。
 
 ```typescript
-// ✅ 推奨: type を使用
-type User = {
+// 推奨: interface を使用
+interface User {
   readonly id: string;
   readonly name: string;
   readonly email: string;
-};
+}
 
-// ✅ ユニオン型やプリミティブ型のエイリアスも type
-type Status = "pending" | "approved" | "rejected";
-type ApiResponse<T> =
-  | { success: true; data: T }
-  | { success: false; error: string };
+interface Config {
+  readonly apiKey: string;
+  readonly timeout: number;
+}
 ```
 
-**理由:**
+### Type を使用すべきケース
 
-- コードベース全体で一貫したスタイルを維持
-- ユニオン型・インターセクション型との統一性
-- Linter (Ultracite/Biome) の推奨に準拠
-- シンプルで理解しやすい
+以下のパターンでは `type` を使用してください。これらは TypeScript の構文上 `interface` では表現できません:
+
+1. **Union 型**: `type Result = Success | Failure`
+2. **Template Literal 型**: `` type Id = `user-${string}` ``
+3. **Branded Types**: `type UserId = string & { readonly __brand: "userId" }`
+4. **Function 型**: `type Handler = (event: Event) => void`
+5. **Mapped Types**: `type Keys = { [K in keyof T]: boolean }`
+6. **Indexed Access 型**: `type Item = (typeof items)[number]`
+7. **z.infer 型**: `type Schema = z.infer<typeof schema>`
+8. **Conditional 型**: `type Extract<T> = T extends X ? Y : Z`
+9. **Pick/Omit 等のユーティリティ型との組み合わせ**: `type Props = Omit<Base, "id"> & Extra`
+
+```typescript
+// Union 型 - type を使用
+type UploadResult =
+  | { readonly success: true; readonly url: string }
+  | { readonly success: false; readonly error: string };
+
+// Function 型 - type を使用
+type FetchData = (id: string) => Promise<Data>;
+
+// Branded Type - type を使用
+type UserId = string & { readonly __brand: "userId" };
+```
 
 ### readonly の使用
 

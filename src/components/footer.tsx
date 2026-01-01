@@ -6,9 +6,9 @@ import type { Language } from "@/features/language";
 import { createPrivacyPolicyLinksFromLanguages } from "@/features/privacy/functions/privacy-policy";
 import { createTermsOfUseLinksFromLanguages } from "@/features/terms/functions/terms-of-use";
 
-export type Props = {
+export interface Props {
   language: Language;
-};
+}
 
 const linkStyle =
   "font-inter text-sm font-normal leading-5 text-orange-900 hover:underline";

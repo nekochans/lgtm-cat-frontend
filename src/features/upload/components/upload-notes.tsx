@@ -10,9 +10,9 @@ import {
   privacyPolicyAgreementText,
 } from "@/features/upload/functions/upload-i18n";
 
-type Props = {
+interface Props {
   readonly language: Language;
-};
+}
 
 /**
  * 注意事項セクション

@@ -15,7 +15,10 @@ export function createLgtmImageId(id: number): LgtmImageId {
   return id as LgtmImageId;
 }
 
-export type LgtmImage = { id: LgtmImageId; imageUrl: LgtmImageUrl };
+export interface LgtmImage {
+  id: LgtmImageId;
+  imageUrl: LgtmImageUrl;
+}
 
 export type FetchLgtmImages = (
   accessToken: JwtAccessTokenString

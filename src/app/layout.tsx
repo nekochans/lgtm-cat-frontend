@@ -10,9 +10,9 @@ import { appBaseUrl, i18nUrlList } from "@/features/url";
 import { googleTagManagerId } from "@/utils/gtm";
 import { mPlusRounded1c } from "./fonts";
 
-type Props = {
+interface Props {
   readonly children: ReactNode;
-};
+}
 
 const language = "ja";
 

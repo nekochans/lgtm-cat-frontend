@@ -3,11 +3,11 @@
 import type { Language } from "@/features/language";
 import { assertNever } from "@/utils/assert-never";
 
-type ErrorPageTexts = {
+interface ErrorPageTexts {
   readonly title: string;
   readonly message: string;
   readonly buttonText: string;
-};
+}
 
 export function notFoundPageTexts(language: Language): ErrorPageTexts {
   switch (language) {

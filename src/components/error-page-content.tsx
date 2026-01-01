@@ -6,13 +6,13 @@ import { LinkButton } from "@/components/link-button";
 import type { Language } from "@/features/language";
 import { createIncludeLanguageAppPath } from "@/features/url";
 
-type Props = {
+interface Props {
   readonly language: Language;
   readonly title: string;
   readonly message: string;
   readonly buttonText: string;
   readonly catComponent: ReactNode;
-};
+}
 
 export function ErrorPageContent({
   language,

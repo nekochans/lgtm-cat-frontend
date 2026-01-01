@@ -2,9 +2,9 @@
 
 import type { JSX } from "react";
 
-type Props = {
+interface Props {
   readonly messages: readonly string[];
-};
+}
 
 /**
  * エラーメッセージ表示コンポーネント

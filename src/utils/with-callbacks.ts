@@ -21,10 +21,10 @@ type ErrorState<T extends ActionState> = T extends { readonly status: "ERROR" }
   ? T
   : never;
 
-type Callbacks<T extends ActionState> = {
+interface Callbacks<T extends ActionState> {
   readonly onSuccess?: (result: SuccessState<NonNullable<T>>) => void;
   readonly onError?: (result: ErrorState<NonNullable<T>>) => void;
-};
+}
 
 /**
  * Server Actionにコールバック機能を追加する高階関数

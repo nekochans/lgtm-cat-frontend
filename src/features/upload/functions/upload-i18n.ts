@@ -216,11 +216,11 @@ export function uploadSuccessDescription(
 /**
  * アップロード成功画面のリンク用テキスト
  */
-export type ViewLatestImageLinkText = {
+export interface ViewLatestImageLinkText {
   readonly prefix: string;
   readonly linkText: string;
   readonly suffix: string;
-};
+}
 
 /**
  * アップロード成功画面の「最新画像を見る」リンク用テキストを返す

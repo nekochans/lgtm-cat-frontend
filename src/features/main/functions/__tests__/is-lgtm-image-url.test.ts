@@ -3,10 +3,10 @@ import { describe, expect, it } from "vitest";
 import { isLgtmImageUrl } from "@/features/main/functions/is-lgtm-image-url";
 
 describe("src/features/main/functions/is-lgtm-image-url.ts isLgtmImageUrl TestCases", () => {
-  type TestTable = {
+  interface TestTable {
     url: string;
     expected: boolean;
-  };
+  }
 
   it.each`
     url                                                                                          | expected

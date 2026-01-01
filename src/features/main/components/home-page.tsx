@@ -8,11 +8,11 @@ import { RandomLgtmImages } from "@/features/main/components/random-lgtm-images"
 import { ServiceDescription } from "@/features/main/components/service-description";
 import type { IncludeLanguageAppPath } from "@/features/url";
 
-type Props = {
+interface Props {
   readonly language: Language;
   readonly currentUrlPath: IncludeLanguageAppPath;
   readonly view: "random" | "latest";
-};
+}
 
 export const HomePage = ({ language, currentUrlPath, view }: Props) => (
   <PageLayout

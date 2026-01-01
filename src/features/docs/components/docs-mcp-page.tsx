@@ -4,10 +4,10 @@ import { PageLayout } from "@/components/page-layout";
 import type { Language } from "@/features/language";
 import type { IncludeLanguageAppPath } from "@/features/url";
 
-type Props = {
+interface Props {
   readonly language: Language;
   readonly currentUrlPath: IncludeLanguageAppPath;
-};
+}
 
 export function DocsMcpPage({ language, currentUrlPath }: Props) {
   return (

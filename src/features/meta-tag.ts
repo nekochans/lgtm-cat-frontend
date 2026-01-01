@@ -141,13 +141,13 @@ function description(language: Language): string {
   }
 }
 
-type MetaTag = {
+interface MetaTag {
   title: string;
   ogpImgUrl: typeof appUrlList.ogpImg;
   ogpTargetUrl: Url;
   appName: AppName;
   description?: string;
-};
+}
 
 type MetaTagList = {
   [key in AppPathName]: MetaTag;

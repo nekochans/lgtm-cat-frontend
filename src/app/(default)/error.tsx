@@ -4,10 +4,10 @@
 import type { JSX } from "react";
 import { ErrorPage } from "@/features/errors/components/error-page";
 
-type Props = {
+interface Props {
   readonly error: Error & { digest?: string };
   readonly reset: () => void;
-};
+}
 
 export default function ErrorBoundary({ error, reset }: Props): JSX.Element {
   return <ErrorPage error={error} reset={reset} />;
