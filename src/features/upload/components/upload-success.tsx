@@ -159,7 +159,7 @@ export function UploadSuccess({
       {isCopied ? (
         <div
           aria-live="polite"
-          className="-translate-x-1/2 -translate-y-1/2 fixed top-1/2 left-1/2 z-50 rounded bg-[#7B2F1D] px-6 py-3 font-semibold text-lg text-white shadow-lg"
+          className="fixed top-1/2 left-1/2 z-50 -translate-x-1/2 -translate-y-1/2 rounded bg-[#7B2F1D] px-6 py-3 font-semibold text-lg text-white shadow-lg"
         >
           {copiedText()}
         </div>
