@@ -36,7 +36,7 @@ R2_BUCKET_NAME=CloudflareのR2バケット名を指定
 
 ローカルでSentryやChromaticの動作確認を実施する場合 [direnv](https://github.com/direnv/direnv) を使って `.envrc` に以下の環境変数を設定します。
 
-```
+```bash
 export CHROMATIC_PROJECT_TOKEN=Chromaticのトークンを指定
 export NEXT_PUBLIC_APP_ENV=local
 export NEXT_PUBLIC_APP_URL=http://localhost:2222
@@ -112,9 +112,9 @@ https://vercel.com/nekochans/lgtm-cat-frontend/stores
 現在採用している linter は以下の通りです。（Prettier はどちらかと言うと Formatter）
 
 - [Prettier](https://prettier.io/)
-- [Biome](https://biomejs.dev/ja/guides/getting-started/)
+- [Ultracite](https://www.ultracite.ai/)
 
-ルールは [Ultracite](https://www.ultracite.ai/) の推奨ルールをそのまま利用しています。
+ルールは Ultracite の推奨ルールをそのまま利用しています。
 
 こちらのチェックでエラーになったコードは CI のチェックを通過する事が出来ません。
 
@@ -178,7 +178,7 @@ https://docs.npmjs.com/cli/v7/commands/npm-dedupe
 
 `staging` ブランチにマージされると以下のように `main` ブランチに対してリリース用のPRが自動で作成されます。（追加で `staging` にPRがマージされるとそれもリリース用のPRに追加されます）
 
-https://github.com/nekochans/lgtm-cat-frontend/pull/423
+[リリースPRの例](https://github.com/nekochans/lgtm-cat-frontend/pull/423)
 
 `main` ブランチにマージされた時点で本番環境へデプロイが行われます。
 
@@ -192,7 +192,7 @@ https://github.com/nekochans/lgtm-cat-frontend/pull/423
   - 本番環境
 - Preview
   - GitHub のブランチにプッシュされる度に一時的に生成される環境
-- Preview（staging）
+- Preview (staging)
   - ステージング環境専用の環境変数が必要な場合は `staging` ブランチ用に設定します
 - Development
   - [vercel dev](https://vercel.com/docs/cli#commands/dev) コマンドでローカル環境を起動した場合、この環境変数が利用されます。
