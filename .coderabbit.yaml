@@ -1,4 +1,7 @@
 language: ja-JP
 reviews:
+  auto_review:
+    labels:
+      - "!release-pull-request"
   path_filters:
     - "!design-docs-for-ai/**"
