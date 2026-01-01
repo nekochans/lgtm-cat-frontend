@@ -115,10 +115,10 @@ export function LgtmImage({ hideHeartIcon, id, imageUrl }: Props): JSX.Element {
           alt="LGTM image"
           className="object-contain"
           fill
-          objectPosition="center top"
           priority={false}
           sizes="(max-width: 768px) 100vw, 390px"
           src={imageUrl}
+          style={{ objectPosition: "center top" }}
         />
       </button>
       <div className="absolute top-2 right-2 flex gap-2 opacity-100 transition-opacity duration-150 md:opacity-0 md:group-hover:opacity-100">

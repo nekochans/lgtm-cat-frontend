@@ -29,9 +29,13 @@ const sentryWebpackPluginOptions = {
   org: process.env.SENTRY_ORG,
   project: process.env.SENTRY_PROJECT,
   widenClientFileUpload: true,
-  disableLogger: true,
-  automaticVercelMonitors: true,
   sendDefaultPii: true,
+  webpack: {
+    treeshake: {
+      removeDebugLogging: true,
+    },
+    automaticVercelMonitors: true,
+  },
 };
 
 const nextConfig = withSentryConfig(baseConfig, sentryWebpackPluginOptions);
