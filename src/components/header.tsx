@@ -7,13 +7,13 @@ import { HeaderMobile } from "@/components/header-mobile";
 import type { Language } from "@/features/language";
 import type { IncludeLanguageAppPath } from "@/features/url";
 
-type Props = {
+interface Props {
   readonly language: Language;
   readonly currentUrlPath: IncludeLanguageAppPath;
   // TODO: ログイン機能実装後は hideLoginButton Propsを削除する
   readonly hideLoginButton?: boolean;
   readonly isLoggedIn: boolean;
-};
+}
 
 export function Header({
   language,

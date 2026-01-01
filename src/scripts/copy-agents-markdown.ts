@@ -13,11 +13,11 @@ const SKIP_DIRECTORIES = new Set<string>([
   "test-results",
 ]);
 
-type CopyAgentsResult = {
+interface CopyAgentsResult {
   updated: string[];
   unchanged: string[];
   missing: string[];
-};
+}
 
 async function findAgentsFiles(rootDir: string): Promise<string[]> {
   const entries = await readdir(rootDir, { withFileTypes: true });

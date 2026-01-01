@@ -4,10 +4,10 @@ import { removeLanguageFromAppPath } from "@/features/language";
 import type { IncludeLanguageAppPath } from "@/features/url";
 
 describe("src/features/language.ts removeLanguageFromAppPath TestCases", () => {
-  type TestTable = {
+  interface TestTable {
     appPath: IncludeLanguageAppPath;
     expected: string;
-  };
+  }
 
   it.each`
     appPath         | expected

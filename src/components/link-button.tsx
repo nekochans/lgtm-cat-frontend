@@ -4,12 +4,12 @@ import Link from "next/link";
 import type { CSSProperties, JSX } from "react";
 import type { IncludeLanguageAppPath, Url } from "@/features/url";
 
-type Props = {
+interface Props {
   linkText: string;
   linkUrl: Url | IncludeLanguageAppPath;
   className?: string;
   style?: CSSProperties;
-};
+}
 
 export function LinkButton({
   linkText,

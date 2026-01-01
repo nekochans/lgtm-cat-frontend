@@ -32,10 +32,10 @@ function sanitizeErrorMessage(error: string): string {
   return "An unexpected error occurred. Please try again later.";
 }
 
-type Props = {
+interface Props {
   readonly language: Language;
   readonly className?: string;
-};
+}
 
 export function HomeActionButtons({ language, className }: Props) {
   const router = useRouter();
@@ -169,7 +169,7 @@ export function HomeActionButtons({ language, className }: Props) {
         {isCopied ? (
           <div
             aria-live="polite"
-            className="-translate-x-1/2 absolute bottom-full left-1/2 mb-2 rounded bg-[#7B2F1D] px-4 py-2 font-semibold text-sm text-white"
+            className="absolute bottom-full left-1/2 mb-2 -translate-x-1/2 rounded bg-[#7B2F1D] px-4 py-2 font-semibold text-sm text-white"
           >
             Copied!
           </div>

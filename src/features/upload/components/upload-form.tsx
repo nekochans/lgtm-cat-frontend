@@ -35,11 +35,11 @@ import { UploadSuccess } from "./upload-success";
 /**
  * プログレス管理用のヘルパー型
  */
-type ProgressManager = {
+interface ProgressManager {
   readonly start: (increment: number, max: number, intervalMs: number) => void;
   readonly stop: () => void;
   readonly setProgress: (value: number) => void;
-};
+}
 
 /**
  * プログレス管理ヘルパーを作成
@@ -69,7 +69,7 @@ function createProgressManager(
   };
 }
 
-type Props = {
+interface Props {
   readonly language: Language;
   /**
    * 依存関係の注入（Storybook等でのモック用）
@@ -96,7 +96,7 @@ type Props = {
   readonly initialPreviewImageUrlForSuccess?: string | null;
   readonly initialErrorMessages?: readonly string[];
   readonly initialUploadProgress?: number;
-};
+}
 
 /**
  * アップロードフォームメインコンポーネント

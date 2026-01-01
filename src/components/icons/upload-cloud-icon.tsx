@@ -2,11 +2,11 @@
 
 import type { JSX } from "react";
 
-type Props = {
+interface Props {
   readonly width?: number;
   readonly height?: number;
   readonly className?: string;
-};
+}
 
 /**
  * アップロード用クラウドアイコン

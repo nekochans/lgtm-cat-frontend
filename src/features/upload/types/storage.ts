@@ -4,21 +4,21 @@
  * 署名付きPUT URL生成結果の型
  * ブラウザから直接アップロードするためのURL
  */
-export type PresignedPutUrlResult = {
+export interface PresignedPutUrlResult {
   /** 署名付きPUT URL（ブラウザからのアップロード用） */
   readonly putUrl: string;
   /** ストレージ内のオブジェクトキー */
   readonly objectKey: string;
-};
+}
 
 /**
  * 署名付きGET URL生成結果の型
  * API呼び出し時の画像参照用
  */
-export type PresignedGetUrlResult = {
+export interface PresignedGetUrlResult {
   /** 署名付きGET URL（読み取り専用） */
   readonly getUrl: string;
-};
+}
 
 /**
  * 署名付きPUT URL生成関数の型定義

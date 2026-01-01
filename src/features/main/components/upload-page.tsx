@@ -5,10 +5,10 @@ import type { Language } from "@/features/language";
 import { UploadForm } from "@/features/upload/components/upload-form";
 import type { IncludeLanguageAppPath } from "@/features/url";
 
-type Props = {
+interface Props {
   readonly language: Language;
   readonly currentUrlPath: IncludeLanguageAppPath;
-};
+}
 
 export function UploadPage({ language, currentUrlPath }: Props) {
   return (

@@ -6,11 +6,11 @@ import { Header } from "@/components/header";
 import type { Language } from "@/features/language";
 import type { IncludeLanguageAppPath } from "@/features/url";
 
-type Props = {
+interface Props {
   readonly language: Language;
   readonly currentUrlPath: IncludeLanguageAppPath;
   readonly children: ReactNode;
-};
+}
 
 export function ErrorLayout({ language, currentUrlPath, children }: Props) {
   return (

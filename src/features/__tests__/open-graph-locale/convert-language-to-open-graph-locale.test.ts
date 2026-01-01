@@ -7,10 +7,10 @@ import {
 } from "@/features/open-graph-locale";
 
 describe("src/features/open-graph-locale.ts convertLanguageToOpenGraphLocale TestCases", () => {
-  type TestTable = {
+  interface TestTable {
     readonly language: Language;
     readonly expected: OpenGraphLocale;
-  };
+  }
 
   it.each`
     language | expected

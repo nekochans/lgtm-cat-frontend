@@ -37,11 +37,11 @@ export const metadata: Metadata = {
   },
 };
 
-type Props = {
+interface Props {
   readonly searchParams: Promise<{
     readonly view?: "random" | "latest";
   }>;
-};
+}
 
 const HomePageContent = async ({
   searchParams,

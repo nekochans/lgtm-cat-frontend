@@ -3,10 +3,10 @@ import { describe, expect, it } from "vitest";
 import { isIncludeLanguageAppPath } from "@/features/url";
 
 describe("src/features/url.ts isIncludeLanguageAppPath TestCases", () => {
-  type TestTable = {
+  interface TestTable {
     value: unknown;
     expected: boolean;
-  };
+  }
 
   it.each`
     value            | expected

@@ -5,9 +5,9 @@ import { getCurrentScope } from "@sentry/nextjs";
 /**
  * headers プロパティを持つエラーオブジェクトの型
  */
-type ErrorWithHeaders = {
+interface ErrorWithHeaders {
   readonly headers?: Record<string, string>;
-};
+}
 
 /**
  * エラーオブジェクトから x-request-id を取得し、Sentry のタグに設定する

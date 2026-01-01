@@ -1,11 +1,11 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { JSX } from "react";
 
-type Props = {
+interface Props {
   readonly width?: number;
   readonly height?: number;
   readonly color?: "default" | "favorite" | "white";
-};
+}
 
 export function HeartIcon({
   width = 20,

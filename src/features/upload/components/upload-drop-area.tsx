@@ -18,11 +18,11 @@ import {
   uploadInputButtonText,
 } from "../functions/upload-i18n";
 
-type Props = {
+interface Props {
   readonly language: Language;
   readonly onFileSelect: (file: File) => void;
   readonly isDisabled?: boolean;
-};
+}
 
 /**
  * ドラッグ＆ドロップエリア

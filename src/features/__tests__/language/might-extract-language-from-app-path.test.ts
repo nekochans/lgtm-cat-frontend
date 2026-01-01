@@ -7,10 +7,10 @@ import {
 import type { IncludeLanguageAppPath } from "@/features/url";
 
 describe("src/features/language.ts mightExtractLanguageFromAppPath TestCases", () => {
-  type TestTable = {
+  interface TestTable {
     appPath: IncludeLanguageAppPath;
     expected: Language | null;
-  };
+  }
 
   it.each`
     appPath         | expected

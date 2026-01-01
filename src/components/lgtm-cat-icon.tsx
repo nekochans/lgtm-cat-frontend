@@ -1,12 +1,12 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { JSX } from "react";
 
-type Props = {
+interface Props {
   readonly width?: number;
   readonly height?: number;
   readonly className?: string;
   readonly "aria-hidden"?: boolean;
-};
+}
 
 export function LgtmCatIcon({
   width = 36,

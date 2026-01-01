@@ -12,14 +12,14 @@ import {
   uploadButtonText,
 } from "../functions/upload-i18n";
 
-type Props = {
+interface Props {
   readonly language: Language;
   readonly previewUrl: string;
   readonly fileName: string;
   readonly onCancel: () => void;
   readonly onUpload: () => void;
   readonly isUploading?: boolean;
-};
+}
 
 /**
  * 画像プレビュー表示

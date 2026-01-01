@@ -29,13 +29,13 @@ import {
   type IncludeLanguageAppPath,
 } from "@/features/url";
 
-type Props = {
+interface Props {
   readonly language: Language;
   readonly currentUrlPath: IncludeLanguageAppPath;
   // TODO: ログイン機能実装後は hideLoginButton Propsを削除する
   readonly hideLoginButton?: boolean;
   readonly isLoggedIn: boolean;
-};
+}
 
 export function HeaderDesktop({
   language,

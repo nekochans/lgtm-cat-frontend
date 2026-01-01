@@ -1,9 +1,10 @@
-type Options = {
+// 絶対厳守：編集前に必ずAI実装ルールを読む
+interface Options {
   readonly statusCode?: number;
   readonly statusText?: string;
   readonly headers?: Record<string, string>;
   readonly responseBody?: unknown;
-};
+}
 
 export class IssueClientCredentialsAccessTokenError extends Error {
   static {

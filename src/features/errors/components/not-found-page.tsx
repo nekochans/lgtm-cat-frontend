@@ -6,9 +6,9 @@ import { ErrorLayout } from "@/features/errors/components/error-layout";
 import { notFoundPageTexts } from "@/features/errors/error-i18n";
 import type { Language } from "@/features/language";
 
-type Props = {
+interface Props {
   readonly language: Language;
-};
+}
 
 export function NotFoundPage({ language }: Props) {
   const texts = notFoundPageTexts(language);

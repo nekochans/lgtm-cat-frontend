@@ -11,11 +11,11 @@ import {
   upstashRedisRestUrl,
 } from "@/lib/upstash/constants";
 
-type CognitoTokenResponseBody = {
+interface CognitoTokenResponseBody {
   readonly access_token: string;
   readonly expires_in: 3600;
   readonly token_type: "Bearer";
-};
+}
 
 const cognitoTokenResponseBodySchema = z.object({
   access_token: z.string(),
