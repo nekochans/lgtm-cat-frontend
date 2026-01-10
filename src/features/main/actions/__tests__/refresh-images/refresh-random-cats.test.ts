@@ -1,7 +1,7 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { refreshRandomCats } from "@/features/main/actions/refresh-images";
+import { refreshRandomCatsAction } from "@/features/main/actions/refresh-images-action";
 import { CACHE_TAG_LGTM_IMAGES_RANDOM } from "@/features/main/constants/cache-tags";
 import { i18nUrlList } from "@/features/url";
 
@@ -11,13 +11,13 @@ vi.mock("next/cache", () => ({
   updateTag: (...args: unknown[]) => updateTagMock(...args),
 }));
 
-describe("refreshRandomCats", () => {
+describe("refreshRandomCatsAction", () => {
   afterEach(() => {
     vi.clearAllMocks();
   });
 
   it("updates random tag and returns ja redirect URL", async () => {
-    const result = await refreshRandomCats(null, "ja");
+    const result = await refreshRandomCatsAction(null, "ja");
 
     expect(updateTagMock).toHaveBeenCalledWith(CACHE_TAG_LGTM_IMAGES_RANDOM);
     expect(result).toEqual({
@@ -27,7 +27,7 @@ describe("refreshRandomCats", () => {
   });
 
   it("updates random tag and returns en redirect URL", async () => {
-    const result = await refreshRandomCats(null, "en");
+    const result = await refreshRandomCatsAction(null, "en");
 
     expect(updateTagMock).toHaveBeenCalledWith(CACHE_TAG_LGTM_IMAGES_RANDOM);
     expect(result).toEqual({
@@ -41,7 +41,7 @@ describe("refreshRandomCats", () => {
       throw new Error("Cache update failed");
     });
 
-    const result = await refreshRandomCats(null, "ja");
+    const result = await refreshRandomCatsAction(null, "ja");
 
     expect(result).toEqual({
       status: "ERROR",
