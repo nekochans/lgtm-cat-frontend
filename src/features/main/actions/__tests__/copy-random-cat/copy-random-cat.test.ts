@@ -12,7 +12,7 @@ import {
   it,
   vi,
 } from "vitest";
-import { copyRandomCat } from "@/features/main/actions/copy-random-cat";
+import { copyRandomCatAction } from "@/features/main/actions/copy-random-cat-action";
 import { fetchLgtmImagesInRandomUrl } from "@/features/main/functions/api-url";
 import { mockIssueClientCredentialsAccessToken } from "@/mocks/api/external/cognito/mock-issue-client-credentials-access-token";
 import { mockFetchLgtmImages } from "@/mocks/api/external/lgtmeow/mock-fetch-lgtm-images";
@@ -45,7 +45,7 @@ const mockHandlers = [
 
 const server = setupServer(...mockHandlers);
 
-describe("copyRandomCat", () => {
+describe("copyRandomCatAction", () => {
   beforeAll(() => {
     server.listen();
   });
@@ -67,7 +67,7 @@ describe("copyRandomCat", () => {
     // Math.random をモックして最初の画像を選択させる
     vi.spyOn(Math, "random").mockReturnValue(0);
 
-    const result = await copyRandomCat();
+    const result = await copyRandomCatAction();
 
     expect(result.success).toBe(true);
     if (result.success) {
@@ -84,7 +84,7 @@ describe("copyRandomCat", () => {
       )
     );
 
-    const result = await copyRandomCat();
+    const result = await copyRandomCatAction();
 
     expect(result.success).toBe(false);
     if (!result.success) {
@@ -99,7 +99,7 @@ describe("copyRandomCat", () => {
       )
     );
 
-    const result = await copyRandomCat();
+    const result = await copyRandomCatAction();
 
     expect(result.success).toBe(false);
     if (!result.success) {

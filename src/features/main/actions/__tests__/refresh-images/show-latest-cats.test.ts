@@ -1,7 +1,7 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { showLatestCats } from "@/features/main/actions/refresh-images";
+import { showLatestCatsAction } from "@/features/main/actions/refresh-images-action";
 import { CACHE_TAG_LGTM_IMAGES_LATEST } from "@/features/main/constants/cache-tags";
 import { i18nUrlList } from "@/features/url";
 
@@ -11,13 +11,13 @@ vi.mock("next/cache", () => ({
   updateTag: (...args: unknown[]) => updateTagMock(...args),
 }));
 
-describe("showLatestCats", () => {
+describe("showLatestCatsAction", () => {
   afterEach(() => {
     vi.clearAllMocks();
   });
 
   it("updates latest tag and returns ja redirect URL", async () => {
-    const result = await showLatestCats(null, "ja");
+    const result = await showLatestCatsAction(null, "ja");
 
     expect(updateTagMock).toHaveBeenCalledWith(CACHE_TAG_LGTM_IMAGES_LATEST);
     expect(result).toEqual({
@@ -27,7 +27,7 @@ describe("showLatestCats", () => {
   });
 
   it("updates latest tag and returns en redirect URL", async () => {
-    const result = await showLatestCats(null, "en");
+    const result = await showLatestCatsAction(null, "en");
 
     expect(updateTagMock).toHaveBeenCalledWith(CACHE_TAG_LGTM_IMAGES_LATEST);
     expect(result).toEqual({
@@ -41,7 +41,7 @@ describe("showLatestCats", () => {
       throw new Error("Cache update failed");
     });
 
-    const result = await showLatestCats(null, "ja");
+    const result = await showLatestCatsAction(null, "ja");
 
     expect(result).toEqual({
       status: "ERROR",

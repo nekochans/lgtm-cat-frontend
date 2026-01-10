@@ -8,7 +8,11 @@ import {
   CACHE_TAG_LGTM_IMAGES_LATEST,
   CACHE_TAG_LGTM_IMAGES_RANDOM,
 } from "@/features/main/constants/cache-tags";
-import type { RefreshImagesActionState } from "@/features/main/types/action-state";
+import type {
+  RefreshImagesActionState,
+  RefreshRandomCatsAction,
+  ShowLatestCatsAction,
+} from "@/features/main/types/action-state";
 import { i18nUrlList } from "@/features/url";
 
 /**
@@ -17,12 +21,14 @@ import { i18nUrlList } from "@/features/url";
  * @param _prevState - useActionStateから渡される前回の状態 (使用しない)
  * @param language - 言語設定
  * @returns 成功時はリダイレクト先URL、失敗時はエラーメッセージ
+ *
+ * RefreshRandomCatsAction 型に準拠した実装
  */
 // biome-ignore lint/suspicious/useAwait: Server Actions must be async (Next.js requirement)
-export async function refreshRandomCats(
+export const refreshRandomCatsAction: RefreshRandomCatsAction = async (
   _prevState: RefreshImagesActionState,
   language: Language
-): Promise<RefreshImagesActionState> {
+): Promise<RefreshImagesActionState> => {
   try {
     updateTag(CACHE_TAG_LGTM_IMAGES_RANDOM);
 
@@ -35,7 +41,7 @@ export async function refreshRandomCats(
   } catch {
     return { status: "ERROR", message: "Failed to refresh images" };
   }
-}
+};
 
 /**
  * 最新のLGTM画像を表示するためのキャッシュを更新し、リダイレクト先URLを返す
@@ -43,12 +49,14 @@ export async function refreshRandomCats(
  * @param _prevState - useActionStateから渡される前回の状態 (使用しない)
  * @param language - 言語設定
  * @returns 成功時はリダイレクト先URL、失敗時はエラーメッセージ
+ *
+ * ShowLatestCatsAction 型に準拠した実装
  */
 // biome-ignore lint/suspicious/useAwait: Server Actions must be async (Next.js requirement)
-export async function showLatestCats(
+export const showLatestCatsAction: ShowLatestCatsAction = async (
   _prevState: RefreshImagesActionState,
   language: Language
-): Promise<RefreshImagesActionState> {
+): Promise<RefreshImagesActionState> => {
   try {
     updateTag(CACHE_TAG_LGTM_IMAGES_LATEST);
 
@@ -61,4 +69,4 @@ export async function showLatestCats(
   } catch {
     return { status: "ERROR", message: "Failed to show latest images" };
   }
-}
+};
