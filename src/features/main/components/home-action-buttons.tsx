@@ -7,11 +7,11 @@ import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useRef, useState } from "react";
 import { IconButton } from "@/components/icon-button";
 import type { Language } from "@/features/language";
-import { copyRandomCat } from "@/features/main/actions/copy-random-cat";
+import { copyRandomCatAction } from "@/features/main/actions/copy-random-cat-action";
 import {
-  refreshRandomCats,
-  showLatestCats,
-} from "@/features/main/actions/refresh-images";
+  refreshRandomCatsAction,
+  showLatestCatsAction,
+} from "@/features/main/actions/refresh-images-action";
 import { getActionButtonText } from "@/features/main/service-description-text";
 import type { RefreshImagesActionState } from "@/features/main/types/action-state";
 import {
@@ -48,7 +48,7 @@ export function HomeActionButtons({ language, className }: Props) {
         prevState: RefreshImagesActionState,
         _formData: FormData
       ): Promise<RefreshImagesActionState> =>
-        refreshRandomCats(prevState, language),
+        refreshRandomCatsAction(prevState, language),
       {
         onSuccess: (result) => {
           sendClickTopFetchRandomCatButton();
@@ -73,7 +73,7 @@ export function HomeActionButtons({ language, className }: Props) {
         prevState: RefreshImagesActionState,
         _formData: FormData
       ): Promise<RefreshImagesActionState> =>
-        showLatestCats(prevState, language),
+        showLatestCatsAction(prevState, language),
       {
         onSuccess: (result) => {
           sendClickTopFetchNewArrivalCatButton();
@@ -103,7 +103,7 @@ export function HomeActionButtons({ language, className }: Props) {
 
     setIsLoading(true);
     try {
-      const result = await copyRandomCat();
+      const result = await copyRandomCatAction();
 
       if (result.success) {
         try {

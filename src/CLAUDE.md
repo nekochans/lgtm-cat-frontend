@@ -24,8 +24,8 @@ src/
 │       │   ├── latest-lgtm-images.tsx       # 最新画像表示
 │       │   └── service-description.tsx      # サービス説明
 │       ├── actions/
-│       │   ├── refresh-images.ts            # 画像更新アクション
-│       │   └── copy-random-cat.ts           # ランダム猫コピーアクション
+│       │   ├── refresh-images-action.ts     # 画像更新アクション
+│       │   └── copy-random-cat-action.ts    # ランダム猫コピーアクション
 │       └── functions/
 │           └── fetch-lgtm-images.ts         # API呼び出し関数
 └── components/
