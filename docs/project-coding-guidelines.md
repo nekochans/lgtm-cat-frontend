@@ -471,3 +471,126 @@ validate-and-create-lgtm-image.ts
 - Server Action であることが関数名・ファイル名から明確になる
 - 通常の関数とServer Actionを区別できる
 - 関数名とファイル名を一致させる規則との整合性を保てる
+
+## テストコードの書き方
+
+Vitestを使用したテストコードの書き方を統一します。
+
+### ファイル配置
+
+テストファイルは以下の構成で配置します:
+
+```
+src/<機能>/__tests__/<サブ機能>/<関数名>.test.ts
+```
+
+### describeブロックの命名
+
+トップレベルの `describe` には以下の形式で名前を付けます:
+
+```
+"<ファイルパス> <関数名/コンポーネント名> TestCases"
+```
+
+```typescript
+// 関数のテストの場合
+describe("src/features/language.ts mightExtractLanguageFromAppPath TestCases", () => {
+  // ...
+});
+
+// Componentのテストの場合
+describe("src/components/footer.tsx Footer TestCases", () => {
+  // ...
+});
+```
+
+### describeのネストルール
+
+- トップレベルの `describe` は1ファイルに1つまで (Issue #383の要件)
+- **ネストした `describe` は禁止**
+- テストケースのグループ化は `it` の命名で表現する
+
+```typescript
+describe("src/features/upload/functions/upload-validator.ts validateUploadFile TestCases", () => {
+  it("should allow PNG files", () => { ... });
+  it("should allow JPEG files", () => { ... });
+  it("should reject GIF files", () => { ... });
+  it("should reject files larger than 5MB", () => { ... });
+});
+```
+
+### itの命名規則
+
+- **英語で統一** (必須)
+- **何をテストしているか分かりやすい名称を付ける** (必須)
+- **必須フォーマット**: `"should <期待する動作>"` または `"should <期待する動作> when <条件>"`
+
+```typescript
+// 必須フォーマット
+it("should return language when appPath contains valid language", () => { ... });
+it("should allow PNG files", () => { ... });
+it("should reject files larger than 5MB", () => { ... });
+it("should return error when API call fails", () => { ... });
+
+// 禁止
+it("PNGファイルは許可される", () => { ... }); // 日本語NG
+it("test1", () => { ... }); // 意味不明
+it("allows PNG files", () => { ... }); // should で始まっていない
+```
+
+### テーブル駆動型テスト
+
+複数のパラメータでテストを行う場合は `it.each` を使用します:
+
+```typescript
+describe("src/features/language.ts mightExtractLanguageFromAppPath TestCases", () => {
+  interface TestTable {
+    readonly appPath: IncludeLanguageAppPath;
+    readonly expected: Language | null;
+  }
+
+  it.each`
+    appPath         | expected
+    ${"/en"}        | ${"en"}
+    ${"/ja"}        | ${"ja"}
+    ${"/en/upload"} | ${"en"}
+  `(
+    "should return $expected when appPath is $appPath",
+    ({ appPath, expected }: TestTable) => {
+      expect(mightExtractLanguageFromAppPath(appPath)).toStrictEqual(expected);
+    },
+  );
+});
+```
+
+**ポイント**:
+
+- `TestTable` interface を定義して型安全性を確保
+- プロパティには `readonly` を使用
+- テンプレートリテラル形式 (`it.each\`...\``) を使用
+
+### hooksの使用順序
+
+Vitestのhooksは以下の順序で使用します:
+
+```typescript
+import {
+  afterAll,
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
+
+describe("...", () => {
+  beforeAll(() => { ... });
+  beforeEach(() => { ... });
+  afterEach(() => { ... });
+  afterAll(() => { ... });
+
+  it("...", () => { ... });
+});
+```

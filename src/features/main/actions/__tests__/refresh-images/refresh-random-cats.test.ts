@@ -11,12 +11,12 @@ vi.mock("next/cache", () => ({
   updateTag: (...args: unknown[]) => updateTagMock(...args),
 }));
 
-describe("refreshRandomCatsAction", () => {
+describe("src/features/main/actions/refresh-images-action.ts refreshRandomCatsAction TestCases", () => {
   afterEach(() => {
     vi.clearAllMocks();
   });
 
-  it("updates random tag and returns ja redirect URL", async () => {
+  it("should update random tag and return ja redirect URL", async () => {
     const result = await refreshRandomCatsAction(null, "ja");
 
     expect(updateTagMock).toHaveBeenCalledWith(CACHE_TAG_LGTM_IMAGES_RANDOM);
@@ -26,7 +26,7 @@ describe("refreshRandomCatsAction", () => {
     });
   });
 
-  it("updates random tag and returns en redirect URL", async () => {
+  it("should update random tag and return en redirect URL", async () => {
     const result = await refreshRandomCatsAction(null, "en");
 
     expect(updateTagMock).toHaveBeenCalledWith(CACHE_TAG_LGTM_IMAGES_RANDOM);
@@ -36,7 +36,7 @@ describe("refreshRandomCatsAction", () => {
     });
   });
 
-  it("returns error state when updateTag throws", async () => {
+  it("should return error state when updateTag throws", async () => {
     updateTagMock.mockImplementation(() => {
       throw new Error("Cache update failed");
     });

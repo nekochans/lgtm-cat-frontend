@@ -4,88 +4,82 @@ import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import { UploadProgress } from "../upload-progress";
 
-describe("UploadProgress", () => {
+describe("src/features/upload/components/upload-progress.tsx UploadProgress TestCases", () => {
   afterEach(() => {
     cleanup();
   });
 
-  describe("日本語表示", () => {
-    it("アップロード中テキストが日本語で表示される", () => {
-      render(
-        <UploadProgress
-          fileName="cat.jpg"
-          language="ja"
-          previewUrl="blob:http://localhost/test"
-          progress={50}
-        />
-      );
+  it("should display uploading text in Japanese when language is ja", () => {
+    render(
+      <UploadProgress
+        fileName="cat.jpg"
+        language="ja"
+        previewUrl="blob:http://localhost/test"
+        progress={50}
+      />
+    );
 
-      expect(screen.getByText("ただいまアップロード中...")).toBeInTheDocument();
-    });
-
-    it("プログレスバーのaria-labelが正しく設定される", () => {
-      render(
-        <UploadProgress
-          fileName="cat.jpg"
-          language="ja"
-          previewUrl="blob:http://localhost/test"
-          progress={50}
-        />
-      );
-
-      expect(screen.getByRole("progressbar")).toHaveAttribute(
-        "aria-label",
-        "ただいまアップロード中..."
-      );
-    });
+    expect(screen.getByText("ただいまアップロード中...")).toBeInTheDocument();
   });
 
-  describe("英語表示", () => {
-    it("アップロード中テキストが英語で表示される", () => {
-      render(
-        <UploadProgress
-          fileName="cat.jpg"
-          language="en"
-          previewUrl="blob:http://localhost/test"
-          progress={50}
-        />
-      );
+  it("should set correct aria-label for progress bar when language is ja", () => {
+    render(
+      <UploadProgress
+        fileName="cat.jpg"
+        language="ja"
+        previewUrl="blob:http://localhost/test"
+        progress={50}
+      />
+    );
 
-      expect(screen.getByText("Uploading...")).toBeInTheDocument();
-    });
+    expect(screen.getByRole("progressbar")).toHaveAttribute(
+      "aria-label",
+      "ただいまアップロード中..."
+    );
   });
 
-  describe("プログレス値", () => {
-    it("プログレス0%で正しく表示される", () => {
-      render(
-        <UploadProgress
-          fileName="cat.jpg"
-          language="ja"
-          previewUrl="blob:http://localhost/test"
-          progress={0}
-        />
-      );
+  it("should display uploading text in English when language is en", () => {
+    render(
+      <UploadProgress
+        fileName="cat.jpg"
+        language="en"
+        previewUrl="blob:http://localhost/test"
+        progress={50}
+      />
+    );
 
-      expect(screen.getByRole("progressbar")).toHaveAttribute(
-        "aria-valuenow",
-        "0"
-      );
-    });
+    expect(screen.getByText("Uploading...")).toBeInTheDocument();
+  });
 
-    it("プログレス100%で正しく表示される", () => {
-      render(
-        <UploadProgress
-          fileName="cat.jpg"
-          language="ja"
-          previewUrl="blob:http://localhost/test"
-          progress={100}
-        />
-      );
+  it("should display correctly at 0% progress", () => {
+    render(
+      <UploadProgress
+        fileName="cat.jpg"
+        language="ja"
+        previewUrl="blob:http://localhost/test"
+        progress={0}
+      />
+    );
 
-      expect(screen.getByRole("progressbar")).toHaveAttribute(
-        "aria-valuenow",
-        "100"
-      );
-    });
+    expect(screen.getByRole("progressbar")).toHaveAttribute(
+      "aria-valuenow",
+      "0"
+    );
+  });
+
+  it("should display correctly at 100% progress", () => {
+    render(
+      <UploadProgress
+        fileName="cat.jpg"
+        language="ja"
+        previewUrl="blob:http://localhost/test"
+        progress={100}
+      />
+    );
+
+    expect(screen.getByRole("progressbar")).toHaveAttribute(
+      "aria-valuenow",
+      "100"
+    );
   });
 });

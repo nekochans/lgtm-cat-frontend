@@ -19,19 +19,19 @@ import { mockIsAcceptableCatImageNotCatImage } from "@/mocks/api/external/lgtmeo
 import { mockIsAcceptableCatImagePayloadTooLargeError } from "@/mocks/api/external/lgtmeow/mock-is-acceptable-cat-image-payload-too-large-error";
 import { validateAndCreateLgtmImageAction } from "../validate-and-create-lgtm-image-action";
 
-// next/cacheをモック（revalidateTagはServer Action内で使用）
+// Mock next/cache (revalidateTag is used in Server Action)
 vi.mock("next/cache", () => ({
   revalidateTag: vi.fn(),
 }));
 
-// Cognito認証をモック
+// Mock Cognito authentication
 vi.mock("@/lib/cognito/oidc", () => ({
   issueClientCredentialsAccessToken: vi.fn(() =>
     Promise.resolve("mock-access-token")
   ),
 }));
 
-// R2クライアントのモック
+// Mock R2 client
 vi.mock("@/lib/cloudflare/r2/presigned-url", () => ({
   generateR2PresignedGetUrl: vi.fn(() =>
     Promise.resolve({
@@ -40,10 +40,10 @@ vi.mock("@/lib/cloudflare/r2/presigned-url", () => ({
   ),
 }));
 
-// APIのベースURL（環境変数から取得）
+// API base URL (from environment variables)
 const apiBaseUrl = lgtmeowApiUrl();
 
-// LGTM画像作成成功モック（imageUrlを返す）
+// Mock successful LGTM image creation (returns imageUrl)
 const mockCreateLgtmImageSuccess = () =>
   HttpResponse.json(
     {
@@ -58,87 +58,71 @@ const server = setupServer(
   http.post(`${apiBaseUrl}/v2/lgtm-images`, mockCreateLgtmImageSuccess)
 );
 
-beforeAll(() => server.listen());
-afterEach(() => {
-  server.resetHandlers();
-  vi.clearAllMocks();
-});
-afterAll(() => server.close());
-
-describe("validateAndCreateLgtmImageAction", () => {
+describe("src/features/upload/actions/validate-and-create-lgtm-image-action.ts validateAndCreateLgtmImageAction TestCases", () => {
   const testObjectKey = "uploads/test-uuid.jpg";
 
-  describe("正常系", () => {
-    it("成功した場合、createdLgtmImageUrlを返す", async () => {
-      const result = await validateAndCreateLgtmImageAction(
-        testObjectKey,
-        "ja"
-      );
+  beforeAll(() => server.listen());
 
-      expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.createdLgtmImageUrl).toContain(
-          "https://lgtm-images.lgtmeow.com"
-        );
-      }
-    });
+  afterEach(() => {
+    server.resetHandlers();
+    vi.clearAllMocks();
   });
 
-  describe("異常系 - 猫画像判定API", () => {
-    it("猫画像でない場合、エラーメッセージを返す", async () => {
-      server.use(
-        http.post(
-          `${apiBaseUrl}/cat-images/validate/url`,
-          mockIsAcceptableCatImageNotCatImage
-        )
+  afterAll(() => server.close());
+
+  it("should return createdLgtmImageUrl when successful", async () => {
+    const result = await validateAndCreateLgtmImageAction(testObjectKey, "ja");
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.createdLgtmImageUrl).toContain(
+        "https://lgtm-images.lgtmeow.com"
       );
-
-      const result = await validateAndCreateLgtmImageAction(
-        testObjectKey,
-        "ja"
-      );
-
-      expect(result.success).toBe(false);
-      if (!result.success) {
-        expect(result.errorMessages[0]).toContain("猫");
-      }
-    });
-
-    it("APIからPayloadTooLargeエラーが返る場合、エラーメッセージを返す", async () => {
-      server.use(
-        http.post(
-          `${apiBaseUrl}/cat-images/validate/url`,
-          mockIsAcceptableCatImagePayloadTooLargeError
-        )
-      );
-
-      const result = await validateAndCreateLgtmImageAction(
-        testObjectKey,
-        "ja"
-      );
-
-      expect(result.success).toBe(false);
-      if (!result.success) {
-        expect(result.errorMessages[0]).toContain("サイズ");
-      }
-    });
+    }
   });
 
-  describe("異常系 - LGTM画像作成API失敗", () => {
-    it("LGTM画像作成APIが非202を返す場合、エラーメッセージを返す", async () => {
-      server.use(
-        http.post(`${apiBaseUrl}/v2/lgtm-images`, mockCreateLgtmImageError)
-      );
+  it("should return error message when image is not a cat", async () => {
+    server.use(
+      http.post(
+        `${apiBaseUrl}/cat-images/validate/url`,
+        mockIsAcceptableCatImageNotCatImage
+      )
+    );
 
-      const result = await validateAndCreateLgtmImageAction(
-        testObjectKey,
-        "ja"
-      );
+    const result = await validateAndCreateLgtmImageAction(testObjectKey, "ja");
 
-      expect(result.success).toBe(false);
-      if (!result.success) {
-        expect(result.errorMessages[0]).toContain("エラー");
-      }
-    });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.errorMessages[0]).toContain("猫");
+    }
+  });
+
+  it("should return error message when API returns PayloadTooLarge error", async () => {
+    server.use(
+      http.post(
+        `${apiBaseUrl}/cat-images/validate/url`,
+        mockIsAcceptableCatImagePayloadTooLargeError
+      )
+    );
+
+    const result = await validateAndCreateLgtmImageAction(testObjectKey, "ja");
+
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.errorMessages[0]).toContain("サイズ");
+    }
+  });
+
+  it("should return error message when LGTM image creation API returns non-202", async () => {
+    server.use(
+      http.post(`${apiBaseUrl}/v2/lgtm-images`, mockCreateLgtmImageError)
+    );
+
+    const result = await validateAndCreateLgtmImageAction(testObjectKey, "ja");
+
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.errorMessages[0]).toContain("エラー");
+    }
   });
 });
