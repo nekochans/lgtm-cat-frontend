@@ -10,175 +10,163 @@ const testLgtmImageUrl = createLgtmImageUrl(
   "https://lgtm-images.lgtmeow.com/test.webp"
 );
 
-// happy-dom環境ではnavigator.clipboardが存在しないため、グローバルにモックを設定
+// happy-dom does not have navigator.clipboard, so set up a global mock
 Object.defineProperty(navigator, "clipboard", {
   value: { writeText: vi.fn().mockResolvedValue(undefined) },
   writable: true,
   configurable: true,
 });
 
-describe("UploadSuccess", () => {
+describe("src/features/upload/components/upload-success.tsx UploadSuccess TestCases", () => {
   afterEach(() => {
     cleanup();
   });
 
-  describe("日本語表示", () => {
-    it("成功メッセージが日本語で表示される", () => {
-      render(
-        <UploadSuccess
-          language="ja"
-          lgtmImageUrl={testLgtmImageUrl}
-          onClose={vi.fn()}
-          previewImageUrl="blob:http://localhost/test-image"
-        />
-      );
+  it("should display success message in Japanese when language is ja", () => {
+    render(
+      <UploadSuccess
+        language="ja"
+        lgtmImageUrl={testLgtmImageUrl}
+        onClose={vi.fn()}
+        previewImageUrl="blob:http://localhost/test-image"
+      />
+    );
 
-      expect(
-        screen.getByText("アップロード成功しました！")
-      ).toBeInTheDocument();
-    });
-
-    it("ボタンテキストが日本語で表示される", () => {
-      render(
-        <UploadSuccess
-          language="ja"
-          lgtmImageUrl={testLgtmImageUrl}
-          onClose={vi.fn()}
-          previewImageUrl="blob:http://localhost/test-image"
-        />
-      );
-
-      expect(
-        screen.getByRole("button", { name: "閉じる" })
-      ).toBeInTheDocument();
-      expect(
-        screen.getByRole("button", { name: "Markdownソースをコピー" })
-      ).toBeInTheDocument();
-    });
-
-    it("最新画像へのリンクが日本語で表示される", () => {
-      render(
-        <UploadSuccess
-          language="ja"
-          lgtmImageUrl={testLgtmImageUrl}
-          onClose={vi.fn()}
-          previewImageUrl="blob:http://localhost/test-image"
-        />
-      );
-
-      const link = screen.getByRole("link", { name: "こちら" });
-      expect(link).toBeInTheDocument();
-      expect(link).toHaveAttribute("href", "/?view=latest");
-    });
+    expect(screen.getByText("アップロード成功しました！")).toBeInTheDocument();
   });
 
-  describe("英語表示", () => {
-    it("成功メッセージが英語で表示される", () => {
-      render(
-        <UploadSuccess
-          language="en"
-          lgtmImageUrl={testLgtmImageUrl}
-          onClose={vi.fn()}
-          previewImageUrl="blob:http://localhost/test-image"
-        />
-      );
+  it("should display button text in Japanese when language is ja", () => {
+    render(
+      <UploadSuccess
+        language="ja"
+        lgtmImageUrl={testLgtmImageUrl}
+        onClose={vi.fn()}
+        previewImageUrl="blob:http://localhost/test-image"
+      />
+    );
 
-      expect(screen.getByText("Upload successful!")).toBeInTheDocument();
-    });
-
-    it("ボタンテキストが英語で表示される", () => {
-      render(
-        <UploadSuccess
-          language="en"
-          lgtmImageUrl={testLgtmImageUrl}
-          onClose={vi.fn()}
-          previewImageUrl="blob:http://localhost/test-image"
-        />
-      );
-
-      expect(screen.getByRole("button", { name: "Close" })).toBeInTheDocument();
-      expect(
-        screen.getByRole("button", { name: "Copy Markdown Source" })
-      ).toBeInTheDocument();
-    });
-
-    it("最新画像へのリンクが英語で表示される", () => {
-      render(
-        <UploadSuccess
-          language="en"
-          lgtmImageUrl={testLgtmImageUrl}
-          onClose={vi.fn()}
-          previewImageUrl="blob:http://localhost/test-image"
-        />
-      );
-
-      const link = screen.getByRole("link", { name: "here" });
-      expect(link).toBeInTheDocument();
-      expect(link).toHaveAttribute("href", "/en?view=latest");
-    });
+    expect(screen.getByRole("button", { name: "閉じる" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Markdownソースをコピー" })
+    ).toBeInTheDocument();
   });
 
-  describe("閉じるボタン動作", () => {
-    it("閉じるボタンをクリックするとonCloseが呼ばれる", async () => {
-      const onClose = vi.fn();
-      const user = userEvent.setup();
+  it("should display link to latest images in Japanese when language is ja", () => {
+    render(
+      <UploadSuccess
+        language="ja"
+        lgtmImageUrl={testLgtmImageUrl}
+        onClose={vi.fn()}
+        previewImageUrl="blob:http://localhost/test-image"
+      />
+    );
 
-      render(
-        <UploadSuccess
-          language="ja"
-          lgtmImageUrl={testLgtmImageUrl}
-          onClose={onClose}
-          previewImageUrl="blob:http://localhost/test-image"
-        />
-      );
-
-      await user.click(screen.getByRole("button", { name: "閉じる" }));
-
-      expect(onClose).toHaveBeenCalledTimes(1);
-    });
+    const link = screen.getByRole("link", { name: "こちら" });
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute("href", "/?view=latest");
   });
 
-  describe("コピー機能", () => {
-    it("コピーボタンをクリックするとCopied!メッセージが表示される", async () => {
-      const user = userEvent.setup();
+  it("should display success message in English when language is en", () => {
+    render(
+      <UploadSuccess
+        language="en"
+        lgtmImageUrl={testLgtmImageUrl}
+        onClose={vi.fn()}
+        previewImageUrl="blob:http://localhost/test-image"
+      />
+    );
 
-      render(
-        <UploadSuccess
-          language="ja"
-          lgtmImageUrl={testLgtmImageUrl}
-          onClose={vi.fn()}
-          previewImageUrl="blob:http://localhost/test-image"
-        />
-      );
+    expect(screen.getByText("Upload successful!")).toBeInTheDocument();
+  });
 
-      await user.click(
-        screen.getByRole("button", { name: "Markdownソースをコピー" })
-      );
+  it("should display button text in English when language is en", () => {
+    render(
+      <UploadSuccess
+        language="en"
+        lgtmImageUrl={testLgtmImageUrl}
+        onClose={vi.fn()}
+        previewImageUrl="blob:http://localhost/test-image"
+      />
+    );
 
-      // Copied!メッセージが表示されることでクリップボードへのコピーが成功したことを確認
-      expect(await screen.findByText("Copied!")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Close" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Copy Markdown Source" })
+    ).toBeInTheDocument();
+  });
+
+  it("should display link to latest images in English when language is en", () => {
+    render(
+      <UploadSuccess
+        language="en"
+        lgtmImageUrl={testLgtmImageUrl}
+        onClose={vi.fn()}
+        previewImageUrl="blob:http://localhost/test-image"
+      />
+    );
+
+    const link = screen.getByRole("link", { name: "here" });
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute("href", "/en?view=latest");
+  });
+
+  it("should call onClose when close button is clicked", async () => {
+    const onClose = vi.fn();
+    const user = userEvent.setup();
+
+    render(
+      <UploadSuccess
+        language="ja"
+        lgtmImageUrl={testLgtmImageUrl}
+        onClose={onClose}
+        previewImageUrl="blob:http://localhost/test-image"
+      />
+    );
+
+    await user.click(screen.getByRole("button", { name: "閉じる" }));
+
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it("should display Copied! message when copy button is clicked", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <UploadSuccess
+        language="ja"
+        lgtmImageUrl={testLgtmImageUrl}
+        onClose={vi.fn()}
+        previewImageUrl="blob:http://localhost/test-image"
+      />
+    );
+
+    await user.click(
+      screen.getByRole("button", { name: "Markdownソースをコピー" })
+    );
+
+    // Copied! message confirms clipboard copy was successful
+    expect(await screen.findByText("Copied!")).toBeInTheDocument();
+  });
+
+  it("should display Copied! message when image is clicked", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <UploadSuccess
+        language="ja"
+        lgtmImageUrl={testLgtmImageUrl}
+        onClose={vi.fn()}
+        previewImageUrl="blob:http://localhost/test-image"
+      />
+    );
+
+    // Click the button wrapping the image
+    const imageButton = screen.getByRole("button", {
+      name: "Uploaded LGTM image",
     });
+    await user.click(imageButton);
 
-    it("画像クリックでもCopied!メッセージが表示される", async () => {
-      const user = userEvent.setup();
-
-      render(
-        <UploadSuccess
-          language="ja"
-          lgtmImageUrl={testLgtmImageUrl}
-          onClose={vi.fn()}
-          previewImageUrl="blob:http://localhost/test-image"
-        />
-      );
-
-      // 画像をラップしているbuttonをクリック
-      const imageButton = screen.getByRole("button", {
-        name: "Uploaded LGTM image",
-      });
-      await user.click(imageButton);
-
-      // Copied!メッセージが表示されることでクリップボードへのコピーが成功したことを確認
-      expect(await screen.findByText("Copied!")).toBeInTheDocument();
-    });
+    // Copied! message confirms clipboard copy was successful
+    expect(await screen.findByText("Copied!")).toBeInTheDocument();
   });
 });

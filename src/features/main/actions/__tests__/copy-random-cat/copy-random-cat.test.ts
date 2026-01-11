@@ -17,7 +17,7 @@ import { fetchLgtmImagesInRandomUrl } from "@/features/main/functions/api-url";
 import { mockIssueClientCredentialsAccessToken } from "@/mocks/api/external/cognito/mock-issue-client-credentials-access-token";
 import { mockFetchLgtmImages } from "@/mocks/api/external/lgtmeow/mock-fetch-lgtm-images";
 
-// Redis をモック（キャッシュなしを模擬）
+// Redis mock (simulates no cache)
 vi.mock("@upstash/redis", () => {
   const MockRedis = class {
     get = vi.fn().mockResolvedValue(null);
@@ -27,7 +27,7 @@ vi.mock("@upstash/redis", () => {
   return { Redis: MockRedis };
 });
 
-// appBaseUrl をモック（一貫したURLを返すため）
+// appBaseUrl mock (returns consistent URL)
 vi.mock("@/features/url", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@/features/url")>();
   return {
@@ -45,7 +45,7 @@ const mockHandlers = [
 
 const server = setupServer(...mockHandlers);
 
-describe("copyRandomCatAction", () => {
+describe("src/features/main/actions/copy-random-cat-action.ts copyRandomCatAction TestCases", () => {
   beforeAll(() => {
     server.listen();
   });
@@ -64,7 +64,7 @@ describe("copyRandomCatAction", () => {
   });
 
   it("should return markdown when images are available", async () => {
-    // Math.random をモックして最初の画像を選択させる
+    // Mock Math.random to select the first image
     vi.spyOn(Math, "random").mockReturnValue(0);
 
     const result = await copyRandomCatAction();

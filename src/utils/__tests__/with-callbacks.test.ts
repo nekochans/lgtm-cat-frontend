@@ -8,8 +8,8 @@ type TestActionState =
   | { readonly status: "ERROR"; readonly message: string }
   | null;
 
-describe("withCallbacks", () => {
-  it("calls onSuccess callback when action returns SUCCESS status", async () => {
+describe("src/utils/with-callbacks.ts withCallbacks TestCases", () => {
+  it("should call onSuccess callback when action returns SUCCESS status", async () => {
     const mockAction = vi.fn().mockResolvedValue({
       status: "SUCCESS",
       data: "test data",
@@ -33,7 +33,7 @@ describe("withCallbacks", () => {
     expect(result).toEqual({ status: "SUCCESS", data: "test data" });
   });
 
-  it("calls onError callback when action returns ERROR status", async () => {
+  it("should call onError callback when action returns ERROR status", async () => {
     const mockAction = vi.fn().mockResolvedValue({
       status: "ERROR",
       message: "Something went wrong",
@@ -60,7 +60,7 @@ describe("withCallbacks", () => {
     });
   });
 
-  it("does not call callbacks when action returns null", async () => {
+  it("should not call callbacks when action returns null", async () => {
     const mockAction = vi.fn().mockResolvedValue(null);
     const onSuccess = vi.fn();
     const onError = vi.fn();
@@ -77,7 +77,7 @@ describe("withCallbacks", () => {
     expect(result).toBeNull();
   });
 
-  it("works without onError callback", async () => {
+  it("should work without onError callback", async () => {
     const mockAction = vi.fn().mockResolvedValue({
       status: "SUCCESS",
       data: "test",
@@ -93,7 +93,7 @@ describe("withCallbacks", () => {
     expect(onSuccess).toHaveBeenCalled();
   });
 
-  it("works without onSuccess callback", async () => {
+  it("should work without onSuccess callback", async () => {
     const mockAction = vi.fn().mockResolvedValue({
       status: "ERROR",
       message: "error",

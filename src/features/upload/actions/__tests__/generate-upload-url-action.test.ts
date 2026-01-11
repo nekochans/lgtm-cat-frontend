@@ -3,14 +3,14 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { generateUploadUrlAction } from "../generate-upload-url-action";
 
-// R2クライアントのモック
+// R2 client mock
 const mockGenerateR2PresignedPutUrl = vi.fn();
 
 vi.mock("@/lib/cloudflare/r2/presigned-url", () => ({
   generateR2PresignedPutUrl: () => mockGenerateR2PresignedPutUrl(),
 }));
 
-describe("generateUploadUrlAction", () => {
+describe("src/features/upload/actions/generate-upload-url-action.ts generateUploadUrlAction TestCases", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockGenerateR2PresignedPutUrl.mockResolvedValue({
@@ -19,68 +19,62 @@ describe("generateUploadUrlAction", () => {
     });
   });
 
-  describe("正常系", () => {
-    it("有効なMIMEタイプとサイズで署名付きPUT URLを返す", async () => {
-      const result = await generateUploadUrlAction(
-        "image/jpeg",
-        1024 * 1024,
-        "ja"
-      );
+  it("should return presigned PUT URL with valid MIME type and size", async () => {
+    const result = await generateUploadUrlAction(
+      "image/jpeg",
+      1024 * 1024,
+      "ja"
+    );
 
-      expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.presignedPutUrl).toContain("https://r2.example.com");
-        expect(result.objectKey).toBe("uploads/test-uuid.jpg");
-      }
-    });
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.presignedPutUrl).toContain("https://r2.example.com");
+      expect(result.objectKey).toBe("uploads/test-uuid.jpg");
+    }
   });
 
-  describe("異常系 - 前検証", () => {
-    it("MIMEタイプが許可されていない場合、エラーを返す", async () => {
-      const result = await generateUploadUrlAction(
-        "image/gif",
-        1024 * 1024,
-        "ja"
-      );
+  it("should return error when MIME type is not allowed", async () => {
+    const result = await generateUploadUrlAction(
+      "image/gif",
+      1024 * 1024,
+      "ja"
+    );
 
-      expect(result.success).toBe(false);
-      if (!result.success) {
-        expect(result.errorMessages[0]).toContain("JPEG");
-      }
-      // R2への呼び出しは行われない
-      expect(mockGenerateR2PresignedPutUrl).not.toHaveBeenCalled();
-    });
-
-    it("ファイルサイズが5MBを超える場合、エラーを返す", async () => {
-      const result = await generateUploadUrlAction(
-        "image/jpeg",
-        6 * 1024 * 1024,
-        "ja"
-      );
-
-      expect(result.success).toBe(false);
-      if (!result.success) {
-        expect(result.errorMessages[0]).toContain("5MB");
-      }
-      // R2への呼び出しは行われない
-      expect(mockGenerateR2PresignedPutUrl).not.toHaveBeenCalled();
-    });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.errorMessages[0]).toContain("JPEG");
+    }
+    // R2 call should not be made
+    expect(mockGenerateR2PresignedPutUrl).not.toHaveBeenCalled();
   });
 
-  describe("異常系 - R2エラー", () => {
-    it("R2への呼び出しが失敗した場合、エラーを返す", async () => {
-      mockGenerateR2PresignedPutUrl.mockRejectedValue(new Error("R2 error"));
+  it("should return error when file size exceeds 5MB", async () => {
+    const result = await generateUploadUrlAction(
+      "image/jpeg",
+      6 * 1024 * 1024,
+      "ja"
+    );
 
-      const result = await generateUploadUrlAction(
-        "image/jpeg",
-        1024 * 1024,
-        "ja"
-      );
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.errorMessages[0]).toContain("5MB");
+    }
+    // R2 call should not be made
+    expect(mockGenerateR2PresignedPutUrl).not.toHaveBeenCalled();
+  });
 
-      expect(result.success).toBe(false);
-      if (!result.success) {
-        expect(result.errorMessages[0]).toContain("エラー");
-      }
-    });
+  it("should return error when R2 call fails", async () => {
+    mockGenerateR2PresignedPutUrl.mockRejectedValue(new Error("R2 error"));
+
+    const result = await generateUploadUrlAction(
+      "image/jpeg",
+      1024 * 1024,
+      "ja"
+    );
+
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.errorMessages[0]).toContain("エラー");
+    }
   });
 });
