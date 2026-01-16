@@ -1,8 +1,8 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { Metadata, NextPage } from "next";
-import { UploadPage } from "@/features/main/components/upload-page";
 import { appName, metaTagList } from "@/features/meta-tag";
 import { convertLanguageToOpenGraphLocale } from "@/features/open-graph-locale";
+import { UploadPage } from "@/features/upload/components/upload-page";
 import { appBaseUrl, appPathList, i18nUrlList } from "@/features/url";
 
 const language = "ja";
