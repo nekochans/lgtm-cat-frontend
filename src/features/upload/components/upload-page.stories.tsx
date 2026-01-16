@@ -42,7 +42,7 @@ function createSuccessMocks() {
 
 const meta = {
   component: UploadPage,
-  title: "features/main/UploadPage",
+  title: "features/upload/UploadPage",
   parameters: {
     layout: "fullscreen",
   },
