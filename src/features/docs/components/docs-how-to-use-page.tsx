@@ -30,7 +30,7 @@ interface SectionProps {
 /**
  * 使い方ページの各セクションを表示するコンポーネント
  *
- * @param title - セクションのタイトル (# 記号付きで表示される)
+ * @param title - セクションのタイトル
  * @param children - セクションの内容
  */
 function Section({ title, children }: SectionProps) {
@@ -38,7 +38,7 @@ function Section({ title, children }: SectionProps) {
     <div className="flex w-full flex-col gap-2">
       <div className="flex items-center gap-2">
         <h2 className="shrink-0 font-bold text-orange-500 text-xl leading-7">
-          # {title}
+          {title}
         </h2>
         <div className="h-px flex-1 bg-orange-300" />
       </div>

@@ -70,7 +70,7 @@ describe("src/features/docs/functions/how-to-use-text.ts getHowToUseTexts TestCa
 
     // uploadCatPhoto section
     expect(result.uploadCatPhoto.title).toBe(
-      "猫画像をアップロードしてLGTM画像を作成する"
+      "LGTM画像を作成する(アップロード)"
     );
     expect(result.uploadCatPhoto.content).toHaveLength(3);
     expect(result.uploadCatPhoto.content[0]).toContain("[アップロード]");
@@ -124,9 +124,7 @@ describe("src/features/docs/functions/how-to-use-text.ts getHowToUseTexts TestCa
     expect(result.copyRandom.content).toContain("Copy Random Cat");
 
     // uploadCatPhoto section
-    expect(result.uploadCatPhoto.title).toBe(
-      "Create LGTM Image by Uploading Cat Photo"
-    );
+    expect(result.uploadCatPhoto.title).toBe("Create LGTM Image (Upload)");
     expect(result.uploadCatPhoto.content).toHaveLength(3);
     expect(result.uploadCatPhoto.content[0]).toContain("[Upload]");
 

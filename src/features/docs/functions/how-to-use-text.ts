@@ -83,7 +83,7 @@ export function getHowToUseTexts(language: Language): HowToUseTexts {
           content: `[HOME](${homeUrl}) にある \`${buttonText.randomCopy}\` ボタンを押下するとサーバーからランダムで取得したLGTM画像のマークダウンソースがクリップボードにコピーされます。`,
         },
         uploadCatPhoto: {
-          title: "猫画像をアップロードしてLGTM画像を作成する",
+          title: "LGTM画像を作成する(アップロード)",
           content: [
             `[アップロード](${uploadUrl}) (Headerにリンクがあります)からオリジナルの猫画像を使ったLGTM画像が生成されます。`,
             "アップロードすると `LGTMeow` の文字が入ったLGTM画像が作成されます。",
@@ -135,7 +135,7 @@ export function getHowToUseTexts(language: Language): HowToUseTexts {
           content: `Click the \`${buttonText.randomCopy}\` button on the [HOME](${homeUrl}) to copy a randomly fetched LGTM image's markdown source to your clipboard.`,
         },
         uploadCatPhoto: {
-          title: "Create LGTM Image by Uploading Cat Photo",
+          title: "Create LGTM Image (Upload)",
           content: [
             `Upload your original cat photo from the [Upload](${uploadUrl}) page (link available in the header) to generate an LGTM image.`,
             "When you upload an image, an LGTM image with the `LGTMeow` text will be created.",
