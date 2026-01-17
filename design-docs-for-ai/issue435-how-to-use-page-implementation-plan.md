@@ -76,7 +76,7 @@ Figmaデザインに基づき、各セクションは以下の構成で表示:
 | 2 | LGTMeowとは | What is LGTMeow? |
 | 3 | LGTM画像を選んでコピーする | Copy LGTM Image by Clicking |
 | 4 | LGTM画像をランダムでコピーする | Copy Random LGTM Image |
-| 5 | 猫画像をアップロードしてLGTM画像を作成する | Create LGTM Image by Uploading Cat Photo |
+| 5 | LGTM画像を作成する(アップロード) | Create LGTM Image (Upload) |
 | 6 | お問い合わせ | Contact |
 
 ### 各セクションの詳細コンテンツ
@@ -145,7 +145,7 @@ You can switch the displayed cat images using these two buttons:
 Click the `{randomCopy}` button on the [HOME]({homeUrl}) to copy a randomly fetched LGTM image's markdown source to your clipboard.
 ```
 
-#### 5. 猫画像をアップロードしてLGTM画像を作成する
+#### 5. LGTM画像を作成する(アップロード)
 
 **日本語** (動的に生成):
 ```
@@ -160,7 +160,7 @@ Click the `{randomCopy}` button on the [HOME]({homeUrl}) to copy a randomly fetc
 ```
 Upload your original cat photo from the [Upload]({uploadUrl}) page (link available in the header) to generate an LGTM image.
 
-When you upload an image, an LGTM image with the "LGTMeow" text will be created.
+When you upload an image, an LGTM image with the `LGTMeow` text will be created.
 
 Please refer to the [Upload]({uploadUrl}) page for constraints and guidelines.
 ```
@@ -193,7 +193,9 @@ There are two ways to contact us:
    https://docs.google.com/forms/d/e/1FAIpQLSf0-A1ysrWQFCDuOZY8f2uH5KhUCB5yqi7TlLEsgl95Q9WKtw/viewform
 ```
 
-**実装上の注意**: お問い合わせセクションは `<ol>` タグを使用してセマンティックなHTMLを実現します。番号はHTMLが自動付与するため、テキストデータには含めません。
+**実装上の注意**:
+- お問い合わせセクションは `<ol>` タグを使用してセマンティックなHTMLを実現します。番号はHTMLが自動付与するため、テキストデータには含めません。
+- 英語版のフォームリンクテキストは `/privacy` ページとの統一のため `Inquiry Form` を使用します。
 
 ---
 
@@ -308,7 +310,7 @@ DocsHowToUsePage
     ├── Section: LGTMeowとは
     ├── Section: LGTM画像を選んでコピーする (+ 画像)
     ├── Section: LGTM画像をランダムでコピーする
-    ├── Section: 猫画像をアップロードしてLGTM画像を作成する
+    ├── Section: LGTM画像を作成する(アップロード)
     └── Section: お問い合わせ
 ```
 
@@ -317,11 +319,15 @@ DocsHowToUsePage
 Figmaデザインに基づき、以下のレイアウトを採用:
 
 ```
-コンテナ: max-w-[1020px] px-[40px] py-[60px]
-セクション間隔: gap-[28px]
+コンテナ: max-w-[1020px] px-4 py-8 sm:px-10 sm:py-[60px]
+セクション間隔: gap-5 sm:gap-7
 見出し + 下線: flex gap-2 items-center
-本文間隔: gap-[8px]
+本文間隔: gap-2
 ```
+
+**レスポンシブ対応**:
+- モバイル (< 640px): `px-4 py-8 gap-5`
+- デスクトップ (>= 640px): `px-10 py-[60px] gap-7`
 
 ---
 
@@ -419,7 +425,7 @@ export function getHowToUseTexts(language: Language): HowToUseTexts {
           content: `[HOME](${homeUrl}) にある \`${buttonText.randomCopy}\` ボタンを押下するとサーバーからランダムで取得したLGTM画像のマークダウンソースがクリップボードにコピーされます。`,
         },
         uploadCatPhoto: {
-          title: "猫画像をアップロードしてLGTM画像を作成する",
+          title: "LGTM画像を作成する(アップロード)",
           content: [
             `[アップロード](${uploadUrl}) (Headerにリンクがあります)からオリジナルの猫画像を使ったLGTM画像が生成されます。`,
             "アップロードすると `LGTMeow` の文字が入ったLGTM画像が作成されます。",
@@ -471,10 +477,10 @@ export function getHowToUseTexts(language: Language): HowToUseTexts {
           content: `Click the \`${buttonText.randomCopy}\` button on the [HOME](${homeUrl}) to copy a randomly fetched LGTM image's markdown source to your clipboard.`,
         },
         uploadCatPhoto: {
-          title: "Create LGTM Image by Uploading Cat Photo",
+          title: "Create LGTM Image (Upload)",
           content: [
             `Upload your original cat photo from the [Upload](${uploadUrl}) page (link available in the header) to generate an LGTM image.`,
-            'When you upload an image, an LGTM image with the "LGTMeow" text will be created.',
+            "When you upload an image, an LGTM image with the `LGTMeow` text will be created.",
             `Please refer to the [Upload](${uploadUrl}) page for constraints and guidelines.`,
           ],
         },
@@ -485,7 +491,7 @@ export function getHowToUseTexts(language: Language): HowToUseTexts {
           issueLabel: "Create an issue in our repository",
           issueLinkText: "GitHub Issues",
           formLabel: "Fill out the contact form",
-          formLinkText: "Contact Form",
+          formLinkText: "Inquiry Form",
           issueUrl: "https://github.com/nekochans/lgtm-cat/issues",
           formUrl:
             "https://docs.google.com/forms/d/e/1FAIpQLSf0-A1ysrWQFCDuOZY8f2uH5KhUCB5yqi7TlLEsgl95Q9WKtw/viewform",
@@ -553,16 +559,22 @@ export function DocsHowToUsePage({ language, currentUrlPath }: Props) {
 ```typescript
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 
-import type { ReactNode } from "react";
 import Image from "next/image";
+import type { ReactNode } from "react";
 import { PageLayout } from "@/components/page-layout";
 import {
   getHowToUseTexts,
   howToUseScreenshotPath,
 } from "@/features/docs/functions/how-to-use-text";
 import type { Language } from "@/features/language";
-import { appBaseUrl } from "@/features/url";
 import type { IncludeLanguageAppPath } from "@/features/url";
+import { appBaseUrl } from "@/features/url";
+
+// トップレベルに正規表現を定義
+const MARKDOWN_LINK_SPLIT_REGEX = /(\[[^\]]+\]\([^)]+\))/g;
+const MARKDOWN_LINK_MATCH_REGEX = /\[([^\]]+)\]\(([^)]+)\)/;
+const BACKTICK_CODE_SPLIT_REGEX = /(`[^`]+`)/g;
+const BACKTICK_CODE_MATCH_REGEX = /`([^`]+)`/;
 
 interface Props {
   readonly language: Language;
@@ -574,12 +586,18 @@ interface SectionProps {
   readonly children: ReactNode;
 }
 
+/**
+ * 使い方ページの各セクションを表示するコンポーネント
+ *
+ * @param title - セクションのタイトル
+ * @param children - セクションの内容
+ */
 function Section({ title, children }: SectionProps) {
   return (
     <div className="flex w-full flex-col gap-2">
       <div className="flex items-center gap-2">
         <h2 className="shrink-0 font-bold text-orange-500 text-xl leading-7">
-          # {title}
+          {title}
         </h2>
         <div className="h-px flex-1 bg-orange-300" />
       </div>
@@ -603,7 +621,7 @@ interface TextWithLinksProps {
  */
 function isInternalUrl(url: string, baseUrl: string): boolean {
   // 相対パスは内部リンク
-  if (!url.startsWith("http://") && !url.startsWith("https://")) {
+  if (!(url.startsWith("http://") || url.startsWith("https://"))) {
     return true;
   }
   // appBaseUrl() のドメインと一致する場合は内部リンク
@@ -621,21 +639,21 @@ function isInternalUrl(url: string, baseUrl: string): boolean {
  */
 function TextWithLinks({ text, baseUrl }: TextWithLinksProps) {
   // マークダウン形式のリンク [text](url) をパースして変換
-  const parts = text.split(/(\[[^\]]+\]\([^)]+\))/g);
+  const parts = text.split(MARKDOWN_LINK_SPLIT_REGEX);
 
   return (
     <p>
-      {parts.map((part, partIndex) => {
-        const linkMatch = part.match(/\[([^\]]+)\]\(([^)]+)\)/);
+      {parts.map((part) => {
+        const linkMatch = part.match(MARKDOWN_LINK_MATCH_REGEX);
         if (linkMatch) {
           const [, linkText, linkUrl] = linkMatch;
           // 内部リンクは同じタブで開く、外部リンクは新しいタブで開く
           const isInternal = isInternalUrl(linkUrl, baseUrl);
           return (
             <a
-              key={`link-${partIndex}`}
               className="text-cyan-500 hover:underline"
               href={linkUrl}
+              key={`link-${linkUrl}`}
               {...(!isInternal && {
                 rel: "noopener noreferrer",
                 target: "_blank",
@@ -646,16 +664,20 @@ function TextWithLinks({ text, baseUrl }: TextWithLinksProps) {
           );
         }
         // バッククォートで囲まれたテキストをコードとして表示
-        const codeParts = part.split(/(`[^`]+`)/g);
+        const codeParts = part.split(BACKTICK_CODE_SPLIT_REGEX);
+        // 空文字列や空白のみの場合はそのまま返す
+        if (codeParts.length === 1 && codeParts[0] === part) {
+          return <span key={`text-${part.slice(0, 30)}`}>{part}</span>;
+        }
         return (
-          <span key={`text-group-${partIndex}`}>
-            {codeParts.map((codePart, codeIndex) => {
-              const codeMatch = codePart.match(/`([^`]+)`/);
+          <span key={`text-group-${part.slice(0, 30)}`}>
+            {codeParts.map((codePart) => {
+              const codeMatch = codePart.match(BACKTICK_CODE_MATCH_REGEX);
               if (codeMatch) {
                 return (
                   <code
-                    key={`code-${partIndex}-${codeIndex}`}
                     className="rounded bg-orange-100 px-1 py-0.5 font-mono text-orange-800"
+                    key={`code-${codeMatch[1]}`}
                   >
                     {codeMatch[1]}
                   </code>
@@ -681,18 +703,18 @@ export function DocsHowToUsePage({ language, currentUrlPath }: Props) {
       language={language}
       mainClassName="flex w-full flex-1 flex-col items-center bg-background"
     >
-      <div className="flex w-full max-w-[1020px] flex-col items-center gap-7 px-10 py-[60px]">
+      <div className="flex w-full max-w-[1020px] flex-col items-center gap-5 px-4 py-8 sm:gap-7 sm:px-10 sm:py-[60px]">
         {/* セクション1: LGTMとは? */}
         <Section title={texts.whatIsLgtm.title}>
-          {texts.whatIsLgtm.content.map((line, index) => (
-            <p key={index}>{line}</p>
+          {texts.whatIsLgtm.content.map((line) => (
+            <p key={line}>{line}</p>
           ))}
         </Section>
 
         {/* セクション2: LGTMeowとは */}
         <Section title={texts.whatIsLgtmeow.title}>
-          {texts.whatIsLgtmeow.content.map((line, index) => (
-            <p key={index}>{line}</p>
+          {texts.whatIsLgtmeow.content.map((line) => (
+            <p key={line}>{line}</p>
           ))}
         </Section>
 
@@ -702,10 +724,16 @@ export function DocsHowToUsePage({ language, currentUrlPath }: Props) {
           <p>{texts.copyByClicking.buttonDescription[0]}</p>
           <ul className="list-disc pl-6">
             <li>
-              <TextWithLinks baseUrl={baseUrl} text={texts.copyByClicking.buttonDescription[1]} />
+              <TextWithLinks
+                baseUrl={baseUrl}
+                text={texts.copyByClicking.buttonDescription[1]}
+              />
             </li>
             <li>
-              <TextWithLinks baseUrl={baseUrl} text={texts.copyByClicking.buttonDescription[2]} />
+              <TextWithLinks
+                baseUrl={baseUrl}
+                text={texts.copyByClicking.buttonDescription[2]}
+              />
             </li>
           </ul>
           <p className="mt-4">{texts.copyByClicking.screenshotDescription}</p>
@@ -729,10 +757,10 @@ export function DocsHowToUsePage({ language, currentUrlPath }: Props) {
           <TextWithLinks baseUrl={baseUrl} text={texts.copyRandom.content} />
         </Section>
 
-        {/* セクション5: 猫画像をアップロードしてLGTM画像を作成する */}
+        {/* セクション5: LGTM画像を作成する(アップロード) */}
         <Section title={texts.uploadCatPhoto.title}>
-          {texts.uploadCatPhoto.content.map((line, index) => (
-            <TextWithLinks baseUrl={baseUrl} key={index} text={line} />
+          {texts.uploadCatPhoto.content.map((line) => (
+            <TextWithLinks baseUrl={baseUrl} key={line} text={line} />
           ))}
         </Section>
 
@@ -786,14 +814,19 @@ export function DocsHowToUsePage({ language, currentUrlPath }: Props) {
 ```typescript
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 
-import { afterEach, describe, expect, it, vi } from "vitest";
-import type { Language } from "@/features/language";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   getHowToUseTexts,
   howToUseScreenshotPath,
 } from "@/features/docs/functions/how-to-use-text";
+import type { Language } from "@/features/language";
 
 describe("src/features/docs/functions/how-to-use-text.ts getHowToUseTexts TestCases", () => {
+  beforeEach(() => {
+    // テスト用にデフォルトURLを設定 (環境変数が未設定の場合のデフォルト値を使用)
+    vi.stubEnv("NEXT_PUBLIC_APP_URL", "https://lgtmeow.com");
+  });
+
   afterEach(() => {
     vi.unstubAllEnvs();
   });
@@ -810,12 +843,16 @@ describe("src/features/docs/functions/how-to-use-text.ts getHowToUseTexts TestCa
     ${"en"}  | ${"What is LGTM?"}      | ${"Contact"}
   `(
     "should return correct titles when language is $language",
-    ({ language, expectedWhatIsLgtmTitle, expectedContactTitle }: TestTable) => {
+    ({
+      language,
+      expectedWhatIsLgtmTitle,
+      expectedContactTitle,
+    }: TestTable) => {
       const result = getHowToUseTexts(language);
 
       expect(result.whatIsLgtm.title).toBe(expectedWhatIsLgtmTitle);
       expect(result.contact.title).toBe(expectedContactTitle);
-    },
+    }
   );
 
   it("should return Japanese texts with correct structure when language is ja", () => {
@@ -834,11 +871,11 @@ describe("src/features/docs/functions/how-to-use-text.ts getHowToUseTexts TestCa
     expect(result.copyByClicking.intro).toContain("[HOME]");
     expect(result.copyByClicking.buttonDescription).toHaveLength(3);
     expect(result.copyByClicking.buttonDescription[1]).toContain(
-      "ねこリフレッシュ",
+      "ねこリフレッシュ"
     );
     expect(result.copyByClicking.buttonDescription[2]).toContain("ねこ新着順");
     expect(result.copyByClicking.screenshotDescription).toBe(
-      "GitHubにマークダウンソースを貼り付けると以下のようになります。",
+      "GitHubにマークダウンソースを貼り付けると以下のようになります。"
     );
 
     // copyRandom section
@@ -847,7 +884,7 @@ describe("src/features/docs/functions/how-to-use-text.ts getHowToUseTexts TestCa
 
     // uploadCatPhoto section
     expect(result.uploadCatPhoto.title).toBe(
-      "猫画像をアップロードしてLGTM画像を作成する",
+      "LGTM画像を作成する(アップロード)"
     );
     expect(result.uploadCatPhoto.content).toHaveLength(3);
     expect(result.uploadCatPhoto.content[0]).toContain("[アップロード]");
@@ -855,18 +892,18 @@ describe("src/features/docs/functions/how-to-use-text.ts getHowToUseTexts TestCa
     // contact section
     expect(result.contact.intro).toBe("質問、機能リクエスト等は大歓迎です");
     expect(result.contact.methodsIntro).toBe(
-      "お問い合わせは2つの手段があります。",
+      "お問い合わせは2つの手段があります。"
     );
     expect(result.contact.issueLabel).toBe(
-      "以下のリポジトリからIssueを作成する",
+      "以下のリポジトリからIssueを作成する"
     );
     expect(result.contact.issueLinkText).toBe("GitHub Issues");
     expect(result.contact.formLabel).toBe(
-      "お問い合わせフォームに必要情報を入力",
+      "お問い合わせフォームに必要情報を入力"
     );
     expect(result.contact.formLinkText).toBe("お問い合わせフォーム");
     expect(result.contact.issueUrl).toBe(
-      "https://github.com/nekochans/lgtm-cat/issues",
+      "https://github.com/nekochans/lgtm-cat/issues"
     );
     expect(result.contact.formUrl).toContain("docs.google.com/forms");
   });
@@ -886,12 +923,14 @@ describe("src/features/docs/functions/how-to-use-text.ts getHowToUseTexts TestCa
     expect(result.copyByClicking.title).toBe("Copy LGTM Image by Clicking");
     expect(result.copyByClicking.intro).toContain("[HOME]");
     expect(result.copyByClicking.buttonDescription).toHaveLength(3);
-    expect(result.copyByClicking.buttonDescription[1]).toContain("Refresh Cats");
+    expect(result.copyByClicking.buttonDescription[1]).toContain(
+      "Refresh Cats"
+    );
     expect(result.copyByClicking.buttonDescription[2]).toContain(
-      "Show Latest Cats",
+      "Show Latest Cats"
     );
     expect(result.copyByClicking.screenshotDescription).toBe(
-      "When you paste the markdown source into GitHub, it will look like this:",
+      "When you paste the markdown source into GitHub, it will look like this:"
     );
 
     // copyRandom section
@@ -899,25 +938,23 @@ describe("src/features/docs/functions/how-to-use-text.ts getHowToUseTexts TestCa
     expect(result.copyRandom.content).toContain("Copy Random Cat");
 
     // uploadCatPhoto section
-    expect(result.uploadCatPhoto.title).toBe(
-      "Create LGTM Image by Uploading Cat Photo",
-    );
+    expect(result.uploadCatPhoto.title).toBe("Create LGTM Image (Upload)");
     expect(result.uploadCatPhoto.content).toHaveLength(3);
     expect(result.uploadCatPhoto.content[0]).toContain("[Upload]");
 
     // contact section
     expect(result.contact.intro).toBe(
-      "Questions and feature requests are always welcome!",
+      "Questions and feature requests are always welcome!"
     );
     expect(result.contact.methodsIntro).toBe(
-      "There are two ways to contact us:",
+      "There are two ways to contact us:"
     );
     expect(result.contact.issueLabel).toBe("Create an issue in our repository");
     expect(result.contact.issueLinkText).toBe("GitHub Issues");
     expect(result.contact.formLabel).toBe("Fill out the contact form");
-    expect(result.contact.formLinkText).toBe("Contact Form");
+    expect(result.contact.formLinkText).toBe("Inquiry Form");
     expect(result.contact.issueUrl).toBe(
-      "https://github.com/nekochans/lgtm-cat/issues",
+      "https://github.com/nekochans/lgtm-cat/issues"
     );
     expect(result.contact.formUrl).toContain("docs.google.com/forms");
   });
@@ -928,21 +965,22 @@ describe("src/features/docs/functions/how-to-use-text.ts getHowToUseTexts TestCa
     const result = getHowToUseTexts("ja");
 
     expect(result.copyByClicking.intro).toContain(
-      "[HOME](https://custom-domain.com)",
+      "[HOME](https://custom-domain.com)"
     );
     expect(result.uploadCatPhoto.content[0]).toContain(
-      "[アップロード](https://custom-domain.com/upload)",
+      "[アップロード](https://custom-domain.com/upload)"
     );
   });
 
-  it("should use default URL when NEXT_PUBLIC_APP_URL is not set", () => {
+  it("should use default URL when NEXT_PUBLIC_APP_URL is lgtmeow.com", () => {
+    // beforeEachでhttps://lgtmeow.comが設定されている
     const result = getHowToUseTexts("ja");
 
     expect(result.copyByClicking.intro).toContain(
-      "[HOME](https://lgtmeow.com)",
+      "[HOME](https://lgtmeow.com)"
     );
     expect(result.uploadCatPhoto.content[0]).toContain(
-      "[アップロード](https://lgtmeow.com/upload)",
+      "[アップロード](https://lgtmeow.com/upload)"
     );
   });
 
@@ -950,7 +988,7 @@ describe("src/features/docs/functions/how-to-use-text.ts getHowToUseTexts TestCa
     const result = getHowToUseTexts("en");
 
     expect(result.uploadCatPhoto.content[0]).toContain(
-      "[Upload](https://lgtmeow.com/en/upload)",
+      "[Upload](https://lgtmeow.com/en/upload)"
     );
   });
 
@@ -958,10 +996,10 @@ describe("src/features/docs/functions/how-to-use-text.ts getHowToUseTexts TestCa
     const result = getHowToUseTexts("en");
 
     expect(result.copyByClicking.intro).toContain(
-      "[HOME](https://lgtmeow.com/en)",
+      "[HOME](https://lgtmeow.com/en)"
     );
     expect(result.copyRandom.content).toContain(
-      "[HOME](https://lgtmeow.com/en)",
+      "[HOME](https://lgtmeow.com/en)"
     );
   });
 });
