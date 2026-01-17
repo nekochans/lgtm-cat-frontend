@@ -8,7 +8,7 @@ vi.mock("@/features/url", () => ({
   appBaseUrl: vi.fn(() => "https://lgtmeow.com"),
 }));
 
-describe("generateLgtmMarkdown", () => {
+describe("src/features/main/functions/generate-lgtm-markdown.ts generateLgtmMarkdown TestCases", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });

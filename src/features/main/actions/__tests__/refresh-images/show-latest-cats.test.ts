@@ -11,12 +11,12 @@ vi.mock("next/cache", () => ({
   updateTag: (...args: unknown[]) => updateTagMock(...args),
 }));
 
-describe("showLatestCatsAction", () => {
+describe("src/features/main/actions/refresh-images-action.ts showLatestCatsAction TestCases", () => {
   afterEach(() => {
     vi.clearAllMocks();
   });
 
-  it("updates latest tag and returns ja redirect URL", async () => {
+  it("should update latest tag and return ja redirect URL", async () => {
     const result = await showLatestCatsAction(null, "ja");
 
     expect(updateTagMock).toHaveBeenCalledWith(CACHE_TAG_LGTM_IMAGES_LATEST);
@@ -26,7 +26,7 @@ describe("showLatestCatsAction", () => {
     });
   });
 
-  it("updates latest tag and returns en redirect URL", async () => {
+  it("should update latest tag and return en redirect URL", async () => {
     const result = await showLatestCatsAction(null, "en");
 
     expect(updateTagMock).toHaveBeenCalledWith(CACHE_TAG_LGTM_IMAGES_LATEST);
@@ -36,7 +36,7 @@ describe("showLatestCatsAction", () => {
     });
   });
 
-  it("returns error state when updateTag throws", async () => {
+  it("should return error state when updateTag throws", async () => {
     updateTagMock.mockImplementation(() => {
       throw new Error("Cache update failed");
     });

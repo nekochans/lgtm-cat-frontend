@@ -121,4 +121,28 @@
       hreflang="en"
       href="https://lgtmeow.com/en/external-transmission-policy/"/>
   </url>
+  <url>
+    <loc>https://lgtmeow.com/docs/how-to-use/</loc>
+    <changefreq>monthly</changefreq>
+    <xhtml:link
+      rel="alternate"
+      hreflang="ja"
+      href="https://lgtmeow.com/docs/how-to-use/"/>
+    <xhtml:link
+      rel="alternate"
+      hreflang="en"
+      href="https://lgtmeow.com/en/docs/how-to-use/"/>
+  </url>
+  <url>
+    <loc>https://lgtmeow.com/en/docs/how-to-use/</loc>
+    <changefreq>monthly</changefreq>
+    <xhtml:link
+      rel="alternate"
+      hreflang="ja"
+      href="https://lgtmeow.com/docs/how-to-use/"/>
+    <xhtml:link
+      rel="alternate"
+      hreflang="en"
+      href="https://lgtmeow.com/en/docs/how-to-use/"/>
+  </url>
 </urlset>
