@@ -8,12 +8,12 @@ export function createMcpLinksFromLanguages(language: Language): LinkAttribute {
   switch (language) {
     case "en":
       return {
-        text: "How to Use MCP",
+        text: "MCP",
         link: createIncludeLanguageAppPath("docs-mcp", language),
       };
     case "ja":
       return {
-        text: "MCPの使い方",
+        text: "MCP",
         link: createIncludeLanguageAppPath("docs-mcp", language),
       };
     default:

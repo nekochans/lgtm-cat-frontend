@@ -1,0 +1,50 @@
+name: Claude Code Auto Review on PR Open
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  claude-auto-review:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+      cancel-in-progress: false
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run Claude Code
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            リポジトリ: ${{ github.repository }}
+            PR番号: ${{ github.event.pull_request.number }}
+
+            このPRの変更内容をレビューしてください。
+
+            レビュー完了後、必ず mcp__github__add_issue_comment ツールを使用して、
+            上記のPR番号にレビュー結果をコメントとして投稿してください。
+
+            マージ可能と判断した場合は、
+            mcp__lgtmeow__get_random_lgtm_markdown で LGTM画像を取得し、
+            レビューコメントに含めてください。
+
+            問題がある場合は、改善点を具体的に指摘してください。
+
+          claude_args: |
+            --mcp-config .github/mcp-servers.json
+            --allowedTools "Bash(git diff),Read,LS,Glob,Grep,mcp__github__pull_request_read,mcp__github__get_pull_request,mcp__github__get_pull_request_files,mcp__github__get_pull_request_diff,mcp__github__add_issue_comment,mcp__github__get_issue,mcp__lgtmeow__get_random_lgtm_markdown"
+
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -4,6 +4,8 @@ import Image from "next/image";
 import type { ReactNode } from "react";
 import { PageLayout } from "@/components/page-layout";
 import { CodeSnippet } from "@/features/docs/components/code-snippet";
+// 重要: import type を使用してサーバー専用モジュールの混入を防止
+import type { McpExternalCodes } from "@/features/docs/functions/mcp-code-loader";
 import {
   getMcpTexts,
   type McpConfigPattern,
@@ -13,9 +15,11 @@ import {
 import type { Language } from "@/features/language";
 import type { IncludeLanguageAppPath } from "@/features/url";
 
-interface Props {
-  readonly language: Language;
+// Props から DocsMcpPageProps にリネーム
+interface DocsMcpPageProps {
   readonly currentUrlPath: IncludeLanguageAppPath;
+  readonly language: Language;
+  readonly externalCodes: McpExternalCodes;
 }
 
 interface SectionProps {
@@ -83,7 +87,7 @@ function ToolSection({ tool, language }: ToolSectionProps) {
       <p className="font-medium text-orange-700 text-sm">
         {responseExampleLabel}
       </p>
-      <CodeSnippet code={tool.responseExample} />
+      <CodeSnippet code={tool.responseExample} language="json" />
     </SubSection>
   );
 }
@@ -100,7 +104,7 @@ function ConfigPatternSection({ pattern, index }: ConfigPatternSectionProps) {
   return (
     <SubSection title={`${index + 1}. ${pattern.title}`}>
       {pattern.description && <p>{pattern.description}</p>}
-      <CodeSnippet code={pattern.code} />
+      <CodeSnippet code={pattern.code} language="json" />
       {pattern.note && (
         <p className="text-orange-700 text-sm">{pattern.note}</p>
       )}
@@ -138,7 +142,7 @@ function GitHubActionsExampleSection({
       {example.folderNote && (
         <p className="text-orange-700 text-sm">{example.folderNote}</p>
       )}
-      <CodeSnippet code={example.folderStructure} />
+      <CodeSnippet code={example.folderStructure} language="plaintext" />
 
       {/* MCP設定ファイル (Claude Code の場合のみ) */}
       {example.mcpConfigCode && example.mcpConfigDescription && (
@@ -146,13 +150,13 @@ function GitHubActionsExampleSection({
           <p className="mt-2 font-medium text-orange-800">
             {example.mcpConfigDescription}
           </p>
-          <CodeSnippet code={example.mcpConfigCode} />
+          <CodeSnippet code={example.mcpConfigCode} language="json" />
         </>
       )}
 
       {/* ワークフローファイル */}
       <p className="mt-2 font-medium text-orange-800">{workflowLabel}</p>
-      <CodeSnippet code={example.workflowCode} />
+      <CodeSnippet code={example.workflowCode} language="yaml" />
 
       {/* 出力イメージ */}
       <p className="mt-4 font-medium text-orange-800">{outputImageLabel}</p>
@@ -171,8 +175,47 @@ function GitHubActionsExampleSection({
   );
 }
 
-export function DocsMcpPage({ language, currentUrlPath }: Props) {
-  const texts = getMcpTexts(language);
+export function DocsMcpPage({
+  currentUrlPath,
+  language,
+  externalCodes,
+}: DocsMcpPageProps) {
+  const baseTexts = getMcpTexts(language);
+
+  // 不変な合成で外部コードをマージ（直接ミューテーションを避ける）
+  const texts = {
+    ...baseTexts,
+    clientConfig: {
+      ...baseTexts.clientConfig,
+      patterns: baseTexts.clientConfig.patterns.map((pattern, index) =>
+        index === 0
+          ? { ...pattern, code: externalCodes.mcpServersJson }
+          : pattern
+      ),
+    },
+    githubActions: {
+      ...baseTexts.githubActions,
+      examples: baseTexts.githubActions.examples.map((example, index) => {
+        if (index === 0) {
+          // Claude Code Action用
+          return {
+            ...example,
+            mcpConfigCode: externalCodes.mcpServersJson,
+            workflowCode: externalCodes.claudeAutoReviewYaml,
+          };
+        }
+        if (index === 1) {
+          // Codex Action用
+          return {
+            ...example,
+            workflowCode: externalCodes.codexAutoReviewYaml,
+          };
+        }
+        return example;
+      }),
+    },
+  };
+
   const useCasesLabel = language === "ja" ? "使用例:" : "Use cases:";
 
   return (

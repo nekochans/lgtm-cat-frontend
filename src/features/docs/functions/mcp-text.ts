@@ -62,15 +62,6 @@ export interface McpTexts {
 
 const mcpServerUrl = "https://api.lgtmeow.com/sse";
 
-const sseDirectConfigCode = `{
-  "mcpServers": {
-    "lgtmeow": {
-      "type": "sse",
-      "url": "${mcpServerUrl}"
-    }
-  }
-}`;
-
 const nodeConfigCode = `{
   "mcpServers": {
     "lgtmeow": {
@@ -108,133 +99,6 @@ const lgtmImagesResponseExample = `{
 const markdownResponseExample = `{
   "markdown": "[![LGTMeow](https://lgtm-images.lgtmeow.com/2022/03/23/10/9738095a-f426-48e4-be8d-93f933c42917.webp)](https://lgtmeow.com)"
 }`;
-
-const claudeWorkflowCode = `name: Claude Code Auto Review on PR Open
-
-on:
-  pull_request:
-    types: [opened, synchronize]
-
-jobs:
-  claude-auto-review:
-    runs-on: ubuntu-latest
-    concurrency:
-      group: \${{ github.workflow }}-\${{ github.event.pull_request.number }}
-      cancel-in-progress: false
-    permissions:
-      contents: write
-      pull-requests: write
-      issues: write
-      id-token: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-          token: \${{ secrets.GITHUB_TOKEN }}
-
-      - name: Run Claude Code
-        uses: anthropics/claude-code-action@v1
-        with:
-          anthropic_api_key: \${{ secrets.ANTHROPIC_API_KEY }}
-          prompt: |
-            リポジトリ: \${{ github.repository }}
-            PR番号: \${{ github.event.pull_request.number }}
-
-            このPRの変更内容をレビューしてください。
-
-            レビュー完了後、必ず mcp__github__add_issue_comment ツールを使用して、
-            上記のPR番号にレビュー結果をコメントとして投稿してください。
-
-            マージ可能と判断した場合は、
-            mcp__lgtmeow__get_random_lgtm_markdown で LGTM画像を取得し、
-            レビューコメントに含めてください。
-
-            問題がある場合は、改善点を具体的に指摘してください。
-
-          claude_args: |
-            --mcp-config .github/mcp-servers.json
-            --allowedTools "Bash(git diff),Read,LS,Glob,Grep,mcp__github__pull_request_read,mcp__github__get_pull_request,mcp__github__get_pull_request_files,mcp__github__get_pull_request_diff,mcp__github__add_issue_comment,mcp__github__get_issue,mcp__lgtmeow__get_random_lgtm_markdown"
-
-        env:
-          GITHUB_TOKEN: \${{ secrets.GITHUB_TOKEN }}`;
-
-const codexWorkflowCode = `name: Codex Auto Review on PR Open
-
-on:
-  pull_request:
-    types: [opened, synchronize]
-
-jobs:
-  codex:
-    runs-on: ubuntu-latest
-    concurrency:
-      group: \${{ github.workflow }}-\${{ github.event.pull_request.number }}
-      cancel-in-progress: false
-    permissions:
-      contents: read
-    outputs:
-      final_message: \${{ steps.run_codex.outputs.final-message }}
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-        with:
-          ref: refs/pull/\${{ github.event.pull_request.number }}/merge
-
-      - name: Pre-fetch base and head refs for the PR
-        run: |
-          git fetch --no-tags origin \\
-            \${{ github.event.pull_request.base.ref }} \\
-            +refs/pull/\${{ github.event.pull_request.number }}/head
-
-      - name: Install mcp-proxy for SSE bridge
-        run: pip install mcp-proxy
-
-      - name: Run Codex
-        id: run_codex
-        uses: openai/codex-action@v1
-        with:
-          openai-api-key: \${{ secrets.OPENAI_API_KEY }}
-          codex-args: |
-            --config mcp_servers={"lgtmeow"={"command"="mcp-proxy","args"=["${mcpServerUrl}"]}}
-          prompt: |
-            リポジトリ: \${{ github.repository }}
-            PR番号: \${{ github.event.pull_request.number }}
-
-            このPRの変更内容をレビューしてください。
-
-            マージ可能な品質と判断した場合は、lgtmeow MCPサーバーの get_random_lgtm_markdown でLGTM画像を取得し、レビュー結果に含めてください。
-            問題がある場合は、改善点を具体的に指摘してください。
-
-            PRタイトルと本文:
-            ----
-            \${{ github.event.pull_request.title }}
-            \${{ github.event.pull_request.body }}
-
-  post_feedback:
-    runs-on: ubuntu-latest
-    needs: codex
-    if: needs.codex.outputs.final_message != ''
-    permissions:
-      issues: write
-      pull-requests: write
-
-    steps:
-      - name: Post review comment to PR
-        uses: actions/github-script@v7
-        env:
-          CODEX_FINAL_MESSAGE: \${{ needs.codex.outputs.final_message }}
-        with:
-          github-token: \${{ github.token }}
-          script: |
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.payload.pull_request.number,
-              body: process.env.CODEX_FINAL_MESSAGE,
-            });`;
 
 export function getMcpTexts(language: Language): McpTexts {
   switch (language) {
@@ -288,7 +152,8 @@ export function getMcpTexts(language: Language): McpTexts {
           patterns: [
             {
               title: "SSE を直接サポートするクライアントの場合",
-              code: sseDirectConfigCode,
+              // 実際の値は page.tsx から props として渡される
+              code: "",
             },
             {
               title: "Node 環境 / mcp-remote を使う場合",
@@ -318,8 +183,9 @@ export function getMcpTexts(language: Language): McpTexts {
     └── claude-auto-review.yml    # PR を自動レビューする GitHub Actions`,
               mcpConfigDescription:
                 "MCP サーバー設定 (.github/mcp-servers.json)",
-              mcpConfigCode: sseDirectConfigCode,
-              workflowCode: claudeWorkflowCode,
+              // 実際の値は page.tsx から props として渡される
+              mcpConfigCode: "",
+              workflowCode: "",
               outputDescription:
                 "マージ可能と判断された場合、Claude Code は LGTMeow MCP Server から取得した Markdown 形式の LGTM 画像を含むコメントを自動で PR に投稿します。",
               screenshotPath:
@@ -337,7 +203,8 @@ export function getMcpTexts(language: Language): McpTexts {
     └── codex-auto-review.yml    # PR を自動レビューする GitHub Actions`,
               folderNote:
                 "Codex Action は MCP サーバー設定を codex-args で直接指定できるため、.github/mcp-servers.json は不要です。",
-              workflowCode: codexWorkflowCode,
+              // 実際の値は page.tsx から props として渡される
+              workflowCode: "",
               outputDescription:
                 "マージ可能と判断された場合、Codex Action は LGTMeow MCP Server から取得した Markdown 形式の LGTM 画像を含むコメントを自動で PR に投稿します。",
               screenshotPath:
@@ -399,7 +266,8 @@ export function getMcpTexts(language: Language): McpTexts {
           patterns: [
             {
               title: "For clients that directly support SSE",
-              code: sseDirectConfigCode,
+              // 実際の値は page.tsx から props として渡される
+              code: "",
             },
             {
               title: "For Node environment / using mcp-remote",
@@ -429,8 +297,9 @@ export function getMcpTexts(language: Language): McpTexts {
     └── claude-auto-review.yml    # GitHub Actions for auto PR review`,
               mcpConfigDescription:
                 "MCP Server Configuration (.github/mcp-servers.json)",
-              mcpConfigCode: sseDirectConfigCode,
-              workflowCode: claudeWorkflowCode,
+              // 実際の値は page.tsx から props として渡される
+              mcpConfigCode: "",
+              workflowCode: "",
               outputDescription:
                 "When determined as mergeable, Claude Code automatically posts a comment to the PR containing a Markdown-formatted LGTM image retrieved from LGTMeow MCP Server.",
               screenshotPath:
@@ -449,7 +318,8 @@ export function getMcpTexts(language: Language): McpTexts {
     └── codex-auto-review.yml    # GitHub Actions for auto PR review`,
               folderNote:
                 "Codex Action can specify MCP server configuration directly via codex-args, so .github/mcp-servers.json is not needed.",
-              workflowCode: codexWorkflowCode,
+              // 実際の値は page.tsx から props として渡される
+              workflowCode: "",
               outputDescription:
                 "When determined as mergeable, Codex Action automatically posts a comment to the PR containing a Markdown-formatted LGTM image retrieved from LGTMeow MCP Server.",
               screenshotPath:

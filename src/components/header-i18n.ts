@@ -115,9 +115,9 @@ export function documentsText(language: Language): string {
 export function mcpText(language: Language): string {
   switch (language) {
     case "ja":
-      return "MCPの使い方";
+      return "MCP";
     case "en":
-      return "How to Use MCP";
+      return "MCP";
     default:
       return assertNever(language);
   }
