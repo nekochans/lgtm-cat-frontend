@@ -152,9 +152,9 @@ export function CodeSnippet({
         className="w-full max-w-full"
         classNames={{
           base: "bg-orange-50 border border-orange-200 overflow-hidden",
-          pre: "font-mono text-orange-900 whitespace-pre text-sm",
-          copyButton: "text-orange-600 hover:text-orange-800",
-          content: "overflow-x-auto max-w-full",
+          pre: "font-mono text-orange-900 whitespace-pre text-sm min-w-0 overflow-x-auto",
+          copyButton: "text-orange-600 hover:text-orange-800 shrink-0",
+          content: "overflow-x-auto max-w-full min-w-0",
         }}
         hideSymbol
         variant="flat"
@@ -173,9 +173,9 @@ export function CodeSnippet({
       className="w-full max-w-full"
       classNames={{
         base: "bg-orange-50 border border-orange-200 overflow-hidden",
-        pre: "font-mono whitespace-pre text-sm",
-        copyButton: "text-orange-600 hover:text-orange-800",
-        content: "overflow-x-auto max-w-full",
+        pre: "font-mono whitespace-pre text-sm min-w-0 overflow-x-auto",
+        copyButton: "text-orange-600 hover:text-orange-800 shrink-0",
+        content: "overflow-x-auto max-w-full min-w-0",
       }}
       codeString={code}
       hideSymbol

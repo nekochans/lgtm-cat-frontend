@@ -15,8 +15,8 @@ describe("src/features/docs/functions/mcp-text.ts getMcpTexts TestCases", () => 
 
   it.each`
     language | expectedOverviewTitle    | expectedAvailableToolsTitle | expectedClientConfigTitle      | expectedGithubActionsTitle
-    ${"ja"}  | ${"LGTMeow MCPサーバー"} | ${"利用可能ツール"}         | ${"MCPクライアントの設定方法"} | ${"GitHub Actionsで LGTM画像を自動コメントする"}
-    ${"en"}  | ${"LGTMeow MCP Server"}  | ${"Available Tools"}        | ${"MCP Client Configuration"}  | ${"Auto-comment LGTM Images with GitHub Actions"}
+    ${"ja"}  | ${"LGTMeow MCPサーバー"} | ${"利用可能ツール"}         | ${"MCPクライアントの設定方法"} | ${"GitHub Actions連携"}
+    ${"en"}  | ${"LGTMeow MCP Server"}  | ${"Available Tools"}        | ${"MCP Client Configuration"}  | ${"GitHub Actions Integration"}
   `(
     "should return correct section titles when language is $language",
     ({

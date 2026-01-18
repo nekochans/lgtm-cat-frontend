@@ -171,7 +171,7 @@ export function getMcpTexts(language: Language): McpTexts {
           ],
         },
         githubActions: {
-          title: "GitHub Actionsで LGTM画像を自動コメントする",
+          title: "GitHub Actions連携",
           examples: [
             {
               title: "Claude Code Action を使った例",
@@ -285,7 +285,7 @@ export function getMcpTexts(language: Language): McpTexts {
           ],
         },
         githubActions: {
-          title: "Auto-comment LGTM Images with GitHub Actions",
+          title: "GitHub Actions Integration",
           examples: [
             {
               title: "Using Claude Code Action",
