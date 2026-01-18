@@ -1,5 +1,6 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { Metadata, NextPage } from "next";
+import { cacheLife } from "next/cache";
 import { DocsMcpPage } from "@/features/docs/components/docs-mcp-page";
 import { loadAllMcpExternalCodes } from "@/features/docs/functions/mcp-code-loader";
 import { appName, metaTagList } from "@/features/meta-tag";
@@ -40,6 +41,9 @@ export const metadata: Metadata = {
 };
 
 const DocsMcp: NextPage = async () => {
+  "use cache";
+  cacheLife("max");
+
   // 外部コードファイルをパラレルで読み込み
   // Promise.all により複数ファイルを並列取得してパフォーマンス最適化
   const externalCodes = await loadAllMcpExternalCodes();
