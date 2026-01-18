@@ -108,31 +108,11 @@ CSSはTailwind CSS 4を利用しています。以下のコーディングルー
 
 コーディングを効率的に行う為のツールです。必ず以下に目を通してください。
 
-### Serena MCP ― コード検索・編集ツールセット（必ず優先）
+### Serena MCP
 
-| 分類                        | 主要ツール (mcp**serena**)                                                                        | 典型的な用途                                     |
-| --------------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| **ファイル / ディレクトリ** | `list_dir` / `find_file`                                                                          | ツリー俯瞰・ファイル名で高速検索                 |
-| **全文検索**                | `search_for_pattern` / `replace_regex`                                                            | 正規表現を含む横断検索・一括置換                 |
-| **シンボル検索**            | `get_symbols_overview` / `find_symbol` / `find_referencing_symbols`                               | 定義探索・参照逆引き                             |
-| **シンボル編集**            | `insert_after_symbol` / `insert_before_symbol` / `replace_symbol_body`                            | 挿入・追記・リファクタ                           |
-| **メモリ管理**              | `write_memory` / `read_memory` / `list_memories` / `delete_memory`                                | `.serena/memories/` への長期知識 CRUD            |
-| **メンテナンス**            | `restart_language_server` / `switch_modes` / `summarize_changes` / `prepare_for_new_conversation` | LSP 再起動・モード切替・変更要約・新チャット準備 |
+コードの検索や編集には Serena MCP を **最優先で使用** してください。
 
-> **禁止**: 組み込み `Search / Read / Edit / Write` ツールは使用しない。
-> **ロード手順**: チャット開始直後に `/mcp__serena__initial_instructions` を必ず実行してから作業を行う。
-
-Serena MCPが使えない環境では仕方ないので通常の `Search / Read / Edit / Write` を使用しても良いが、Serena MCPの機能を優先的に利用すること。
-
-### Gemini CLI ― Web 検索専用
-
-外部情報を取得する必要がある場合は、次の Bash ツール呼び出しを **唯一の手段として使用** する。
-
-```bash
-gemini --prompt "WebSearch: <query>"
-```
-
-`gemini` が使えない環境の場合は通常のWeb検索ツールを使っても良い。
+Serena MCPが使えない種類のファイルでは通常の読み取り・編集ツールを利用しても良いです。
 
 ### Figma Dev Mode MCP
 
