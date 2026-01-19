@@ -145,4 +145,28 @@
       hreflang="en"
       href="https://lgtmeow.com/en/docs/how-to-use/"/>
   </url>
+  <url>
+    <loc>https://lgtmeow.com/docs/mcp/</loc>
+    <changefreq>monthly</changefreq>
+    <xhtml:link
+      rel="alternate"
+      hreflang="ja"
+      href="https://lgtmeow.com/docs/mcp/"/>
+    <xhtml:link
+      rel="alternate"
+      hreflang="en"
+      href="https://lgtmeow.com/en/docs/mcp/"/>
+  </url>
+  <url>
+    <loc>https://lgtmeow.com/en/docs/mcp/</loc>
+    <changefreq>monthly</changefreq>
+    <xhtml:link
+      rel="alternate"
+      hreflang="ja"
+      href="https://lgtmeow.com/docs/mcp/"/>
+    <xhtml:link
+      rel="alternate"
+      hreflang="en"
+      href="https://lgtmeow.com/en/docs/mcp/"/>
+  </url>
 </urlset>
