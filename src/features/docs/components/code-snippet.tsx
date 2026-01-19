@@ -123,7 +123,7 @@ export function CodeSnippet({
         .catch(() => {
           // YAML言語の初期化に失敗した場合はプレーンテキストとして表示
           // コンソールエラーは本番環境で不要なため出力しない
-          setIsPrismReady(true);
+          setIsPrismReady(false);
         });
     }
   }, [language]);
