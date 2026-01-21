@@ -490,6 +490,7 @@ src/<機能>/<ソースディレクトリ>/__tests__/<ソースファイル名>/
 - `<関数名>`: テスト対象の主要関数名（ケバブケース）
 
 **例**: `src/features/main/actions/copy-random-cat-action.ts` 内の `copyRandomCatAction` 関数のテスト
+
 ```
 src/features/main/actions/__tests__/copy-random-cat-action/copy-random-cat-action.test.ts
 ```
