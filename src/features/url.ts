@@ -35,6 +35,7 @@ export const appPathList = {
   login: "/login",
   "docs-how-to-use": "/docs/how-to-use",
   "docs-mcp": "/docs/mcp",
+  "docs-github-app": "/docs/github-app",
 } as const;
 
 export type AppPathName =
@@ -46,7 +47,8 @@ export type AppPathName =
   | "external-transmission-policy"
   | "login"
   | "docs-how-to-use"
-  | "docs-mcp";
+  | "docs-mcp"
+  | "docs-github-app";
 
 type AppPath = (typeof appPathList)[keyof typeof appPathList];
 
@@ -157,6 +159,10 @@ export const i18nUrlList: I18nUrlList = {
   "docs-mcp": {
     ja: `${appPathList["docs-mcp"]}/`,
     en: `/en${appPathList["docs-mcp"]}/`,
+  },
+  "docs-github-app": {
+    ja: `${appPathList["docs-github-app"]}/`,
+    en: `/en${appPathList["docs-github-app"]}/`,
   },
 };
 

@@ -169,4 +169,28 @@
       hreflang="en"
       href="https://lgtmeow.com/en/docs/mcp/"/>
   </url>
+  <url>
+    <loc>https://lgtmeow.com/docs/github-app/</loc>
+    <changefreq>monthly</changefreq>
+    <xhtml:link
+      rel="alternate"
+      hreflang="ja"
+      href="https://lgtmeow.com/docs/github-app/"/>
+    <xhtml:link
+      rel="alternate"
+      hreflang="en"
+      href="https://lgtmeow.com/en/docs/github-app/"/>
+  </url>
+  <url>
+    <loc>https://lgtmeow.com/en/docs/github-app/</loc>
+    <changefreq>monthly</changefreq>
+    <xhtml:link
+      rel="alternate"
+      hreflang="ja"
+      href="https://lgtmeow.com/docs/github-app/"/>
+    <xhtml:link
+      rel="alternate"
+      hreflang="en"
+      href="https://lgtmeow.com/en/docs/github-app/"/>
+  </url>
 </urlset>

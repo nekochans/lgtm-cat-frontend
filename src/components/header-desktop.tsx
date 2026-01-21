@@ -21,6 +21,7 @@ import { GithubIcon } from "@/components/icons/github-icon";
 import { GlobeIcon } from "@/components/icons/globe-icon";
 import { RightIcon } from "@/components/icons/right-icon";
 import { LoginButton } from "@/components/login-button";
+import { createGitHubAppLinksFromLanguages } from "@/features/docs/functions/github-app";
 import { createHowToUseLinksFromLanguages } from "@/features/docs/functions/how-to-use";
 import { createMcpLinksFromLanguages } from "@/features/docs/functions/mcp";
 import { type Language, removeLanguageFromAppPath } from "@/features/language";
@@ -43,6 +44,7 @@ export function HeaderDesktop({
   hideLoginButton,
   isLoggedIn,
 }: Props): JSX.Element {
+  const githubApp = createGitHubAppLinksFromLanguages(language);
   const howToUse = createHowToUseLinksFromLanguages(language);
   const mcp = createMcpLinksFromLanguages(language);
   const removedLanguagePath = removeLanguageFromAppPath(currentUrlPath);
@@ -94,6 +96,14 @@ export function HeaderDesktop({
                     key="mcp"
                   >
                     {mcp.text}
+                  </DropdownItem>
+                  <DropdownItem
+                    as={Link}
+                    className="data-[hover=true]:!bg-orange-300 rounded-lg px-3 py-2 font-bold text-background text-xl"
+                    href={githubApp.link}
+                    key="github-app"
+                  >
+                    {githubApp.text}
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
