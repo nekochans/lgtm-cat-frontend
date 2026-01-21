@@ -480,7 +480,7 @@ Vitestを使用したテストコードの書き方を統一します。
 
 テストファイルは以下の構成で配置します:
 
-```
+```text
 src/<機能>/<ソースディレクトリ>/__tests__/<ソースファイル名>/<関数名>.test.ts
 ```
 
@@ -491,7 +491,7 @@ src/<機能>/<ソースディレクトリ>/__tests__/<ソースファイル名>/
 
 **例**: `src/features/main/actions/copy-random-cat-action.ts` 内の `copyRandomCatAction` 関数のテスト
 
-```
+```text
 src/features/main/actions/__tests__/copy-random-cat-action/copy-random-cat-action.test.ts
 ```
 

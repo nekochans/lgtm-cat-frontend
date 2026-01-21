@@ -115,6 +115,7 @@ export const appUrlList = {
   login: `${appBaseUrl()}${appPathList.login}` as const,
   docsHowToUse: `${appBaseUrl()}${appPathList["docs-how-to-use"]}` as const,
   docsMcp: `${appBaseUrl()}${appPathList["docs-mcp"]}` as const,
+  docsGitHubApp: `${appBaseUrl()}${appPathList["docs-github-app"]}` as const,
 } as const;
 
 type I18nUrlList = {
