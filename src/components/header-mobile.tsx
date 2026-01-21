@@ -14,6 +14,7 @@ import { type JSX, useState } from "react";
 import {
   closeMenuAriaLabel,
   favoriteListText,
+  githubAppText,
   homeText,
   howToUseText,
   loginText,
@@ -159,6 +160,13 @@ function UnloggedInMenu({
             onClick={onCloseMenus}
           >
             {mcpText(language)}
+          </Link>
+          <Link
+            className="flex h-[70px] items-center border-orange-200 border-b px-5 py-3 text-background text-base"
+            href={createIncludeLanguageAppPath("docs-github-app", language)}
+            onClick={onCloseMenus}
+          >
+            {githubAppText(language)}
           </Link>
         </>
       )}

@@ -130,6 +130,17 @@ function docsMcpPageTitle(language: Language): string {
   }
 }
 
+function docsGitHubAppPageTitle(language: Language): string {
+  switch (language) {
+    case "ja":
+      return `${defaultTitle} GitHub Appの使い方`;
+    case "en":
+      return `${defaultTitle} How to Use GitHub App`;
+    default:
+      return assertNever(language);
+  }
+}
+
 function description(language: Language): string {
   switch (language) {
     case "ja":
@@ -208,6 +219,12 @@ export function metaTagList(language: Language): MetaTagList {
       title: docsMcpPageTitle(language),
       ogpImgUrl: appUrlList.ogpImg,
       ogpTargetUrl: createI18nUrl("docs-mcp", language),
+      appName,
+    },
+    "docs-github-app": {
+      title: docsGitHubAppPageTitle(language),
+      ogpImgUrl: appUrlList.ogpImg,
+      ogpTargetUrl: createI18nUrl("docs-github-app", language),
       appName,
     },
   };

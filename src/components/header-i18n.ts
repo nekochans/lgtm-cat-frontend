@@ -123,6 +123,17 @@ export function mcpText(language: Language): string {
   }
 }
 
+export function githubAppText(language: Language): string {
+  switch (language) {
+    case "ja":
+      return "GitHub App";
+    case "en":
+      return "GitHub App";
+    default:
+      return assertNever(language);
+  }
+}
+
 export function openMenuAriaLabel(language: Language): string {
   switch (language) {
     case "ja":

@@ -480,8 +480,19 @@ Vitestを使用したテストコードの書き方を統一します。
 
 テストファイルは以下の構成で配置します:
 
+```text
+src/<機能>/<ソースディレクトリ>/__tests__/<ソースファイル名>/<関数名>.test.ts
 ```
-src/<機能>/__tests__/<サブ機能>/<関数名>.test.ts
+
+- `<機能>`: `features/main`、`features/upload` などの機能ディレクトリ
+- `<ソースディレクトリ>`: ソースファイルが配置されているディレクトリ名（`functions`、`components`、`actions` など）
+- `<ソースファイル名>`: テスト対象の関数が定義されているファイル名（拡張子なし、ケバブケース）
+- `<関数名>`: テスト対象の主要関数名（ケバブケース）
+
+**例**: `src/features/main/actions/copy-random-cat-action.ts` 内の `copyRandomCatAction` 関数のテスト
+
+```text
+src/features/main/actions/__tests__/copy-random-cat-action/copy-random-cat-action.test.ts
 ```
 
 ### describeブロックの命名
