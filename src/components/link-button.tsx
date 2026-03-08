@@ -5,9 +5,9 @@ import type { CSSProperties, JSX } from "react";
 import type { IncludeLanguageAppPath, Url } from "@/features/url";
 
 interface Props {
+  className?: string;
   linkText: string;
   linkUrl: Url | IncludeLanguageAppPath;
-  className?: string;
   style?: CSSProperties;
 }
 

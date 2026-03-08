@@ -10,14 +10,14 @@ import { ServiceDescription } from "@/features/main/components/service-descripti
 import type { IncludeLanguageAppPath } from "@/features/url";
 
 interface Props {
-  readonly language: Language;
   readonly currentUrlPath: IncludeLanguageAppPath;
-  readonly view: "random" | "latest";
+  readonly language: Language;
   /**
    * LGTMイメージ表示用ReactNode (Storybook等でのモック用)
    * 省略時は view に応じた実際のサーバーコンポーネントが使用される
    */
   readonly lgtmImages?: ReactNode;
+  readonly view: "random" | "latest";
 }
 
 export const HomePage = ({

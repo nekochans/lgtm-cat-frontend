@@ -18,13 +18,13 @@ import type { IncludeLanguageAppPath } from "@/features/url";
 // Props から DocsMcpPageProps にリネーム
 interface DocsMcpPageProps {
   readonly currentUrlPath: IncludeLanguageAppPath;
-  readonly language: Language;
   readonly externalCodes: McpExternalCodes;
+  readonly language: Language;
 }
 
 interface SectionProps {
-  readonly title: string;
   readonly children: ReactNode;
+  readonly title: string;
 }
 
 /**
@@ -47,8 +47,8 @@ function Section({ title, children }: SectionProps) {
 }
 
 interface SubSectionProps {
-  readonly title: string;
   readonly children: ReactNode;
+  readonly title: string;
 }
 
 /**
@@ -64,8 +64,8 @@ function SubSection({ title, children }: SubSectionProps) {
 }
 
 interface ToolSectionProps {
-  readonly tool: McpToolInfo;
   readonly language: Language;
+  readonly tool: McpToolInfo;
 }
 
 /**
@@ -93,8 +93,8 @@ function ToolSection({ tool, language }: ToolSectionProps) {
 }
 
 interface ConfigPatternSectionProps {
-  readonly pattern: McpConfigPattern;
   readonly index: number;
+  readonly pattern: McpConfigPattern;
 }
 
 /**

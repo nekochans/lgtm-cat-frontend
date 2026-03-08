@@ -49,9 +49,9 @@ export async function loadCodexAutoReviewYaml(): Promise<string> {
  * DocsMcpPageコンポーネントにpropsとして渡す
  */
 export interface McpExternalCodes {
-  readonly mcpServersJson: string;
   readonly claudeAutoReviewYaml: string;
   readonly codexAutoReviewYaml: string;
+  readonly mcpServersJson: string;
 }
 
 /**

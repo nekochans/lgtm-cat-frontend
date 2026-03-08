@@ -8,9 +8,9 @@ import { Header } from "./header";
 
 interface Props {
   readonly children: ReactNode;
-  readonly language: Language;
   readonly currentUrlPath: IncludeLanguageAppPath;
   readonly isLoggedIn?: boolean;
+  readonly language: Language;
   readonly mainClassName?: string;
 }
 

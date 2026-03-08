@@ -8,11 +8,11 @@ import type { Language } from "@/features/language";
 import type { IncludeLanguageAppPath } from "@/features/url";
 
 interface Props {
-  readonly language: Language;
   readonly currentUrlPath: IncludeLanguageAppPath;
   // TODO: ログイン機能実装後は hideLoginButton Propsを削除する
   readonly hideLoginButton?: boolean;
   readonly isLoggedIn: boolean;
+  readonly language: Language;
 }
 
 export function Header({

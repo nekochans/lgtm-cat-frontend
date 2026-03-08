@@ -6,25 +6,24 @@ import { appBaseUrl, createIncludeLanguageAppPath } from "@/features/url";
 import { assertNever } from "@/utils/assert-never";
 
 export interface HowToUseSectionText {
-  readonly title: string;
   readonly content: readonly string[];
+  readonly title: string;
 }
 
 export interface HowToUseContactText {
-  readonly title: string;
-  readonly intro: string;
-  readonly methodsIntro: string;
-  readonly issueLabel: string;
-  readonly issueLinkText: string;
   readonly formLabel: string;
   readonly formLinkText: string;
-  readonly issueUrl: string;
   readonly formUrl: string;
+  readonly intro: string;
+  readonly issueLabel: string;
+  readonly issueLinkText: string;
+  readonly issueUrl: string;
+  readonly methodsIntro: string;
+  readonly title: string;
 }
 
 export interface HowToUseTexts {
-  readonly whatIsLgtm: HowToUseSectionText;
-  readonly whatIsLgtmeow: HowToUseSectionText;
+  readonly contact: HowToUseContactText;
   readonly copyByClicking: {
     readonly title: string;
     readonly intro: string;
@@ -39,7 +38,8 @@ export interface HowToUseTexts {
     readonly title: string;
     readonly content: readonly string[];
   };
-  readonly contact: HowToUseContactText;
+  readonly whatIsLgtm: HowToUseSectionText;
+  readonly whatIsLgtmeow: HowToUseSectionText;
 }
 
 export function getHowToUseTexts(language: Language): HowToUseTexts {

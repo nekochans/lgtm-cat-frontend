@@ -5,10 +5,10 @@
  * ブラウザから直接アップロードするためのURL
  */
 export interface PresignedPutUrlResult {
-  /** 署名付きPUT URL（ブラウザからのアップロード用） */
-  readonly putUrl: string;
   /** ストレージ内のオブジェクトキー */
   readonly objectKey: string;
+  /** 署名付きPUT URL（ブラウザからのアップロード用） */
+  readonly putUrl: string;
 }
 
 /**

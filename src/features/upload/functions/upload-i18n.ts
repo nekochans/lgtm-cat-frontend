@@ -217,8 +217,8 @@ export function uploadSuccessDescription(
  * アップロード成功画面のリンク用テキスト
  */
 export interface ViewLatestImageLinkText {
-  readonly prefix: string;
   readonly linkText: string;
+  readonly prefix: string;
   readonly suffix: string;
 }
 

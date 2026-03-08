@@ -7,9 +7,9 @@ import type { Language } from "@/features/language";
 import type { IncludeLanguageAppPath } from "@/features/url";
 
 interface Props {
-  readonly language: Language;
-  readonly currentUrlPath: IncludeLanguageAppPath;
   readonly children: ReactNode;
+  readonly currentUrlPath: IncludeLanguageAppPath;
+  readonly language: Language;
 }
 
 export function ErrorLayout({ language, currentUrlPath, children }: Props) {

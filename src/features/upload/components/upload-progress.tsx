@@ -9,9 +9,9 @@ import type { Language } from "@/features/language";
 import { uploadingText } from "../functions/upload-i18n";
 
 interface Props {
+  readonly fileName: string;
   readonly language: Language;
   readonly previewUrl: string;
-  readonly fileName: string;
   readonly progress: number;
 }
 

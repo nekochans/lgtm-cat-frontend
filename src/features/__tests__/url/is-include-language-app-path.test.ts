@@ -4,8 +4,8 @@ import { isIncludeLanguageAppPath } from "@/features/url";
 
 describe("src/features/url.ts isIncludeLanguageAppPath TestCases", () => {
   interface TestTable {
-    value: unknown;
     expected: boolean;
+    value: unknown;
   }
 
   it.each`

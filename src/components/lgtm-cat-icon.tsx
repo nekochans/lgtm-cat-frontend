@@ -2,10 +2,10 @@
 import type { JSX } from "react";
 
 interface Props {
-  readonly width?: number;
-  readonly height?: number;
-  readonly className?: string;
   readonly "aria-hidden"?: boolean;
+  readonly className?: string;
+  readonly height?: number;
+  readonly width?: number;
 }
 
 export function LgtmCatIcon({

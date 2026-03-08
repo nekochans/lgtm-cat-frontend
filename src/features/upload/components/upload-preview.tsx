@@ -13,12 +13,12 @@ import {
 } from "../functions/upload-i18n";
 
 interface Props {
-  readonly language: Language;
-  readonly previewUrl: string;
   readonly fileName: string;
+  readonly isUploading?: boolean;
+  readonly language: Language;
   readonly onCancel: () => void;
   readonly onUpload: () => void;
-  readonly isUploading?: boolean;
+  readonly previewUrl: string;
 }
 
 /**

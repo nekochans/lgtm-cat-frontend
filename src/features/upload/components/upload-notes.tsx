@@ -29,8 +29,8 @@ export function UploadNotes({ language }: Props): JSX.Element {
         {cautionText(language)}
       </p>
       <ul className="list-disc pl-5 font-normal text-xs leading-4 md:pl-6 md:text-base md:leading-6">
-        {notes.map((note, index) => (
-          <li key={`note-${index}-${note.slice(0, 10)}`}>{note}</li>
+        {notes.map((note) => (
+          <li key={note}>{note}</li>
         ))}
       </ul>
       <p className="max-w-full px-2 text-center font-normal text-xs leading-4 md:max-w-[476px] md:px-0 md:text-base md:leading-6">

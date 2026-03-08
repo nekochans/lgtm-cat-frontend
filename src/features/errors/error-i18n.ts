@@ -4,9 +4,9 @@ import type { Language } from "@/features/language";
 import { assertNever } from "@/utils/assert-never";
 
 interface ErrorPageTexts {
-  readonly title: string;
-  readonly message: string;
   readonly buttonText: string;
+  readonly message: string;
+  readonly title: string;
 }
 
 export function notFoundPageTexts(language: Language): ErrorPageTexts {

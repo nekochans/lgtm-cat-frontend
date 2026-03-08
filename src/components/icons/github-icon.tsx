@@ -2,9 +2,9 @@
 import type { JSX } from "react";
 
 interface Props {
-  width: number;
-  height: number;
   color: "default" | "white";
+  height: number;
+  width: number;
 }
 
 export function GithubIcon({ width, height, color }: Props): JSX.Element {
