@@ -7,11 +7,11 @@ import type { Language } from "@/features/language";
 import { createIncludeLanguageAppPath } from "@/features/url";
 
 interface Props {
-  readonly language: Language;
-  readonly title: string;
-  readonly message: string;
   readonly buttonText: string;
   readonly catComponent: ReactNode;
+  readonly language: Language;
+  readonly message: string;
+  readonly title: string;
 }
 
 export function ErrorPageContent({

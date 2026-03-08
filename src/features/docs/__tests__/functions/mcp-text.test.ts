@@ -6,11 +6,11 @@ import type { Language } from "@/features/language";
 
 describe("src/features/docs/functions/mcp-text.ts getMcpTexts TestCases", () => {
   interface TestTable {
-    readonly language: Language;
-    readonly expectedOverviewTitle: string;
     readonly expectedAvailableToolsTitle: string;
     readonly expectedClientConfigTitle: string;
     readonly expectedGithubActionsTitle: string;
+    readonly expectedOverviewTitle: string;
+    readonly language: Language;
   }
 
   it.each`

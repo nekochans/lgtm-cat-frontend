@@ -22,8 +22,8 @@ type ErrorState<T extends ActionState> = T extends { readonly status: "ERROR" }
   : never;
 
 interface Callbacks<T extends ActionState> {
-  readonly onSuccess?: (result: SuccessState<NonNullable<T>>) => void;
   readonly onError?: (result: ErrorState<NonNullable<T>>) => void;
+  readonly onSuccess?: (result: SuccessState<NonNullable<T>>) => void;
 }
 
 /**

@@ -43,10 +43,10 @@ const apiLgtmImageResponseSchema = z
 type ApiLgtmImageResponse = z.infer<typeof apiLgtmImageResponseSchema>;
 
 interface FetchLgtmImagesErrorOptions {
-  readonly statusCode?: number;
-  readonly statusText?: string;
   readonly headers?: Record<string, string>;
   readonly responseBody?: unknown;
+  readonly statusCode?: number;
+  readonly statusText?: string;
 }
 
 export class FetchLgtmImagesError extends Error {

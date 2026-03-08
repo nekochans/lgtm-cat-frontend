@@ -18,9 +18,9 @@ describe("src/features/docs/functions/how-to-use-text.ts getHowToUseTexts TestCa
   });
 
   interface TestTable {
-    readonly language: Language;
-    readonly expectedWhatIsLgtmTitle: string;
     readonly expectedContactTitle: string;
+    readonly expectedWhatIsLgtmTitle: string;
+    readonly language: Language;
   }
 
   it.each`

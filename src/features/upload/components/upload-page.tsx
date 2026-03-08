@@ -13,8 +13,8 @@ import type { IncludeLanguageAppPath } from "@/features/url";
 type UploadFormProps = Omit<ComponentProps<typeof UploadForm>, "language">;
 
 interface Props extends UploadFormProps {
-  readonly language: Language;
   readonly currentUrlPath: IncludeLanguageAppPath;
+  readonly language: Language;
 }
 
 export function UploadPage(props: Props) {

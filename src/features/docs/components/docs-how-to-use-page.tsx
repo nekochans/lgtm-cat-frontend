@@ -18,13 +18,13 @@ const BACKTICK_CODE_SPLIT_REGEX = /(`[^`]+`)/g;
 const BACKTICK_CODE_MATCH_REGEX = /`([^`]+)`/;
 
 interface Props {
-  readonly language: Language;
   readonly currentUrlPath: IncludeLanguageAppPath;
+  readonly language: Language;
 }
 
 interface SectionProps {
-  readonly title: string;
   readonly children: ReactNode;
+  readonly title: string;
 }
 
 /**
@@ -50,8 +50,8 @@ function Section({ title, children }: SectionProps) {
 }
 
 interface TextWithLinksProps {
-  readonly text: string;
   readonly baseUrl: string;
+  readonly text: string;
 }
 
 /**

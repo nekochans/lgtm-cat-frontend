@@ -27,8 +27,8 @@ import {
 interface Props {
   readonly language: Language;
   readonly lgtmImageUrl: LgtmImageUrl;
-  readonly previewImageUrl: string;
   readonly onClose: () => void;
+  readonly previewImageUrl: string;
 }
 
 /**

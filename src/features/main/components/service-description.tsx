@@ -4,8 +4,8 @@ import type { Language } from "@/features/language";
 import { getServiceDescriptionText } from "@/features/main/service-description-text";
 
 interface Props {
-  readonly language: Language;
   readonly className?: string;
+  readonly language: Language;
 }
 
 export function ServiceDescription({ language, className }: Props) {

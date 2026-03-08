@@ -36,9 +36,9 @@ import { UploadSuccess } from "./upload-success";
  * プログレス管理用のヘルパー型
  */
 interface ProgressManager {
+  readonly setProgress: (value: number) => void;
   readonly start: (increment: number, max: number, intervalMs: number) => void;
   readonly stop: () => void;
-  readonly setProgress: (value: number) => void;
 }
 
 /**
@@ -70,12 +70,23 @@ function createProgressManager(
 }
 
 interface Props {
-  readonly language: Language;
   /**
    * 依存関係の注入（Storybook等でのモック用）
    * 省略時は実際のServer Actions/関数が使用される
    */
   readonly generateUploadUrlAction?: GenerateUploadUrlAction;
+  readonly initialErrorMessages?: readonly string[];
+  readonly initialLgtmImageUrl?: LgtmImageUrl | null;
+  readonly initialPreviewImageUrlForSuccess?: string | null;
+  readonly initialPreviewUrl?: string | null;
+  readonly initialSelectedFile?: File | null;
+  /**
+   * 初期状態の設定（Storybook用）
+   * 実際の使用時は指定不要
+   */
+  readonly initialState?: UploadFormState;
+  readonly initialUploadProgress?: number;
+  readonly language: Language;
   /**
    * ストレージへのアップロード関数（Storybook等でのモック用）
    *
@@ -85,17 +96,6 @@ interface Props {
    */
   readonly uploadToStorage?: UploadToStorageFunc;
   readonly validateAndCreateLgtmImageAction?: ValidateAndCreateLgtmImageAction;
-  /**
-   * 初期状態の設定（Storybook用）
-   * 実際の使用時は指定不要
-   */
-  readonly initialState?: UploadFormState;
-  readonly initialPreviewUrl?: string | null;
-  readonly initialSelectedFile?: File | null;
-  readonly initialLgtmImageUrl?: LgtmImageUrl | null;
-  readonly initialPreviewImageUrlForSuccess?: string | null;
-  readonly initialErrorMessages?: readonly string[];
-  readonly initialUploadProgress?: number;
 }
 
 /**

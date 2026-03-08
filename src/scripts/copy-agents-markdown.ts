@@ -14,9 +14,9 @@ const SKIP_DIRECTORIES = new Set<string>([
 ]);
 
 interface CopyAgentsResult {
-  updated: string[];
-  unchanged: string[];
   missing: string[];
+  unchanged: string[];
+  updated: string[];
 }
 
 async function findAgentsFiles(rootDir: string): Promise<string[]> {

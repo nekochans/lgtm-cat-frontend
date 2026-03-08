@@ -4,40 +4,35 @@ import type { Language } from "@/features/language";
 import { assertNever } from "@/utils/assert-never";
 
 export interface McpToolInfo {
-  readonly name: string;
   readonly description: string;
-  readonly responseFormat: string;
+  readonly name: string;
   readonly responseExample: string;
+  readonly responseFormat: string;
 }
 
 export interface McpConfigPattern {
-  readonly title: string;
-  readonly description?: string;
   readonly code: string;
+  readonly description?: string;
   readonly note?: string;
+  readonly title: string;
 }
 
 export interface McpGitHubActionsExample {
-  readonly title: string;
   readonly description: string;
-  readonly folderStructure: string;
   readonly folderNote?: string;
+  readonly folderStructure: string;
   readonly mcpConfigCode?: string;
   readonly mcpConfigDescription?: string;
-  readonly workflowCode: string;
   readonly outputDescription: string;
-  readonly screenshotPath: string;
   readonly screenshotAlt: string;
-  readonly screenshotWidth: number;
   readonly screenshotHeight: number;
+  readonly screenshotPath: string;
+  readonly screenshotWidth: number;
+  readonly title: string;
+  readonly workflowCode: string;
 }
 
 export interface McpTexts {
-  readonly overview: {
-    readonly title: string;
-    readonly intro: string;
-    readonly useCases: readonly string[];
-  };
   readonly availableTools: {
     readonly title: string;
     readonly tools: readonly McpToolInfo[];
@@ -57,6 +52,11 @@ export interface McpTexts {
   readonly githubActions: {
     readonly title: string;
     readonly examples: readonly McpGitHubActionsExample[];
+  };
+  readonly overview: {
+    readonly title: string;
+    readonly intro: string;
+    readonly useCases: readonly string[];
   };
 }
 
