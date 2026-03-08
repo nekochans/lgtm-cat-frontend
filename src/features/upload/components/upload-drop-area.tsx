@@ -19,9 +19,9 @@ import {
 } from "../functions/upload-i18n";
 
 interface Props {
+  readonly isDisabled?: boolean;
   readonly language: Language;
   readonly onFileSelect: (file: File) => void;
-  readonly isDisabled?: boolean;
 }
 
 /**

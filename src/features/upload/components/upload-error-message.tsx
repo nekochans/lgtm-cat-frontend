@@ -35,8 +35,8 @@ export function UploadErrorMessage({ messages }: Props): JSX.Element {
       </div>
       {/* メッセージ */}
       <div className="flex flex-col font-normal text-rose-600 text-xs leading-4 md:text-xl md:leading-7">
-        {messages.map((message, index) => (
-          <p key={`error-${index}-${message.slice(0, 10)}`}>{message}</p>
+        {messages.map((message) => (
+          <p key={message}>{message}</p>
         ))}
       </div>
     </div>

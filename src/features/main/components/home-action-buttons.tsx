@@ -33,8 +33,8 @@ function sanitizeErrorMessage(error: string): string {
 }
 
 interface Props {
-  readonly language: Language;
   readonly className?: string;
+  readonly language: Language;
 }
 
 export function HomeActionButtons({ language, className }: Props) {

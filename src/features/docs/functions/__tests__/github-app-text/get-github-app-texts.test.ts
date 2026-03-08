@@ -15,10 +15,10 @@ import type { Language } from "@/features/language";
 
 describe("src/features/docs/functions/github-app-text.ts getGitHubAppTexts TestCases", () => {
   interface TestTable {
-    readonly language: Language;
-    readonly expectedOverviewTitle: string;
-    readonly expectedInstallTitle: string;
     readonly expectedBasicFeatureTitle: string;
+    readonly expectedInstallTitle: string;
+    readonly expectedOverviewTitle: string;
+    readonly language: Language;
   }
 
   it.each`

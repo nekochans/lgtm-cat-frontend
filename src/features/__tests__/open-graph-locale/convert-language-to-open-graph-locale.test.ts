@@ -8,8 +8,8 @@ import {
 
 describe("src/features/open-graph-locale.ts convertLanguageToOpenGraphLocale TestCases", () => {
   interface TestTable {
-    readonly language: Language;
     readonly expected: OpenGraphLocale;
+    readonly language: Language;
   }
 
   it.each`

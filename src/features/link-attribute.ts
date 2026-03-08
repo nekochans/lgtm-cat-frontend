@@ -2,6 +2,6 @@
 import type { IncludeLanguageAppPath } from "@/features/url";
 
 export interface LinkAttribute {
-  text: string;
   link: IncludeLanguageAppPath;
+  text: string;
 }

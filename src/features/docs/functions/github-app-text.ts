@@ -4,12 +4,10 @@ import type { Language } from "@/features/language";
 import { assertNever } from "@/utils/assert-never";
 
 export interface GitHubAppTexts {
-  readonly overview: {
+  readonly basicFeature: {
     readonly title: string;
-    readonly beforeLink: string;
-    readonly linkText: string;
-    readonly afterLink: string;
-    readonly linkUrl: string;
+    readonly intro: string;
+    readonly screenshotAlt: string;
   };
   readonly install: {
     readonly title: string;
@@ -19,10 +17,12 @@ export interface GitHubAppTexts {
     readonly linkUrl: string;
     readonly screenshotAlt: string;
   };
-  readonly basicFeature: {
+  readonly overview: {
     readonly title: string;
-    readonly intro: string;
-    readonly screenshotAlt: string;
+    readonly beforeLink: string;
+    readonly linkText: string;
+    readonly afterLink: string;
+    readonly linkUrl: string;
   };
 }
 

@@ -40,11 +40,11 @@ import {
 } from "@/features/url";
 
 interface Props {
-  readonly language: Language;
   readonly currentUrlPath: IncludeLanguageAppPath;
   // TODO: ログイン機能実装後は hideLoginButton Propsを削除する
   readonly hideLoginButton?: boolean;
   readonly isLoggedIn: boolean;
+  readonly language: Language;
 }
 
 // メニューの種類: "navigation"はハンバーガーメニュー、"language"は言語選択メニュー
@@ -52,8 +52,8 @@ type MenuType = "navigation" | "language";
 
 interface LanguageMenuNavProps {
   readonly language: Language;
-  readonly removedLanguagePath: string;
   readonly onLinkClick: () => void;
+  readonly removedLanguagePath: string;
 }
 
 function LanguageMenuNav({
@@ -91,12 +91,12 @@ function LanguageMenuNav({
 }
 
 interface UnloggedInMenuProps {
-  readonly language: Language;
-  readonly removedLanguagePath: string;
-  readonly menuType: MenuType;
-  readonly onCloseMenus: () => void;
   // TODO: ログイン機能実装後は hideLoginButton Propsを削除する
   readonly hideLoginButton?: boolean;
+  readonly language: Language;
+  readonly menuType: MenuType;
+  readonly onCloseMenus: () => void;
+  readonly removedLanguagePath: string;
 }
 
 function UnloggedInMenu({
@@ -176,9 +176,9 @@ function UnloggedInMenu({
 
 interface LoggedInMenuProps {
   readonly language: Language;
-  readonly removedLanguagePath: string;
   readonly menuType: MenuType;
   readonly onCloseMenus: () => void;
+  readonly removedLanguagePath: string;
 }
 
 function LoggedInMenu({

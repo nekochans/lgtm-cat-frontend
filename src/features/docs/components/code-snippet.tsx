@@ -31,8 +31,8 @@ type SupportedLanguage = "json" | "yaml" | "typescript" | "plaintext";
 
 interface CodeSnippetProps {
   readonly code: string;
-  readonly variant?: "block" | "inline";
   readonly language?: SupportedLanguage;
+  readonly variant?: "block" | "inline";
 }
 
 /**
