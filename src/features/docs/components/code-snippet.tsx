@@ -20,7 +20,7 @@ async function initPrismYaml(): Promise<void> {
 
   // グローバルPrismを設定してから言語モジュールをインポート
   // prism-yamlはグローバルPrismオブジェクトを参照するため必須
-  const globalObj = typeof globalThis !== "undefined" ? globalThis : window;
+  const globalObj = typeof globalThis === "undefined" ? window : globalThis;
   globalObj.Prism = Prism;
   await import("prismjs/components/prism-yaml");
   isPrismYamlInitialized = true;

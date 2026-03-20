@@ -6,9 +6,9 @@ import { playwright } from "@vitest/browser-playwright";
 import { defineConfig } from "vitest/config";
 
 const dirname =
-  typeof import.meta.dirname !== "undefined"
-    ? import.meta.dirname
-    : path.dirname(fileURLToPath(import.meta.url));
+  typeof import.meta.dirname === "undefined"
+    ? path.dirname(fileURLToPath(import.meta.url))
+    : import.meta.dirname;
 const srcDir = fileURLToPath(new URL("./src", import.meta.url));
 
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
@@ -49,7 +49,6 @@ export default defineConfig({
             provider: playwright({}),
             instances: [{ browser: "chromium" }],
           },
-          setupFiles: [".storybook/vitest.setup.ts"],
         },
       },
     ],
