@@ -22,8 +22,8 @@
 
 | パッケージ名 | 現在のバージョン | 更新後のバージョン | 変更種別 | 備考 |
 |---|---|---|---|---|
-| `@aws-sdk/client-s3` | 3.1012.0 | 3.1017.0 | パッチ | |
-| `@aws-sdk/s3-request-presigner` | 3.1012.0 | 3.1017.0 | パッチ | |
+| `@aws-sdk/client-s3` | 3.1012.0 | 3.1019.0 | パッチ | |
+| `@aws-sdk/s3-request-presigner` | 3.1012.0 | 3.1019.0 | パッチ | |
 | `@next/third-parties` | 16.2.0 | 16.2.1 | パッチ | Next.js と同一バージョンで揃える |
 | `@sentry/nextjs` | 10.44.0 | 10.46.0 | マイナー | |
 | `next` | 16.2.0 | 16.2.1 | パッチ | セキュリティ修正5件を含む（CVE-2026-27977〜27980, CVE-2026-29057） |
@@ -40,14 +40,15 @@
 | `@storybook/addon-onboarding` | 10.3.0 | 10.3.3 | パッチ | |
 | `@storybook/addon-vitest` | 10.3.0 | 10.3.3 | パッチ | |
 | `@storybook/nextjs-vite` | 10.3.0 | 10.3.3 | パッチ | |
-| `@vitest/browser-playwright` | 4.1.0 | 4.1.1 | パッチ | Vitest関連は全て4.1.1に揃える |
-| `@vitest/coverage-v8` | 4.1.0 | 4.1.1 | パッチ | |
+| `@vitest/browser-playwright` | 4.1.0 | 4.1.2 | パッチ | Vitest関連は全て4.1.2に揃える |
+| `@vitest/coverage-v8` | 4.1.0 | 4.1.2 | パッチ | |
 | `chromatic` | 15.3.0 | 16.0.0 | **メジャー** | 破壊的変更: Node 18 サポート廃止のみ |
 | `jsdom` | 29.0.0 | 29.0.1 | パッチ | |
 | `msw` | 2.12.13 | 2.12.14 | パッチ | `mockServiceWorker.js` 再生成の可能性あり |
 | `storybook` | 10.3.0 | 10.3.3 | パッチ | |
 | `typescript` | 5.9.3 | 6.0.2 | **メジャー** | `tsconfig.json` の修正が必要 |
-| `vitest` | 4.1.0 | 4.1.1 | パッチ | |
+| `ultracite` | 7.3.2 | 7.4.0 | マイナー | Biome プリセット |
+| `vitest` | 4.1.0 | 4.1.2 | パッチ | |
 
 ### 更新対象外
 
@@ -57,7 +58,7 @@
 
 ### 更新不要（既に最新安定版）
 
-`@storybook/addon-viewport`（9.0.8）は10.x系が存在しないため更新不要。その他のリストに無いパッケージも既に最新安定版。
+`@storybook/addon-viewport`（9.0.8）は10.x系が存在しないため更新不要。その他のリストに無いパッケージは `npm outdated` で確認済みであり、既に最新安定版。
 
 ## メジャーバージョンアップの影響分析
 
@@ -133,8 +134,8 @@ Step 8: Chrome DevTools MCP で動作確認
 
 ```bash
 npm install \
-  @aws-sdk/client-s3@3.1017.0 \
-  @aws-sdk/s3-request-presigner@3.1017.0 \
+  @aws-sdk/client-s3@3.1019.0 \
+  @aws-sdk/s3-request-presigner@3.1019.0 \
   @next/third-parties@16.2.1 \
   @sentry/nextjs@10.46.0 \
   next@16.2.1 \
@@ -152,14 +153,15 @@ npm install --save-dev \
   @storybook/addon-onboarding@10.3.3 \
   @storybook/addon-vitest@10.3.3 \
   @storybook/nextjs-vite@10.3.3 \
-  @vitest/browser-playwright@4.1.1 \
-  @vitest/coverage-v8@4.1.1 \
+  @vitest/browser-playwright@4.1.2 \
+  @vitest/coverage-v8@4.1.2 \
   chromatic@16.0.0 \
   jsdom@29.0.1 \
   msw@2.12.14 \
   storybook@10.3.3 \
   typescript@6.0.2 \
-  vitest@4.1.1
+  ultracite@7.4.0 \
+  vitest@4.1.2
 ```
 
 #### 1-3. インストール後の確認
@@ -372,12 +374,21 @@ git checkout -- package.json package-lock.json tsconfig.json
 npm install
 ```
 
-`public/mockServiceWorker.js` やフォーマット変更されたソースファイルがある場合は:
+`public/mockServiceWorker.js` やフォーマット変更されたソースファイルがある場合は、対象ファイルを明示的に列挙して復元する:
 
 ```bash
-git checkout -- .
+git checkout -- package.json package-lock.json tsconfig.json public/mockServiceWorker.js
 npm install
 ```
+
+フォーマッターによる差分がある場合は、`git diff --name-only` で対象を確認した上で、本タスクで変更したファイルのみを個別に `git checkout` する:
+
+```bash
+# 例: フォーマット差分がある場合
+git checkout -- src/path/to/formatted-file1.ts src/path/to/formatted-file2.tsx
+```
+
+**注意**: `git checkout -- .` や `git checkout -- $(git diff --name-only)` のような一括復元コマンドは、本タスクと無関係な未コミット変更まで破棄してしまうため使用しない。
 
 ## 参考情報
 
