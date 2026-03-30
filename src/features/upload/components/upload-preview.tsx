@@ -57,14 +57,14 @@ export function UploadPreview({
           className="h-12 w-full rounded-lg border-2 border-button-tertiary-border bg-button-tertiary-base px-6 font-bold text-base text-button-tertiary-tx hover:bg-button-tertiary-hover md:w-[220px]"
           isDisabled={isUploading}
           onPress={onCancel}
-          variant="bordered"
+          variant="outline"
         >
           {cancelButtonText(language)}
         </Button>
         <Button
           className="h-12 w-full rounded-lg bg-button-primary-base px-6 font-bold text-base text-text-wh hover:bg-button-primary-hover md:w-[220px]"
           isDisabled={isUploading}
-          isLoading={isUploading}
+          isPending={isUploading}
           onPress={onUpload}
         >
           {uploadButtonText(language)}

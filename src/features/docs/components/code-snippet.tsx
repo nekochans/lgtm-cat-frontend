@@ -2,9 +2,9 @@
 
 "use client";
 
-import { Snippet } from "@heroui/react";
 import { Highlight, Prism, themes } from "prism-react-renderer";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { CopyIcon } from "@/components/icons/copy-icon";
 
 // YAML言語の初期化状態を管理（モジュールスコープで共有）
 let isPrismYamlInitialized = false;
@@ -91,9 +91,60 @@ function HighlightedCode({
 }
 
 /**
+ * コピーボタンコンポーネント
+ * 旧 Snippet コンポーネントのコピー機能を再現
+ * 既存の CopyIcon コンポーネントを流用する
+ */
+function CopyButton({ text }: { readonly text: string }) {
+  const [isCopied, setIsCopied] = useState(false);
+
+  const handleCopy = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setIsCopied(true);
+      setTimeout(() => {
+        setIsCopied(false);
+      }, 1500);
+    } catch {
+      // クリップボード書き込み失敗時は何もしない
+    }
+  }, [text]);
+
+  return (
+    <button
+      aria-label={isCopied ? "Copied" : "Copy to clipboard"}
+      className="text-orange-600 hover:text-orange-800"
+      onClick={handleCopy}
+      type="button"
+    >
+      {isCopied ? (
+        <svg
+          aria-hidden="true"
+          fill="none"
+          height="16"
+          stroke="currentColor"
+          strokeWidth="2"
+          viewBox="0 0 24 24"
+          width="16"
+        >
+          <title>Copied</title>
+          <path
+            d="M20 6L9 17l-5-5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      ) : (
+        <CopyIcon color="default" height={16} width={16} />
+      )}
+    </button>
+  );
+}
+
+/**
  * コードブロックを表示するクライアントコンポーネント
- * HeroUI の Snippet コンポーネントと prism-react-renderer を組み合わせて使用
- * Snippetの標準コピーボタン機能を維持してUIの一貫性を保つ
+ * カスタム実装で prism-react-renderer を使用したシンタックスハイライトと
+ * コピーボタン機能を提供する
  * 原文保持: trim() は使用せず、コードの原文をそのまま渡す
  */
 export function CodeSnippet({
@@ -130,66 +181,43 @@ export function CodeSnippet({
 
   if (variant === "inline") {
     return (
-      <Snippet
-        className="w-fit"
-        classNames={{
-          base: "bg-white border border-orange-200",
-          pre: "font-mono text-orange-900",
-          copyButton: "text-orange-600 hover:text-orange-800",
-        }}
-        hideSymbol
-        variant="flat"
-      >
-        {code}
-      </Snippet>
+      <div className="inline-flex w-fit items-center gap-2 rounded-lg border border-orange-200 bg-white px-3 py-1.5">
+        <pre className="font-mono text-orange-900">{code}</pre>
+        <CopyButton text={code} />
+      </div>
     );
   }
 
   // プレーンテキストの場合はシンタックスハイライトなし
   if (language === "plaintext") {
     return (
-      <Snippet
-        className="w-full max-w-full"
-        classNames={{
-          base: "bg-orange-50 border border-orange-200 overflow-hidden relative",
-          pre: "font-mono text-orange-900 whitespace-pre text-sm min-w-0 overflow-x-auto",
-          copyButton:
-            "text-orange-600 hover:text-orange-800 absolute top-2 right-2",
-          content: "overflow-x-auto max-w-full min-w-0",
-        }}
-        hideSymbol
-        variant="flat"
-      >
-        {code}
-      </Snippet>
+      <div className="relative w-full max-w-full overflow-hidden rounded-lg border border-orange-200 bg-orange-50">
+        <pre className="min-w-0 overflow-x-auto whitespace-pre p-4 pr-12 font-mono text-orange-900 text-sm">
+          {code}
+        </pre>
+        <div className="absolute top-2 right-2">
+          <CopyButton text={code} />
+        </div>
+      </div>
     );
   }
 
   // シンタックスハイライト付きのコードブロック
-  // HeroUI Snippetのコピー機能を維持しつつ、内部でHighlightを使用
   const prismLanguage = getPrismLanguage(language);
 
   return (
-    <Snippet
-      className="w-full max-w-full"
-      classNames={{
-        base: "bg-orange-50 border border-orange-200 overflow-hidden relative",
-        pre: "font-mono whitespace-pre text-sm min-w-0 overflow-x-auto",
-        copyButton:
-          "text-orange-600 hover:text-orange-800 absolute top-2 right-2",
-        content: "overflow-x-auto max-w-full min-w-0",
-      }}
-      codeString={code}
-      hideSymbol
-      variant="flat"
-    >
-      {isPrismReady ? (
-        <HighlightedCode code={code} language={prismLanguage} />
-      ) : (
-        // YAML初期化完了まではプレーンテキストとして表示
-        // Snippetの標準preに任せるため、codeをそのまま渡す
-        code
-      )}
-    </Snippet>
+    <div className="relative w-full max-w-full overflow-hidden rounded-lg border border-orange-200 bg-orange-50">
+      <pre className="min-w-0 overflow-x-auto whitespace-pre p-4 pr-12 font-mono text-sm">
+        {isPrismReady ? (
+          <HighlightedCode code={code} language={prismLanguage} />
+        ) : (
+          // YAML初期化完了まではプレーンテキストとして表示
+          code
+        )}
+      </pre>
+      <div className="absolute top-2 right-2">
+        <CopyButton text={code} />
+      </div>
+    </div>
   );
 }

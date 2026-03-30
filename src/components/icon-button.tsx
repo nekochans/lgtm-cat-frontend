@@ -96,7 +96,7 @@ export function IconButton({
       : "bg-button-secondary-base hover:bg-button-secondary-hover"
   } ${className ?? ""}`;
 
-  const startContent = (
+  const iconContent = (
     <span aria-hidden="true" className="flex items-center gap-2">
       {showGithubIcon === true && (
         <GithubIcon color="default" height={20} width={20} />
@@ -109,14 +109,10 @@ export function IconButton({
 
   if (link != null) {
     return (
-      <Button
-        as={Link}
-        className={buttonClasses}
-        href={link}
-        startContent={startContent}
-      >
+      <Link className={buttonClasses} href={link}>
+        {iconContent}
         {displayText}
-      </Button>
+      </Link>
     );
   }
 
@@ -124,11 +120,11 @@ export function IconButton({
     <Button
       className={buttonClasses}
       isDisabled={isPressed === true || isLoading === true}
-      isLoading={isLoading}
+      isPending={isLoading}
       onPress={onPress}
-      startContent={startContent}
       type={type}
     >
+      {iconContent}
       {displayText}
     </Button>
   );

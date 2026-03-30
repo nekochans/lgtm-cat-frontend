@@ -124,12 +124,11 @@ export function LgtmImage({ hideHeartIcon, id, imageUrl }: Props): JSX.Element {
       <div className="absolute top-2 right-2 flex gap-2 opacity-100 transition-opacity duration-150 md:opacity-0 md:group-hover:opacity-100">
         <Button
           aria-label="Copy to clipboard"
-          className="min-w-0 bg-white/80 p-2 backdrop-blur-sm hover:bg-white/90"
+          className="min-w-0 rounded-sm bg-white/80 p-2 backdrop-blur-sm hover:bg-white/90"
           isIconOnly
           onPress={handleCopyIconPress}
           onPressEnd={handleCopyPressEnd}
           onPressStart={handleCopyPressStart}
-          radius="sm"
           size="sm"
         >
           <CopyIcon
@@ -142,12 +141,11 @@ export function LgtmImage({ hideHeartIcon, id, imageUrl }: Props): JSX.Element {
         {!hideHeartIcon && (
           <Button
             aria-label="Add to favorites"
-            className="min-w-0 bg-white/80 p-2 backdrop-blur-sm hover:bg-white/90"
+            className="min-w-0 rounded-sm bg-white/80 p-2 backdrop-blur-sm hover:bg-white/90"
             isIconOnly
             onPress={handleToggleFavorite}
             onPressEnd={handleFavoritePressEnd}
             onPressStart={handleFavoritePressStart}
-            radius="sm"
             size="sm"
           >
             <HeartIcon
