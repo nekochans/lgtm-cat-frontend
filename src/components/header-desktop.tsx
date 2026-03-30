@@ -82,21 +82,21 @@ export function HeaderDesktop({
                     }}
                   >
                     <Dropdown.Item
-                      className="data-[hovered=true]:!bg-orange-300 rounded-lg px-3 py-2 font-bold text-background text-xl"
+                      className="data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm"
                       id="how-to-use"
                       textValue={howToUse.text}
                     >
                       {howToUse.text}
                     </Dropdown.Item>
                     <Dropdown.Item
-                      className="data-[hovered=true]:!bg-orange-300 rounded-lg px-3 py-2 font-bold text-background text-xl"
+                      className="data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm"
                       id="mcp"
                       textValue={mcp.text}
                     >
                       {mcp.text}
                     </Dropdown.Item>
                     <Dropdown.Item
-                      className="data-[hovered=true]:!bg-orange-300 rounded-lg px-3 py-2 font-bold text-background text-xl"
+                      className="data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm"
                       id="github-app"
                       textValue={githubApp.text}
                     >
@@ -132,7 +132,7 @@ export function HeaderDesktop({
                   }}
                 >
                   <Dropdown.Item
-                    className={`data-[hovered=true]:!bg-orange-300 rounded-lg px-3 py-2 font-bold text-background text-xl ${
+                    className={`data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm ${
                       language === "ja" ? "!bg-orange-400" : ""
                     }`}
                     id="ja"
@@ -148,7 +148,7 @@ export function HeaderDesktop({
                     </div>
                   </Dropdown.Item>
                   <Dropdown.Item
-                    className={`data-[hovered=true]:!bg-orange-300 rounded-lg px-3 py-2 font-bold text-background text-xl ${
+                    className={`data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm ${
                       language === "en" ? "!bg-orange-400" : ""
                     }`}
                     id="en"
@@ -192,21 +192,21 @@ export function HeaderDesktop({
                     }}
                   >
                     <Dropdown.Item
-                      className="data-[hovered=true]:!bg-orange-300 rounded-lg px-3 py-2 font-bold text-background text-xl"
+                      className="data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm"
                       id="favorites"
                       textValue={favoriteListText(language)}
                     >
                       {favoriteListText(language)}
                     </Dropdown.Item>
                     <Dropdown.Item
-                      className="data-[hovered=true]:!bg-orange-300 rounded-lg px-3 py-2 font-bold text-background text-xl"
+                      className="data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm"
                       id="cat-list"
                       textValue={meowlistText(language)}
                     >
                       {meowlistText(language)}
                     </Dropdown.Item>
                     <Dropdown.Item
-                      className="data-[hovered=true]:!bg-orange-300 rounded-lg px-3 py-2 font-bold text-background text-xl"
+                      className="data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm"
                       id="logout"
                       textValue={logoutText(language)}
                     >
