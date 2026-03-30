@@ -3,8 +3,7 @@
 
 import { Dropdown } from "@heroui/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import type { JSX, Key } from "react";
+import type { JSX } from "react";
 import {
   documentsText,
   favoriteListText,
@@ -41,7 +40,6 @@ export function HeaderDesktop({
   hideLoginButton,
   isLoggedIn,
 }: Props): JSX.Element {
-  const router = useRouter();
   const githubApp = createGitHubAppLinksFromLanguages(language);
   const howToUse = createHowToUseLinksFromLanguages(language);
   const mcp = createMcpLinksFromLanguages(language);
@@ -65,24 +63,14 @@ export function HeaderDesktop({
                   {documentsText(language)}
                   <DownIcon />
                 </Dropdown.Trigger>
-                <Dropdown.Popover className="overflow-hidden rounded-[14px] p-0">
+                <Dropdown.Popover className="!rounded-[14px] !p-0">
                   <Dropdown.Menu
                     aria-label="Documents menu"
                     className="!gap-0 min-w-[200px] max-w-[400px] rounded-lg bg-primary p-2"
-                    onAction={(key: Key) => {
-                      const linkMap: Record<string, string> = {
-                        "how-to-use": howToUse.link,
-                        mcp: mcp.link,
-                        "github-app": githubApp.link,
-                      };
-                      const href = linkMap[key as string];
-                      if (href) {
-                        router.push(href);
-                      }
-                    }}
                   >
                     <Dropdown.Item
                       className="data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm"
+                      href={howToUse.link}
                       id="how-to-use"
                       textValue={howToUse.text}
                     >
@@ -90,6 +78,7 @@ export function HeaderDesktop({
                     </Dropdown.Item>
                     <Dropdown.Item
                       className="data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm"
+                      href={mcp.link}
                       id="mcp"
                       textValue={mcp.text}
                     >
@@ -97,6 +86,7 @@ export function HeaderDesktop({
                     </Dropdown.Item>
                     <Dropdown.Item
                       className="data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm"
+                      href={githubApp.link}
                       id="github-app"
                       textValue={githubApp.text}
                     >
@@ -114,27 +104,16 @@ export function HeaderDesktop({
                 language
                 <DownIcon />
               </Dropdown.Trigger>
-              <Dropdown.Popover className="overflow-hidden rounded-[14px] p-0">
+              <Dropdown.Popover className="!rounded-[14px] !p-0">
                 <Dropdown.Menu
                   aria-label="Language selection"
                   className="!gap-0 min-w-[180px] rounded-lg bg-primary p-2"
-                  onAction={(key: Key) => {
-                    const langKey = key as string;
-                    if (langKey === "ja") {
-                      router.push(removedLanguagePath);
-                    } else if (langKey === "en") {
-                      router.push(
-                        removedLanguagePath === "/"
-                          ? "/en"
-                          : `/en${removedLanguagePath}`
-                      );
-                    }
-                  }}
                 >
                   <Dropdown.Item
                     className={`data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm ${
                       language === "ja" ? "!bg-orange-400" : ""
                     }`}
+                    href={removedLanguagePath}
                     id="ja"
                     textValue="日本語"
                   >
@@ -151,6 +130,11 @@ export function HeaderDesktop({
                     className={`data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm ${
                       language === "en" ? "!bg-orange-400" : ""
                     }`}
+                    href={
+                      removedLanguagePath === "/"
+                        ? "/en"
+                        : `/en${removedLanguagePath}`
+                    }
                     id="en"
                     textValue="English"
                   >
@@ -175,24 +159,14 @@ export function HeaderDesktop({
                   <GithubIcon color="white" height={24} width={24} />
                   <DownIcon />
                 </Dropdown.Trigger>
-                <Dropdown.Popover className="overflow-hidden rounded-[14px] p-0">
+                <Dropdown.Popover className="!rounded-[14px] !p-0">
                   <Dropdown.Menu
                     aria-label="User menu"
                     className="!gap-0 min-w-[180px] rounded-lg bg-primary p-2"
-                    onAction={(key: Key) => {
-                      const linkMap: Record<string, string> = {
-                        favorites: "/favorites",
-                        "cat-list": "/cat-list",
-                        logout: "/logout",
-                      };
-                      const href = linkMap[key as string];
-                      if (href) {
-                        router.push(href);
-                      }
-                    }}
                   >
                     <Dropdown.Item
                       className="data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm"
+                      href="/favorites"
                       id="favorites"
                       textValue={favoriteListText(language)}
                     >
@@ -200,6 +174,7 @@ export function HeaderDesktop({
                     </Dropdown.Item>
                     <Dropdown.Item
                       className="data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm"
+                      href="/cat-list"
                       id="cat-list"
                       textValue={meowlistText(language)}
                     >
@@ -207,6 +182,7 @@ export function HeaderDesktop({
                     </Dropdown.Item>
                     <Dropdown.Item
                       className="data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm"
+                      href="/logout"
                       id="logout"
                       textValue={logoutText(language)}
                     >
