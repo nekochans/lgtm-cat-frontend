@@ -90,7 +90,7 @@ export function IconButton({
   onPress,
 }: Props): JSX.Element {
   // Figmaデザインに基づくスタイル（デザイントークン使用）
-  const buttonClasses = `inline-flex items-center justify-center gap-2 rounded-lg px-7 py-2 font-bold font-inter text-xl text-text-br transition-colors duration-200 ${
+  const buttonClasses = `inline-flex h-10 items-center justify-center gap-2 rounded-lg px-7 py-2 font-bold font-inter text-xl text-text-br transition-colors duration-200 ${
     isPressed === true
       ? "bg-button-secondary-active"
       : "bg-button-secondary-base hover:bg-button-secondary-hover"

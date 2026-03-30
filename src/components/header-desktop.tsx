@@ -99,7 +99,7 @@ export function HeaderDesktop({
           </div>
           <div className="flex items-center gap-2">
             <Dropdown>
-              <Dropdown.Trigger className="flex items-center gap-2 rounded-xl border-2 border-background bg-primary px-5 py-3 font-bold text-background text-base hover:bg-primary">
+              <Dropdown.Trigger className="flex h-10 items-center gap-2 rounded-xl border-2 border-background bg-primary px-5 py-3 font-bold text-background text-base hover:bg-primary">
                 <GlobeIcon />
                 language
                 <DownIcon />
