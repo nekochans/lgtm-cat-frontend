@@ -296,9 +296,9 @@ export function HeaderMobile({
           }}
         >
           <Drawer.Content placement="right">
-            <Drawer.Dialog className="w-[285px] bg-primary">
+            <Drawer.Dialog className="!p-0 w-[285px] bg-primary">
               {/* Drawer内のヘッダー（閉じるアイコンのみ、右寄せ） */}
-              <Drawer.Header className="flex items-center justify-end border-orange-300 border-b bg-primary px-4 py-2">
+              <Drawer.Header className="!mb-0 !flex-row items-center justify-end border-orange-300 border-b bg-primary px-4 py-2">
                 <button
                   aria-label={closeMenuAriaLabel(language)}
                   className="p-1"
@@ -310,7 +310,7 @@ export function HeaderMobile({
               </Drawer.Header>
 
               {/* Drawer内のボディ（メニューコンテンツ） */}
-              <Drawer.Body className="bg-primary px-5 py-10">
+              <Drawer.Body className="!m-0 bg-primary px-5 py-10">
                 {!isLoggedIn && (
                   <UnloggedInMenu
                     hideLoginButton={hideLoginButton}
