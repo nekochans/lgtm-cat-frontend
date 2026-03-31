@@ -43,6 +43,13 @@ interface Props {
 // メニューの種類: "navigation"はハンバーガーメニュー、"language"は言語選択メニュー
 type MenuType = "navigation" | "language";
 
+function drawerAriaLabel(menuType: MenuType, language: Language): string {
+  if (menuType === "language") {
+    return language === "ja" ? "言語選択メニュー" : "Language selection menu";
+  }
+  return language === "ja" ? "ナビゲーションメニュー" : "Navigation menu";
+}
+
 interface LanguageMenuNavProps {
   readonly language: Language;
   readonly onLinkClick: () => void;
@@ -296,7 +303,10 @@ export function HeaderMobile({
           }}
         >
           <Drawer.Content placement="right">
-            <Drawer.Dialog className="!p-0 w-[285px] overflow-hidden rounded-[14px_0_0_14px] bg-primary">
+            <Drawer.Dialog
+              aria-label={drawerAriaLabel(menuType, language)}
+              className="!p-0 w-[285px] overflow-hidden rounded-[14px_0_0_14px] bg-primary"
+            >
               {/* Drawer内のヘッダー（閉じるアイコンのみ、右寄せ） */}
               <Drawer.Header className="!mb-0 !flex-row items-center justify-end border-orange-300 border-b bg-primary px-4 py-2">
                 <button
