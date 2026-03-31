@@ -296,7 +296,7 @@ export function HeaderMobile({
           }}
         >
           <Drawer.Content placement="right">
-            <Drawer.Dialog className="!p-0 w-[285px] bg-primary">
+            <Drawer.Dialog className="!p-0 w-[285px] overflow-hidden rounded-[14px_0_0_14px] bg-primary">
               {/* Drawer内のヘッダー（閉じるアイコンのみ、右寄せ） */}
               <Drawer.Header className="!mb-0 !flex-row items-center justify-end border-orange-300 border-b bg-primary px-4 py-2">
                 <button
