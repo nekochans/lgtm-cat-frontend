@@ -2,8 +2,7 @@
 
 "use client";
 
-import { Button } from "@heroui/react";
-import { addToast } from "@heroui/toast";
+import { Button, toast } from "@heroui/react";
 import Image from "next/image";
 import Link from "next/link";
 import type { JSX } from "react";
@@ -79,10 +78,8 @@ export function UploadSuccess({
         setIsCopied(false);
       }, 1500);
     } catch {
-      addToast({
-        title: copyFailedTitle(language),
+      toast.danger(copyFailedTitle(language), {
         description: copyFailedDescription(language),
-        color: "danger",
       });
     }
   }, [lgtmImageUrl, language]);

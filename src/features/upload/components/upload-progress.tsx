@@ -2,7 +2,7 @@
 
 "use client";
 
-import { Progress } from "@heroui/react";
+import { ProgressBar } from "@heroui/react";
 import Image from "next/image";
 import type { JSX } from "react";
 import type { Language } from "@/features/language";
@@ -44,16 +44,15 @@ export function UploadProgress({
       </p>
 
       {/* プログレスバー */}
-      <Progress
+      <ProgressBar
         aria-label={uploadingText(language)}
-        classNames={{
-          base: "w-full max-w-[280px] md:max-w-[400px]",
-          track: "h-6 md:h-7 bg-zinc-200",
-          indicator: "bg-orange-400",
-        }}
-        showValueLabel={false}
+        className="w-full max-w-[280px] md:max-w-[400px]"
         value={progress}
-      />
+      >
+        <ProgressBar.Track className="h-6 bg-zinc-200 md:h-7">
+          <ProgressBar.Fill className="bg-orange-400" />
+        </ProgressBar.Track>
+      </ProgressBar>
     </div>
   );
 }
