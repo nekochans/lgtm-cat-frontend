@@ -1,11 +1,7 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
-import {
-  Button,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-} from "@heroui/react";
+"use client";
+
+import { Dropdown } from "@heroui/react";
 import Link from "next/link";
 import type { JSX } from "react";
 import {
@@ -62,151 +58,138 @@ export function HeaderDesktop({
               >
                 {uploadText(language)}
               </Link>
-              <Dropdown
-                classNames={{
-                  content: "p-0",
-                }}
-              >
-                <DropdownTrigger>
-                  <Button
-                    className="flex items-center justify-center gap-2 bg-transparent px-5 py-2 font-bold text-background text-base hover:text-button-tertiary-hover data-[hover=true]:bg-transparent"
-                    variant="light"
+              <Dropdown>
+                <Dropdown.Trigger className="flex items-center justify-center gap-2 rounded-xl bg-transparent px-5 py-2 font-bold text-background text-base hover:text-button-tertiary-hover">
+                  {documentsText(language)}
+                  <DownIcon />
+                </Dropdown.Trigger>
+                <Dropdown.Popover className="!rounded-[14px] !p-0">
+                  <Dropdown.Menu
+                    aria-label="Documents menu"
+                    className="!gap-0 min-w-[200px] max-w-[400px] rounded-lg bg-primary p-2"
                   >
-                    {documentsText(language)}
-                    <DownIcon />
-                  </Button>
-                </DropdownTrigger>
-                <DropdownMenu
-                  aria-label="Documents menu"
-                  className="min-w-[200px] max-w-[400px] rounded-lg bg-primary p-2"
-                  classNames={{ base: "!gap-0", list: "gap-0" }}
-                >
-                  <DropdownItem
-                    as={Link}
-                    className="data-[hover=true]:!bg-orange-300 rounded-lg px-3 py-2 font-bold text-background text-xl"
-                    href={howToUse.link}
-                    key="how-to-use"
-                  >
-                    {howToUse.text}
-                  </DropdownItem>
-                  <DropdownItem
-                    as={Link}
-                    className="data-[hover=true]:!bg-orange-300 rounded-lg px-3 py-2 font-bold text-background text-xl"
-                    href={mcp.link}
-                    key="mcp"
-                  >
-                    {mcp.text}
-                  </DropdownItem>
-                  <DropdownItem
-                    as={Link}
-                    className="data-[hover=true]:!bg-orange-300 rounded-lg px-3 py-2 font-bold text-background text-xl"
-                    href={githubApp.link}
-                    key="github-app"
-                  >
-                    {githubApp.text}
-                  </DropdownItem>
-                </DropdownMenu>
+                    <Dropdown.Item
+                      className="data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm"
+                      href={howToUse.link}
+                      id="how-to-use"
+                      textValue={howToUse.text}
+                    >
+                      {howToUse.text}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      className="data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm"
+                      href={mcp.link}
+                      id="mcp"
+                      textValue={mcp.text}
+                    >
+                      {mcp.text}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      className="data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm"
+                      href={githubApp.link}
+                      id="github-app"
+                      textValue={githubApp.text}
+                    >
+                      {githubApp.text}
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown.Popover>
               </Dropdown>
             </nav>
           </div>
           <div className="flex items-center gap-2">
-            <Dropdown
-              classNames={{
-                content: "p-0",
-              }}
-            >
-              <DropdownTrigger>
-                <Button
-                  className="border-2 border-background bg-primary px-5 py-3 font-bold text-background text-base hover:bg-primary"
-                  variant="bordered"
+            <Dropdown>
+              <Dropdown.Trigger className="flex h-10 items-center gap-2 rounded-xl border-2 border-background bg-primary px-5 py-3 font-bold text-background text-base hover:bg-primary">
+                <GlobeIcon />
+                language
+                <DownIcon />
+              </Dropdown.Trigger>
+              <Dropdown.Popover className="!rounded-[14px] !p-0">
+                <Dropdown.Menu
+                  aria-label="Language selection"
+                  className="!gap-0 min-w-[180px] rounded-lg bg-primary p-2"
                 >
-                  <GlobeIcon />
-                  language
-                  <DownIcon />
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu
-                aria-label="Language selection"
-                className="min-w-[180px] rounded-lg bg-primary p-2"
-                classNames={{ base: "!gap-0", list: "gap-0" }}
-              >
-                <DropdownItem
-                  as={Link}
-                  className={`data-[hover=true]:!bg-orange-300 rounded-lg px-3 py-2 font-bold text-background text-xl ${
-                    language === "ja" ? "!bg-orange-400" : ""
-                  }`}
-                  href={removedLanguagePath}
-                  key="ja"
-                  startContent={language === "ja" ? <RightIcon /> : null}
-                >
-                  日本語
-                </DropdownItem>
-                <DropdownItem
-                  as={Link}
-                  className={`data-[hover=true]:!bg-orange-300 rounded-lg px-3 py-2 font-bold text-background text-xl ${
-                    language === "en" ? "!bg-orange-400" : ""
-                  }`}
-                  href={
-                    removedLanguagePath === "/"
-                      ? "/en"
-                      : `/en${removedLanguagePath}`
-                  }
-                  key="en"
-                  startContent={language === "en" ? <RightIcon /> : null}
-                >
-                  English
-                </DropdownItem>
-              </DropdownMenu>
+                  <Dropdown.Item
+                    className={`data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm ${
+                      language === "ja" ? "!bg-orange-400" : ""
+                    }`}
+                    href={removedLanguagePath}
+                    id="ja"
+                    textValue="日本語"
+                  >
+                    <div className="flex items-center gap-3">
+                      {language === "ja" ? (
+                        <RightIcon />
+                      ) : (
+                        <span className="w-4" />
+                      )}
+                      日本語
+                    </div>
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    className={`data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm ${
+                      language === "en" ? "!bg-orange-400" : ""
+                    }`}
+                    href={
+                      removedLanguagePath === "/"
+                        ? "/en"
+                        : `/en${removedLanguagePath}`
+                    }
+                    id="en"
+                    textValue="English"
+                  >
+                    <div className="flex items-center gap-3">
+                      {language === "en" ? (
+                        <RightIcon />
+                      ) : (
+                        <span className="w-4" />
+                      )}
+                      English
+                    </div>
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown.Popover>
             </Dropdown>
             {isLoggedIn ? (
-              <Dropdown
-                classNames={{
-                  content: "p-0",
-                }}
-              >
-                <DropdownTrigger>
-                  <Button
-                    aria-label="User menu"
-                    className="bg-transparent px-5 py-2 data-[hover=true]:bg-transparent"
-                    variant="light"
-                  >
-                    <GithubIcon color="white" height={24} width={24} />
-                    <DownIcon />
-                  </Button>
-                </DropdownTrigger>
-                <DropdownMenu
+              <Dropdown>
+                <Dropdown.Trigger
                   aria-label="User menu"
-                  className="min-w-[180px] rounded-lg bg-primary p-2"
-                  classNames={{ base: "!gap-0", list: "gap-0" }}
+                  className="flex items-center gap-1 rounded-xl bg-transparent px-5 py-2"
                 >
-                  <DropdownItem
-                    as={Link}
-                    className="data-[hover=true]:!bg-orange-300 rounded-lg px-3 py-2 font-bold text-background text-xl"
-                    // TODO: https://github.com/nekochans/lgtm-cat/issues/14 でログイン機能が出来た際にこのページを実装するので実装後は `createIncludeLanguageAppPath` を使ってパスを生成するように修正する
-                    href="/favorites"
-                    key="favorites"
+                  <GithubIcon color="white" height={24} width={24} />
+                  <DownIcon />
+                </Dropdown.Trigger>
+                <Dropdown.Popover className="!rounded-[14px] !p-0">
+                  <Dropdown.Menu
+                    aria-label="User menu"
+                    className="!gap-0 min-w-[180px] rounded-lg bg-primary p-2"
                   >
-                    {favoriteListText(language)}
-                  </DropdownItem>
-                  <DropdownItem
-                    as={Link}
-                    className="data-[hover=true]:!bg-orange-300 rounded-lg px-3 py-2 font-bold text-background text-xl"
-                    // TODO: https://github.com/nekochans/lgtm-cat/issues/14 でログイン機能が出来た際にこのページを実装するので実装後は `createIncludeLanguageAppPath` を使ってパスを生成するように修正する
-                    href="/cat-list"
-                    key="cat-list"
-                  >
-                    {meowlistText(language)}
-                  </DropdownItem>
-                  <DropdownItem
-                    as={Link}
-                    className="data-[hover=true]:!bg-orange-300 rounded-lg px-3 py-2 font-bold text-background text-xl"
-                    // TODO: https://github.com/nekochans/lgtm-cat/issues/14 でログイン機能が出来た際にこのページを実装するので実装後は `createIncludeLanguageAppPath` を使ってパスを生成するように修正する
-                    href="/logout"
-                    key="logout"
-                  >
-                    {logoutText(language)}
-                  </DropdownItem>
-                </DropdownMenu>
+                    <Dropdown.Item
+                      className="data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm"
+                      href="/favorites"
+                      id="favorites"
+                      textValue={favoriteListText(language)}
+                    >
+                      {favoriteListText(language)}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      className="data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm"
+                      href="/cat-list"
+                      id="cat-list"
+                      textValue={meowlistText(language)}
+                    >
+                      {meowlistText(language)}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      className="data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm"
+                      href="/logout"
+                      id="logout"
+                      textValue={logoutText(language)}
+                    >
+                      {logoutText(language)}
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown.Popover>
               </Dropdown>
             ) : (
               // TODO: ログイン機能実装後は hideLoginButton による条件分岐を削除する

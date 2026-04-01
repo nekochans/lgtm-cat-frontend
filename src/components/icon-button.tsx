@@ -90,13 +90,13 @@ export function IconButton({
   onPress,
 }: Props): JSX.Element {
   // Figmaデザインに基づくスタイル（デザイントークン使用）
-  const buttonClasses = `inline-flex items-center justify-center gap-2 rounded-lg px-7 py-2 font-bold font-inter text-xl text-text-br transition-colors duration-200 ${
+  const buttonClasses = `inline-flex h-10 items-center justify-center gap-2 rounded-lg px-7 py-2 font-bold font-inter text-xl text-text-br transition-colors duration-200 ${
     isPressed === true
       ? "bg-button-secondary-active"
       : "bg-button-secondary-base hover:bg-button-secondary-hover"
   } ${className ?? ""}`;
 
-  const startContent = (
+  const iconContent = (
     <span aria-hidden="true" className="flex items-center gap-2">
       {showGithubIcon === true && (
         <GithubIcon color="default" height={20} width={20} />
@@ -109,14 +109,10 @@ export function IconButton({
 
   if (link != null) {
     return (
-      <Button
-        as={Link}
-        className={buttonClasses}
-        href={link}
-        startContent={startContent}
-      >
+      <Link className={buttonClasses} href={link}>
+        {iconContent}
         {displayText}
-      </Button>
+      </Link>
     );
   }
 
@@ -124,11 +120,11 @@ export function IconButton({
     <Button
       className={buttonClasses}
       isDisabled={isPressed === true || isLoading === true}
-      isLoading={isLoading}
+      isPending={isLoading}
       onPress={onPress}
-      startContent={startContent}
       type={type}
     >
+      {iconContent}
       {displayText}
     </Button>
   );

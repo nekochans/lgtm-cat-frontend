@@ -2,7 +2,7 @@
 
 "use client";
 
-import { addToast } from "@heroui/toast";
+import { toast } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useRef, useState } from "react";
 import { IconButton } from "@/components/icon-button";
@@ -55,10 +55,8 @@ export function HomeActionButtons({ language, className }: Props) {
           router.push(result.redirectUrl);
         },
         onError: () => {
-          addToast({
-            title: "Error",
+          toast.danger("Error", {
             description: "Failed to refresh images. Please try again later.",
-            color: "danger",
           });
         },
       }
@@ -80,11 +78,9 @@ export function HomeActionButtons({ language, className }: Props) {
           router.push(result.redirectUrl);
         },
         onError: () => {
-          addToast({
-            title: "Error",
+          toast.danger("Error", {
             description:
               "Failed to load latest images. Please try again later.",
-            color: "danger",
           });
         },
       }
@@ -120,25 +116,19 @@ export function HomeActionButtons({ language, className }: Props) {
             setIsCopied(false);
           }, 1500);
         } catch {
-          addToast({
-            title: "Copy Failed",
+          toast.danger("Copy Failed", {
             description:
               "Failed to copy to clipboard. Please check browser permissions.",
-            color: "danger",
           });
         }
       } else {
-        addToast({
-          title: "Error",
+        toast.danger("Error", {
           description: sanitizeErrorMessage(result.error),
-          color: "danger",
         });
       }
     } catch {
-      addToast({
-        title: "Error",
+      toast.danger("Error", {
         description: "An unexpected error occurred. Please try again later.",
-        color: "danger",
       });
     } finally {
       setIsLoading(false);

@@ -107,7 +107,7 @@ export function UploadDropArea({
         className="h-12 w-[220px] rounded-lg border-2 border-button-tertiary-border bg-button-tertiary-base px-6 font-bold text-base text-button-tertiary-tx hover:bg-button-tertiary-hover"
         isDisabled={isDisabled}
         onPress={handleButtonClick}
-        variant="bordered"
+        variant="outline"
       >
         {uploadInputButtonText(language)}
       </Button>
