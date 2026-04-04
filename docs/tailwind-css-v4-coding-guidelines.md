@@ -126,11 +126,11 @@
   }
   ```
 
-- **Custom variants**: Use `@variant` directive
+- **Custom variants**: Use `@custom-variant` directive
 
   ```css
-  @variant pointer-coarse (@media (pointer: coarse));
-  @variant theme-midnight (&:where([data-theme="midnight"] *));
+  @custom-variant pointer-coarse (@media (pointer: coarse));
+  @custom-variant theme-midnight (&:where([data-theme="midnight"] *));
   ```
 
 - **Plugins**: Use `@plugin` directive
