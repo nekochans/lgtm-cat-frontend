@@ -1,267 +1,216 @@
-# Tailwind CSS 4 rules
-
-Provided by playbooks
-
-https://playbooks.com/rules/tailwind4
+# Tailwind CSS v4
 
 ## Core Changes
 
-- Use CSS-first configuration with `@theme` directive instead of JavaScript config `tailwind.config.js`:
+- **CSS-first configuration**: Configuration is now done in CSS instead of JavaScript
+  - Use `@theme` directive in CSS instead of `tailwind.config.js`
+  - Example:
 
-```css
-@import "tailwindcss";
+    ```css
+    @import "tailwindcss";
 
-@theme {
-  --font-display: "Satoshi", "sans-serif";
-  --breakpoint-3xl: 1920px;
-  --color-avocado-500: oklch(0.84 0.18 117.33);
-  --ease-fluid: cubic-bezier(0.3, 0, 0, 1);
-}
-```
+    @theme {
+      --font-display: "Satoshi", "sans-serif";
+      --breakpoint-3xl: 1920px;
+      --color-avocado-500: oklch(0.84 0.18 117.33);
+      --ease-fluid: cubic-bezier(0.3, 0, 0, 1);
+    }
+    ```
 
-- Import legacy config files with the `@config` directive:
+- Legacy `tailwind.config.js` files can still be imported using the `@config` directive:
+  ```css
+  @import "tailwindcss";
+  @config "../../tailwind.config.js";
+  ```
+- **CSS import syntax**: Use `@import "tailwindcss"` instead of `@tailwind` directives
+  - Old: `@tailwind base; @tailwind components; @tailwind utilities;`
+  - New: `@import "tailwindcss";`
 
-```css
-@import "tailwindcss";
-@config "../../tailwind.config.js";
-```
+- **Package changes**:
+  - PostCSS plugin is now `@tailwindcss/postcss` (not `tailwindcss`)
+  - CLI is now `@tailwindcss/cli`
+  - Vite plugin is `@tailwindcss/vite`
+  - No need for `postcss-import` or `autoprefixer` anymore
 
-- Use `@import "tailwindcss"` instead of separate `@tailwind` directives:
-
-```css
-/* Old way */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* New way */
-@import "tailwindcss";
-```
-
-- Use updated package names:
-  - PostCSS plugin: `@tailwindcss/postcss` (not `tailwindcss`)
-  - CLI: `@tailwindcss/cli`
-  - Vite plugin: `@tailwindcss/vite`
+- **Native CSS cascade layers**: Uses real CSS `@layer` instead of Tailwind's custom implementation
 
 ## Theme Configuration
 
-- Use CSS variables for all design tokens:
+- **CSS theme variables**: All design tokens are available as CSS variables
+  - Namespace format: `--category-name` (e.g., `--color-blue-500`, `--font-sans`)
+  - Access in CSS: `var(--color-blue-500)`
+  - Available namespaces:
+    - `--color-*` : Color utilities like `bg-red-500` and `text-sky-300`
+    - `--font-*` : Font family utilities like `font-sans`
+    - `--text-*` : Font size utilities like `text-xl`
+    - `--font-weight-*` : Font weight utilities like `font-bold`
+    - `--tracking-*` : Letter spacing utilities like `tracking-wide`
+    - `--leading-*` : Line height utilities like `leading-tight`
+    - `--breakpoint-*` : Responsive breakpoint variants like `sm:*`
+    - `--container-*` : Container query variants like `@sm:*` and size utilities like `max-w-md`
+    - `--spacing-*` : Spacing and sizing utilities like `px-4` and `max-h-16`
+    - `--radius-*` : Border radius utilities like `rounded-sm`
+    - `--shadow-*` : Box shadow utilities like `shadow-md`
+    - `--inset-shadow-*` : Inset box shadow utilities like `inset-shadow-xs`
+    - `--drop-shadow-*` : Drop shadow filter utilities like `drop-shadow-md`
+    - `--blur-*` : Blur filter utilities like `blur-md`
+    - `--perspective-*` : Perspective utilities like `perspective-near`
+    - `--aspect-*` : Aspect ratio utilities like `aspect-video`
+    - `--ease-*` : Transition timing function utilities like `ease-out`
+    - `--animate-*` : Animation utilities like `animate-spin`
 
-```css
-/* In CSS */
-.custom-element {
-  background-color: var(--color-blue-500);
-  font-family: var(--font-sans);
-}
-```
+- **Simplified theme configuration**: Many utilities no longer need theme configuration
+  - Utilities like `grid-cols-12`, `z-40`, and `opacity-70` work without configuration
+  - Data attributes like `data-selected:opacity-100` don't need configuration
 
-- Available CSS variable namespaces:
-  - `--color-*`: Colors (e.g., `--color-blue-500`)
-  - `--font-*`: Font families (e.g., `--font-sans`)
-  - `--text-*`: Font sizes (e.g., `--text-xl`)
-  - `--font-weight-*`: Font weights (e.g., `--font-weight-bold`)
-  - `--spacing-*`: Spacing values (e.g., `--spacing-4`)
-  - `--radius-*`: Border radius (e.g., `--radius-md`)
-  - `--shadow-*`: Box shadows (e.g., `--shadow-lg`)
+- **Dynamic spacing scale**: Derived from a single spacing value
+  - Default: `--spacing: 0.25rem`
+  - Every multiple of the base value is available (e.g., `mt-21` works automatically)
 
-- Override entire namespaces or the whole theme:
+- **Overriding theme namespaces**:
+  - Override entire namespace: `--font-*: initial;`
+  - Override entire theme: `--*: initial;`
 
-```css
-@theme {
-  /* Override all font variables */
-  --font-*: initial;
+## New Features
 
-  /* Override the entire theme */
-  --*: initial;
-}
-```
+- **Container query support**: Built-in now, no plugin needed
+  - `@container` for container context
+  - `@sm:`, `@md:`, etc. for container-based breakpoints
+  - `@max-md:` for max-width container queries
+  - Combine with `@min-md:@max-xl:hidden` for ranges
 
-## Container Queries
+- **3D transforms**:
+  - `transform-3d` enables 3D transforms
+  - `rotate-x-*`, `rotate-y-*`, `rotate-z-*` for 3D rotation
+  - `scale-z-*` for z-axis scaling
+  - `translate-z-*` for z-axis translation
+  - `perspective-*` utilities (`perspective-near`, `perspective-distant`, etc.)
+  - `perspective-origin-*` utilities
+  - `backface-visible` and `backface-hidden`
 
-- Use container queries with `@container` and container-based breakpoints:
+- **Gradient enhancements**:
+  - Linear gradient angles: `bg-linear-45` (renamed from `bg-gradient-*`)
+  - Gradient interpolation: `bg-linear-to-r/oklch`, `bg-linear-to-r/srgb`
+  - Conic and radial gradients: `bg-conic`, `bg-radial-[at_25%_25%]`
 
-```html
-<!-- Create a container context -->
-<div class="@container">
-  <!-- Elements that respond to container size, not viewport -->
-  <div class="@sm:text-lg @md:text-xl @lg:text-2xl">
-    Responsive to container
-  </div>
-</div>
-```
+- **Shadow enhancements**:
+  - `inset-shadow-*` and `inset-ring-*` utilities
+  - Can be composed with regular `shadow-*` and `ring-*`
 
-- Use max-width container queries and ranges:
-
-```html
-<div class="@container">
-  <!-- Hidden when container is between md and xl breakpoints -->
-  <div class="@max-md:block @min-md:@max-xl:hidden @min-xl:block">
-    Conditionally visible
-  </div>
-</div>
-```
-
-## 3D Transforms
-
-- Use 3D transforms with new utilities:
-
-```html
-<!-- Enable 3D transforms -->
-<div
-  class="transform-3d rotate-x-12 rotate-y-6 translate-z-4 perspective-distant"
->
-  3D transformed element
-</div>
-
-<!-- Control backface visibility -->
-<div class="transform-3d rotate-y-180 backface-hidden">
-  Card back (hidden when flipped)
-</div>
-```
-
-## Enhanced Gradients
-
-- Use new gradient syntax and features:
-
-```html
-<!-- Linear gradient with specific angle -->
-<div class="bg-linear-45 from-blue-500 to-purple-500">45-degree gradient</div>
-
-<!-- Gradient with specific color space interpolation -->
-<div class="bg-linear-to-r/oklch from-blue-500 to-red-500">
-  Linear gradient with OKLCH interpolation
-</div>
-
-<!-- Conic and radial gradients -->
-<div class="bg-conic from-red-500 via-yellow-500 to-green-500">
-  Conic gradient
-</div>
-
-<div class="bg-radial-[at_25%_25%] from-amber-500 to-transparent">
-  Radial gradient with custom position
-</div>
-```
+- **New CSS property utilities**:
+  - `field-sizing-content` for auto-resizing textareas
+  - `scheme-light`, `scheme-dark` for `color-scheme` property
+  - `font-stretch-*` utilities for variable fonts
 
 ## New Variants
 
-- Use composable variants by chaining them:
+- **Composable variants**: Chain variants together
+  - Example: `group-has-data-potato:opacity-100`
 
-```html
-<div class="group">
-  <!-- Only visible when parent has data-active attribute and is hovered -->
-  <span class="opacity-0 group-has-data-active:group-hover:opacity-100">
-    Conditionally visible
-  </span>
-</div>
-```
-
-- Use new variants:
-
-```html
-<!-- Styles applied during CSS transitions -->
-<div class="opacity-0 starting:opacity-100 transition">
-  Fade in on initial render
-</div>
-
-<!-- Target elements that are not in a specific state -->
-<div class="not-first:mt-4">Margin top on all but first item</div>
-
-<!-- Target specific nth-child positions -->
-<ul>
-  <li class="nth-3:bg-gray-100">Every third item has gray background</li>
-</ul>
-
-<!-- Target all descendants -->
-<div class="**:text-gray-800">All text inside is gray-800</div>
-```
+- **New variants**:
+  - `starting` variant for `@starting-style` transitions
+  - `not-*` variant for `:not()` pseudo-class
+  - `inert` variant for `inert` attribute
+  - `nth-*` variants (`nth-3:`, `nth-last-5:`, `nth-of-type-4:`, `nth-last-of-type-6:`)
+  - `in-*` variant (like `group-*` but without adding `group` class)
+  - `open` variant now supports `:popover-open`
+  - `**` variant for targeting all descendants
 
 ## Custom Extensions
 
-- Create custom utilities with `@utility` directive:
+- **Custom utilities**: Use `@utility` directive
 
-```css
-@utility tab-4 {
-  tab-size: 4;
-}
+  ```css
+  @utility tab-4 {
+    tab-size: 4;
+  }
+  ```
 
-/* Usage */
-<pre class="tab-4">
-  Indented with tabs
-</pre>
-```
+- **Custom variants**: Use `@custom-variant` directive
 
-- Create custom variants with `@variant` directive:
+  ```css
+  @custom-variant pointer-coarse (@media (pointer: coarse));
+  @custom-variant theme-midnight (&:where([data-theme="midnight"] *));
+  ```
 
-```css
-@variant pointer-coarse (@media (pointer: coarse));
-@variant theme-midnight (&:where([data-theme="midnight"] *));
-
-/* Usage */
-<button class="pointer-coarse:p-4">
-  Larger padding on touch devices
-</button>
-```
-
-- Use plugins with `@plugin` directive:
-
-```css
-@plugin "@tailwindcss/typography";
-```
+- **Plugins**: Use `@plugin` directive
+  ```css
+  @plugin "@tailwindcss/typography";
+  ```
 
 ## Breaking Changes
 
-- Use new syntax for CSS variables in arbitrary values:
+- **Removed deprecated utilities**:
+  - `bg-opacity-*` → Use `bg-black/50` instead
+  - `text-opacity-*` → Use `text-black/50` instead
+  - And others: `border-opacity-*`, `divide-opacity-*`, etc.
 
-```html
-<!-- Old way -->
-<div class="bg-[--brand-color]">Using CSS variable</div>
+- **Renamed utilities**:
+  - `shadow-sm` → `shadow-xs` (and `shadow` → `shadow-sm`)
+  - `drop-shadow-sm` → `drop-shadow-xs` (and `drop-shadow` → `drop-shadow-sm`)
+  - `blur-sm` → `blur-xs` (and `blur` → `blur-sm`)
+  - `rounded-sm` → `rounded-xs` (and `rounded` → `rounded-sm`)
+  - `outline-none` → `outline-hidden` (for the old behavior)
 
-<!-- New way -->
-<div class="bg-(--brand-color)">Using CSS variable</div>
-```
+- **Default style changes**:
+  - Default border color is now `currentColor` (was `gray-200`)
+  - Default `ring` width is now 1px (was 3px)
+  - Placeholder text now uses current color at 50% opacity (was `gray-400`)
+  - Hover styles only apply on devices that support hover (`@media (hover: hover)`)
 
-- Use renamed utilities:
-
-```html
-<!-- Old way -->
-<div class="shadow-sm rounded-sm blur-sm"></div>
-
-<!-- New way -->
-<div class="shadow-xs rounded-xs blur-xs"></div>
-```
+- **Syntax changes**:
+  - CSS variables in arbitrary values: `bg-(--brand-color)` instead of `bg-[--brand-color]`
+  - Stacked variants now apply left-to-right (not right-to-left)
+  - Use CSS variables instead of `theme()` function
 
 ## Advanced Configuration
 
-- Add a prefix to all Tailwind classes:
+- **Using a prefix**:
 
-```css
-@import "tailwindcss" prefix(tw);
+  ```css
+  @import "tailwindcss" prefix(tw);
+  ```
 
-/* Results in classes like: */
-<div class="tw:flex tw:bg-blue-500 tw:hover:bg-blue-600">
-  Prefixed classes
-</div>
-```
+  - Results in classes like `tw:flex`, `tw:bg-red-500`, `tw:hover:bg-red-600`
 
-- Configure dark mode:
+- **Source detection**:
+  - Automatic by default (ignores `.gitignore` files and binary files)
+  - Add sources: `@source "../node_modules/@my-company/ui-lib";`
+  - Disable automatic detection: `@import "tailwindcss" source(none);`
 
-```css
-@import "tailwindcss";
-@variant dark (&:where(.dark, .dark *));
+- **Legacy config files**:
 
-/* Usage */
-<div class="dark">
-  <p class="text-gray-900 dark:text-white">
-    Dark mode text
-  </p>
-</div>
-```
+  ```css
+  @import "tailwindcss";
+  @config "../../tailwind.config.js";
+  ```
 
-- Customize container:
+- **Dark mode configuration**:
 
-```css
-@utility container {
-  margin-inline: auto;
-  padding-inline: 2rem;
-}
-```
+  ```css
+  @import "tailwindcss";
+  @custom-variant dark (&:where(.dark, .dark *));
+  ```
+
+- **Container customization**: Extend with `@utility`
+
+  ```css
+  @utility container {
+    margin-inline: auto;
+    padding-inline: 2rem;
+  }
+  ```
+
+- **Using `@apply` in Vue/Svelte**:
+
+  ```html
+  <style>
+    @import "../../my-theme.css" theme(reference);
+    /* or */
+    @import "tailwindcss/theme" theme(reference);
+
+    h1 {
+      @apply font-bold text-2xl text-red-500;
+    }
+  </style>
+  ```
