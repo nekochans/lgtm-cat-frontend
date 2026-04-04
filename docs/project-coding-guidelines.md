@@ -384,6 +384,153 @@ for (const item of items) {
 }
 ```
 
+## 早期リターン（ガード節）の推奨
+
+条件分岐やエラーハンドリングでは**早期リターン（ガード節）**を使用し、ネストを最小限に抑えてください。
+
+### if/else のネストを避ける
+
+```typescript
+// ❌ 非推奨: ネストした if/else
+const determineAccessStatus = (user?: User): string => {
+  if (user) {
+    if (user.isActive) {
+      if (user.hasPermission) {
+        return "allowed";
+      } else {
+        return "no permission";
+      }
+    } else {
+      return "inactive";
+    }
+  } else {
+    return "not found";
+  }
+};
+
+// ✅ 推奨: 早期リターンでフラットに
+const determineAccessStatus = (user?: User): string => {
+  if (!user) {
+    return "not found";
+  }
+
+  if (!user.isActive) {
+    return "inactive";
+  }
+
+  if (!user.hasPermission) {
+    return "no permission";
+  }
+
+  return "allowed";
+};
+```
+
+### try-catch のネストを避ける — ローカル関数パターン
+
+複数の非同期処理を順番に実行し、それぞれ異なるエラーハンドリングが必要な場合、try-catch をネストさせると可読性が大幅に低下します。各処理をローカル関数に切り出し、結果オブジェクトを返すことで `let` を使わずに `const` + 早期リターンで表現できます。
+
+```typescript
+// ❌ 非推奨: ネストした try-catch（ネストが深く処理の流れが追いにくい）
+try {
+  const accountResult = await createAccount(email, password);
+  const userId = accountResult.userId;
+
+  try {
+    await createProfile(userId, profileData);
+  } catch {
+    await cleanup(userId);
+    return {
+      status: "ERROR",
+      errorMessage: "プロフィール作成に失敗しました",
+    };
+  }
+
+  return { status: "SUCCESS" };
+} catch {
+  return {
+    status: "ERROR",
+    errorMessage: "アカウント作成に失敗しました",
+  };
+}
+
+// ❌ 非推奨: let を使って try-catch のスコープを跨ぐ
+let userId: string;
+try {
+  const accountResult = await createAccount(email, password);
+  userId = accountResult.userId;
+} catch {
+  return {
+    status: "ERROR",
+    errorMessage: "アカウント作成に失敗しました",
+  };
+}
+```
+
+```typescript
+// ✅ 推奨: ローカル関数 + const + 早期リターン
+
+// Step 1: try-catch をローカル関数に閉じ込め、結果オブジェクトを返す
+interface CreateAccountResult {
+  readonly userId?: string;
+  readonly errorMessage?: string;
+}
+
+const tryCreateAccount = async (
+  email: string,
+  password: string,
+): Promise<CreateAccountResult> => {
+  try {
+    const accountResult = await createAccount(email, password);
+    return {
+      userId: accountResult.userId,
+    };
+  } catch {
+    return {
+      errorMessage: "アカウント作成に失敗しました",
+    };
+  }
+};
+
+// Step 2: 呼び出し側では const + 早期リターンで表現
+const { userId, errorMessage } = await tryCreateAccount(email, password);
+
+if (errorMessage) {
+  return {
+    status: "ERROR",
+    errorMessage,
+  };
+}
+
+if (!userId) {
+  return {
+    status: "ERROR",
+    errorMessage: "アカウント作成に失敗しました",
+  };
+}
+
+// userId は string 型として確定（早期リターン済み）
+const profileCreated = await createProfile(userId, profileData)
+  .then(() => true)
+  .catch(() => false);
+
+if (!profileCreated) {
+  await cleanup(userId);
+  return {
+    status: "ERROR",
+    errorMessage: "プロフィール作成に失敗しました",
+  };
+}
+
+return { status: "SUCCESS" };
+```
+
+**ポイント:**
+
+- try-catch のスコープをローカル関数に閉じ込めることで、呼び出し側で `let` を使わずに済む
+- 結果オブジェクト（`{ userId?, errorMessage? }`）を返し、呼び出し側で分岐する
+- 各ステップの失敗を早期リターンで処理し、ネストを最小限に保つ
+
 ## 関数型への準拠を明示する
 
 抽象的なインターフェース型に準拠する関数を実装する場合は、関数宣言時に型を明示してください。
