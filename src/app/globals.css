@@ -2,7 +2,7 @@
 @import "@heroui/styles";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 /* LGTMeow Design Tokens from Figma */
 @theme {

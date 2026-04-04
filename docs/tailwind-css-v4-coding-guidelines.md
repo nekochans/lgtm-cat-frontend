@@ -189,7 +189,7 @@
 
   ```css
   @import "tailwindcss";
-  @variant dark (&:where(.dark, .dark *));
+  @custom-variant dark (&:where(.dark, .dark *));
   ```
 
 - **Container customization**: Extend with `@utility`
