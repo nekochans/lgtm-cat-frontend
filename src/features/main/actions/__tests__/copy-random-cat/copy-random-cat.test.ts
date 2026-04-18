@@ -13,7 +13,7 @@ import {
   vi,
 } from "vitest";
 import { copyRandomCatAction } from "@/features/main/actions/copy-random-cat-action";
-import { fetchLgtmImagesInRandomUrl } from "@/features/main/functions/api-url";
+import { fetchLgtmImagesInRandomUrl } from "@/lib/config/api-url";
 import { mockIssueClientCredentialsAccessToken } from "@/mocks/api/external/cognito/mock-issue-client-credentials-access-token";
 import { mockFetchLgtmImages } from "@/mocks/api/external/lgtmeow/mock-fetch-lgtm-images";
 
@@ -28,8 +28,9 @@ vi.mock("@upstash/redis", () => {
 });
 
 // appBaseUrl mock (returns consistent URL)
-vi.mock("@/features/url", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/features/url")>();
+vi.mock("@/lib/config/app-base-url", async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import("@/lib/config/app-base-url")>();
   return {
     ...actual,
     appBaseUrl: vi.fn(() => "https://lgtmeow.com"),

@@ -1,7 +1,7 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import { cacheLife, cacheTag } from "next/cache";
+import { CACHE_TAG_LGTM_IMAGES_RANDOM } from "@/constants/cache-tags";
 import { LgtmImages } from "@/features/main/components/lgtm-images";
-import { CACHE_TAG_LGTM_IMAGES_RANDOM } from "@/features/main/constants/cache-tags";
 import { fetchLgtmImagesInRandom } from "@/features/main/functions/fetch-lgtm-images";
 import { issueClientCredentialsAccessToken } from "@/lib/cognito/oidc";
 

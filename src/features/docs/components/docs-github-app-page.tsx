@@ -13,8 +13,8 @@ import {
   sampleLgtmScreenshotPath,
   sampleLgtmScreenshotWidth,
 } from "@/features/docs/functions/github-app-text";
-import type { Language } from "@/features/language";
-import type { IncludeLanguageAppPath } from "@/features/url";
+import type { Language } from "@/types/language";
+import type { IncludeLanguageAppPath } from "@/types/url";
 
 interface Props {
   readonly currentUrlPath: IncludeLanguageAppPath;

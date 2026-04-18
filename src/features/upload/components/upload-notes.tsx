@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import type { JSX } from "react";
-import type { Language } from "@/features/language";
-import { createPrivacyPolicyLinksFromLanguages } from "@/features/privacy/functions/privacy-policy";
 import {
   cautionText,
   noteList,
   privacyPolicyAgreementText,
 } from "@/features/upload/functions/upload-i18n";
+import { createPrivacyPolicyLinksFromLanguages } from "@/functions/privacy-policy";
+import type { Language } from "@/types/language";
 
 interface Props {
   readonly language: Language;

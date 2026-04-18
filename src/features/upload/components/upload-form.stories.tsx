@@ -3,15 +3,15 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { http } from "msw";
 import { PageLayout } from "@/components/page-layout";
-import type { Language } from "@/features/language";
-import { createLgtmImageUrl } from "@/features/main/types/lgtm-image";
-import type { IncludeLanguageAppPath } from "@/features/url";
 import { mockIsAcceptableCatImage } from "@/mocks/api/external/lgtmeow/mock-is-acceptable-cat-image";
 import { mockIsAcceptableCatImageNotCatImage } from "@/mocks/api/external/lgtmeow/mock-is-acceptable-cat-image-not-cat-image";
 import { mockIsAcceptableCatImageNotModerationImage } from "@/mocks/api/external/lgtmeow/mock-is-acceptable-cat-image-not-moderation-image";
 import { mockIsAcceptableCatImagePayloadTooLargeError } from "@/mocks/api/external/lgtmeow/mock-is-acceptable-cat-image-payload-too-large-error";
 import { mockIsAcceptableCatImagePersonFaceInImage } from "@/mocks/api/external/lgtmeow/mock-is-acceptable-cat-image-person-face-in-image";
 import { mockUploadCatImage } from "@/mocks/api/external/lgtmeow/mock-upload-cat-image";
+import type { Language } from "@/types/language";
+import { createLgtmImageUrl } from "@/types/lgtm-image";
+import type { IncludeLanguageAppPath } from "@/types/url";
 import {
   createImageSizeTooLargeErrorMessage,
   errorMessageNotCatImage,

@@ -1,30 +1,28 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { Metadata, NextPage } from "next";
 import { cacheLife } from "next/cache";
+import { i18nUrlList } from "@/constants/url";
 import { DocsMcpPage } from "@/features/docs/components/docs-mcp-page";
 import { loadAllMcpExternalCodes } from "@/features/docs/functions/mcp-code-loader";
-import { appName, metaTagList } from "@/features/meta-tag";
-import { convertLanguageToOpenGraphLocale } from "@/features/open-graph-locale";
-import {
-  appBaseUrl,
-  createIncludeLanguageAppPath,
-  i18nUrlList,
-} from "@/features/url";
+import { appName, metaTagList } from "@/functions/meta-tag";
+import { convertLanguageToOpenGraphLocale } from "@/functions/open-graph-locale";
+import { createIncludeLanguageAppPath } from "@/functions/url";
+import { appBaseUrl } from "@/lib/config/app-base-url";
 
 const language = "ja";
 
 export const metadata: Metadata = {
-  title: metaTagList(language)["docs-mcp"].title,
+  title: metaTagList(language, appBaseUrl())["docs-mcp"].title,
   openGraph: {
-    title: metaTagList(language)["docs-mcp"].title,
-    url: metaTagList(language)["docs-mcp"].ogpTargetUrl,
+    title: metaTagList(language, appBaseUrl())["docs-mcp"].title,
+    url: metaTagList(language, appBaseUrl())["docs-mcp"].ogpTargetUrl,
     siteName: appName,
     images: [
       {
-        url: metaTagList(language)["docs-mcp"].ogpImgUrl,
+        url: metaTagList(language, appBaseUrl())["docs-mcp"].ogpImgUrl,
         width: 1200,
         height: 630,
-        alt: metaTagList(language)["docs-mcp"].title,
+        alt: metaTagList(language, appBaseUrl())["docs-mcp"].title,
       },
     ],
     locale: convertLanguageToOpenGraphLocale(language),

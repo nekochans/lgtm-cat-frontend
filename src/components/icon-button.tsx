@@ -3,7 +3,7 @@
 import { Button, type ButtonProps } from "@heroui/react";
 import Link from "next/link";
 import type { ComponentProps, JSX } from "react";
-import type { IncludeLanguageAppPath } from "@/features/url";
+import type { IncludeLanguageAppPath } from "@/types/url";
 import { GithubIcon } from "./icons/github-icon";
 
 function RepeatIcon() {

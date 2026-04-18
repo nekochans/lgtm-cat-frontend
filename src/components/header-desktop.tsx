@@ -17,14 +17,13 @@ import { GithubIcon } from "@/components/icons/github-icon";
 import { GlobeIcon } from "@/components/icons/globe-icon";
 import { RightIcon } from "@/components/icons/right-icon";
 import { LoginButton } from "@/components/login-button";
-import { createGitHubAppLinksFromLanguages } from "@/features/docs/functions/github-app";
-import { createHowToUseLinksFromLanguages } from "@/features/docs/functions/how-to-use";
-import { createMcpLinksFromLanguages } from "@/features/docs/functions/mcp";
-import { type Language, removeLanguageFromAppPath } from "@/features/language";
-import {
-  createIncludeLanguageAppPath,
-  type IncludeLanguageAppPath,
-} from "@/features/url";
+import { createGitHubAppLinksFromLanguages } from "@/functions/github-app";
+import { createHowToUseLinksFromLanguages } from "@/functions/how-to-use";
+import { removeLanguageFromAppPath } from "@/functions/language";
+import { createMcpLinksFromLanguages } from "@/functions/mcp";
+import { createIncludeLanguageAppPath } from "@/functions/url";
+import type { Language } from "@/types/language";
+import type { IncludeLanguageAppPath } from "@/types/url";
 
 interface Props {
   readonly currentUrlPath: IncludeLanguageAppPath;

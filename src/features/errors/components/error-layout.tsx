@@ -3,8 +3,8 @@
 import type { ReactNode } from "react";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
-import type { Language } from "@/features/language";
-import type { IncludeLanguageAppPath } from "@/features/url";
+import type { Language } from "@/types/language";
+import type { IncludeLanguageAppPath } from "@/types/url";
 
 interface Props {
   readonly children: ReactNode;

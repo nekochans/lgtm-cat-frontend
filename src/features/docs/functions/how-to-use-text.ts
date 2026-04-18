@@ -1,8 +1,9 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 
-import type { Language } from "@/features/language";
-import { getActionButtonText } from "@/features/main/service-description-text";
-import { appBaseUrl, createIncludeLanguageAppPath } from "@/features/url";
+import { getActionButtonText } from "@/functions/service-description-text";
+import { createIncludeLanguageAppPath } from "@/functions/url";
+import type { Language } from "@/types/language";
+import type { Url } from "@/types/url";
 import { assertNever } from "@/utils/assert-never";
 
 export interface HowToUseSectionText {
@@ -42,8 +43,10 @@ export interface HowToUseTexts {
   readonly whatIsLgtmeow: HowToUseSectionText;
 }
 
-export function getHowToUseTexts(language: Language): HowToUseTexts {
-  const baseUrl = appBaseUrl();
+export function getHowToUseTexts(
+  language: Language,
+  baseUrl: Url
+): HowToUseTexts {
   const homePath = createIncludeLanguageAppPath("home", language);
   const homeUrl = homePath === "/" ? baseUrl : `${baseUrl}${homePath}`;
   const uploadPath = createIncludeLanguageAppPath("upload", language);

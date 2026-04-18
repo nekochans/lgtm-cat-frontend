@@ -3,8 +3,8 @@ import Link from "next/link";
 import type { JSX } from "react";
 import { Text } from "react-aria-components";
 import { LgtmCatIcon } from "@/components/lgtm-cat-icon";
-import type { Language } from "@/features/language";
-import { createIncludeLanguageAppPath } from "@/features/url";
+import { createIncludeLanguageAppPath } from "@/functions/url";
+import type { Language } from "@/types/language";
 
 export interface Props {
   readonly language: Language;

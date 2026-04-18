@@ -7,9 +7,9 @@ import {
   getHowToUseTexts,
   howToUseScreenshotPath,
 } from "@/features/docs/functions/how-to-use-text";
-import type { Language } from "@/features/language";
-import type { IncludeLanguageAppPath } from "@/features/url";
-import { appBaseUrl } from "@/features/url";
+import { appBaseUrl } from "@/lib/config/app-base-url";
+import type { Language } from "@/types/language";
+import type { IncludeLanguageAppPath } from "@/types/url";
 
 // トップレベルに正規表現を定義
 const MARKDOWN_LINK_SPLIT_REGEX = /(\[[^\]]+\]\([^)]+\))/g;
@@ -134,7 +134,7 @@ function TextWithLinks({ text, baseUrl }: TextWithLinksProps) {
 }
 
 export function DocsHowToUsePage({ language, currentUrlPath }: Props) {
-  const texts = getHowToUseTexts(language);
+  const texts = getHowToUseTexts(language, appBaseUrl());
   const baseUrl = appBaseUrl();
 
   return (

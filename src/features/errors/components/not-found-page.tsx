@@ -3,8 +3,8 @@
 import { LookingUpCat } from "@/components/cats/looking-up-cat";
 import { ErrorPageContent } from "@/components/error-page-content";
 import { ErrorLayout } from "@/features/errors/components/error-layout";
-import { notFoundPageTexts } from "@/features/errors/error-i18n";
-import type { Language } from "@/features/language";
+import { notFoundPageTexts } from "@/features/errors/functions/error-i18n";
+import type { Language } from "@/types/language";
 
 interface Props {
   readonly language: Language;

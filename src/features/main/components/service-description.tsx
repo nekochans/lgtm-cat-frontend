@@ -1,7 +1,7 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 
-import type { Language } from "@/features/language";
-import { getServiceDescriptionText } from "@/features/main/service-description-text";
+import { getServiceDescriptionText } from "@/functions/service-description-text";
+import type { Language } from "@/types/language";
 
 interface Props {
   readonly className?: string;
