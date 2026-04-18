@@ -26,11 +26,10 @@ import { GlobeIcon } from "@/components/icons/globe-icon";
 import { HeartIcon } from "@/components/icons/heart-icon";
 import { MenuIcon } from "@/components/icons/menu-icon";
 import { RightIcon } from "@/components/icons/right-icon";
-import { type Language, removeLanguageFromAppPath } from "@/features/language";
-import {
-  createIncludeLanguageAppPath,
-  type IncludeLanguageAppPath,
-} from "@/features/url";
+import { removeLanguageFromAppPath } from "@/functions/language";
+import { createIncludeLanguageAppPath } from "@/functions/url";
+import type { Language } from "@/types/language";
+import type { IncludeLanguageAppPath } from "@/types/url";
 
 interface Props {
   readonly currentUrlPath: IncludeLanguageAppPath;

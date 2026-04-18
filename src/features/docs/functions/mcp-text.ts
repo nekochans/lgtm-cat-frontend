@@ -1,6 +1,6 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 
-import type { Language } from "@/features/language";
+import type { Language } from "@/types/language";
 import { assertNever } from "@/utils/assert-never";
 
 export interface McpToolInfo {

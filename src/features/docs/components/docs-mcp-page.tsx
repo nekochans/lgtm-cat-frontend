@@ -12,8 +12,8 @@ import {
   type McpGitHubActionsExample,
   type McpToolInfo,
 } from "@/features/docs/functions/mcp-text";
-import type { Language } from "@/features/language";
-import type { IncludeLanguageAppPath } from "@/features/url";
+import type { Language } from "@/types/language";
+import type { IncludeLanguageAppPath } from "@/types/url";
 
 // Props から DocsMcpPageProps にリネーム
 interface DocsMcpPageProps {

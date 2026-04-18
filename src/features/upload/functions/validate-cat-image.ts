@@ -1,8 +1,8 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 
 import { httpStatusCode } from "@/constants/http-status-code";
-import { lgtmeowApiUrl } from "@/features/main/functions/api-url";
 import { issueClientCredentialsAccessToken } from "@/lib/cognito/oidc";
+import { lgtmeowApiUrl } from "@/lib/config/api-url";
 import {
   type ValidateCatImageResponse,
   validateCatImageResponseSchema,

@@ -12,7 +12,7 @@ import {
   vi,
 } from "vitest";
 import { httpStatusCode } from "@/constants/http-status-code";
-import { lgtmeowApiUrl } from "@/features/main/functions/api-url";
+import { lgtmeowApiUrl } from "@/lib/config/api-url";
 import { mockCreateLgtmImageError } from "@/mocks/api/external/lgtmeow/mock-create-lgtm-image-error";
 import { mockIsAcceptableCatImage } from "@/mocks/api/external/lgtmeow/mock-is-acceptable-cat-image";
 import { mockIsAcceptableCatImageNotCatImage } from "@/mocks/api/external/lgtmeow/mock-is-acceptable-cat-image-not-cat-image";

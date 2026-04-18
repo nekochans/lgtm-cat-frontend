@@ -38,7 +38,7 @@ src/features/<機能>/  → 共通レイヤー (types, lib, functions, constants
 src/actions/          → types, lib, functions, constants に依存可能
 src/components/       → types, lib, functions, constants, utils, actions（types/ 配下の型定義ファイルのみ）に依存可能
 src/functions/        → types, constants に依存可能（lib には原則非依存）
-src/lib/              → types, constants, functions に依存可能
+src/lib/              → types, constants, functions, features に依存可能
 src/utils/            → 他レイヤーに依存しない
 src/constants/        → 他レイヤーに依存しない
 src/types/            → constants に依存可能（定数からのユニオン型導出等）
@@ -73,6 +73,7 @@ Next.js 16 のファイルコンベンションである [Proxy](https://nextjs.
 
 特定の外部ライブラリに依存した処理を定義します。
 
+- `src/features/` への依存が可能です。DDD のインフラストラクチャ層がドメイン層に依存するパターンに相当します
 - `src/functions/` から `src/lib/` の機能を利用する場合は、`src/types/` に抽象的なインターフェース型を定義し、`src/lib/` 側でその型に準拠する実装を提供します
 
 ```typescript

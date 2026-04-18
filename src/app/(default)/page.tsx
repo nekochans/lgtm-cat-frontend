@@ -1,27 +1,28 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { Metadata, NextPage } from "next";
 import { Suspense } from "react";
+import { i18nUrlList } from "@/constants/url";
 import { HomePage } from "@/features/main/components/home-page";
-import { appName, metaTagList } from "@/features/meta-tag";
-import { convertLanguageToOpenGraphLocale } from "@/features/open-graph-locale";
-import { appBaseUrl, i18nUrlList } from "@/features/url";
+import { appName, metaTagList } from "@/functions/meta-tag";
+import { convertLanguageToOpenGraphLocale } from "@/functions/open-graph-locale";
+import { appBaseUrl } from "@/lib/config/app-base-url";
 
 const language = "ja";
 
 export const metadata: Metadata = {
-  title: metaTagList(language).home.title,
-  description: metaTagList(language).home.description,
+  title: metaTagList(language, appBaseUrl()).home.title,
+  description: metaTagList(language, appBaseUrl()).home.description,
   openGraph: {
-    title: metaTagList(language).home.title,
-    description: metaTagList(language).home.description,
-    url: metaTagList(language).home.ogpTargetUrl,
+    title: metaTagList(language, appBaseUrl()).home.title,
+    description: metaTagList(language, appBaseUrl()).home.description,
+    url: metaTagList(language, appBaseUrl()).home.ogpTargetUrl,
     siteName: appName,
     images: [
       {
-        url: metaTagList(language).home.ogpImgUrl,
+        url: metaTagList(language, appBaseUrl()).home.ogpImgUrl,
         width: 1200,
         height: 630,
-        alt: metaTagList(language).home.title,
+        alt: metaTagList(language, appBaseUrl()).home.title,
       },
     ],
     locale: convertLanguageToOpenGraphLocale(language),

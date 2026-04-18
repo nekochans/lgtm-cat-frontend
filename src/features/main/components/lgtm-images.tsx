@@ -1,6 +1,6 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { JSX } from "react";
-import type { LgtmImage as LgtmImageType } from "@/features/main/types/lgtm-image";
+import type { LgtmImage as LgtmImageType } from "@/types/lgtm-image";
 import { LgtmImage } from "./lgtm-image";
 
 interface Props {

@@ -3,7 +3,7 @@
 import type {
   UploadToStorageFunc,
   UploadToStorageResult,
-} from "@/features/upload/types/storage";
+} from "@/types/upload/storage";
 
 /**
  * ブラウザから署名付きPUT URLを使ってR2に直接アップロードする

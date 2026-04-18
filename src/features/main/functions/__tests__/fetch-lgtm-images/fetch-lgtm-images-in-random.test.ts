@@ -3,16 +3,13 @@
 import { http } from "msw";
 import { setupServer } from "msw/node";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
-import { fetchLgtmImagesInRandomUrl } from "@/features/main/functions/api-url";
 import { fetchLgtmImagesInRandom } from "@/features/main/functions/fetch-lgtm-images";
-import {
-  createLgtmImageId,
-  createLgtmImageUrl,
-} from "@/features/main/types/lgtm-image";
-import { createJwtAccessTokenString } from "@/features/oidc/types/access-token";
+import { fetchLgtmImagesInRandomUrl } from "@/lib/config/api-url";
 import { mockInternalServerError } from "@/mocks/api/error/mock-internal-server-error";
 import { mockUnauthorizedError } from "@/mocks/api/error/mock-unauthorized-error";
 import { mockFetchLgtmImages } from "@/mocks/api/external/lgtmeow/mock-fetch-lgtm-images";
+import { createLgtmImageId, createLgtmImageUrl } from "@/types/lgtm-image";
+import { createJwtAccessTokenString } from "@/types/oidc/access-token";
 
 const mockHandlers = [
   http.get(fetchLgtmImagesInRandomUrl(), mockFetchLgtmImages),

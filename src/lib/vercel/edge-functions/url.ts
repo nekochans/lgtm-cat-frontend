@@ -1,6 +1,8 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import { headers } from "next/headers";
-import { appBaseUrl, isUrl, type Url } from "@/features/url";
+import { isUrl } from "@/functions/url";
+import { appBaseUrl } from "@/lib/config/app-base-url";
+import type { Url } from "@/types/url";
 
 export const appBaseUrlHeaderName = "lgtmeow-app-base-url";
 

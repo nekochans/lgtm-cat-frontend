@@ -6,14 +6,14 @@ import { toast } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useRef, useState } from "react";
 import { IconButton } from "@/components/icon-button";
-import type { Language } from "@/features/language";
 import { copyRandomCatAction } from "@/features/main/actions/copy-random-cat-action";
 import {
   refreshRandomCatsAction,
   showLatestCatsAction,
 } from "@/features/main/actions/refresh-images-action";
-import { getActionButtonText } from "@/features/main/service-description-text";
 import type { RefreshImagesActionState } from "@/features/main/types/action-state";
+import { getActionButtonText } from "@/functions/service-description-text";
+import type { Language } from "@/types/language";
 import {
   sendClickTopFetchNewArrivalCatButton,
   sendClickTopFetchRandomCatButton,
