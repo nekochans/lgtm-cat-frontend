@@ -94,6 +94,15 @@ export type { UploadToStorageFunc, UploadToStorageResult } from "@/types/upload/
 
 **分割方針:** 1 ファイルに型・定数・関数が混在しているため、レイヤールールに従い 3 ファイルに分割。依存方向は `constants/ ← types/ ← functions/` となる。
 
+**循環参照の回避方針:** 現状 `url.ts` と `language.ts` は相互参照している（`url.ts` が `Language` を参照し、`language.ts` が `IncludeLanguageAppPath` を参照）。types 層で循環させないため、以下の依存方向に統一する:
+
+- `types/language.ts` は **基底型**（他の types に依存しない、constants/language のみに依存）
+- `types/url.ts` は `types/language.ts` に依存可能（`Language` 型を import）
+- `types/url.ts` で `IncludeLanguageAppPath` を定義
+- `functions/language.ts` が `IncludeLanguageAppPath` を使う場合は `types/url.ts` から import（functions → types の依存は許可されている）
+
+これにより types 層の依存は一方向（`language → url` ではなく `url → language`）となり、循環参照は発生しない。
+
 **`src/constants/url.ts` に含めるもの:**
 ```typescript
 // 純粋な定数のみ（他レイヤーに依存しない）
@@ -107,38 +116,41 @@ export const appPathList = {
 
 **`src/types/url.ts` に含めるもの:**
 ```typescript
-// 型定義のみ（constants に依存可能）
+// 型定義のみ（constants, types/language に依存可能）
 import { appPathList } from "@/constants/url";
+import type { Language } from "@/types/language";
 
 export type Url = `http://localhost${string}` | `https://${string}`;
 export type AppPathName = keyof typeof appPathList;
-export type IncludeLanguageAppPath = /* ... */;
+export type IncludeLanguageAppPath = /* Language を使って定義 */;
 export type AppUrl = /* ... */;
 export type I18nUrlList = /* ... */;
 ```
 
-**`src/functions/url.ts` に含めるもの:**
+**`src/functions/url.ts` に含めるもの（純粋関数のみ）:**
 ```typescript
-// 関数・算出値（types, constants に依存可能）
+// 純粋関数（types, constants に依存可能。lib には非依存）
 import type { Url, AppPathName, IncludeLanguageAppPath } from "@/types/url";
 import { appPathList } from "@/constants/url";
 
 export function isUrl(value: unknown): value is Url { /* ... */ }
-export function appBaseUrl(): Url { /* ... */ }
 export function isIncludeLanguageAppPath(value: unknown): value is IncludeLanguageAppPath { /* ... */ }
 export function createIncludeLanguageAppPath(appPathName: AppPathName, language: Language): IncludeLanguageAppPath { /* ... */ }
-export const appUrlList = /* appBaseUrl() を使う算出値 */;
-export const i18nUrlList = /* languages 配列に依存する算出値 */;
-export function createI18nUrl(appPathName: AppPathName, language: Language): Url { /* ... */ }
+// createI18nUrl は appBaseUrl に依存するため lib に配置（下記参照）
 ```
+
+**`createI18nUrl` は `src/lib/config/app-base-url.ts` に配置:**
+`createI18nUrl()` は内部で `appBaseUrl()` を呼び出しており、環境変数に依存する。`src/functions/` の純粋関数要件を満たさないため、`appBaseUrl()`, `appUrlList`, `i18nUrlList` と共に `src/lib/config/app-base-url.ts` に配置する。
+
+**環境変数に依存する関数は `src/lib/` に配置:**
+`appBaseUrl()` は `process.env` を読む構成値アクセサであり、純粋関数ではない。`src/functions/` の責務（原則として純粋関数）に合わないため `src/lib/config/app-base-url.ts` に配置する。`appUrlList`, `i18nUrlList` 等の `appBaseUrl()` に依存する算出値も同様に `src/lib/` に配置する。
 
 **import 修正対象（76 箇所以上）:** `@/features/url` を以下に分割:
 - `type Url` 等の型 import → `@/types/url`
 - `appPathList` → `@/constants/url`
-- `isUrl()`, `appBaseUrl()`, `createI18nUrl()` 等の関数 → `@/functions/url`
-- 型と関数を同時に使う場合は 2 行の import に分ける
-
-**注意:** `appUrlList` は `appBaseUrl()` の戻り値を使う算出値であり、環境変数に依存する。純粋定数ではないため `src/functions/url.ts` に配置する。
+- `isUrl()`, `isIncludeLanguageAppPath()`, `createIncludeLanguageAppPath()` → `@/functions/url`
+- `appBaseUrl()`, `appUrlList`, `i18nUrlList`, `createI18nUrl()` → `@/lib/config/app-base-url`
+- 型と関数を同時に使う場合は複数行の import に分ける
 
 #### 1-1-f. Language 関連 → `src/constants/language.ts` + `src/types/language.ts` + `src/functions/language.ts` に3分割
 
@@ -219,23 +231,57 @@ export function mightExtractLanguageFromAppPath(appPath: IncludeLanguageAppPath)
 - `notFoundMetaTag()` 関数
 - `errorMetaTag()` 関数
 
+**`src/functions/` → `src/lib/` 逆依存の回避:** 現在の `meta-tag.ts` は `appUrlList` (環境変数依存) を参照している。`src/functions/` は `src/lib/` に依存できないため、`appBaseUrl` を引数として呼び出し側から注入する形にリファクタリングする。
+
+```typescript
+// Before: functions 内で直接 appUrlList を参照（lib に依存してしまう）
+export function metaTagList(language: Language): MetaTagList { ... }
+
+// After: appBaseUrl を引数で受け取る（純粋関数を維持）
+export function metaTagList(language: Language, appBaseUrl: Url): MetaTagList { ... }
+```
+
+**呼び出し側の更新が必要な箇所:**
+呼び出し側で `appBaseUrl()` を import し引数に渡す形に更新する。主な対象:
+- `src/app/(default)/layout.tsx` 等のレイアウトファイル（`metaTagList()` の呼び出し）
+- 各 `page.tsx`（`metaTagList()` の呼び出し）
+- `src/app/not-found.tsx`（`notFoundMetaTag()` の呼び出し）
+- `src/app/(default)/error.tsx`（`errorMetaTag()` の呼び出し）
+
 **import 修正対象（26 箇所以上）:** `@/features/meta-tag` → 型は `@/types/meta-tag`、関数は `@/functions/meta-tag`
 
-#### 1-2-b. API URL 関数 → `src/functions/api-url.ts`
+#### 1-2-b. API URL 関数 → `src/lib/config/api-url.ts`
 
 **移動元:** `src/features/main/functions/api-url.ts`
-**移動先:** `src/functions/api-url.ts`
-**理由:** upload feature からも利用されており、feature 間依存の原因。外部 API の URL 構築は共通ビジネスロジック。
+**移動先:** `src/lib/config/api-url.ts`
+**理由:** upload feature からも利用されており feature 間依存の原因。ただし `lgtmeowApiUrl()`, `fetchLgtmImagesInRandomUrl()`, `fetchLgtmImagesInRecentlyCreatedUrl()` はいずれも `process.env` を読む構成値アクセサであり、`src/functions/` の責務（原則として純粋関数）に合わない。外部ライブラリ（環境変数アクセス）に依存した処理を扱う `src/lib/` が適切。
 
-**import 修正対象（12 箇所以上）:** `@/features/main/functions/api-url` → `@/functions/api-url`
+**import 修正対象（12 箇所以上）:** `@/features/main/functions/api-url` → `@/lib/config/api-url`
 
-**注意:** 移動先で `@/features/url` への import を `@/functions/url` に更新する必要あり（ステップ 1-1-e で移動済み）。ヘッダーコメントも追加すること。
+**注意:** 移動先で `@/features/url` への import を `@/types/url` と `@/functions/url` に更新する必要あり（ステップ 1-1-e で移動済み）。ヘッダーコメントも追加すること。
 
 #### 1-2-c. LGTM Markdown 生成 → `src/functions/generate-lgtm-markdown.ts`
 
 **移動元:** `src/features/main/functions/generate-lgtm-markdown.ts`
 **移動先:** `src/functions/generate-lgtm-markdown.ts`
 **理由:** upload feature (`upload-success.tsx`) と main feature の両方から利用されている。
+
+**`src/functions/` → `src/lib/` 逆依存の回避:** 現在の `generate-lgtm-markdown.ts` は `appBaseUrl()` を直接呼び出している。`src/functions/` は `src/lib/` に依存できないため、`appBaseUrl` を引数として受け取る形にリファクタリングする。
+
+```typescript
+// Before: functions 内で直接 appBaseUrl() を呼び出し
+export function generateLgtmMarkdown(imageUrl: LgtmImageUrl): string { ... }
+
+// After: appBaseUrl を引数で受け取る（純粋関数を維持）
+export function generateLgtmMarkdown(imageUrl: LgtmImageUrl, appBaseUrl: Url): string { ... }
+```
+
+**呼び出し側の更新が必要な箇所:**
+呼び出し側で `appBaseUrl()` を import し引数に渡す形に更新する。主な対象:
+- `src/features/upload/components/upload-success.tsx`
+- `src/features/main/components/lgtm-image.tsx`
+- `src/features/main/actions/copy-random-cat-action.ts`
+- 関連テストファイル（テスト内でのモック値渡し追加）
 
 **import 修正対象（8 箇所以上）:** `@/features/main/functions/generate-lgtm-markdown` → `@/functions/generate-lgtm-markdown`
 
@@ -328,7 +374,7 @@ export function mightExtractLanguageFromAppPath(appPath: IncludeLanguageAppPath)
 - 他複数のコンポーネント・ストーリー・テストファイル
 
 **解決策:** ステップ 1 で以下が全て共通レイヤーに移動済み:
-- `api-url.ts` → `src/functions/api-url.ts`（ステップ 1-2-b）
+- `api-url.ts` → `src/lib/config/api-url.ts`（ステップ 1-2-b）
 - `cache-tags.ts` → `src/constants/cache-tags.ts`（ステップ 1-3-a）
 - `lgtm-image.ts` 型 → `src/types/lgtm-image.ts`（ステップ 1-1-d）
 - `generate-lgtm-markdown.ts` → `src/functions/generate-lgtm-markdown.ts`（ステップ 1-2-c）
@@ -339,10 +385,12 @@ export function mightExtractLanguageFromAppPath(appPath: IncludeLanguageAppPath)
 
 ## ステップ 4: lib/ → features/ 依存の解消
 
-ステップ 1 の型移動により自動的に解消:
+ステップ 1 の移動により自動的に解消:
 - `src/lib/cloudflare/r2/presigned-url.ts` — ステップ 1-1-c で `src/types/upload/storage.ts` に移動済み
 - `src/lib/cognito/oidc.ts` — ステップ 1-1-a, 1-1-b で `src/types/oidc/` に移動済み
-- `src/lib/vercel/edge-functions/url.ts` — ステップ 1-1-e で `src/functions/url.ts` に移動済み
+- `src/lib/vercel/edge-functions/url.ts` — 2 箇所の import 更新が必要:
+  - `isUrl` → `@/functions/url`（ステップ 1-1-e）
+  - `appBaseUrl` → `@/lib/config/app-base-url`（ステップ 1-1-e の lib 部分）
 
 ---
 
@@ -352,17 +400,63 @@ export function mightExtractLanguageFromAppPath(appPath: IncludeLanguageAppPath)
 
 ステップ 1-1-a, 1-1-b で `types/` と `errors/` を `src/types/oidc/` に移動した後、`src/features/oidc/` は空になるため削除。
 
-### 5-2. `src/features/load-markdown.ts` の移動
+### 5-2. `src/features/load-markdown.ts` の責務分離と移動
 
 **移動元:** `src/features/load-markdown.ts`
-**理由:** features ルート直下の共有ファイル。Node.js の `fs` モジュールと Next.js の `cacheLife` に依存しているため、外部ライブラリ依存の処理を扱う `src/lib/` が適切。
 
-**移動先:** `src/lib/markdown/load-markdown.ts`
+**問題:** 現在の `loadMarkdown` は `"use cache"`, `cacheLife()`, `notFound()`, `readFile` が混在している。`src/AGENTS.md` のルールでは `"use cache"` は `src/actions/` or `src/app/` で制御すべきであり、`notFound()` も App Router のページ遷移制御であるため `lib` に持ち込むべきではない。
 
-**移動先ファイル内部の import 修正:**
-- `@/features/language` → `@/types/language`（Language 型のみ使用しているため）
+**解決策: 2 ファイルに分離**
 
-**import 修正対象（6 箇所）:** `@/features/load-markdown` → `@/lib/markdown/load-markdown`
+**`src/lib/markdown/read-markdown-file.ts`（ファイル読み込みのみ）:**
+```typescript
+// 絶対厳守：編集前に必ずAI実装ルールを読む
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+import type { Language } from "@/types/language";
+
+type DocType = "terms" | "privacy" | "external-transmission";
+
+export async function readMarkdownFile(
+  docType: DocType,
+  language: Language
+): Promise<string | null> {
+  const docTypeToDir: Record<DocType, string> = {
+    terms: "terms",
+    privacy: "privacy",
+    "external-transmission": "external-transmission-policy",
+  };
+  const dirName = docTypeToDir[docType];
+  const fileName = language === "en" ? `${docType}.en.md` : `${docType}.ja.md`;
+  const filePath = join(process.cwd(), "src", "features", dirName, "markdown", fileName);
+
+  try {
+    return await readFile(filePath, "utf-8");
+  } catch {
+    return null;
+  }
+}
+```
+
+**各 `page.tsx` 側でキャッシュと 404 を制御:**
+```typescript
+// src/app/(default)/terms/page.tsx 等
+import { cacheLife } from "next/cache";
+import { notFound } from "next/navigation";
+import { readMarkdownFile } from "@/lib/markdown/read-markdown-file";
+
+async function loadMarkdown(docType, language) {
+  "use cache";
+  cacheLife({ stale: 2_592_000, revalidate: 2_592_000, expire: 31_536_000 });
+  const content = await readMarkdownFile(docType, language);
+  if (!content) notFound();
+  return content;
+}
+```
+
+**注意:** `"use cache"` と `notFound()` の責務は呼び出し側（`src/app/`）に残す。各 page.tsx に同じラッパーを書く重複が発生するが、6 ファイルのみであり共通化の必要性は低い。将来的に共通化する場合は `src/actions/` にラッパーを配置する。
+
+**import 修正対象（6 箇所）:** `@/features/load-markdown` → `@/lib/markdown/read-markdown-file`
 - `src/app/(default)/terms/page.tsx`
 - `src/app/(default)/privacy/page.tsx`
 - `src/app/(default)/external-transmission-policy/page.tsx`
@@ -415,6 +509,32 @@ export function mightExtractLanguageFromAppPath(appPath: IncludeLanguageAppPath)
 - `describe` ブロックのパス表記は変更不要
 - 移動後に `src/features/upload/__tests__/` ディレクトリが空になったら削除
 
+### 6-4. `src/functions/` に移動した関数のテスト追加
+
+`src/AGENTS.md` のルールで `src/functions/` の関数にはテストが必須。以下の関数は現状テストが存在しないため、新規にテストを作成する。
+
+**テスト追加が必要な対象:**
+
+| 移動先ファイル | 関数 | テスト配置先 |
+|---------------|------|-------------|
+| `src/functions/meta-tag.ts` | `metaTagList()`, `notFoundMetaTag()`, `errorMetaTag()` 等 | `src/functions/__tests__/meta-tag/meta-tag.test.ts` |
+| `src/functions/service-description-text.ts` | `getServiceDescriptionText()`, `getActionButtonText()` | `src/functions/__tests__/service-description-text/service-description-text.test.ts` |
+| `src/functions/privacy-policy.ts` | `createPrivacyPolicyLinksFromLanguages()` | `src/functions/__tests__/privacy-policy/privacy-policy.test.ts` |
+| `src/functions/terms-of-use.ts` | `createTermsOfUseLinksFromLanguages()` | `src/functions/__tests__/terms-of-use/terms-of-use.test.ts` |
+| `src/functions/external-transmission-policy.ts` | `createExternalTransmissionPolicyLinksFromLanguages()` | `src/functions/__tests__/external-transmission-policy/external-transmission-policy.test.ts` |
+| `src/functions/github-app.ts` | `createGitHubAppLinksFromLanguages()` | `src/functions/__tests__/github-app/github-app.test.ts` |
+| `src/functions/how-to-use.ts` | `createHowToUseLinksFromLanguages()` | `src/functions/__tests__/how-to-use/how-to-use.test.ts` |
+| `src/functions/mcp.ts` | `createMcpLinksFromLanguages()` | `src/functions/__tests__/mcp/mcp.test.ts` |
+| `src/lib/markdown/read-markdown-file.ts` | `readMarkdownFile()` | `src/lib/markdown/__tests__/read-markdown-file/read-markdown-file.test.ts` |
+| `src/lib/config/app-base-url.ts` | `appBaseUrl()` | `src/lib/config/__tests__/app-base-url/app-base-url.test.ts` |
+| `src/lib/config/api-url.ts` | `lgtmeowApiUrl()`, `fetchLgtmImagesInRandomUrl()`, `fetchLgtmImagesInRecentlyCreatedUrl()` | `src/lib/config/__tests__/api-url/api-url.test.ts` |
+
+**テスト不要な対象（既存テストが移動済み）:**
+- `src/functions/language.ts` — 既存テスト 2 件がステップ 6-1 で移動済み
+- `src/functions/open-graph-locale.ts` — 既存テスト 1 件がステップ 6-1 で移動済み
+- `src/functions/url.ts` — 既存テスト 1 件がステップ 6-1 で移動済み
+- `src/functions/generate-lgtm-markdown.ts` — 既存テスト `src/features/main/functions/__tests__/generate-lgtm-markdown.test.ts` を `src/functions/__tests__/generate-lgtm-markdown/generate-lgtm-markdown.test.ts` に移動し、シグネチャ変更（`appBaseUrl` 引数追加）に合わせてテストコードも更新する
+
 ---
 
 ## ステップ 7: ヘッダーコメントの追加
@@ -425,7 +545,7 @@ export function mightExtractLanguageFromAppPath(appPath: IncludeLanguageAppPath)
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 ```
 
-- `src/functions/api-url.ts`（ステップ 1-2-b で移動後のパス）
+- `src/lib/config/api-url.ts`（ステップ 1-2-b で移動後のパス）
 - `src/lib/upstash/constants.ts`
 
 **注意:** 新規作成・移動するファイル全てにもこのヘッダーコメントを必ず含めること。
@@ -539,9 +659,10 @@ npm run test
 13. **1-1-f の functions 部分**: `functions/language.ts`（← types/language, types/url に依存）
 14. **1-1-e の functions 部分**: `functions/url.ts`（← types/url, types/language, constants/url, constants/language に依存）
 15. **1-1-h の functions 部分**: `functions/open-graph-locale.ts`（← types/language, types/open-graph-locale に依存）
-16. **1-2-a の functions 部分**: `functions/meta-tag.ts`（← types/language, types/url, functions/url に依存）
-17. **1-2-b**: `functions/api-url.ts`（← types/url, functions/url に依存）
-18. **1-2-c**: `functions/generate-lgtm-markdown.ts`（← types/lgtm-image, functions/url に依存）
+16. **1-2-a の functions 部分**: `functions/meta-tag.ts`（← types/language, types/url, types/meta-tag に依存。appBaseUrl は引数注入のため lib 非依存）
+17. **1-2-b**: `lib/config/api-url.ts`（← types/url, functions/url に依存。環境変数アクセサのため lib に配置）
+18. **1-1-e の lib 部分**: `lib/config/app-base-url.ts`（← types/url に依存。環境変数アクセサのため lib に配置）
+19. **1-2-c**: `functions/generate-lgtm-markdown.ts`（← types/lgtm-image に依存。appBaseUrl は引数注入のため lib 非依存）
 
 ### Phase 2: feature 間依存の解消・内部整理（ステップ 2, 3）
 
@@ -563,7 +684,8 @@ npm run test
 24. **6-1**: features ルート直下テスト → src/functions/__tests__/
 25. **6-2**: docs テスト配置修正
 26. **6-3**: upload テスト配置修正
-27. **7**: ヘッダーコメント追加（移動した全ファイルにも確認）
+27. **6-4**: src/functions/ に移動した関数のテスト新規作成（10 ファイル）
+28. **7**: ヘッダーコメント追加（移動した全ファイルにも確認）
 28. **8**: コンポーネントドキュメント作成
 29. **9**: 空ディレクトリの削除
 30. **10**: リファクタリングに伴うドキュメントのパス参照更新
