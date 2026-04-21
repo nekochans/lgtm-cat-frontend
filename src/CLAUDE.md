@@ -37,7 +37,7 @@ src/features/<機能>/  → 共通レイヤー (types, lib, functions, constants
                         他の機能への直接依存は禁止
 src/actions/          → types, lib, functions, constants に依存可能
 src/components/       → types, lib, functions, constants, utils, actions（types/ 配下の型定義ファイルのみ）に依存可能
-src/functions/        → types, constants に依存可能（lib には原則非依存）
+src/functions/        → types, constants, utils に依存可能（lib には原則非依存）
 src/lib/              → types, constants, functions, features に依存可能
 src/utils/            → 他レイヤーに依存しない
 src/constants/        → 他レイヤーに依存しない
