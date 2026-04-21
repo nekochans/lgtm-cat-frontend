@@ -1,9 +1,10 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { Metadata, NextPage } from "next";
-import { appPathList, i18nUrlList } from "@/constants/url";
+import { i18nUrlList } from "@/constants/url";
 import { UploadPage } from "@/features/upload/components/upload-page";
 import { appName, metaTagList } from "@/functions/meta-tag";
 import { convertLanguageToOpenGraphLocale } from "@/functions/open-graph-locale";
+import { createIncludeLanguageAppPath } from "@/functions/url";
 import { appBaseUrl } from "@/lib/config/app-base-url";
 
 const language = "en";
@@ -38,7 +39,10 @@ export const metadata: Metadata = {
 };
 
 const EnUpload: NextPage = () => (
-  <UploadPage currentUrlPath={appPathList.upload} language={language} />
+  <UploadPage
+    currentUrlPath={createIncludeLanguageAppPath("upload", language)}
+    language={language}
+  />
 );
 
 export default EnUpload;
