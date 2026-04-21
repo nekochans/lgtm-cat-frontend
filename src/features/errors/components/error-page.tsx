@@ -8,9 +8,9 @@ import { useEffect, useMemo } from "react";
 import { RunningCat } from "@/components/cats/running-cat";
 import { ErrorPageContent } from "@/components/error-page-content";
 import { ErrorLayout } from "@/features/errors/components/error-layout";
-import { errorPageTexts } from "@/features/errors/error-i18n";
-import type { Language } from "@/features/language";
-import { customErrorTitle } from "@/features/meta-tag";
+import { errorPageTexts } from "@/features/errors/functions/error-i18n";
+import { customErrorTitle } from "@/functions/meta-tag";
+import type { Language } from "@/types/language";
 
 interface Props {
   readonly error: Error & { digest?: string };

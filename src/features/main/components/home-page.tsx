@@ -2,12 +2,12 @@
 
 import type { ReactNode } from "react";
 import { PageLayout } from "@/components/page-layout";
-import type { Language } from "@/features/language";
 import { HomeActionButtons } from "@/features/main/components/home-action-buttons";
 import { LatestLgtmImages } from "@/features/main/components/latest-lgtm-images";
 import { RandomLgtmImages } from "@/features/main/components/random-lgtm-images";
 import { ServiceDescription } from "@/features/main/components/service-description";
-import type { IncludeLanguageAppPath } from "@/features/url";
+import type { Language } from "@/types/language";
+import type { IncludeLanguageAppPath } from "@/types/url";
 
 interface Props {
   readonly currentUrlPath: IncludeLanguageAppPath;

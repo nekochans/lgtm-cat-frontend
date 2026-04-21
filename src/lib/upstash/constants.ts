@@ -1,3 +1,5 @@
+// 絶対厳守：編集前に必ずAI実装ルールを読む
+
 export const upstashRedisRestUrl = (): string => {
   if (process.env.UPSTASH_REDIS_REST_URL != null) {
     return process.env.UPSTASH_REDIS_REST_URL;

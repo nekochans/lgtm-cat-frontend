@@ -5,7 +5,7 @@
 import { Button } from "@heroui/react";
 import Image from "next/image";
 import type { JSX } from "react";
-import type { Language } from "@/features/language";
+import type { Language } from "@/types/language";
 import {
   cancelButtonText,
   previewConfirmationText,

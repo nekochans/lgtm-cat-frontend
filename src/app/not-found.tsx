@@ -2,10 +2,11 @@
 import type { Metadata } from "next";
 import type { JSX } from "react";
 import { NotFoundPage } from "@/features/errors/components/not-found-page";
-import { notFoundMetaTag } from "@/features/meta-tag";
+import { notFoundMetaTag } from "@/functions/meta-tag";
+import { appBaseUrl } from "@/lib/config/app-base-url";
 
 // metadataはビルド時に評価されるため、静的な値を使用
-const metaTag = notFoundMetaTag("ja");
+const metaTag = notFoundMetaTag("ja", appBaseUrl());
 
 export const metadata: Metadata = {
   title: metaTag.title,

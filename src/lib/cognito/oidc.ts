@@ -1,15 +1,15 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import { Redis } from "@upstash/redis";
 import { z } from "zod";
-import { IssueClientCredentialsAccessTokenError } from "@/features/oidc/errors/issue-client-credentials-access-token-error";
-import {
-  createJwtAccessTokenString,
-  type IssueClientCredentialsAccessToken,
-} from "@/features/oidc/types/access-token";
 import {
   upstashRedisRestToken,
   upstashRedisRestUrl,
 } from "@/lib/upstash/constants";
+import {
+  createJwtAccessTokenString,
+  type IssueClientCredentialsAccessToken,
+} from "@/types/oidc/access-token";
+import { IssueClientCredentialsAccessTokenError } from "@/types/oidc/issue-client-credentials-access-token-error";
 
 interface CognitoTokenResponseBody {
   readonly access_token: string;

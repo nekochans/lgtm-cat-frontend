@@ -4,9 +4,10 @@ import type { Metadata } from "next";
 import type { JSX, ReactNode } from "react";
 import "./globals.css";
 import { Providers } from "@/components/heroui/providers";
-import { appName, metaTagList } from "@/features/meta-tag";
-import { convertLanguageToOpenGraphLocale } from "@/features/open-graph-locale";
-import { appBaseUrl, i18nUrlList } from "@/features/url";
+import { i18nUrlList } from "@/constants/url";
+import { appName, metaTagList } from "@/functions/meta-tag";
+import { convertLanguageToOpenGraphLocale } from "@/functions/open-graph-locale";
+import { appBaseUrl } from "@/lib/config/app-base-url";
 import { googleTagManagerId } from "@/utils/gtm";
 import { mPlusRounded1c } from "./fonts";
 
@@ -17,19 +18,19 @@ interface Props {
 const language = "ja";
 
 export const metadata: Metadata = {
-  title: metaTagList(language).home.title,
-  description: metaTagList(language).home.description,
+  title: metaTagList(language, appBaseUrl()).home.title,
+  description: metaTagList(language, appBaseUrl()).home.description,
   openGraph: {
-    title: metaTagList(language).home.title,
-    description: metaTagList(language).home.description,
-    url: metaTagList(language).home.ogpTargetUrl,
+    title: metaTagList(language, appBaseUrl()).home.title,
+    description: metaTagList(language, appBaseUrl()).home.description,
+    url: metaTagList(language, appBaseUrl()).home.ogpTargetUrl,
     siteName: appName,
     images: [
       {
-        url: metaTagList(language).home.ogpImgUrl,
+        url: metaTagList(language, appBaseUrl()).home.ogpImgUrl,
         width: 1200,
         height: 630,
-        alt: metaTagList(language).home.title,
+        alt: metaTagList(language, appBaseUrl()).home.title,
       },
     ],
     locale: convertLanguageToOpenGraphLocale(language),

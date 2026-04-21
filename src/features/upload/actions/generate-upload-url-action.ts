@@ -2,8 +2,8 @@
 
 "use server";
 
-import type { Language } from "@/features/language";
 import { generateR2PresignedPutUrl } from "@/lib/cloudflare/r2/presigned-url";
+import type { Language } from "@/types/language";
 import {
   errorMessageFileTooLarge,
   errorMessageInvalidMimeType,

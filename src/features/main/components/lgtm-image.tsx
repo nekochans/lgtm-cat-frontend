@@ -7,8 +7,9 @@ import type { JSX } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CopyIcon } from "@/components/icons/copy-icon";
 import { HeartIcon } from "@/components/icons/heart-icon";
-import { generateLgtmMarkdown } from "@/features/main/functions/generate-lgtm-markdown";
-import type { LgtmImage as LgtmImageType } from "@/features/main/types/lgtm-image";
+import { generateLgtmMarkdown } from "@/functions/generate-lgtm-markdown";
+import { appBaseUrl } from "@/lib/config/app-base-url";
+import type { LgtmImage as LgtmImageType } from "@/types/lgtm-image";
 import {
   sendCopyMarkdownFromCopyButton,
   sendCopyMarkdownFromTopImages,
@@ -34,7 +35,7 @@ export function LgtmImage({ hideHeartIcon, id, imageUrl }: Props): JSX.Element {
    */
   const copyMarkdownAndSendEvent = useCallback(
     async (sendGaEvent: () => void) => {
-      const markdown = generateLgtmMarkdown(imageUrl);
+      const markdown = generateLgtmMarkdown(imageUrl, appBaseUrl());
 
       try {
         await navigator.clipboard.writeText(markdown);

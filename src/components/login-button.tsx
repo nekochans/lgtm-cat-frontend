@@ -1,8 +1,8 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { JSX } from "react";
 import { IconButton } from "@/components/icon-button";
-import type { Language } from "@/features/language";
-import { createIncludeLanguageAppPath } from "@/features/url";
+import { createIncludeLanguageAppPath } from "@/functions/url";
+import type { Language } from "@/types/language";
 
 interface Props {
   language: Language;

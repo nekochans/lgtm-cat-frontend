@@ -11,7 +11,7 @@ import {
   sampleLgtmScreenshotPath,
   sampleLgtmScreenshotWidth,
 } from "@/features/docs/functions/github-app-text";
-import type { Language } from "@/features/language";
+import type { Language } from "@/types/language";
 
 describe("src/features/docs/functions/github-app-text.ts getGitHubAppTexts TestCases", () => {
   interface TestTable {

@@ -12,7 +12,7 @@ import {
   useState,
 } from "react";
 import { UploadCloudIcon } from "@/components/icons/upload-cloud-icon";
-import type { Language } from "@/features/language";
+import type { Language } from "@/types/language";
 import {
   imageDropAreaText,
   uploadInputButtonText,

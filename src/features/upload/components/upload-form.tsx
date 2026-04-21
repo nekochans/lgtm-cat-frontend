@@ -5,9 +5,9 @@
 import type { JSX } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { LgtmCatIcon } from "@/components/lgtm-cat-icon";
-import type { Language } from "@/features/language";
-import type { LgtmImageUrl } from "@/features/main/types/lgtm-image";
 import { uploadToR2 as defaultUploadToStorage } from "@/lib/cloudflare/r2/upload-to-r2";
+import type { Language } from "@/types/language";
+import type { LgtmImageUrl } from "@/types/lgtm-image";
 import { sendUploadedCatImage } from "@/utils/gtm";
 import { generateUploadUrlAction as defaultGenerateUploadUrlAction } from "../actions/generate-upload-url-action";
 import { validateAndCreateLgtmImageAction as defaultValidateAndCreateLgtmImageAction } from "../actions/validate-and-create-lgtm-image-action";

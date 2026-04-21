@@ -3,7 +3,7 @@
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { createLgtmImageUrl } from "@/features/main/types/lgtm-image";
+import { createLgtmImageUrl } from "@/types/lgtm-image";
 import { UploadSuccess } from "../upload-success";
 
 const testLgtmImageUrl = createLgtmImageUrl(

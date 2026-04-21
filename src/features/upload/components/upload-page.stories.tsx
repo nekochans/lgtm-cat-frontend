@@ -1,11 +1,11 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { Meta, StoryObj } from "@storybook/react";
-import { createLgtmImageUrl } from "@/features/main/types/lgtm-image";
 import {
   createImageSizeTooLargeErrorMessage,
   errorMessageNotCatImage,
   errorMessagePersonFaceInImage,
 } from "@/features/upload/functions/upload-i18n";
+import { createLgtmImageUrl } from "@/types/lgtm-image";
 import { UploadPage } from "./upload-page";
 
 /**
