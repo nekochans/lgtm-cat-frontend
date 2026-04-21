@@ -1,19 +1,13 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import { z } from "zod";
+import { isLgtmImageUrl } from "@/features/main/functions/is-lgtm-image-url";
 import {
   fetchLgtmImagesInRandomUrl,
   fetchLgtmImagesInRecentlyCreatedUrl,
-} from "@/features/main/functions/api-url";
-import { isLgtmImageUrl } from "@/features/main/functions/is-lgtm-image-url";
-import type {
-  FetchLgtmImages,
-  LgtmImage,
-} from "@/features/main/types/lgtm-image";
-import {
-  createLgtmImageId,
-  createLgtmImageUrl,
-} from "@/features/main/types/lgtm-image";
-import type { JwtAccessTokenString } from "@/features/oidc/types/access-token";
+} from "@/lib/config/api-url";
+import type { FetchLgtmImages, LgtmImage } from "@/types/lgtm-image";
+import { createLgtmImageId, createLgtmImageUrl } from "@/types/lgtm-image";
+import type { JwtAccessTokenString } from "@/types/oidc/access-token";
 
 const NUMERIC_ID_REGEX = /^\d+$/;
 

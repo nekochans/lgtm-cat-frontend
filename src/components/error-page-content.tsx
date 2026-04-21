@@ -3,8 +3,8 @@
 
 import type { JSX, ReactNode } from "react";
 import { LinkButton } from "@/components/link-button";
-import type { Language } from "@/features/language";
-import { createIncludeLanguageAppPath } from "@/features/url";
+import { createIncludeLanguageAppPath } from "@/functions/url";
+import type { Language } from "@/types/language";
 
 interface Props {
   readonly buttonText: string;

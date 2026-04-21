@@ -59,10 +59,13 @@ export type UploadFormState =
  * Storybook等でモック可能にするため、Server Actions相当の関数を外部から注入できるようにする
  */
 
+export type {
+  UploadToStorageFunc,
+  UploadToStorageResult,
+} from "@/types/upload/storage";
 // Re-export for convenience
 export type { GenerateUploadUrlResult } from "../actions/generate-upload-url-action";
 export type { ValidateAndCreateLgtmImageResult } from "../actions/validate-and-create-lgtm-image-action";
-export type { UploadToStorageFunc, UploadToStorageResult } from "./storage";
 
 /**
  * generateUploadUrlAction関数の型
@@ -73,7 +76,7 @@ export type { UploadToStorageFunc, UploadToStorageResult } from "./storage";
 export type GenerateUploadUrlAction = (
   contentType: string,
   fileSize: number,
-  language: import("@/features/language").Language
+  language: import("@/types/language").Language
 ) => Promise<
   import("../actions/generate-upload-url-action").GenerateUploadUrlResult
 >;
@@ -86,7 +89,7 @@ export type GenerateUploadUrlAction = (
  */
 export type ValidateAndCreateLgtmImageAction = (
   objectKey: string,
-  language: import("@/features/language").Language
+  language: import("@/types/language").Language
 ) => Promise<
   import("../actions/validate-and-create-lgtm-image-action").ValidateAndCreateLgtmImageResult
 >;

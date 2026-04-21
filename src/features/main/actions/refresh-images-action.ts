@@ -3,17 +3,17 @@
 "use server";
 
 import { updateTag } from "next/cache";
-import type { Language } from "@/features/language";
 import {
   CACHE_TAG_LGTM_IMAGES_LATEST,
   CACHE_TAG_LGTM_IMAGES_RANDOM,
-} from "@/features/main/constants/cache-tags";
+} from "@/constants/cache-tags";
+import { i18nUrlList } from "@/constants/url";
 import type {
   RefreshImagesActionState,
   RefreshRandomCatsAction,
   ShowLatestCatsAction,
 } from "@/features/main/types/action-state";
-import { i18nUrlList } from "@/features/url";
+import type { Language } from "@/types/language";
 
 /**
  * ランダムなLGTM画像を再取得するためのキャッシュを更新し、リダイレクト先URLを返す

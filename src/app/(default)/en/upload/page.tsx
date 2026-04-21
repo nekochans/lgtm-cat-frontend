@@ -1,26 +1,28 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { Metadata, NextPage } from "next";
-import { appName, metaTagList } from "@/features/meta-tag";
-import { convertLanguageToOpenGraphLocale } from "@/features/open-graph-locale";
+import { i18nUrlList } from "@/constants/url";
 import { UploadPage } from "@/features/upload/components/upload-page";
-import { appBaseUrl, appPathList, i18nUrlList } from "@/features/url";
+import { appName, metaTagList } from "@/functions/meta-tag";
+import { convertLanguageToOpenGraphLocale } from "@/functions/open-graph-locale";
+import { createIncludeLanguageAppPath } from "@/functions/url";
+import { appBaseUrl } from "@/lib/config/app-base-url";
 
 const language = "en";
 
 export const metadata: Metadata = {
-  title: metaTagList(language).upload.title,
-  description: metaTagList(language).upload.description,
+  title: metaTagList(language, appBaseUrl()).upload.title,
+  description: metaTagList(language, appBaseUrl()).upload.description,
   openGraph: {
-    title: metaTagList(language).upload.title,
-    description: metaTagList(language).upload.description,
-    url: metaTagList(language).upload.ogpTargetUrl,
+    title: metaTagList(language, appBaseUrl()).upload.title,
+    description: metaTagList(language, appBaseUrl()).upload.description,
+    url: metaTagList(language, appBaseUrl()).upload.ogpTargetUrl,
     siteName: appName,
     images: [
       {
-        url: metaTagList(language).upload.ogpImgUrl,
+        url: metaTagList(language, appBaseUrl()).upload.ogpImgUrl,
         width: 1200,
         height: 630,
-        alt: metaTagList(language).upload.title,
+        alt: metaTagList(language, appBaseUrl()).upload.title,
       },
     ],
     locale: convertLanguageToOpenGraphLocale(language),
@@ -37,7 +39,10 @@ export const metadata: Metadata = {
 };
 
 const EnUpload: NextPage = () => (
-  <UploadPage currentUrlPath={appPathList.upload} language={language} />
+  <UploadPage
+    currentUrlPath={createIncludeLanguageAppPath("upload", language)}
+    language={language}
+  />
 );
 
 export default EnUpload;

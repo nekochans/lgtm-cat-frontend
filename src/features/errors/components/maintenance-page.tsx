@@ -3,9 +3,9 @@
 import { FishHoldingCat } from "@/components/cats/fish-holding-cat";
 import { ErrorPageContent } from "@/components/error-page-content";
 import { ErrorLayout } from "@/features/errors/components/error-layout";
-import { maintenancePageTexts } from "@/features/errors/error-i18n";
-import type { Language } from "@/features/language";
-import { createIncludeLanguageAppPath } from "@/features/url";
+import { maintenancePageTexts } from "@/features/errors/functions/error-i18n";
+import { createIncludeLanguageAppPath } from "@/functions/url";
+import type { Language } from "@/types/language";
 
 interface Props {
   readonly language: Language;

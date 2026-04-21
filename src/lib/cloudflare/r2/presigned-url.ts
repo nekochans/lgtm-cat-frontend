@@ -11,8 +11,8 @@ import type {
   GeneratePresignedPutUrl,
   PresignedGetUrlResult,
   PresignedPutUrlResult,
-} from "@/features/upload/types/storage";
-import { StorageError } from "@/features/upload/types/storage";
+} from "@/types/upload/storage";
+import { StorageError } from "@/types/upload/storage";
 
 /**
  * R2固有のエラークラス

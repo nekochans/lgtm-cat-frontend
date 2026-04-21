@@ -3,13 +3,10 @@
 "use server";
 
 import { revalidateTag } from "next/cache";
-import type { Language } from "@/features/language";
-import { CACHE_TAG_LGTM_IMAGES_LATEST } from "@/features/main/constants/cache-tags";
-import {
-  createLgtmImageUrl,
-  type LgtmImageUrl,
-} from "@/features/main/types/lgtm-image";
+import { CACHE_TAG_LGTM_IMAGES_LATEST } from "@/constants/cache-tags";
 import { generateR2PresignedGetUrl } from "@/lib/cloudflare/r2/presigned-url";
+import type { Language } from "@/types/language";
+import { createLgtmImageUrl, type LgtmImageUrl } from "@/types/lgtm-image";
 import { createLgtmImage } from "../functions/create-lgtm-image";
 import {
   errorMessageNotAcceptable,

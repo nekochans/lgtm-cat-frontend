@@ -1,25 +1,26 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { Metadata, NextPage } from "next";
+import { i18nUrlList } from "@/constants/url";
 import { MaintenancePage } from "@/features/errors/components/maintenance-page";
-import type { Language } from "@/features/language";
-import { appName, metaTagList } from "@/features/meta-tag";
-import { convertLanguageToOpenGraphLocale } from "@/features/open-graph-locale";
-import { appBaseUrl, i18nUrlList } from "@/features/url";
+import { appName, metaTagList } from "@/functions/meta-tag";
+import { convertLanguageToOpenGraphLocale } from "@/functions/open-graph-locale";
+import { appBaseUrl } from "@/lib/config/app-base-url";
+import type { Language } from "@/types/language";
 
 const language: Language = "ja";
 
 export const metadata: Metadata = {
-  title: metaTagList(language).maintenance.title,
+  title: metaTagList(language, appBaseUrl()).maintenance.title,
   openGraph: {
-    title: metaTagList(language).maintenance.title,
-    url: metaTagList(language).maintenance.ogpTargetUrl,
+    title: metaTagList(language, appBaseUrl()).maintenance.title,
+    url: metaTagList(language, appBaseUrl()).maintenance.ogpTargetUrl,
     siteName: appName,
     images: [
       {
-        url: metaTagList(language).maintenance.ogpImgUrl,
+        url: metaTagList(language, appBaseUrl()).maintenance.ogpImgUrl,
         width: 1200,
         height: 630,
-        alt: metaTagList(language).maintenance.title,
+        alt: metaTagList(language, appBaseUrl()).maintenance.title,
       },
     ],
     locale: convertLanguageToOpenGraphLocale(language),

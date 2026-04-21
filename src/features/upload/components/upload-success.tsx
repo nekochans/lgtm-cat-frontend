@@ -7,10 +7,11 @@ import Image from "next/image";
 import Link from "next/link";
 import type { JSX } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { Language } from "@/features/language";
-import { generateLgtmMarkdown } from "@/features/main/functions/generate-lgtm-markdown";
-import type { LgtmImageUrl } from "@/features/main/types/lgtm-image";
-import { createIncludeLanguageAppPath } from "@/features/url";
+import { generateLgtmMarkdown } from "@/functions/generate-lgtm-markdown";
+import { createIncludeLanguageAppPath } from "@/functions/url";
+import { appBaseUrl } from "@/lib/config/app-base-url";
+import type { Language } from "@/types/language";
+import type { LgtmImageUrl } from "@/types/lgtm-image";
 import { sendCopyMarkdownFromCreatedImage } from "@/utils/gtm";
 import {
   closeButtonText,
@@ -60,7 +61,7 @@ export function UploadSuccess({
   const handleCopyMarkdown = useCallback(async () => {
     try {
       // Markdownを生成（lgtmImageUrlは既にLgtmImageUrl型）
-      const markdown = generateLgtmMarkdown(lgtmImageUrl);
+      const markdown = generateLgtmMarkdown(lgtmImageUrl, appBaseUrl());
 
       await navigator.clipboard.writeText(markdown);
       setIsCopied(true);

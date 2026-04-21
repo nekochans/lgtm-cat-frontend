@@ -2,9 +2,9 @@
 
 import type { ComponentProps } from "react";
 import { PageLayout } from "@/components/page-layout";
-import type { Language } from "@/features/language";
 import { UploadForm } from "@/features/upload/components/upload-form";
-import type { IncludeLanguageAppPath } from "@/features/url";
+import type { Language } from "@/types/language";
+import type { IncludeLanguageAppPath } from "@/types/url";
 
 /**
  * UploadForm の Props から language を除外した型

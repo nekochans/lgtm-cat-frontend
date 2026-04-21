@@ -5,8 +5,8 @@ import {
   isLanguage,
   mightExtractLanguageFromAppPath,
   removeLanguageFromAppPath,
-} from "@/features/language";
-import { isIncludeLanguageAppPath } from "@/features/url";
+} from "@/functions/language";
+import { isIncludeLanguageAppPath } from "@/functions/url";
 import { isBanCountry } from "@/lib/vercel/edge-functions/country";
 import { isInMaintenance } from "@/lib/vercel/edge-functions/maintenance";
 import { appBaseUrlHeaderName } from "@/lib/vercel/edge-functions/url";

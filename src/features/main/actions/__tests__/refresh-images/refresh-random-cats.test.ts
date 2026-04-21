@@ -1,9 +1,9 @@
 // 絶対厳守：編集前に必ずAI実装ルールを読む
 
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { CACHE_TAG_LGTM_IMAGES_RANDOM } from "@/constants/cache-tags";
+import { i18nUrlList } from "@/constants/url";
 import { refreshRandomCatsAction } from "@/features/main/actions/refresh-images-action";
-import { CACHE_TAG_LGTM_IMAGES_RANDOM } from "@/features/main/constants/cache-tags";
-import { i18nUrlList } from "@/features/url";
 
 const updateTagMock = vi.fn();
 
