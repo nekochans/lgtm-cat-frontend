@@ -297,11 +297,16 @@ export function DocsMcpPage({
                 【{texts.clientConfig.intro.serverUrlTitle}】
               </p>
               {texts.clientConfig.intro.serverUrls.map((serverUrl) => (
-                <div className="flex items-center gap-2" key={serverUrl.url}>
-                  <span className="text-orange-700 text-sm">
+                <div
+                  className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2"
+                  key={serverUrl.url}
+                >
+                  <span className="shrink-0 text-orange-700 text-sm">
                     {serverUrl.label}:
                   </span>
-                  <CodeSnippet code={serverUrl.url} variant="inline" />
+                  <div className="min-w-0">
+                    <CodeSnippet code={serverUrl.url} variant="inline" />
+                  </div>
                 </div>
               ))}
             </div>
