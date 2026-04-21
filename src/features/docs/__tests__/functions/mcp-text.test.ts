@@ -48,10 +48,14 @@ describe("src/features/docs/functions/mcp-text.ts getMcpTexts TestCases", () => 
     );
   });
 
-  it("should return 3 client config patterns", () => {
+  it("should return 2 transports with correct patterns", () => {
     const result = getMcpTexts("ja");
 
-    expect(result.clientConfig.patterns).toHaveLength(3);
+    expect(result.clientConfig.transports).toHaveLength(2);
+    // Streamable HTTP: 3 patterns
+    expect(result.clientConfig.transports[0].patterns).toHaveLength(3);
+    // SSE: 3 patterns
+    expect(result.clientConfig.transports[1].patterns).toHaveLength(3);
   });
 
   it("should return 2 GitHub Actions examples", () => {
@@ -62,10 +66,14 @@ describe("src/features/docs/functions/mcp-text.ts getMcpTexts TestCases", () => 
     expect(result.githubActions.examples[1].title).toContain("Codex");
   });
 
-  it("should include correct server URL in client config", () => {
+  it("should include correct server URLs in client config", () => {
     const result = getMcpTexts("ja");
 
-    expect(result.clientConfig.intro.serverUrl).toBe(
+    expect(result.clientConfig.intro.serverUrls).toHaveLength(2);
+    expect(result.clientConfig.intro.serverUrls[0].url).toBe(
+      "https://api.lgtmeow.com/mcp"
+    );
+    expect(result.clientConfig.intro.serverUrls[1].url).toBe(
       "https://api.lgtmeow.com/sse"
     );
   });

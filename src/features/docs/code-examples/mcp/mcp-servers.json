@@ -1,8 +1,8 @@
 {
   "mcpServers": {
     "lgtmeow": {
-      "type": "sse",
-      "url": "https://api.lgtmeow.com/sse"
+      "type": "http",
+      "url": "https://api.lgtmeow.com/mcp"
     }
   }
 }

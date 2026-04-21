@@ -27,7 +27,7 @@ jobs:
             ${{ github.event.pull_request.base.ref }} \
             +refs/pull/${{ github.event.pull_request.number }}/head
 
-      - name: Install mcp-proxy for SSE bridge
+      - name: Install mcp-proxy for HTTP bridge
         run: pip install mcp-proxy
 
       - name: Run Codex
@@ -36,7 +36,7 @@ jobs:
         with:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
           codex-args: |
-            --config mcp_servers={"lgtmeow"={"command"="mcp-proxy","args"=["https://api.lgtmeow.com/sse"]}}
+            --config mcp_servers={"lgtmeow"={"command"="mcp-proxy","args"=["https://api.lgtmeow.com/mcp","--transport=streamablehttp"]}}
           prompt: |
             リポジトリ: ${{ github.repository }}
             PR番号: ${{ github.event.pull_request.number }}
