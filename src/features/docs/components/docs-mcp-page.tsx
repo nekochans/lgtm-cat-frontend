@@ -11,6 +11,7 @@ import {
   type McpConfigPattern,
   type McpGitHubActionsExample,
   type McpToolInfo,
+  type McpTransportSection,
 } from "@/features/docs/functions/mcp-text";
 import type { Language } from "@/types/language";
 import type { IncludeLanguageAppPath } from "@/types/url";
@@ -102,12 +103,38 @@ interface ConfigPatternSectionProps {
  */
 function ConfigPatternSection({ pattern, index }: ConfigPatternSectionProps) {
   return (
-    <SubSection title={`${index + 1}. ${pattern.title}`}>
+    <div className="flex flex-col gap-2">
+      <h4 className="font-medium text-orange-700">
+        {index + 1}. {pattern.title}
+      </h4>
       {pattern.description && <p>{pattern.description}</p>}
       <CodeSnippet code={pattern.code} language="json" />
       {pattern.note && (
         <p className="text-orange-700 text-sm">{pattern.note}</p>
       )}
+    </div>
+  );
+}
+
+interface TransportSectionProps {
+  readonly transport: McpTransportSection;
+}
+
+/**
+ * トランスポート別のセクションを表示するコンポーネント
+ */
+function TransportSection({ transport }: TransportSectionProps) {
+  return (
+    <SubSection title={transport.title}>
+      <div className="flex flex-col gap-4">
+        {transport.patterns.map((pattern, index) => (
+          <ConfigPatternSection
+            index={index}
+            key={pattern.title}
+            pattern={pattern}
+          />
+        ))}
+      </div>
     </SubSection>
   );
 }
@@ -187,10 +214,19 @@ export function DocsMcpPage({
     ...baseTexts,
     clientConfig: {
       ...baseTexts.clientConfig,
-      patterns: baseTexts.clientConfig.patterns.map((pattern, index) =>
-        index === 0
-          ? { ...pattern, code: externalCodes.mcpServersJson }
-          : pattern
+      transports: baseTexts.clientConfig.transports.map(
+        (transport, transportIndex) =>
+          transportIndex === 0
+            ? {
+                ...transport,
+                // Streamable HTTP セクションの最初のパターン（HTTP直接サポート）に外部コードを注入
+                patterns: transport.patterns.map((pattern, patternIndex) =>
+                  patternIndex === 0
+                    ? { ...pattern, code: externalCodes.mcpServersJson }
+                    : pattern
+                ),
+              }
+            : transport
       ),
     },
     githubActions: {
@@ -247,28 +283,36 @@ export function DocsMcpPage({
         {/* セクション3: MCPクライアントの設定方法 */}
         <Section title={texts.clientConfig.title}>
           <p>{texts.clientConfig.intro.main}</p>
-          <div className="flex flex-col gap-1 rounded-lg bg-orange-50 p-4">
-            <p className="font-medium text-orange-800">
-              【{texts.clientConfig.intro.authTitle}】
-            </p>
-            <p className="text-orange-700 text-sm">
-              {texts.clientConfig.intro.authDescription}
-            </p>
-            <p className="mt-2 font-medium text-orange-800">
-              【{texts.clientConfig.intro.serverUrlTitle}】
-            </p>
-            <CodeSnippet
-              code={texts.clientConfig.intro.serverUrl}
-              variant="inline"
-            />
+          <div className="flex flex-col gap-3 rounded-lg bg-orange-50 p-4">
+            <div className="flex flex-col gap-1">
+              <p className="font-medium text-orange-800">
+                【{texts.clientConfig.intro.authTitle}】
+              </p>
+              <p className="text-orange-700 text-sm">
+                {texts.clientConfig.intro.authDescription}
+              </p>
+            </div>
+            <div className="flex flex-col gap-1">
+              <p className="font-medium text-orange-800">
+                【{texts.clientConfig.intro.serverUrlTitle}】
+              </p>
+              {texts.clientConfig.intro.serverUrls.map((serverUrl) => (
+                <div
+                  className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2"
+                  key={serverUrl.url}
+                >
+                  <span className="shrink-0 text-orange-700 text-sm">
+                    {serverUrl.label}:
+                  </span>
+                  <div className="min-w-0">
+                    <CodeSnippet code={serverUrl.url} variant="inline" />
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-          <p className="mt-2">{texts.clientConfig.patternsIntro}</p>
-          {texts.clientConfig.patterns.map((pattern, index) => (
-            <ConfigPatternSection
-              index={index}
-              key={pattern.title}
-              pattern={pattern}
-            />
+          {texts.clientConfig.transports.map((transport) => (
+            <TransportSection key={transport.title} transport={transport} />
           ))}
         </Section>
 
