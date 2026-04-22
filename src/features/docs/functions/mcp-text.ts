@@ -17,6 +17,16 @@ export interface McpConfigPattern {
   readonly title: string;
 }
 
+export interface McpTransportSection {
+  readonly patterns: readonly McpConfigPattern[];
+  readonly title: string;
+}
+
+export interface McpServerUrl {
+  readonly label: string;
+  readonly url: string;
+}
+
 export interface McpGitHubActionsExample {
   readonly description: string;
   readonly folderNote?: string;
@@ -44,10 +54,9 @@ export interface McpTexts {
       readonly authTitle: string;
       readonly authDescription: string;
       readonly serverUrlTitle: string;
-      readonly serverUrl: string;
+      readonly serverUrls: readonly McpServerUrl[];
     };
-    readonly patternsIntro: string;
-    readonly patterns: readonly McpConfigPattern[];
+    readonly transports: readonly McpTransportSection[];
   };
   readonly githubActions: {
     readonly title: string;
@@ -60,24 +69,58 @@ export interface McpTexts {
   };
 }
 
-const mcpServerUrl = "https://api.lgtmeow.com/sse";
+const streamableHttpUrl = "https://api.lgtmeow.com/mcp";
+const sseUrl = "https://api.lgtmeow.com/sse";
 
-const nodeConfigCode = `{
+// Streamable HTTP 用の設定コード（stdio ブリッジ）
+const streamableHttpNodeBridgeCode = `{
   "mcpServers": {
     "lgtmeow": {
       "command": "npx",
-      "args": ["mcp-remote", "${mcpServerUrl}"]
+      "args": ["mcp-remote", "${streamableHttpUrl}"]
     }
   }
 }`;
 
-const pythonConfigCode = `{
+const streamableHttpPythonBridgeCode = `{
   "mcpServers": {
     "lgtmeow": {
       "command": "uvx",
       "args": [
         "mcp-proxy",
-        "${mcpServerUrl}"
+        "${streamableHttpUrl}",
+        "--transport=streamablehttp"
+      ]
+    }
+  }
+}`;
+
+// SSE 用の設定コード
+const sseDirectCode = `{
+  "mcpServers": {
+    "lgtmeow": {
+      "type": "sse",
+      "url": "${sseUrl}"
+    }
+  }
+}`;
+
+const sseNodeBridgeCode = `{
+  "mcpServers": {
+    "lgtmeow": {
+      "command": "npx",
+      "args": ["mcp-remote", "${sseUrl}"]
+    }
+  }
+}`;
+
+const ssePythonBridgeCode = `{
+  "mcpServers": {
+    "lgtmeow": {
+      "command": "uvx",
+      "args": [
+        "mcp-proxy",
+        "${sseUrl}"
       ]
     }
   }
@@ -140,33 +183,69 @@ export function getMcpTexts(language: Language): McpTexts {
         clientConfig: {
           title: "MCPクライアントの設定方法",
           intro: {
-            main: "LGTMeow MCP Server は、リモート(SSE)方式のみ提供しています。",
+            main: "LGTMeow MCP Server は、Streamable HTTP と SSE の2つのトランスポートに対応しています。",
             authTitle: "認証について",
             authDescription:
               "認証不要で利用できます。API キーやトークンの設定は不要です。",
             serverUrlTitle: "サーバー URL",
-            serverUrl: mcpServerUrl,
+            serverUrls: [
+              {
+                label: "Streamable HTTP（推奨）",
+                url: streamableHttpUrl,
+              },
+              {
+                label: "SSE",
+                url: sseUrl,
+              },
+            ],
           },
-          patternsIntro:
-            "お使いの MCP クライアントが SSE を「直接サポートしているか」に応じて、以下の 3 パターンのいずれかを利用してください。",
-          patterns: [
+          transports: [
             {
-              title: "SSE を直接サポートするクライアントの場合",
-              // 実際の値は page.tsx から props として渡される
-              code: "",
+              title: "Streamable HTTP を使う場合（推奨）",
+              patterns: [
+                {
+                  title: "HTTP を直接サポートするクライアントの場合",
+                  // 実際の値は page.tsx から props として渡される
+                  code: "",
+                },
+                {
+                  title: "Node 環境 / mcp-remote を使う場合",
+                  description:
+                    "クライアントが HTTP を直接サポートしない場合、mcp-remote を利用して HTTP → stdio をブリッジできます。",
+                  code: streamableHttpNodeBridgeCode,
+                  note: "npx が見つからない場合は、Node.js がインストールされているか、PATH が通っているかをご確認ください。必要に応じて npx のフルパスを指定してください。",
+                },
+                {
+                  title: "Python / uvx + mcp-proxy を使う場合",
+                  description:
+                    "Python ユーザー向けの HTTP → stdio ブリッジです。",
+                  code: streamableHttpPythonBridgeCode,
+                  note: "uvx が見つからない場合は、インストール状況と PATH をご確認ください。必要に応じて uvx のフルパスを指定してください。",
+                },
+              ],
             },
             {
-              title: "Node 環境 / mcp-remote を使う場合",
-              description:
-                "クライアントが SSE を直接サポートしない場合、mcp-remote を利用して SSE → stdio をブリッジできます。",
-              code: nodeConfigCode,
-              note: "npx が見つからない場合は、Node.js がインストールされているか、PATH が通っているかをご確認ください。必要に応じて npx のフルパスを指定してください。",
-            },
-            {
-              title: "Python / uvx + mcp-proxy を使う場合",
-              description: "Python ユーザー向けの SSE → stdio ブリッジです。",
-              code: pythonConfigCode,
-              note: "uvx が見つからない場合は、インストール状況と PATH をご確認ください。必要に応じて uvx のフルパスを指定してください。",
+              title: "SSE を使う場合",
+              patterns: [
+                {
+                  title: "SSE を直接サポートするクライアントの場合",
+                  code: sseDirectCode,
+                },
+                {
+                  title: "Node 環境 / mcp-remote を使う場合",
+                  description:
+                    "クライアントが SSE を直接サポートしない場合、mcp-remote を利用して SSE → stdio をブリッジできます。",
+                  code: sseNodeBridgeCode,
+                  note: "npx が見つからない場合は、Node.js がインストールされているか、PATH が通っているかをご確認ください。必要に応じて npx のフルパスを指定してください。",
+                },
+                {
+                  title: "Python / uvx + mcp-proxy を使う場合",
+                  description:
+                    "Python ユーザー向けの SSE → stdio ブリッジです。",
+                  code: ssePythonBridgeCode,
+                  note: "uvx が見つからない場合は、インストール状況と PATH をご確認ください。必要に応じて uvx のフルパスを指定してください。",
+                },
+              ],
             },
           ],
         },
@@ -254,33 +333,67 @@ export function getMcpTexts(language: Language): McpTexts {
         clientConfig: {
           title: "MCP Client Configuration",
           intro: {
-            main: "LGTMeow MCP Server only supports remote (SSE) mode.",
+            main: "LGTMeow MCP Server supports two transports: Streamable HTTP and SSE.",
             authTitle: "Authentication",
             authDescription:
               "No authentication required. No API key or token configuration is needed.",
-            serverUrlTitle: "Server URL",
-            serverUrl: mcpServerUrl,
+            serverUrlTitle: "Server URLs",
+            serverUrls: [
+              {
+                label: "Streamable HTTP (Recommended)",
+                url: streamableHttpUrl,
+              },
+              {
+                label: "SSE",
+                url: sseUrl,
+              },
+            ],
           },
-          patternsIntro:
-            "Depending on whether your MCP client directly supports SSE, use one of the following 3 patterns.",
-          patterns: [
+          transports: [
             {
-              title: "For clients that directly support SSE",
-              // 実際の値は page.tsx から props として渡される
-              code: "",
+              title: "Using Streamable HTTP (Recommended)",
+              patterns: [
+                {
+                  title: "For clients that directly support HTTP",
+                  // 実際の値は page.tsx から props として渡される
+                  code: "",
+                },
+                {
+                  title: "Using Node environment / mcp-remote",
+                  description:
+                    "If your client does not directly support HTTP, you can use mcp-remote to bridge HTTP → stdio.",
+                  code: streamableHttpNodeBridgeCode,
+                  note: "If npx is not found, please verify that Node.js is installed and PATH is configured. Specify the full path to npx if needed.",
+                },
+                {
+                  title: "Using Python / uvx + mcp-proxy",
+                  description: "HTTP → stdio bridge for Python users.",
+                  code: streamableHttpPythonBridgeCode,
+                  note: "If uvx is not found, please verify installation and PATH. Specify the full path to uvx if needed.",
+                },
+              ],
             },
             {
-              title: "For Node environment / using mcp-remote",
-              description:
-                "If your client doesn't directly support SSE, you can use mcp-remote to bridge SSE → stdio.",
-              code: nodeConfigCode,
-              note: "If npx is not found, please verify that Node.js is installed and PATH is configured. Specify the full path to npx if needed.",
-            },
-            {
-              title: "For Python / uvx + mcp-proxy",
-              description: "This is an SSE → stdio bridge for Python users.",
-              code: pythonConfigCode,
-              note: "If uvx is not found, please verify installation and PATH. Specify the full path to uvx if needed.",
+              title: "Using SSE",
+              patterns: [
+                {
+                  title: "For clients that directly support SSE",
+                  code: sseDirectCode,
+                },
+                {
+                  title: "Using Node environment / mcp-remote",
+                  description:
+                    "If your client does not directly support SSE, you can use mcp-remote to bridge SSE → stdio.",
+                  code: sseNodeBridgeCode,
+                  note: "If npx is not found, please verify that Node.js is installed and PATH is configured. Specify the full path to npx if needed.",
+                },
+                {
+                  title: "Using Python / uvx + mcp-proxy",
+                  description: "SSE → stdio bridge for Python users.",
+                  code: ssePythonBridgeCode,
+                  note: "If uvx is not found, please verify installation and PATH. Specify the full path to uvx if needed.",
+                },
+              ],
             },
           ],
         },
