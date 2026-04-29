@@ -1,4 +1,3 @@
-// 絶対厳守：編集前に必ずAI実装ルールを読む
 import { type NextRequest, NextResponse } from "next/server";
 import { httpStatusCode } from "@/constants/http-status-code";
 import {

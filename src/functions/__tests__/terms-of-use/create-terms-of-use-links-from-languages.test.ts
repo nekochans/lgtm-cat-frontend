@@ -1,4 +1,3 @@
-// 絶対厳守：編集前に必ずAI実装ルールを読む
 import { describe, expect, it } from "vitest";
 import { createTermsOfUseLinksFromLanguages } from "@/functions/terms-of-use";
 import type { Language } from "@/types/language";

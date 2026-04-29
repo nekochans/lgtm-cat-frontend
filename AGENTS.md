@@ -1,143 +1,88 @@
-# 🚨🚨🚨 【重要】ソースファイル必須事項（絶対厳守）
+# lgtm-cat-frontend
 
-絶対厳守：編集前に必ずルールを読む
-
-本ドキュメントはコーディング用AIエージェント向けの資料です。
-
-## 📝 ソースファイル先頭コメント必須
-
-全てのソースファイル（.ts .tsx）の先頭に必ず以下のコメントを記載：
-
-```typescript
-// 絶対厳守：編集前に必ずAI実装ルールを読む
-```
-
-既存ファイルにコメントがない場合は必ず追加すること。
-
-## 他のファイルへの参照
-
-**以下のように @<path> の形式で書かれている場合は別のファイルへの参照になりますので、対象ファイルを探して内容を確認してください。**
-
-**以下に記載例を示します。**
-
-@src/app/page.tsx（src/app/page.tsx を参照）
-@docs/basic-coding-guidelines.md （docs/basic-coding-guidelines.md を参照）
-
-## プロジェクト構成とモジュール
-
-以下のファイルに記載されております。
-
-Claude Codeは @src/CLAUDE.md を参照してください。
-
-Codexは @src/AGENTS.md を参照してください。
+LGTMeow（https://lgtmeow.com）のフロントエンド用 Next.js プロジェクト。
 
 ## ビルド・テスト・開発コマンド
 
-- `npm run dev` : ポート 2222 でホットリロード付きの開発サーバーを起動します。
-- `npm run build` : 本番向けビルドを生成します。マージ前セルフチェックで実行してください。
-- `npm run lint` : Ultracite + Prettier のスタイル検証を行います。修正は `npm run format`。
-- `npm run test` : Vitest のユニットテストと Storybook 連携テストを一括実行します。
-- `npm run test:coverage` : CI 同等のカバレッジレポートを出力します。
-- `npm run storybook` / `npm run chromatic` : UI をローカル確認し、Chromatic にビジュアル差分を送信します。
+| コマンド                     | 内容                                                 |
+| ---------------------------- | ---------------------------------------------------- |
+| `npm run dev`                | ポート 2222 でホットリロード付きの開発サーバーを起動 |
+| `npm run build`              | 本番向けビルド。マージ前セルフチェックで実行する     |
+| `npm run lint`               | Ultracite + Prettier のスタイル検証                  |
+| `npm run format`             | コードのフォーマット（修正含む）                     |
+| `npm run test`               | Vitest のユニット + Storybook 連携テスト             |
+| `npm run test:coverage`      | CI 同等のカバレッジレポート出力                      |
+| `npm run storybook`          | ポート 6006 で Storybook を起動                      |
+| `npm run chromatic`          | Chromatic にビジュアル差分を送信                     |
+| `npm run sync:agents-skills` | `.agents/skills/` を `.claude/skills/` に同期        |
 
-## **重要な品質管理実行手順**
+## 品質管理の実行手順
 
-特別な指示がない場合は **必ず** 以下の順番で品質管理を実行します。
+特別な指示がない場合は、以下の順番で品質管理を実行する。
 
-1. `npm run format` を実行してコードをフォーマットする
-2. `npm run lint` を実行してコードをチェックする
-3. `npm run test` を実行して全てパスする事を確認する
-4. Chrome DevTools MCP を使って `http://localhost:2222` にアクセスして表示確認を行う
-5. Chrome DevTools MCP を使って `http://localhost:6006/` にアクセスして修正したComponentが正常に表示されるか確認を行う
+1. `npm run format` でコードをフォーマット
+2. `npm run lint` でコードをチェック
+3. `npm run test` で全てパスすることを確認
+4. UI 変更時は、ブラウザで以下を表示確認
+   - `http://localhost:2222`
+   - `http://localhost:6006/`（Storybook）
 
-別途ここに書いてある品質管理手順以外の手順が指示されている場合はそちらを優先してください。
+## 利用可能な Skill
+
+用途固有のワークフローは `.agents/skills/` 配下の Skill に分離している。以下の状況に該当する場合は、対応する Skill を読み込んでから作業すること。
+
+| 状況                               | Skill 名           | 内容                                                                        |
+| ---------------------------------- | ------------------ | --------------------------------------------------------------------------- |
+| GitHub の Pull Request を作成する  | `create-pr`        | PR タイトル規約、本文テンプレート、ベースブランチ、許可される操作等         |
+| Git コミットメッセージを作成する   | `git-commit`       | コミットメッセージ規約、issue 番号付与ルール、コミット/プッシュ実行ポリシー |
+| Tailwind CSS v4 でスタイリングする | `tailwind-styling` | v4 構文ルール、Breaking Changes、新機能等                                   |
+| Figma デザインを取り込む           | `figma-import`     | Figma Dev Mode MCP の利用ルール、注意事項                                   |
+
+各 Skill の実体は `.agents/skills/<skill名>/SKILL.md` に格納されている。Claude Code・Codex CLI ともに自動的に Skill を発見するが、確実に呼び出したい場合は明示的に Skill 名を指定すること。
+
+## ファイル編集時の注意
+
+### AGENTS.md / CLAUDE.md の関係
+
+- `AGENTS.md` が実体、`CLAUDE.md` は同ディレクトリの `AGENTS.md` への **相対パス symlink**
+- 編集する際は **必ず `AGENTS.md` を編集** すること（CLAUDE.md は同一ファイルへの参照）
+- 対象ディレクトリ: `./`, `src/`, `src/components/`, `src/features/`
+- symlink を再作成する必要が生じた場合は、必ず相対パスで作成すること（絶対パスは他環境で動作しない）
+
+```bash
+# 各ディレクトリで実行
+ln -s AGENTS.md CLAUDE.md
+```
+
+### Skill ファイル（`.agents/skills/` ↔ `.claude/skills/`）
+
+- **`.agents/skills/<name>/` が実体**（Codex CLI 等が公式に読み込むパス）
+- `.claude/skills/<name>/` は同期スクリプトでコピーされた複製（Claude Code 用）
+- `.agents/skills/` 配下を編集したら **必ず `npm run sync:agents-skills` を実行** して `.claude/skills/` に反映する
+- `.claude/skills/` 側を直接編集してはならない（次の同期実行時に上書きされる）
+- CI が同期ズレを検出する
 
 ## 関連ドキュメント
 
-### **重要: 基本的なコーディングガイドライン**
+| 参照先                             | 内容                                                         |
+| ---------------------------------- | ------------------------------------------------------------ |
+| @src/AGENTS.md                     | `src/` 配下のレイヤー構造と依存関係ルール                    |
+| @docs/project-coding-guidelines.md | プロジェクト固有のコーディング規約（型定義、命名、テスト等） |
 
-必ず以下のドキュメントを参照してから開発を開始してください:
+## GitHub の利用ルール
 
-@docs/basic-coding-guidelines.md
+`gh` コマンドで GitHub と連携できる。許可されている操作と、許可が必要な操作の区別は以下のとおり。
 
-### **プロジェクト固有のコーディングガイドライン**
+**許可なく実行可能：**
 
-プロジェクト固有のコーディング規約とベストプラクティスについては以下に記載してありますので必ず見てください:
+- GitHub への PR の作成
+- GitHub への PR へのコメント追加
+- GitHub Issue の新規作成
+- GitHub Issue へのコメントの追加
 
-@docs/project-coding-guidelines.md
+**ユーザーの明示的な許可が必要：**
 
-### **Tailwind CSS 4 コーディングガイドライン**
+- Git へのコミット
+- GitHub へのプッシュ
 
-CSSはTailwind CSS 4を利用しています。以下のコーディングルールをご確認ください。
-
-@docs/tailwind-css-v4-coding-guidelines.md
-
-## GitとGitHubワークフロールール
-
-### GitHubの利用ルール
-
-`gh` コマンドを利用してGitHubへのPRを作成する事が可能です。
-
-許可されている操作は以下の通りです。
-
-- GitHubへのPRの作成
-- GitHubへのPRへのコメントの追加
-- GitHub Issueの新規作成
-- GitHub Issueへのコメントの追加
-
-**以下の操作はユーザーの許可があれば可能です。**
-
-- Gitへのコミット
-- GitHubへのプッシュ
-
-### コミットメッセージの作成ルール
-
-- 対応issueがある場合は、コミットメッセージに `#<issue番号>` を記載します
-
-### PR作成ルール
-
-- ブランチはユーザーが作成しますので現在のブランチをそのまま利用します
-- PRのタイトルは日本語で入力します
-- PRの作成先は特別な指示がない場合は `staging` ブランチになります
-- PRの説明欄は @.github/PULL_REQUEST_TEMPLATE.md を参考に入力します
-- 対応issueがある場合は、PRの説明欄に `#<issue番号>` を記載します
-- Issue番号は現在のブランチ名から取得出来ます、例えば `feature/issue7/add-docs` の場合は `7` がIssue番号になります
-- PRの説明欄には主に以下の情報を含めてください
-
-#### PRの説明欄に含めるべき情報
-
-- 変更内容の詳細説明よりも、なぜその変更が必要なのかを重視
-- 他に影響を受ける機能やAPIエンドポイントがあれば明記
-
-#### 以下の情報はPRの説明欄に記載する事を禁止する
-
-- 1つのissueで1つのPRとは限らないので `fix #issue番号` や `close #issue番号` のようなコメントは禁止します
-- 全てのテストをパス、Linter、型チェックを通過などのコメント（テストやCIが通過しているのは当たり前でわざわざ書くべき事ではない）
-
-## コーディング時に利用可能なツールについて
-
-コーディングを効率的に行う為のツールです。必ず以下に目を通してください。
-
-### Serena MCP
-
-コードの検索や編集には Serena MCP を **最優先で使用** してください。
-
-Serena MCPが使えない種類のファイルでは通常の読み取り・編集ツールを利用しても良いです。
-
-### Figma Dev Mode MCP
-
-- Figma Dev Mode MCPサーバーは、画像やSVGアセットを提供するアセットエンドポイントを提供します。
-- 重要: Figma Dev Mode MCP サーバーが画像またはSVGのローカルホストソースを返す場合、その画像またはSVGソースを直接使用してください。
-- 重要: 新しいアイコンパッケージをインポート/追加しないでください。すべてのアセットはFigmaペイロードに含まれている必要があります。
-- 重要: ローカルホストソースが提供されている場合、プレースホルダーを使用または作成しないでください。
-
-### Chrome DevTools MCP
-
-フロントエンドのデバッグを行う際に利用します。
-
-ブラウザ操作やデバッグ用途で利用します。
-
-## **絶対禁止事項**
-
-1. **依頼内容に関係のない無駄な修正を行う行為は絶体に禁止。**
-2. **ビジネスロジックが誤っている状態で、テストコードを“上書きしてまで”合格させる行為は絶対に禁止。**
+PR 作成時は `create-pr` Skill、コミット時は `git-commit` Skill を参照すること。

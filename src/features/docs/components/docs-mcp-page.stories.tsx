@@ -1,4 +1,3 @@
-// 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { Meta, StoryObj } from "@storybook/react";
 // 重要: import type を使用してサーバー専用モジュールの混入を防止
 import type { McpExternalCodes } from "../functions/mcp-code-loader";

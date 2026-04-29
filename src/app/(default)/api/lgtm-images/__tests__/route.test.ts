@@ -1,5 +1,3 @@
-// 絶対厳守：編集前に必ずAI実装ルールを読む
-
 import { captureException } from "@sentry/nextjs";
 import { http } from "msw";
 import { setupServer } from "msw/node";

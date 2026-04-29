@@ -1,5 +1,3 @@
-// 絶対厳守：編集前に必ずAI実装ルールを読む
-
 import type { ReactNode } from "react";
 import { PageLayout } from "@/components/page-layout";
 import { HomeActionButtons } from "@/features/main/components/home-action-buttons";

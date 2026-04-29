@@ -1,5 +1,3 @@
-// 絶対厳守：編集前に必ずAI実装ルールを読む
-
 interface Options {
   readonly headers?: Record<string, string>;
   readonly responseBody?: unknown;

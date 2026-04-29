@@ -1,5 +1,3 @@
-// 絶対厳守：編集前に必ずAI実装ルールを読む
-
 export type JwtAccessTokenString = string & {
   readonly __brand: "jwtAccessTokenString";
 };

@@ -1,4 +1,3 @@
-// 絶対厳守：編集前に必ずAI実装ルールを読む
 // https://developer.mozilla.org/ja/docs/Web/HTTP/Status から必要なものを抜粋して定義
 export const httpStatusCode = {
   ok: 200,
