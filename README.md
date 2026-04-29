@@ -251,6 +251,7 @@ AI向けのドキュメントを参照してください。
       "env": {}
     },
     "next-devtools": {
+      "type": "stdio",
       "command": "npx",
       "args": ["-y", "next-devtools-mcp@latest"]
     },
