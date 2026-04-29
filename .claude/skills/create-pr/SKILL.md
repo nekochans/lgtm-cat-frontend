@@ -97,6 +97,15 @@ git rev-parse --abbrev-ref HEAD
 
 `.github/PULL_REQUEST_TEMPLATE.md` で定義されている構造に従う。各セクションに何を書くかを具体的に整理する。
 
+### 全セクション必須の原則
+
+**テンプレートに記載されているセクションは必ずすべて埋める**。任意とされるセクションでも、空のまま省略してはならない。該当する内容が無い場合は、`〇〇のため記載なし` のように **理由付きで明示的に「なし」と記載する**。
+
+- ❌ NG：該当しないセクションを丸ごと省略する → レビュアーが「書き忘れ」か「該当なし」か判別できない
+- ✅ OK：「README.md のドキュメント変更のみで Component / UI の変更を伴わないため、Storybook 連携は不要」のように、判断の根拠を含めて記載
+
+これは「未来の開発者・レビュアーが PR を初見で読んだ際に、なぜそのセクションが空なのかを判断できる」状態を保つために重要。
+
 ### `# issueURL`（必須）
 
 - 対応する GitHub Issue の URL を **フル URL で** 記載する
@@ -122,12 +131,38 @@ git rev-parse --abbrev-ref HEAD
     - LCP 警告（`priority` 未設定）→ #471
   ```
 
-### `# Storybook の URL、 スクリーンショット`（任意）
+### `# Storybook の URL、 スクリーンショット`（必須・該当なしの場合も理由付きで記載）
 
-- UI 変更がある場合は、以下のいずれかを記載する
-  - Chromatic の Storybook URL（PR ごとに自動生成される）
-  - スクリーンショット（デスクトップ / モバイル両方を別見出しで載せると親切）
-- UI 変更がない場合は、確認した URL を記載する程度でも可（例：「`http://localhost:2222` 表示正常」）
+このセクションは PR 作成時点では空になることが多いが、**省略は禁止**。以下の運用ルールに従って必ず記載する。
+
+#### UI 変更がある場合
+
+PR 作成後、Chromatic ビルドが完了するのを待ってから URL を取得し、`gh pr edit` で説明欄を更新する流れになる。
+
+1. PR を作成する（`gh pr create --draft ...`）
+2. Chromatic CI が走り、Storybook が公開される（数分かかる）
+3. PR の Storybook URL を取得する。以下のいずれかの方法で取得できる
+   - **CLI 経由（AI エージェント向け推奨）**：`gh pr checks <PR番号> --repo <owner>/<repo>` の出力から `Storybook Publish` 行の URL を抽出
+   - **GitHub UI 経由（人間向け）**：PR ページの「All checks have passed」セクションで `Storybook Publish` のリンクをクリック
+   - どちらの方法でも、PR 毎に Chromatic が生成した **公開 Storybook のベース URL** が得られる
+     - 例：`https://622b6c5dc31e9e003a111eb5-vwrshrxnjd.chromatic.com/`
+4. 必要に応じて、特定の Story を指す `?path=/story/<story-id>` を末尾に付ける
+   - 例：`https://622b6c5dc31e9e003a111eb5-cprksiyplm.chromatic.com/?path=/story/features-docs-docsmcppage--japanese`
+5. `gh pr edit <PR番号> --body "..."` で取得した URL を該当セクションに貼り付けて更新
+
+スクリーンショットを併載する場合は、デスクトップ / モバイル の両方を別見出し（H2）で載せると親切。
+
+> 注意：`gh pr checks` の出力には `Deploy Storybook to chromatic` という GitHub Actions ジョブ行（`https://github.com/.../actions/runs/...` 形式）も含まれる。これは **Storybook の URL ではなく CI ジョブの URL** なので混同しないこと。PR 説明欄に書くべきは `Storybook Publish` 行の `*.chromatic.com/` 形式の URL。
+
+#### UI 変更がない場合
+
+「**なし**」とだけ書くのではなく、**なぜ該当しないのか** を理由付きで記載する。
+
+例：
+
+- 「README.md のドキュメント変更のみで Component / UI の変更を伴わないため、Storybook 連携は不要」
+- 「`src/scripts/` 配下の開発用スクリプトの追加のみで、レンダリング対象の Component は含まれないため不要」
+- 「依存 package のバージョン更新のみで、UI 表示への影響は無いため不要」
 
 ### `# 変更点概要`（必須）
 
