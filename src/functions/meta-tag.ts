@@ -1,5 +1,3 @@
-// 絶対厳守：編集前に必ずAI実装ルールを読む
-
 import { i18nUrlList } from "@/constants/url";
 import type { Language } from "@/types/language";
 import type { MetaTag, MetaTagList } from "@/types/meta-tag";

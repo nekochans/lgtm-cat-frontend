@@ -1,5 +1,3 @@
-// 絶対厳守：編集前に必ずAI実装ルールを読む
-
 "use server";
 
 import { generateR2PresignedPutUrl } from "@/lib/cloudflare/r2/presigned-url";

@@ -1,5 +1,3 @@
-// 絶対厳守：編集前に必ずAI実装ルールを読む
-
 import { appPathList, i18nUrlList } from "@/constants/url";
 import { isUrl } from "@/functions/url";
 import type { Language } from "@/types/language";

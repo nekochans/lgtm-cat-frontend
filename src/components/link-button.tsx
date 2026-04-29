@@ -1,4 +1,3 @@
-// 絶対厳守：編集前に必ずAI実装ルールを読む
 import Link from "next/link";
 import type { CSSProperties, JSX } from "react";
 import type { IncludeLanguageAppPath, Url } from "@/types/url";

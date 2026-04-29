@@ -204,3 +204,22 @@ https://docs.npmjs.com/cli/v7/commands/npm-dedupe
 AI向けのドキュメントを参照してください。
 
 - [src/AGENTS.md](https://github.com/nekochans/lgtm-cat-frontend/blob/staging/src/AGENTS.md)
+
+## AI Coding Agent 向けの開発環境セットアップ
+
+このプロジェクトは AI Coding Agent（Claude Code、Codex CLI 等）による開発を前提としています。AI エージェントの能力を最大限活かすために、以下のセットアップを推奨します。
+
+### 利用推奨 MCP サーバー
+
+`.mcp.json` に定義済みです。利用する AI エージェントから接続できるようにしておくと開発効率が大きく向上します。
+
+| MCP サーバー      | 用途                                 |
+| ----------------- | ------------------------------------ |
+| `serena`          | コード検索・シンボル単位の編集       |
+| `chrome-devtools` | ブラウザデバッグ・UI 動作確認        |
+| `next-devtools`   | Next.js のドキュメント調査・構成確認 |
+| `figma-desktop`   | Figma デザインの取り込み             |
+
+### 推奨ユーザーグローバル Skill
+
+ブラウザ操作を伴う品質確認を AI エージェントに任せたい場合、[`agent-browser`](https://github.com/vercel-labs/agent-browser/tree/main) のインストールを推奨します。`~/.claude/skills/agent-browser` に配置することで、Claude Code から自動的に利用可能になります。

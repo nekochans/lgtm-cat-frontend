@@ -30,13 +30,13 @@ jobs:
           LGTMEOW_API_URL: ${{ secrets.LGTMEOW_API_URL }}
           NODE_AUTH_TOKEN: ${{ secrets.AUTH_TOKEN_FOR_GITHUB_PACKAGES }}
 
-      - name: Verify Agents Docs Clean
+      - name: Verify Agents Skills Synced
         run: |
-          npm run sync:agents-docs
-          if ! git diff --quiet -- CLAUDE.md AGENTS.md ':(glob)**/CLAUDE.md'; then
-            echo "::error title=Agents docs not synced::AI向けドキュメントが同期されていません。npm run sync:agents-docs を実行して変更をコミットしてください。"
-            git status --short -- CLAUDE.md AGENTS.md ':(glob)**/CLAUDE.md'
-            git diff --stat -- CLAUDE.md AGENTS.md ':(glob)**/CLAUDE.md'
+          npm run sync:agents-skills
+          if ! git diff --quiet -- .claude/skills; then
+            echo "::error title=Agents skills not synced::.agents/skills と .claude/skills が同期されていません。npm run sync:agents-skills を実行して変更をコミットしてください。"
+            git status --short -- .claude/skills
+            git diff --stat -- .claude/skills
             exit 1
           fi
 

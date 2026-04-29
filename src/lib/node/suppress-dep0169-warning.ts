@@ -1,5 +1,3 @@
-// 絶対厳守：編集前に必ずAI実装ルールを読む
-
 // TODO: この対処は一時的なものです。Next.jsおよび依存パッケージ(proxy-from-env等)が
 // WHATWG URL APIに移行した後は、このファイルを削除してください。
 // 関連Issue: https://github.com/nekochans/lgtm-cat-frontend/issues/425
