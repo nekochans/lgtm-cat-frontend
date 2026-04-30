@@ -1,4 +1,3 @@
-// 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { Metadata } from "next";
 import type { JSX } from "react";
 import { NotFoundPage } from "@/features/errors/components/not-found-page";

@@ -1,5 +1,3 @@
-// 絶対厳守：編集前に必ずAI実装ルールを読む
-
 import type { JwtAccessTokenString } from "@/types/oidc/access-token";
 
 export type LgtmImageUrl = `https://${string}` & {

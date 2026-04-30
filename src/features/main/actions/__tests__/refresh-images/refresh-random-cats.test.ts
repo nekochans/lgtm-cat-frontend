@@ -1,5 +1,3 @@
-// 絶対厳守：編集前に必ずAI実装ルールを読む
-
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { CACHE_TAG_LGTM_IMAGES_RANDOM } from "@/constants/cache-tags";
 import { i18nUrlList } from "@/constants/url";

@@ -1,5 +1,3 @@
-// 絶対厳守：編集前に必ずAI実装ルールを読む
-
 type ActionState = {
   readonly status: "SUCCESS" | "ERROR";
   readonly [key: string]: unknown;

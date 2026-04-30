@@ -1,5 +1,3 @@
-// 絶対厳守：編集前に必ずAI実装ルールを読む
-
 import { getActionButtonText } from "@/functions/service-description-text";
 import { createIncludeLanguageAppPath } from "@/functions/url";
 import type { Language } from "@/types/language";

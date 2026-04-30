@@ -1,4 +1,3 @@
-// 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { Metadata, NextPage } from "next";
 import { i18nUrlList } from "@/constants/url";
 import { UploadPage } from "@/features/upload/components/upload-page";

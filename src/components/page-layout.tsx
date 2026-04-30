@@ -1,5 +1,3 @@
-// 絶対厳守：編集前に必ずAI実装ルールを読む
-
 import type { ReactNode } from "react";
 import type { Language } from "@/types/language";
 import type { IncludeLanguageAppPath } from "@/types/url";

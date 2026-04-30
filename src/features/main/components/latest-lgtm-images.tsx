@@ -1,4 +1,3 @@
-// 絶対厳守：編集前に必ずAI実装ルールを読む
 import { cacheLife, cacheTag } from "next/cache";
 import { CACHE_TAG_LGTM_IMAGES_LATEST } from "@/constants/cache-tags";
 import { LgtmImages } from "@/features/main/components/lgtm-images";

@@ -204,3 +204,95 @@ https://docs.npmjs.com/cli/v7/commands/npm-dedupe
 AI向けのドキュメントを参照してください。
 
 - [src/AGENTS.md](https://github.com/nekochans/lgtm-cat-frontend/blob/staging/src/AGENTS.md)
+
+## AI Coding Agent 向けの開発環境セットアップ
+
+このプロジェクトは AI Coding Agent（Claude Code、Codex CLI 等）による開発を前提としています。AI エージェントの能力を最大限活かすために、以下のセットアップを推奨します。
+
+### 利用推奨 MCP サーバー
+
+`.mcp.json` に定義済みです。利用する AI エージェントから接続できるようにしておくと開発効率が大きく向上します。
+
+| MCP サーバー      | 用途                                 |
+| ----------------- | ------------------------------------ |
+| `serena`          | コード検索・シンボル単位の編集       |
+| `chrome-devtools` | ブラウザデバッグ・UI 動作確認        |
+| `next-devtools`   | Next.js のドキュメント調査・構成確認 |
+| `figma-desktop`   | Figma デザインの取り込み             |
+
+以下は `.mcp.json` をプロジェクトルートに設定する例です。
+
+※ `uvx` の利用には `uv` のインストールが必要です。 `brew install uv` などでインストールしてください。
+
+※ `serena` の `--project` には **このリポジトリをクローンした先の絶対パス** を指定する必要があります。下記サンプル中の `/path/to/lgtm-cat-frontend` の部分はご自身の環境に合わせて書き換えてください（例: `/Users/yourname/gitrepos/lgtm-cat-frontend`）。
+
+```json
+{
+  "mcpServers": {
+    "serena": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/oraios/serena",
+        "serena",
+        "start-mcp-server",
+        "--context",
+        "claude-code",
+        "--project",
+        "/path/to/lgtm-cat-frontend"
+      ],
+      "env": {}
+    },
+    "chrome-devtools": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["chrome-devtools-mcp@latest"],
+      "env": {}
+    },
+    "next-devtools": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "next-devtools-mcp@latest"]
+    },
+    "figma-desktop": {
+      "type": "http",
+      "url": "http://127.0.0.1:3845/mcp"
+    }
+  }
+}
+```
+
+### 推奨ユーザーグローバル Skill
+
+ブラウザ操作を伴う品質確認を AI エージェントに任せたい場合、[`agent-browser`](https://github.com/vercel-labs/agent-browser) のインストールを推奨します。
+
+[skills.sh](https://skills.sh/) 提供の `npx skills` CLI が、利用中の AI エージェントを自動検出し、それぞれの公式パスへ Skill を配置してくれます。
+
+```bash
+npx skills add vercel-labs/agent-browser
+```
+
+各 AI エージェントの配置パスは以下のとおりです（自動検出されたエージェントすべてに配置されます）。
+
+| AI エージェント | 配置パス                          |
+| --------------- | --------------------------------- |
+| Claude Code     | `~/.claude/skills/agent-browser/` |
+| Codex CLI       | `~/.codex/skills/agent-browser/`  |
+
+特定のエージェントのみに限定したい場合は `-a` オプションを利用してください。
+
+```bash
+# Codex CLI のみに配置する例
+npx skills add vercel-labs/agent-browser -a codex
+```
+
+#### Codex CLI 利用時の補足
+
+Codex CLI では、バージョンによって Skill 機能の有効化フラグが必要な場合があります。
+
+```bash
+codex --enable skills
+```
+
+詳細は [Codex 公式の Agent Skills ドキュメント](https://developers.openai.com/codex/skills) を参照してください。

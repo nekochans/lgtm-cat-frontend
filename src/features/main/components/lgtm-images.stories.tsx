@@ -1,4 +1,3 @@
-// 絶対厳守：編集前に必ずAI実装ルールを読む
 import type { Meta, StoryObj } from "@storybook/react";
 import { LgtmImages } from "@/features/main/components/lgtm-images";
 import { fetchLgtmImagesMockBody } from "@/mocks/api/fetch-lgtm-images-mock-body";
