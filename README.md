@@ -107,19 +107,23 @@ atlas version
 
 ### Atlas のよく使うコマンド
 
-```bash
-# Turso DB の現在のスキーマを取得（接続あり）
-atlas schema inspect --env dev
+`.env.local` の `TURSO_*` をシェルに読み込ませた状態で実行してください（例: `npx dotenv-cli -e .env.local -- atlas ...`）。
 
-# external_schema（Drizzle export）単体を接続なしで取得（local env の検証用）
+```bash
+# ローカル Turso DB（local-lgtm-cat-auth）の現在のスキーマを取得（接続あり）
+atlas schema inspect --env local
+
+# external_schema（Drizzle export）単体を接続なしで取得（CI 等で DB クレデンシャルが無い場合）
 atlas schema inspect --env local --url env://src
 
 # Drizzle スキーマからマイグレーション SQL を生成（Issue #479 以降で使用）
 atlas migrate diff --env local <migration_name>
 
 # マイグレーションを Turso DB に適用（Issue #479 以降で使用）
-atlas migrate apply --env dev
+atlas migrate apply --env local
 ```
+
+> `env "staging"` / `env "prod"` は本リポジトリでは Issue #479 で `TURSO_STG_*` / `TURSO_PROD_*` の専用環境変数とともに導入予定です。それまでは `--env local` で `.env.local` が指す DB（個人ローカルの `local-lgtm-cat-auth`）に対してのみ操作できます。
 
 ## Turso CLI のインストール（任意）
 
