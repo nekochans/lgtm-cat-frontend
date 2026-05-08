@@ -84,6 +84,12 @@ jobs:
       - name: Compose SQL preview comment body
         if: steps.detect_new_migrations.outputs.has_new == 'true'
         id: compose_comment
+        # GitHub Actions の `${{ }}` 式はシェル実行前に文字列展開されるため、
+        # コミット可能な値（ここでは `git diff --name-only` 由来のファイル名）を
+        # `run:` 内へ直接埋め込むとシェルインジェクション経路になりうる。
+        # 値は env 経由で渡し、bash 変数として展開させる事で再評価を防ぐ。
+        env:
+          NEW_MIGRATION_FILES: ${{ steps.detect_new_migrations.outputs.files }}
         run: |
           BODY_FILE="${RUNNER_TEMP}/migration-comment.md"
           {
@@ -101,7 +107,7 @@ jobs:
               echo ""
               echo "</details>"
               echo ""
-            done <<< "${{ steps.detect_new_migrations.outputs.files }}"
+            done <<< "${NEW_MIGRATION_FILES}"
           } > "${BODY_FILE}"
           echo "body_file=${BODY_FILE}" >> "${GITHUB_OUTPUT}"
 
