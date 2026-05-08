@@ -1,0 +1,46 @@
+name: auth-db-migration-apply-staging
+
+on:
+  push:
+    branches:
+      - staging
+    paths:
+      - "src/lib/better-auth/schema.ts"
+      - "migrations/**"
+      - "drizzle.config.ts"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/auth-db-migration-apply-staging.yml"
+  workflow_dispatch:
+
+# 並列実行を防ぐ。進行中のマイグレーションを途中で止めないため cancel-in-progress: false。
+concurrency:
+  group: auth-db-migration-apply-staging
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  apply:
+    name: Apply migrations to stg-lgtm-cat-auth
+    environment: staging
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js 24.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Apply migrations to stg-lgtm-cat-auth
+        run: npm run auth-db:migrate
+        env:
+          TURSO_DATABASE_URL: ${{ secrets.TURSO_STG_DATABASE_URL }}
+          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_STG_AUTH_TOKEN }}

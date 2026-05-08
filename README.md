@@ -48,7 +48,7 @@ BETTER_AUTH_URL=http://localhost:2222
 | ステージング (Preview/Development) | `stg-lgtm-cat-auth`   | Vercel Preview / Development 環境で利用                                                |
 | 本番                               | `prod-lgtm-cat-auth`  | Vercel Production 環境で利用                                                           |
 
-ローカル開発者は **個人用の `local-lgtm-cat-auth` を Turso CLI で作成** してください。マイグレーションをローカルで安全に試した後、Issue #479 以降のフローで stg・prod に適用します。
+ローカル開発者は **個人用の `local-lgtm-cat-auth` を Turso CLI で作成** してください。マイグレーションをローカルで安全に試した後、本リポジトリで構築済みの GitHub Actions 自動適用フロー（`staging` / `main` ブランチへのマージで stg / prod に順次適用）に乗せます。詳細は「[認証 DB のマイグレーション運用](#認証-db-のマイグレーション運用)」を参照。
 
 ```bash
 # Turso CLI でローカル用 DB を作成
@@ -58,6 +58,8 @@ turso db create local-lgtm-cat-auth
 turso db show local-lgtm-cat-auth --url
 turso db tokens create local-lgtm-cat-auth
 ```
+
+> :warning: **重要**: `TURSO_STG_*` / `TURSO_PROD_*` は **GitHub Actions の Environment Secret 経由で staging / prod のマイグレーションワークフローからのみ参照** します。これらの値を **`.env.local` や手元シェルの環境変数に書き込まないでください**。手元のシェルから誤って stg / prod の DB に書き込む経路を完全に塞ぐための運用ルールです。`.env.local` に記載するのは個人ローカル DB（`local-lgtm-cat-auth-<your-handle>` 等）の URL / トークンのみとします。
 
 `BETTER_AUTH_SECRET` は `openssl rand -base64 32` で生成した値（最低 32 文字）を設定します。**接続先 DB が異なる環境（local / stg / prod）ごとに別の値** にしてください。同じ DB を共有する環境（Preview / Development）は同じ値で問題ありません。
 
@@ -83,51 +85,83 @@ export SENTRY_AUTH_TOKEN=Sentryのトークン（Vercel上の値を参照）
 - `NEXT_PUBLIC_SENTRY_DSN`
 - `SENTRY_AUTH_TOKEN`
 
-## Atlas CLI のインストール
+## 認証 DB のマイグレーション運用
 
-認証 DB のスキーマ管理に [Atlas](https://atlasgo.io/) を利用しています。Issue #478 以降、ローカルで Atlas コマンドを実行する場合は CLI のインストールが必要です。
+認証 DB（Turso、3 環境）のスキーマ管理は [drizzle-kit](https://orm.drizzle.team/docs/migrations) で運用しています。Atlas は採用していません（経緯は [Issue #479](https://github.com/nekochans/lgtm-cat-frontend/issues/479) のクローズコメント参照）。
 
-### macOS (Homebrew)
+### 通常運用フロー
+
+1. **ローカルでスキーマ変更**: `src/lib/better-auth/schema.ts` を編集
+2. **マイグレーション SQL を生成**
+
+   ```bash
+   npm run auth-db:generate -- --name <意味のある変更名>
+   # 例: npm run auth-db:generate -- --name add_user_role_column
+   ```
+
+   `migrations/<NNNN>_<名前>.sql` と `migrations/meta/` 配下のファイルが追加 / 更新される。
+
+3. **ローカル DB へ適用して動作確認**
+
+   ```bash
+   npx dotenv-cli -e .env.local -- npm run auth-db:migrate
+   ```
+
+4. **生成された全ファイルをコミットして PR を出す**: `migrations/` 配下のファイルは **手動編集禁止**。生成物をそのままコミットする。
+5. **PR 検証ワークフロー（`auth-db-migration-validate`）の SQL プレビューコメントをレビューする**: PR コメントに新規 SQL の内容が自動投稿される。意図と一致しない SQL が出ている場合は schema.ts を修正して再 generate する。
+6. **`staging` ブランチにマージ** → `auth-db-migration-apply-staging` が自動実行され、`stg-lgtm-cat-auth` に適用される。
+7. Vercel Preview で動作確認後、**`main` ブランチへのリリース PR をマージ** → `auth-db-migration-apply-prod` が自動実行され、`prod-lgtm-cat-auth` に適用される。
+
+### よく使うコマンド
 
 ```bash
-brew install ariga/tap/atlas
+# マイグレーション SQL の生成（ローカルでのスキーマ変更後に必須）
+npm run auth-db:generate -- --name <name>
+
+# マイグレーションをローカル DB に適用
+npx dotenv-cli -e .env.local -- npm run auth-db:migrate
+
+# meta/_journal.json と SQL ファイルの整合性チェック（CI が自動実行）
+npm run auth-db:check
 ```
 
-### 上記が使えない環境
+### マイグレーション失敗時の確認手順
 
-```bash
-curl -sSf https://atlasgo.sh | sh
-```
+#### staging への自動適用が失敗した場合
 
-インストール確認:
+1. GitHub Actions の `auth-db-migration-apply-staging` ジョブログで失敗箇所と SQL エラーメッセージを確認
+2. `stg-lgtm-cat-auth` の現在の状態を確認（K に依頼するか、Turso Dashboard 経由で `__drizzle_migrations` を参照する）
+3. 失敗の原因を schema.ts 側で修正し、新しいマイグレーション PR を起票（forward fix）。`migrations/<NNNN>_*.sql` を **手動編集して再 push しない**。
 
-```bash
-atlas version
-```
+#### prod への自動適用が失敗した場合
 
-### Atlas のよく使うコマンド
+prod の自動適用が失敗した時点で、Vercel 側のアプリケーションは「新スキーマ前提のコード × 旧スキーマの DB」状態になり、認証機能が壊れる可能性があります。
 
-`.env.local` の `TURSO_*` をシェルに読み込ませた状態で実行してください（例: `npx dotenv-cli -e .env.local -- atlas ...`）。
+1. 即時 GitHub Actions の `auth-db-migration-apply-prod` ジョブログを確認
+2. **失敗が一過性のもの（DB 接続瞬断等）の場合**: Actions UI から `Re-run failed jobs` を実行
+3. **失敗が SQL レベルの問題の場合**: forward fix の修正 PR を作成し、緊急に `staging` → `main` を辿って適用
+4. 致命的なデータ毀損が発生した場合は Turso の **Point-in-Time Recovery (PITR)** を利用（提供条件は契約プランに依存するため、最新の Turso ドキュメント https://docs.turso.tech/ を参照。Turso Dashboard から復旧時刻を指定）
 
-```bash
-# ローカル Turso DB（local-lgtm-cat-auth）の現在のスキーマを取得（接続あり）
-atlas schema inspect --env local
+### ロールバック方針: forward fix 原則
 
-# external_schema（Drizzle export）単体を接続なしで取得（CI 等で DB クレデンシャルが無い場合）
-atlas schema inspect --env local --url env://src
+本リポジトリでは `drizzle-kit` の `migrate down` 相当の機能を **採用しません**。理由は以下の通りです。
 
-# Drizzle スキーマからマイグレーション SQL を生成（Issue #479 以降で使用）
-atlas migrate diff --env local <migration_name>
+- drizzle-kit 自体が `migrate down` を提供しない（Atlas には存在したが、Atlas を採用しない方針）
+- Better Auth 4 テーブルのスキーマ変更頻度は低く、down マイグレーションを維持するコストに見合わない
+- **問題発生時はロールバックではなく forward fix（修正 SQL を新規マイグレーションとして適用）で対処する**
 
-# マイグレーションを Turso DB に適用（Issue #479 以降で使用）
-atlas migrate apply --env local
-```
+> どうしても元のスキーマに戻したい場合は、過去マイグレーションを参考にした「逆操作 SQL」を新規マイグレーションとして書き、PR フローに乗せて段階適用してください（ただし、まず Vercel 側のコードロールバックで一時凌ぎする方が安全です）。
 
-> `env "staging"` / `env "prod"` は本リポジトリでは Issue #479 で `TURSO_STG_*` / `TURSO_PROD_*` の専用環境変数とともに導入予定です。それまでは `--env local` で `.env.local` が指す DB（個人ローカルの `local-lgtm-cat-auth`）に対してのみ操作できます。
+### 認証 DB の Point-in-Time Recovery（PITR）
 
-## Turso CLI のインストール（任意）
+Turso は Point-in-Time Recovery によるデータ復旧を提供しています。マイグレーションでデータ毀損が発生した場合の最終手段として利用します。
 
-> 本リポジトリの通常開発では Turso CLI は **不要** です。Atlas / `@libsql/client` は `.env.local` の `TURSO_DATABASE_URL` / `TURSO_AUTH_TOKEN` を使って Turso に直接接続するため、Turso CLI の認証セッションは経由しません。
+- 操作は Turso Dashboard / `turso db restore` 経由で行います
+- 復旧操作は K（リポジトリオーナー）が実施します。実装担当者は症状を Issue / Slack で報告するに留めてください
+
+### Turso CLI のインストール（任意）
+
+> 本リポジトリの通常開発では Turso CLI は **不要** です。`@libsql/client` および drizzle-kit は `.env.local` の `TURSO_DATABASE_URL` / `TURSO_AUTH_TOKEN` を使って Turso に直接接続するため、Turso CLI の認証セッションは経由しません。
 >
 > 以下のような **管理・調査用途** で Turso CLI を使いたい場合のみインストールしてください。
 >
