@@ -59,6 +59,8 @@ turso db show local-lgtm-cat-auth --url
 turso db tokens create local-lgtm-cat-auth
 ```
 
+> :warning: **重要**: `TURSO_STG_*` / `TURSO_PROD_*` は **GitHub Actions の Environment Secret 経由で staging / prod のマイグレーションワークフローからのみ参照** します。これらの値を **`.env.local` や手元シェルの環境変数に書き込まないでください**。手元のシェルから誤って stg / prod の DB に書き込む経路を完全に塞ぐための運用ルールです。`.env.local` に記載するのは個人ローカル DB（`local-lgtm-cat-auth-<your-handle>` 等）の URL / トークンのみとします。
+
 `BETTER_AUTH_SECRET` は `openssl rand -base64 32` で生成した値（最低 32 文字）を設定します。**接続先 DB が異なる環境（local / stg / prod）ごとに別の値** にしてください。同じ DB を共有する環境（Preview / Development）は同じ値で問題ありません。
 
 ローカルでSentryやChromaticの動作確認を実施する場合 [direnv](https://github.com/direnv/direnv) を使って `.envrc` に以下の環境変数を設定します。

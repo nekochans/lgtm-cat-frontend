@@ -24,8 +24,6 @@ permissions:
 jobs:
   apply:
     name: Apply migrations to stg-lgtm-cat-auth
-    # GitHub Environment "staging" を指定することで、Deployment Branch Policy（staging のみ許可）と
-    # Environment Secret（TURSO_STG_*）が利用可能になる。
     environment: staging
     runs-on: ubuntu-latest
     timeout-minutes: 10

@@ -23,9 +23,6 @@ permissions:
 jobs:
   apply:
     name: Apply migrations to prod-lgtm-cat-auth
-    # GitHub Environment "Production" を指定することで、Deployment Branch Policy（main のみ許可）と
-    # Environment Secret（TURSO_PROD_*）が利用可能になる。
-    # 重要: TURSO_PROD_* は本ワークフロー以外（手元シェル / .env.local 等）から **絶対に参照しない** こと。
     environment: Production
     runs-on: ubuntu-latest
     timeout-minutes: 10
