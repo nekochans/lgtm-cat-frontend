@@ -142,7 +142,7 @@ PR 検証ワークフロー（`pull_request` トリガー）では:
 
 > **方針（2026-05-08 K 合意）**: 本 Issue では **既存バージョンをそのまま据え置く**（スコープを最小化するため）。バージョン互換問題が発生した場合のみ、PR 説明欄で個別に共有する。
 >
-> **drizzle-orm v1.0 が rc 段階の点について**: 本 Issue 着手中に `drizzle-orm v1.0` の stable がリリースされた場合でも、**本 Issue では追従しない**。v1.0 へのアップグレードは migrations 周りに破壊的変更を伴うため、別 Issue で計画を立てて対応する（詳細は §8.10 参照）。
+> **drizzle-orm v1.0 が rc 段階の点について**: 本 Issue 着手中に `drizzle-orm v1.0` の stable がリリースされた場合でも、**本 Issue では追従しない**。v1.0 へのアップグレードは migrations 周りに破壊的変更を伴うため、別 Issue で計画を立てて対応する（詳細は §8.11 参照）。
 
 ### 3.2 drizzle-kit の利用方針（本 Issue で確立する）
 
@@ -340,7 +340,8 @@ export const user = sqliteTable("user", {
     .default(timestampDefault),
   updatedAt: integer("updated_at", { mode: "timestamp_ms" })
     .notNull()
-    .default(timestampDefault),
+    .default(timestampDefault)
+    .$onUpdate(() => new Date()),
 });
 
 export const session = sqliteTable(
@@ -359,7 +360,8 @@ export const session = sqliteTable(
       .default(timestampDefault),
     updatedAt: integer("updated_at", { mode: "timestamp_ms" })
       .notNull()
-      .default(timestampDefault),
+      .default(timestampDefault)
+      .$onUpdate(() => new Date()),
   },
   (table) => [index("session_user_id_idx").on(table.userId)],
 );
@@ -389,7 +391,8 @@ export const account = sqliteTable(
       .default(timestampDefault),
     updatedAt: integer("updated_at", { mode: "timestamp_ms" })
       .notNull()
-      .default(timestampDefault),
+      .default(timestampDefault)
+      .$onUpdate(() => new Date()),
   },
   (table) => [index("account_user_id_idx").on(table.userId)],
 );
@@ -406,7 +409,8 @@ export const verification = sqliteTable(
       .default(timestampDefault),
     updatedAt: integer("updated_at", { mode: "timestamp_ms" })
       .notNull()
-      .default(timestampDefault),
+      .default(timestampDefault)
+      .$onUpdate(() => new Date()),
   },
   (table) => [index("verification_identifier_idx").on(table.identifier)],
 );
@@ -417,6 +421,7 @@ export const verification = sqliteTable(
 - **`mode: "boolean"` の理由**: SQLite には真偽値型がないため、drizzle-orm では integer に 0/1 を保存する。Better Auth は内部で boolean を扱うので `mode: "boolean"` を指定して TypeScript 型を boolean に寄せる。
 - **`mode: "timestamp_ms"` の理由**: JS の `Date` を ms 整数で保存する。Better Auth は `Date` インスタンスを直接受け渡すので `mode: "timestamp"` （秒）ではなく **ms** を選ぶ。
 - **`timestampDefault` を共通変数に切り出した理由**: 同じ式が 8 箇所登場するため。`sql` テンプレートはモジュールトップで 1 度だけ評価される定数として扱える。
+- **`updatedAt` に `.$onUpdate(() => new Date())` を付与する理由**: SQL `DEFAULT` は INSERT 時にしか評価されないため、Better Auth が Drizzle adapter 経由で `update()` を呼んだときに `updated_at` が自動更新されない。`$onUpdate` は Drizzle が UPDATE クエリを発行する際に JS 側で値を再計算するためのフックで、Better Auth canonical Drizzle schema 例にも含まれている。INSERT 時は `default(timestampDefault)` で SQLite 側、UPDATE 時は `$onUpdate` で JS 側、と役割を分担する設計。`createdAt` には付けない（不変値のため）。
 - **外部キーの `references` の引数**: `() => user.id` のように関数で囲むのは、`session` テーブル定義時点で `user` テーブル定義への前方参照を許容するため。本ファイル内で `user` を先に定義するため実質不要だが、Drizzle の慣例として関数渡しで統一する。
 - **`(table) => [...]` の二段目引数**: drizzle-orm 0.43 以降で導入されたタプル形式（公式推奨）。`(table) => ({ idx: index(...) })` のオブジェクト形式は v1 で非推奨化が予告されているため使わない。
 - **インデックス名と物理カラム名の一致**: `session_user_id_idx` のようにスネークケース統一。SQL DDL での可読性を優先。
@@ -750,13 +755,9 @@ jobs:
         with:
           node-version: 24.x
           cache: npm
-          registry-url: "https://npm.pkg.github.com"
-          scope: "@nekochans"
 
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.AUTH_TOKEN_FOR_GITHUB_PACKAGES }}
 
       - name: Verify migration journal integrity (drizzle-kit check)
         run: npm run auth-db:check
@@ -948,13 +949,9 @@ jobs:
         with:
           node-version: 24.x
           cache: npm
-          registry-url: "https://npm.pkg.github.com"
-          scope: "@nekochans"
 
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.AUTH_TOKEN_FOR_GITHUB_PACKAGES }}
 
       - name: Apply migrations to stg-lgtm-cat-auth
         run: npm run auth-db:migrate
@@ -1021,13 +1018,9 @@ jobs:
         with:
           node-version: 24.x
           cache: npm
-          registry-url: "https://npm.pkg.github.com"
-          scope: "@nekochans"
 
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.AUTH_TOKEN_FOR_GITHUB_PACKAGES }}
 
       - name: Apply migrations to prod-lgtm-cat-auth
         run: npm run auth-db:migrate
@@ -1313,7 +1306,15 @@ Phase 3 の §6.3.3 で示した SQL は **想定形** であり、drizzle-kit 0
 - **解消手順**: コンフリクトしたブランチで `git checkout main -- migrations/` で main の状態に戻し、`npm run auth-db:generate -- --name <自分の変更名>` を再実行する。drizzle-kit が `_journal.json` を再生成し、SQL ファイルの番号を採番し直す
 - この運用ノウハウは README §認証 DB のマイグレーション運用 に補足追記する余地がある（後続 Issue 候補）
 
-### 8.10 `drizzle-orm` v1.0 stable リリースとの競合
+### 8.10 GitHub Packages 認証設定を引き継がない方針
+
+既存 `.github/workflows/ci.yml` では `actions/setup-node` に `registry-url: "https://npm.pkg.github.com"` / `scope: "@nekochans"` を指定し、`npm ci` 実行時に `NODE_AUTH_TOKEN` を渡している。本 Issue で新設する 3 ワークフロー（`auth-db-migration-validate.yml` / `auth-db-migration-apply-staging.yml` / `auth-db-migration-apply-prod.yml`）では **同パターンを引き継がない**。
+
+- 理由: 現行の `package.json` / `package-lock.json` / `.npmrc` には `@nekochans` スコープや `npm.pkg.github.com` レジストリへの依存が一切無く、自作 npm パッケージを利用していた以前の名残のため不要（K 確認済み）
+- 影響: 不要な `NODE_AUTH_TOKEN` を `pull_request` トリガーで渡さなくなるため、最小権限原則に沿う
+- 注意: 既存 `ci.yml` 側の設定は本 Issue のスコープ外。整理が必要な場合は別 Issue で対応する
+
+### 8.11 `drizzle-orm` v1.0 stable リリースとの競合
 
 - 2026-05-08 時点で `drizzle-orm` は `0.45.2` (stable) と並行して `v1.0.0-rc.2`（2026-05-05 リリース）が rc 段階にある
 - 本 Issue 着手から PR マージまでの期間中に **v1.0 stable がリリースされても、本 Issue では追従しない**（K 合意済み、§3.1 の方針）
@@ -1387,6 +1388,7 @@ Phase 3 の §6.3.3 で示した SQL は **想定形** であり、drizzle-kit 0
 - [ ] `user.email` / `session.token` に `unique()` が付与されている
 - [ ] `session_user_id_idx` / `account_user_id_idx` / `verification_identifier_idx` のインデックスが定義されている
 - [ ] タイムスタンプは `integer({ mode: "timestamp_ms" })` で定義され、デフォルト値が SQLite 側の `unixepoch('subsecond') * 1000` になっている
+- [ ] 4 テーブル全ての `updatedAt` に `.$onUpdate(() => new Date())` が付与されている（Better Auth が Drizzle 経由で UPDATE する際に `updated_at` が自動更新されるため）
 - [ ] `emailVerified` は `mode: "boolean"` で `default(false)`
 
 ### 10.2 drizzle-kit 生成物の妥当性
