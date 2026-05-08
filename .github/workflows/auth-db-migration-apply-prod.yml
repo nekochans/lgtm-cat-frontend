@@ -1,0 +1,48 @@
+name: auth-db-migration-apply-prod
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "src/lib/better-auth/schema.ts"
+      - "migrations/**"
+      - "drizzle.config.ts"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/auth-db-migration-apply-prod.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: auth-db-migration-apply-prod
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  apply:
+    name: Apply migrations to prod-lgtm-cat-auth
+    # GitHub Environment "Production" を指定することで、Deployment Branch Policy（main のみ許可）と
+    # Environment Secret（TURSO_PROD_*）が利用可能になる。
+    # 重要: TURSO_PROD_* は本ワークフロー以外（手元シェル / .env.local 等）から **絶対に参照しない** こと。
+    environment: Production
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js 24.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Apply migrations to prod-lgtm-cat-auth
+        run: npm run auth-db:migrate
+        env:
+          TURSO_DATABASE_URL: ${{ secrets.TURSO_PROD_DATABASE_URL }}
+          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_PROD_AUTH_TOKEN }}
