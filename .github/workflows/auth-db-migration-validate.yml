@@ -1,0 +1,132 @@
+name: auth-db-migration-validate
+
+on:
+  pull_request:
+    branches:
+      - staging
+      - main
+    paths:
+      - "src/lib/better-auth/schema.ts"
+      - "migrations/**"
+      - "drizzle.config.ts"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/auth-db-migration-validate.yml"
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  validate:
+    name: Validate auth DB migrations
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # コメント投稿用にデフォルトブランチも取得しておく（diff の base 確認に利用）
+          fetch-depth: 0
+
+      - name: Use Node.js 24.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Verify migration journal integrity (drizzle-kit check)
+        run: npm run auth-db:check
+
+      - name: Detect schema drift (schema.ts vs migrations/)
+        run: |
+          # drizzle-kit generate は rename 検出時にインタラクティブな確認を求めることがある。
+          # CI では stdin を /dev/null に閉じ、確認がある場合はそのまま EOF で打ち切らせる
+          # （rename の判定が必要なケースは初回 generate を local で実施する運用に倒す）。
+          npm run auth-db:generate -- --name __drift_check__ < /dev/null
+          DRIFT=$(git status --porcelain -- migrations/)
+          if [ -n "$DRIFT" ]; then
+            echo "::error title=Schema drift detected::schema.ts と migrations/ が同期されていません。ローカルで 'npm run auth-db:generate -- --name <name>' を実行し、生成されたファイルをコミットしてください。"
+            git status --short -- migrations/
+            git diff --stat -- migrations/
+            exit 1
+          fi
+
+      - name: Apply migrations to ephemeral SQLite file DB
+        run: npx drizzle-kit migrate
+        env:
+          # @libsql/client は file: スキームでローカル SQLite ファイルへ接続できる。
+          # CI runner 上で完結し、Turso へは接続しない（PR 検証では Turso クレデンシャルを渡さない方針）。
+          TURSO_DATABASE_URL: file:${{ runner.temp }}/auth-pr-validation.db
+          TURSO_AUTH_TOKEN: dummy-token-for-local-file
+
+      - name: Detect newly added migration files in this PR
+        id: detect_new_migrations
+        run: |
+          # pull_request の base への diff から、追加された migrations/*.sql を抽出
+          BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          NEW_FILES=$(git diff --name-only --diff-filter=A "${BASE_SHA}"...HEAD -- 'migrations/*.sql' | sort)
+          if [ -z "${NEW_FILES}" ]; then
+            echo "has_new=false" >> "${GITHUB_OUTPUT}"
+            echo "新規追加されたマイグレーション SQL はありません。SQL プレビューコメントはスキップします。"
+            exit 0
+          fi
+          echo "has_new=true" >> "${GITHUB_OUTPUT}"
+          # 改行込みの multiline output を渡すため delimiter を使う
+          {
+            echo "files<<__FILES_EOF__"
+            echo "${NEW_FILES}"
+            echo "__FILES_EOF__"
+          } >> "${GITHUB_OUTPUT}"
+
+      - name: Compose SQL preview comment body
+        if: steps.detect_new_migrations.outputs.has_new == 'true'
+        id: compose_comment
+        # GitHub Actions の `${{ }}` 式はシェル実行前に文字列展開されるため、
+        # コミット可能な値（ここでは `git diff --name-only` 由来のファイル名）を
+        # `run:` 内へ直接埋め込むとシェルインジェクション経路になりうる。
+        # 値は env 経由で渡し、bash 変数として展開させる事で再評価を防ぐ。
+        env:
+          NEW_MIGRATION_FILES: ${{ steps.detect_new_migrations.outputs.files }}
+        run: |
+          BODY_FILE="${RUNNER_TEMP}/migration-comment.md"
+          {
+            echo "## :ledger: Auth DB マイグレーション SQL プレビュー"
+            echo ""
+            echo "本 PR で追加されたマイグレーション SQL を表示しています。レビュー時にスキーマ意図とずれがないか確認してください。"
+            echo ""
+            while IFS= read -r FILE; do
+              [ -z "${FILE}" ] && continue
+              echo "<details><summary><code>${FILE}</code></summary>"
+              echo ""
+              echo '```sql'
+              cat "${FILE}"
+              echo '```'
+              echo ""
+              echo "</details>"
+              echo ""
+            done <<< "${NEW_MIGRATION_FILES}"
+          } > "${BODY_FILE}"
+          echo "body_file=${BODY_FILE}" >> "${GITHUB_OUTPUT}"
+
+      # 既存の SQL プレビューコメント（同一 PR で再実行時）を特定するため body-includes でマーカーを検索する
+      - name: Find existing preview comment
+        if: steps.detect_new_migrations.outputs.has_new == 'true'
+        id: find_existing_comment
+        uses: peter-evans/find-comment@v3
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: "github-actions[bot]"
+          body-includes: "Auth DB マイグレーション SQL プレビュー"
+
+      - name: Post or update SQL preview comment
+        if: steps.detect_new_migrations.outputs.has_new == 'true'
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          # 既存コメントがあれば置き換え、なければ新規作成（comment-id 空のとき新規作成扱い）
+          comment-id: ${{ steps.find_existing_comment.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body-path: ${{ steps.compose_comment.outputs.body_file }}
+          edit-mode: replace
