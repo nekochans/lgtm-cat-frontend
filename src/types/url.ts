@@ -11,6 +11,8 @@ export type AppPathName =
   | "maintenance"
   | "external-transmission-policy"
   | "login"
+  | "favorites"
+  | "my-cats"
   | "docs-how-to-use"
   | "docs-mcp"
   | "docs-github-app";
