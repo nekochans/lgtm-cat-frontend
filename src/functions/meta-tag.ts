@@ -109,6 +109,28 @@ function loginPageTitle(language: Language): string {
   }
 }
 
+function favoritesPageTitle(language: Language): string {
+  switch (language) {
+    case "ja":
+      return `${defaultTitle} お気に入り`;
+    case "en":
+      return `${defaultTitle} Favorite`;
+    default:
+      return assertNever(language);
+  }
+}
+
+function myCatsPageTitle(language: Language): string {
+  switch (language) {
+    case "ja":
+      return `${defaultTitle} My Cats`;
+    case "en":
+      return `${defaultTitle} My Cats`;
+    default:
+      return assertNever(language);
+  }
+}
+
 function docsHowToUsePageTitle(language: Language): string {
   switch (language) {
     case "ja":
@@ -210,6 +232,18 @@ export function metaTagList(language: Language, appBaseUrl: Url): MetaTagList {
       title: loginPageTitle(language),
       ogpImgUrl,
       ogpTargetUrl: createI18nUrlFromBase(appBaseUrl, "login", language),
+      appName,
+    },
+    favorites: {
+      title: favoritesPageTitle(language),
+      ogpImgUrl,
+      ogpTargetUrl: createI18nUrlFromBase(appBaseUrl, "favorites", language),
+      appName,
+    },
+    "my-cats": {
+      title: myCatsPageTitle(language),
+      ogpImgUrl,
+      ogpTargetUrl: createI18nUrlFromBase(appBaseUrl, "my-cats", language),
       appName,
     },
     "docs-how-to-use": {

@@ -7,7 +7,7 @@ import {
   documentsText,
   favoriteListText,
   logoutText,
-  meowlistText,
+  myCatsText,
   uploadText,
 } from "@/components/header-i18n";
 import { HeaderLogo } from "@/components/header-logo";
@@ -164,7 +164,7 @@ export function HeaderDesktop({
                   >
                     <Dropdown.Item
                       className="data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm"
-                      href="/favorites"
+                      href={createIncludeLanguageAppPath("favorites", language)}
                       id="favorites"
                       textValue={favoriteListText(language)}
                     >
@@ -172,11 +172,11 @@ export function HeaderDesktop({
                     </Dropdown.Item>
                     <Dropdown.Item
                       className="data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm"
-                      href="/cat-list"
-                      id="cat-list"
-                      textValue={meowlistText(language)}
+                      href={createIncludeLanguageAppPath("my-cats", language)}
+                      id="my-cats"
+                      textValue={myCatsText(language)}
                     >
-                      {meowlistText(language)}
+                      {myCatsText(language)}
                     </Dropdown.Item>
                     <Dropdown.Item
                       className="data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm"
