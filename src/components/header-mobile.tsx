@@ -12,7 +12,7 @@ import {
   loginText,
   logoutText,
   mcpText,
-  meowlistText,
+  myCatsText,
   openMenuAriaLabel,
   switchLanguageAriaLabel,
   uploadText,
@@ -204,13 +204,12 @@ function LoggedInMenu({
         />
       )}
 
-      {/* ナビゲーションメニュー: お気に入り、猫リストを表示 */}
+      {/* ナビゲーションメニュー: お気に入り、My Cats を表示 */}
       {menuType === "navigation" && (
         <>
           <Link
             className="flex h-[70px] items-center gap-3 border-orange-200 border-b px-5 py-4 text-background text-sm"
-            // TODO: https://github.com/nekochans/lgtm-cat/issues/14 でログイン機能が出来た際にこのページを実装するので実装後は `createIncludeLanguageAppPath` を使ってパスを生成するように修正する
-            href="/favorites"
+            href={createIncludeLanguageAppPath("favorites", language)}
             onClick={onCloseMenus}
           >
             <HeartIcon color="white" height={24} width={24} />
@@ -218,12 +217,11 @@ function LoggedInMenu({
           </Link>
           <Link
             className="flex h-[70px] items-center gap-3 border-orange-200 border-b px-5 py-4 text-background text-sm"
-            // TODO: https://github.com/nekochans/lgtm-cat/issues/14 でログイン機能が出来た際にこのページを実装するので実装後は `createIncludeLanguageAppPath` を使ってパスを生成するように修正する
-            href="/cat-list"
+            href={createIncludeLanguageAppPath("my-cats", language)}
             onClick={onCloseMenus}
           >
             <CatNyanIcon color="white" height={24} width={24} />
-            {meowlistText(language)}
+            {myCatsText(language)}
           </Link>
         </>
       )}

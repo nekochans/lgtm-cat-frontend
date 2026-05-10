@@ -23,6 +23,8 @@ export const appUrlList = {
   externalTransmission:
     `${appBaseUrl()}${appPathList["external-transmission-policy"]}` as const,
   login: `${appBaseUrl()}${appPathList.login}` as const,
+  favorites: `${appBaseUrl()}${appPathList.favorites}` as const,
+  myCats: `${appBaseUrl()}${appPathList["my-cats"]}` as const,
   docsHowToUse: `${appBaseUrl()}${appPathList["docs-how-to-use"]}` as const,
   docsMcp: `${appBaseUrl()}${appPathList["docs-mcp"]}` as const,
   docsGitHubApp: `${appBaseUrl()}${appPathList["docs-github-app"]}` as const,

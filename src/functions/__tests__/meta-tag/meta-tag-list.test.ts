@@ -30,17 +30,19 @@ describe("src/functions/meta-tag.ts metaTagList TestCases", () => {
     readonly expectedDocsHowToUseTitle: string;
     readonly expectedDocsMcpTitle: string;
     readonly expectedExternalTransmissionTitle: string;
+    readonly expectedFavoritesTitle: string;
     readonly expectedLoginTitle: string;
     readonly expectedMaintenanceTitle: string;
+    readonly expectedMyCatsTitle: string;
     readonly expectedPrivacyTitle: string;
     readonly expectedTermsTitle: string;
     readonly language: Language;
   }
 
   it.each`
-    language | expectedTermsTitle        | expectedPrivacyTitle              | expectedMaintenanceTitle  | expectedExternalTransmissionTitle         | expectedLoginTitle    | expectedDocsHowToUseTitle | expectedDocsMcpTitle        | expectedDocsGitHubAppTitle
-    ${"ja"}  | ${"LGTMeow 利用規約"}     | ${"LGTMeow プライバシーポリシー"} | ${"LGTMeow メンテナンス"} | ${"LGTMeow 外部送信ポリシー"}             | ${"LGTMeow ログイン"} | ${"LGTMeow 使い方"}       | ${"LGTMeow MCPの使い方"}    | ${"LGTMeow GitHub Appの使い方"}
-    ${"en"}  | ${"LGTMeow Terms of Use"} | ${"LGTMeow Privacy Policy"}       | ${"LGTMeow Maintenance"}  | ${"LGTMeow External Transmission Policy"} | ${"LGTMeow Login"}    | ${"LGTMeow How to Use"}   | ${"LGTMeow How to Use MCP"} | ${"LGTMeow How to Use GitHub App"}
+    language | expectedTermsTitle        | expectedPrivacyTitle              | expectedMaintenanceTitle  | expectedExternalTransmissionTitle         | expectedLoginTitle    | expectedFavoritesTitle  | expectedMyCatsTitle  | expectedDocsHowToUseTitle | expectedDocsMcpTitle        | expectedDocsGitHubAppTitle
+    ${"ja"}  | ${"LGTMeow 利用規約"}     | ${"LGTMeow プライバシーポリシー"} | ${"LGTMeow メンテナンス"} | ${"LGTMeow 外部送信ポリシー"}             | ${"LGTMeow ログイン"} | ${"LGTMeow お気に入り"} | ${"LGTMeow My Cats"} | ${"LGTMeow 使い方"}       | ${"LGTMeow MCPの使い方"}    | ${"LGTMeow GitHub Appの使い方"}
+    ${"en"}  | ${"LGTMeow Terms of Use"} | ${"LGTMeow Privacy Policy"}       | ${"LGTMeow Maintenance"}  | ${"LGTMeow External Transmission Policy"} | ${"LGTMeow Login"}    | ${"LGTMeow Favorite"}   | ${"LGTMeow My Cats"} | ${"LGTMeow How to Use"}   | ${"LGTMeow How to Use MCP"} | ${"LGTMeow How to Use GitHub App"}
   `(
     "should return correct page titles when language is $language",
     ({
@@ -50,6 +52,8 @@ describe("src/functions/meta-tag.ts metaTagList TestCases", () => {
       expectedMaintenanceTitle,
       expectedExternalTransmissionTitle,
       expectedLoginTitle,
+      expectedFavoritesTitle,
+      expectedMyCatsTitle,
       expectedDocsHowToUseTitle,
       expectedDocsMcpTitle,
       expectedDocsGitHubAppTitle,
@@ -62,6 +66,8 @@ describe("src/functions/meta-tag.ts metaTagList TestCases", () => {
         expectedExternalTransmissionTitle
       );
       expect(result.login.title).toBe(expectedLoginTitle);
+      expect(result.favorites.title).toBe(expectedFavoritesTitle);
+      expect(result["my-cats"].title).toBe(expectedMyCatsTitle);
       expect(result["docs-how-to-use"].title).toBe(expectedDocsHowToUseTitle);
       expect(result["docs-mcp"].title).toBe(expectedDocsMcpTitle);
       expect(result["docs-github-app"].title).toBe(expectedDocsGitHubAppTitle);
