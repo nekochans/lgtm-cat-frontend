@@ -10,11 +10,12 @@ Better Auth の GitHub Social Provider を有効化し、以下を実装する�
 
 1. `/login`（ja/en）にアクセスすると GitHub OAuth フローが自動開始される（ボタン押下不要）
 2. `/logout`（ja/en）にアクセスすると sign out 処理が実行され、言語対応の Home へリダイレクトされる（想定外の失敗時はクライアント状態でエラーメッセージ + 再試行ボタンを表示する）
-3. お気に入り（`/favorites`）・My Cats（`/my-cats`）・ログアウト（`/logout`）をアクセス制御ページ化する（未ログイン時は言語対応の Home へリダイレクト）
+3. お気に入り（`/favorites`）・My Cats（`/my-cats`）・ログアウト（`/logout`）をアクセス制御ページ化する（未ログイン時は言語対応の Home へリダイレクト）。`/favorites`・`/my-cats` はセッション照会（DB）で判定し、`/logout` は DB 障害時でもログアウトできるようセッション Cookie の有無のみで判定する
 4. Header のログイン状態表示を `auth.api.getSession()` の結果に基づいて切り替える（`hideLoginButton` と `isLoggedIn` ハードコードの撤去）
 5. GitHub の email scope を要求せず、実 email を DB に永続化しない（匿名化メールアドレス `gh-<GitHub User ID>@no-email.lgtmeow.invalid` を `user.email` に格納。OAuth コールバック処理中に GitHub の公開 email がメモリ上を一時的に通過し得る事は許容する）
 6. `logout` を URL 定数・型・メタタグに追加し、Header の `/logout` ハードコードを解消する
-7. `src/proxy.ts` の matcher に認証系 12 パスを追加する（proxy ではセッション判定を行わない）
+7. `src/proxy.ts` の matcher に認証系 12 パスを追加する（proxy ではセッション判定を行わない）。併せて、`/ja` 正規化リダイレクトの 302 応答にリクエストヘッダー（`cookie` を含む）を横流ししている既存の不具合を修正する（セッション Cookie 導入によりセッショントークンが応答へ写り込む経路になるため）
+8. 追加の OAuth scope を要求できる経路を閉じる（`/link-social` の無効化、`/sign-in/social` への非空 `scopes` の拒否、`account.scope` の保存前検証）
 
 認証処理はすべて Server Action 方式で統一する。**クライアント側 SDK（`createAuthClient()` / `auth-client.ts`）は作成しない。**
 
@@ -51,6 +52,13 @@ Better Auth の GitHub Social Provider を有効化し、以下を実装する�
 | F18 | GitHub provider ドキュメントの「You MUST include the user:email scope」は email をプロバイダから取得する前提の注意書き。本設計は email scope を要求せず匿名化値で置き換えるため該当しない | <https://www.better-auth.com/docs/authentication/github> + F5/F6/F12 の組み合わせ |
 | F33 | GitHub provider の `getUserInfo` は `/user` 取得後、scope の有無に関わらず `/user/emails` も呼ぶ（scope 無しでは失敗し、email の補完は行われない）。また `/user` 応答の `email` にはユーザーが公開設定した email が入り得る。したがって「実 email を一切取得しない」はコード上保証できず、保証できるのは **DB へ永続化しない事**（F6 の上書き）である | `@better-auth/core/dist/social-providers/github.mjs` 62-75 行目 |
 | F34 | OAuth callback で取得した access token は `account.access_token` に保存される。`account.encryptOAuthTokens` はデフォルト false（平文保存）で、true を設定すると `symmetricEncrypt` により暗号化して保存される。スキーマ変更は不要 | `better-auth/dist/oauth2/utils.mjs` 12, 22 行目 / `@better-auth/core/dist/types/init-options.d.mts` 965 行目 |
+| F36 | `getSessionCookie(headersOrRequest)` は `Headers` オブジェクトを直接受け取れる。Cookie ヘッダーから `better-auth.session_token`（`__Secure-` 接頭辞付き・`better-auth-session_token` 形式を含む）を文字列として探すだけで、DB アクセス・復号・署名検証は行わない | `better-auth/dist/cookies/index.mjs` 169-177 行目 |
+| F37 | `/sign-in/social` の body スキーマは `scopes?: string[]` を受け取り、そのままプロバイダへ渡す。GitHub プロバイダは `disableDefaultScope: true` でも `if (scopes) _scopes.push(...scopes)` によりリクエスト由来の scope を無条件に authorize URL へ追記する。`/link-social`（`sessionMiddleware` 付き = 要ログイン）も同様に `scopes` を受け取る | `better-auth/dist/api/routes/sign-in.mjs` 34, 141 行目 / `@better-auth/core/dist/social-providers/github.mjs` 13-16 行目 / `better-auth/dist/api/routes/account.mjs` 67 行目以降 |
+| F38 | `disabledPaths` に列挙したパスは正規化後に一致すると 404（Not Found）を返す | `better-auth/dist/api/index.mjs` 163-165 行目 |
+| F39 | OAuth コールバックは、既存アカウントの再ログイン時に `updateAccount()` で `access_token` と `scope`（`tokens.scopes?.join(",")`）を更新する。したがって scope の保存前検証は `databaseHooks.account.create.before` だけでなく `update.before` にも必要。databaseHooks の before フックで `false` を返すと当該 DB 操作が黙ってスキップされるだけでフロー全体は継続するため、処理を中止させたい場合は例外を throw する | `better-auth/dist/api/routes/callback.mjs` 117-119 行目 / `@better-auth/core/dist/types/init-options.d.mts`（account hooks の JSDoc「If the hook returns false, the account will not be created/updated」） |
+| F40 | `createAuthMiddleware` / `APIError` は `better-auth/api` から export されている。`hooks.before` は全エンドポイントの処理前に実行され、`auth.api.*` 経由のサーバー側呼び出しにも適用される | `better-auth/dist/api/index.mjs` 26, 216 行目 / `better-auth/dist/api/to-auth-endpoints.mjs` 73-93, 190-230 行目 |
+| F41 | `createOAuthUser`（初回 OAuth の user + account 作成）は `runWithTransaction` でラップされているが、drizzle adapter の `transaction` オプションは**デフォルト false** のため、既定では user 作成後に account 作成が失敗しても user 行はロールバックされない（孤立 user が残る）。`drizzleAdapter(db, { transaction: true })` を設定すると `db.transaction()` で実行され原子化される | `better-auth/dist/db/internal-adapter.mjs`（`createOAuthUser` の `runWithTransaction`。1.6.9 / 1.6.23 とも）/ `@better-auth/drizzle-adapter` `dist/index.mjs`（1.6.9: 442 行目、1.6.23: 578 行目の `config.transaction ?? false`） |
+| F42 | 1.6.23 の OAuth callback は `handleOAuthUserInfo` を try-catch で包み、伝播した APIError を **`e.body.code` が存在する場合のみ** `errorCallbackURL` への redirect に変換する（無ければ再 throw = HTTP 400 応答）。既存アカウント再ログイン時の `updateAccount`（= `databaseHooks.account.update.before` の throw 元）はこの経路を通る。一方、新規ユーザー作成（`createOAuthUser`）の APIError は `link-account.mjs` 内部で捕捉され `{ error: e.message }` として返り、`body.code` が無くても redirect になる | 1.6.23 npm tarball の `dist/api/routes/callback.mjs` 140-156 行目（`if (isAPIError(e) && e.body?.code) redirectOnError(...)`）/ `dist/oauth2/link-account.mjs` 115-121 行目 |
 
 ### 2.3 Next.js 16.2.6 の仕様（インストール済みパッケージ同梱ドキュメントで確認）
 
@@ -75,7 +83,9 @@ Better Auth の GitHub Social Provider を有効化し、以下を実装する�
 | F29 | `src/lib/better-auth/auth.ts` は `BETTER_AUTH_SECRET` / `BETTER_AUTH_URL` 未定義で import 時に throw する（fail-fast）。テストは `vi.mock("@/lib/better-auth/auth")` でモック化する方針が Issue で確定済み | `src/lib/better-auth/auth.ts` / Issue #480 本文 |
 | F30 | Better Auth 用 4 テーブル（`user` / `session` / `account` / `verification`）の Drizzle スキーマとマイグレーションは配置済み。`user.email` は NOT NULL + UNIQUE。スキーマ変更は不要 | `src/lib/better-auth/schema.ts` / `migrations/0000_init_auth_schema.sql` |
 | F31 | GitHub OAuth App（本番 / staging / local の 3 つ）は作成済みで、`GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` は Vercel（Production / Preview）と `.env.local` に登録済み。`.env.example` への追記のみ残っている | Issue #480 本文（2026-07-12 完了記載） |
-| F32 | GitHub の OAuth authorize URL は scope 未指定（`disableDefaultScope: true` + `scope` 未指定）の場合、ユーザーの**公開情報のみ**へのアクセスとなる | GitHub OAuth Apps 仕様 + F5 |
+| F43 | 現行の `src/proxy.ts` は `/ja` 正規化リダイレクトの 2 箇所で、リクエストヘッダー全体の複製（`cookie` を含む `requestHeaders`）を `NextResponse.redirect()` の**応答ヘッダー**として渡している。rewrite / next の分岐は正しく `{ request: { headers } }`（リクエストヘッダーの上書き）を使っており、redirect 分岐だけ応答ヘッダーへの横流しになっている | `src/proxy.ts` 51-52, 72-83 行目 / 計画レビュー Round 4（Cookie 付き `/ja/upload` リクエストの 302 応答に `cookie` ヘッダーが含まれる事を実地確認） |
+| F44 | Home の page.tsx（`/`・`/en`）は、`searchParams`（`view`）を await する `HomePageContent` 全体を `<Suspense fallback={null}>` で包んでいる。ページ全体が searchParams の Suspense 境界内にあるため、この境界の内側に SessionHeader を置くと prerender 時に外側の境界で先に suspend し、Home の静的シェルに Header（fallback の未ログイン Header）が含まれなくなる | `src/app/(default)/page.tsx` 46-61 行目 / `src/app/(default)/en/page.tsx` |
+| F32 | GitHub の OAuth authorize URL で scope が空の場合、**そのアプリに一度も scope を許可していないユーザーに限り**空 scope（公開情報のみ）の token が発行される。過去に scope を許可した事があるユーザーには**認可画面を表示せず、許可済み scope の集合で自動補完**した token が発行される（GitHub 側の grant は revoke するまで残る）。本アプリの OAuth App は本 Issue で新規作成しアプリ側から scope を一切要求しないため、通常フローで後者は発生しない。発生し得るのは authorize URL を意図的に改変した場合（§8.8 の検証を実施した開発者自身を含む）のみで、その grant は GitHub の Settings → Applications → Authorized OAuth Apps から Revoke する事で解消できる | GitHub Docs「Authorizing OAuth apps」scope パラメータの説明（"If not provided, scope defaults to an empty list for users that have not authorized any scopes for the application. For users who have authorized scopes for the application, ... this step of the flow will automatically complete with the set of scopes the user has authorized for the application"。2026-07-13 取得）+ F5 |
 
 ## 3. 設計方針
 
@@ -88,12 +98,14 @@ Better Auth の GitHub Social Provider を有効化し、以下を実装する�
 
 ### 3.2 プライバシー設計: email scope を要求せず、実 email を DB に永続化しない
 
-本設計が保証するのは「email scope を要求しない事」と「実 email を DB に永続化しない事」の 2 点である。better-auth の `getUserInfo` は `/user/emails` を無条件に呼び（scope 無しでは失敗する）、`/user` 応答の公開 email がメモリ上を一時的に通過し得るため、「一切取得しない」はコード上保証できない（F33）。
+本設計が保証するのは「email scope を要求しない事」と「実 email を DB に永続化しない事」の 2 点である。better-auth の `getUserInfo` は `/user/emails` を無条件に呼び（scope 無しでは失敗する）、`/user` 応答の公開 email がメモリ上を一時的に通過し得るため、「一切取得しない」はコード上保証できない（F33）。Issue #480 本文のプライバシー設計セクションもこの整理に合わせて更新済みである（2026-07-13。旧文言「実 email を一切取得・保存しない」を「email scope を要求せず、実 email を DB に永続化しない」へ変更し、公開 email がメモリ上を一時的に通過し得る事を許容すると明記）。
 
 - `disableDefaultScope: true` でデフォルトスコープ（`read:user`, `user:email`）を外す（F5）
 - `mapProfileToUser` で `user.email` を `gh-<GitHub User ID>@no-email.lgtmeow.invalid` に置換する（F6）。スコープ無しでも公開プロフィールに public email を設定しているユーザーは `profile.email` に実 email が入り得るため、この上書きは必須（これが「DB へ永続化しない」の実体である）
 - 変換ロジックは純粋関数 `mapGithubProfileToUser` として `src/features/auth/functions/` に切り出し、テストで匿名化値の格納を担保する
 - OAuth の access token は `account.access_token` に保存される。scope が空のため権限は公開情報の読み取り相当だが、平文保存を避けるため `account: { encryptOAuthTokens: true }` を設定して暗号化保存する（F34。スキーマ変更は不要）
+- 「email scope を要求しない」を API 経路レベルでも強制する。`/sign-in/social` と `/link-social` は body の `scopes` を受け取り、`disableDefaultScope: true` でもリクエスト由来の scope が authorize URL へ無条件に追記されるため（F37）、(1) 未使用の `/link-social` を `disabledPaths` で無効化し（F38）、(2) `/sign-in/social` への非空 `scopes` を `hooks.before` で拒否し（F40）、(3) `databaseHooks.account` の create / update 直前に `scope` が空である事を検証する。(3) は authorize URL を手元で改変して広い scope を付与するケースへの防御であり、再ログイン時に `updateAccount()` で scope が更新されるため update 側にも必要（F39）。違反検出時は `false` を返すのではなく throw で処理全体を中止する（F39）。判定ロジックは純粋関数 `oauth-scope-policy.ts` に切り出してテストを用意する
+- scope 拒否の throw を安全に機能させるため、次の 2 点を併せて設定する。(a) **`drizzleAdapter` に `transaction: true` を設定する。** デフォルト false のままだと、初回 OAuth で user 作成後に `account.create.before` が throw しても user 行がロールバックされず、匿名化 email の UNIQUE 制約により孤立 user が残る（F41）。(b) **throw する `APIError` の body に安定したエラーコード（`code: "OAUTH_SCOPE_NOT_ALLOWED"`）を含める。** 1.6.23 の callback は `e.body.code` が存在する場合のみ APIError を `errorCallbackURL`（言語対応 `/login?error=...`）への redirect に変換し、無ければ HTTP 400 のまま返してしまう（F42。既存アカウント再ログイン時の update 経路で必須）
 - 保存される情報: GitHub User ID（`account.accountId`）、GitHub username（`user.name`）、アバター URL（`user.image`）、匿名化 email（`user.email`）、暗号化された access token（`account.access_token`）。実名・実 email は保存しない
 - `.invalid` TLD は RFC 6761 で予約済みのため誤送信事故が起きない
 
@@ -119,13 +131,15 @@ src/app/**/page.tsx（Storybook から参照されない、auth.ts に依存し�
 - `PageLayout` の props を `currentUrlPath` / `isLoggedIn` から `header: ReactNode`（必須）に変更する。必須にすることで、対応漏れのページが TypeScript エラーとして検出される
 - fallback は未ログイン Header（ログインボタン付き）。ログイン済みユーザーには初回描画の一瞬だけログインボタンが見えてから実体に置き換わるが、静的シェルを維持するための意図した挙動である
 - `"use cache"` なページコンポーネント（docs-mcp / docs-github-app）の**内側**に `SessionHeader` は置けない（F21）ため、これらはページコンポーネントから `"use cache"` を外し、キャッシュはデータ読み込み関数側に付け替える（§5 Phase 6-3）
+- Home（`/`・`/en`）は `searchParams`（`view`）の Suspense 境界がページ全体を包んでいる（F44）ため、そのまま境界の内側に `SessionHeader` を追加すると Home の静的シェルに Header が含まれなくなる。page.tsx を「ページ骨格（`HomePage` + `SessionHeader`）は境界の外、view に依存する LGTM 画像領域だけを `lgtmImages` スロットとして境界の内」へ再構成する（§5 Phase 6-2 代表例 1）
 - Issue の当初案は「Header のユーザー領域のみを async Server Component 化し、"use client" の Header へ slot として渡す」であったが、モバイル Header の Drawer メニューがクライアント状態のコールバックとログイン状態の両方に依存するため、本計画では Header 全体を Suspense で包み boolean を渡す方式へ意図的に設計変更した。経緯は Issue #480 にコメントで記録済み: <https://github.com/nekochans/lgtm-cat-frontend/issues/480#issuecomment-4955939864>
 
 ### 3.5 アクセス制御: Server Component のガードコンポーネント
 
-- `RequireLogin`（未ログインなら言語対応 Home へ `redirect()`）と `RequireAnonymous`（ログイン済みなら言語対応 Home へ `redirect()`）を `src/features/auth/components/` に新設する
-- お気に入り / My Cats / `/logout` は `RequireLogin`、`/login` は `RequireAnonymous` で包む
-- **proxy ではセッション判定を行わない**。`src/proxy.ts` は matcher へのパス追加のみ（メンテナンスモード rewrite と `/ja` 正規化リダイレクトの適用が目的）
+- `RequireLogin`（未ログインなら言語対応 Home へ `redirect()`）・`RequireAnonymous`（ログイン済みなら言語対応 Home へ `redirect()`）・`RequireSessionCookie`（セッション Cookie が無ければ言語対応 Home へ `redirect()`）を `src/features/auth/components/` に新設する
+- お気に入り / My Cats は `RequireLogin`、`/login` は `RequireAnonymous`、`/logout` は `RequireSessionCookie` で包む
+- **`/logout` に `RequireLogin` を使ってはならない。** `RequireLogin` は `getSession()` で Turso へ照会するため、有効な Cookie を持つユーザーの DB 障害時にガードの時点で例外となり、「DB 障害でも Cookie 削除でログアウトできる」はずの `signOut()`（F13）にも再試行画面にも到達できなくなる。`RequireSessionCookie` は `getSessionCookie`（F36）で Cookie の有無のみを判定し DB へ問い合わせないため、Turso 障害時でもログアウトが成立する。期限切れ等の無効 Cookie では LogoutPage が描画されるが、`signOut` は冪等（Cookie 削除 + best effort の行削除）のため実害はない
+- **proxy ではセッション判定を行わない**。`src/proxy.ts` の変更は matcher へのパス追加と、`/ja` 正規化リダイレクトの応答へリクエストヘッダー（`cookie` を含む）を横流ししている既存不具合の修正（F43。§5 Phase 8-2）のみ
 - async な Server Component（ガード・SessionHeaderContent）は関数としても呼べるため、`vi.mock` と組み合わせて単体テストする
 
 ### 3.6 `/login` ページ: 遷移した瞬間に OAuth を自動開始する通過点
@@ -140,13 +154,13 @@ src/app/**/page.tsx（Storybook から参照されない、auth.ts に依存し�
 
 ### 3.7 `/logout` ページ: 同じ自動実行パターン
 
-- page.tsx（`RequireLogin` 内）で未ログインなら Home へリダイレクト
-- ログイン済みなら「ログアウトしています…」表示のクライアントコンポーネント `LogoutContent` を描画し、`useEffect` で `logoutAction` を自動起動する（ref ガード付き）
+- page.tsx（`RequireSessionCookie` 内）でセッション Cookie が無ければ Home へリダイレクト（DB へは問い合わせない。理由は §3.5）
+- Cookie が有れば「ログアウトしています…」表示のクライアントコンポーネント `LogoutContent` を描画し、`useEffect` で `logoutAction` を自動起動する（ref ガード付き）
 - Server Component からは Cookie を書き換えられない Next.js の制約があるため page.tsx 内で直接 signOut する実装は不可。GET の Route Handler 方式はプリフェッチで意図せずログアウトする危険があるため採用しない
 - この設計により、Header の `/logout` リンクが Next.js の `<Link>` プリフェッチで事前描画されても安全である（`/logout` ページの Server Component 描画には副作用が無く、実際の sign out はクライアントの effect が `logoutAction` を呼んだ時にのみ実行される）。`/login` の自動開始も同じ理由でプリフェッチ安全（effect はプリフェッチでは実行されない）
 - `auth.api.signOut()` は DB のセッション行削除を best effort で行い（削除失敗は better-auth 内部で捕捉されログ出力のみ）、Cookie を削除して常に success を返す（F13）。ログアウトの一次保証は **Cookie 削除**であり、DB に残った session 行は `expiresAt` で失効する。したがって「DB 行削除の失敗」でログアウト失敗画面に遷移することはない
 - `logoutAction` は try-catch を持たない。成功時は言語対応の Home へ `redirect()` し、想定外の例外（F13 の通り通常は発生しない）はそのまま呼び出し元のクライアントへ伝播させる
-- `LogoutContent` は `logoutAction` の rejection をクライアント側で catch し、クライアント状態（`useState`）で言語別の固定エラーメッセージと再試行ボタンを表示する。**成功時の redirect() も Action Promise の `NEXT_REDIRECT` rejection として観測される（F35）ため、catch の先頭で `unstable_rethrow` を呼んで内部エラーを transition へ再送出し、実際の失敗だけをエラー表示に落とす**。URL 遷移やサーバー再描画を伴わないため、障害が継続していても `RequireLogin`（セッションの DB 再照会）を経由せずエラー表示できる。エラー内容の値は画面に表示しない
+- `LogoutContent` は `logoutAction` の rejection をクライアント側で catch し、クライアント状態（`useState`）で言語別の固定エラーメッセージと再試行ボタンを表示する。**成功時の redirect() も Action Promise の `NEXT_REDIRECT` rejection として観測される（F35）ため、catch の先頭で `unstable_rethrow` を呼んで内部エラーを transition へ再送出し、実際の失敗だけをエラー表示に落とす**。URL 遷移やサーバー再描画（ガードの再実行）を伴わないため、障害が継続していてもエラー表示できる。エラー内容の値は画面に表示しない
 
 ### 3.8 命名・配置の整理
 
@@ -154,14 +168,16 @@ src/app/**/page.tsx（Storybook から参照されない、auth.ts に依存し�
 | --- | --- | --- |
 | `signinAction` / `logoutAction` + 型 + テスト | `src/actions/auth/` | `src/AGENTS.md` の型分離パターンの例示と同じ配置。login / logout 両ページ（ja/en 計 4 ページ）から共通利用される |
 | `mapGithubProfileToUser` + テスト | `src/features/auth/functions/` | 認証機能に閉じたビジネスロジック。`src/lib/` → `src/features/` の依存は許可されている（DDD のインフラ層→ドメイン層） |
-| `RequireLogin` / `RequireAnonymous` / `LoginPage` / `LoginContent` / `LogoutPage` / `LogoutContent` + stories + テスト | `src/features/auth/components/` | 認証機能に閉じた UI |
+| `isScopeRequestForbidden` / `hasNonEmptyAccountScope` + テスト | `src/features/auth/functions/oauth-scope-policy.ts` | scope 固定化の判定ロジック（純粋関数）。auth.ts のフックから利用する |
+| `RequireLogin` / `RequireAnonymous` / `RequireSessionCookie` / `LoginPage` / `LoginContent` / `LogoutPage` / `LogoutContent` + stories + テスト | `src/features/auth/components/` | 認証機能に閉じた UI |
 | `loginPageTexts` / `logoutPageTexts` + テスト | `src/features/auth/functions/auth-i18n.ts` | 機能内 i18n テキスト（`error-i18n.ts` と同パターン） |
 | `getCachedSession` | `src/lib/better-auth/session.ts` | better-auth + next/headers + react に依存するため lib 層 |
+| `hasSessionCookie` + テスト | `src/lib/better-auth/session-cookie.ts` | better-auth/cookies + next/headers に依存するため lib 層。auth.ts には依存しない（import 時 throw を持ち込まない） |
 | `SessionHeader` | `src/components/session-header.tsx` | 複数ページ共通の Header 表示制御。`src/components/` → `src/lib/` の依存は許可されている。**stories は作らない**（auth.ts に依存するため） |
 
 ## 4. 変更ファイル一覧
 
-### 新規（30 ファイル）
+### 新規（38 ファイル）
 
 | # | パス | 内容 |
 | --- | --- | --- |
@@ -187,8 +203,16 @@ src/app/**/page.tsx（Storybook から参照されない、auth.ts に依存し�
 | N20 | `src/features/auth/components/logout-page.tsx` | /logout のページコンポーネント |
 | N21 | `src/features/auth/components/logout-page.stories.tsx` | stories（モック action 注入） |
 | N22 | `src/lib/better-auth/session.ts` | `getCachedSession`（React cache） |
-| N29 | `src/features/auth/components/__tests__/login-content/login-content.test.tsx` | `LoginContent` のテスト（redirect rejection の区別） |
+| N29 | `src/features/auth/components/__tests__/login-content/login-content.test.tsx` | `LoginContent` のテスト（redirect rejection の区別 + `?error=` 時の自動開始抑止） |
 | N30 | `src/features/auth/components/__tests__/logout-content/logout-content.test.tsx` | `LogoutContent` のテスト（redirect rejection の区別） |
+| N31 | `src/features/auth/functions/oauth-scope-policy.ts` | scope 固定化の判定ロジック（純粋関数） |
+| N32 | `src/features/auth/functions/__tests__/oauth-scope-policy/is-scope-request-forbidden.test.ts` | テスト |
+| N33 | `src/features/auth/functions/__tests__/oauth-scope-policy/has-non-empty-account-scope.test.ts` | テスト |
+| N34 | `src/lib/better-auth/session-cookie.ts` | `hasSessionCookie`（Cookie 有無のみの判定、DB 非依存） |
+| N35 | `src/lib/better-auth/__tests__/session-cookie/has-session-cookie.test.ts` | テスト |
+| N36 | `src/features/auth/components/require-session-cookie.tsx` | `/logout` 専用の Cookie ベースガード |
+| N37 | `src/features/auth/components/__tests__/require-session-cookie/require-session-cookie.test.tsx` | テスト |
+| N38 | `src/__tests__/proxy/proxy.test.ts` | proxy のテスト（リダイレクト応答に `cookie` / `authorization` が含まれない事） |
 
 さらに App Router のファイル:
 
@@ -213,7 +237,7 @@ src/app/**/page.tsx（Storybook から参照されない、auth.ts に依存し�
 | M6 | `src/lib/config/app-base-url.ts` | `appUrlList` に `logout` 追加 |
 | M7 | `src/functions/__tests__/url/create-include-language-app-path.test.ts` | `login` / `logout` のケース追加 |
 | M8 | `src/functions/__tests__/meta-tag/meta-tag-list.test.ts` | `logout` タイトル検証追加 |
-| M9 | `src/lib/better-auth/auth.ts` | GitHub プロバイダ + `nextCookies` + `account.encryptOAuthTokens` + `onAPIError.errorURL` 追加 |
+| M9 | `src/lib/better-auth/auth.ts` | GitHub プロバイダ + `nextCookies` + `account.encryptOAuthTokens` + `onAPIError.errorURL` + `disabledPaths` + `hooks.before`（scopes 拒否）+ `databaseHooks.account`（scope 検証、`code` 付き throw）+ `drizzleAdapter` の `transaction: true` 追加 |
 | M10 | `src/components/page-layout.tsx` | `header: ReactNode` 必須 props 化 |
 | M11 | `src/components/header.tsx` | `hideLoginButton` 撤去 |
 | M12 | `src/components/header-desktop.tsx` | `hideLoginButton` 撤去 + `/logout` を関数化 |
@@ -224,13 +248,13 @@ src/app/**/page.tsx（Storybook から参照されない、auth.ts に依存し�
 | M17 | `src/features/errors/components/error-layout.tsx` | `hideLoginButton` 撤去（TODO 削除） |
 | M18〜M27 | feature ページ 10 ファイル（F27 の一覧） | `currentUrlPath` / `isLoggedIn` を `header: ReactNode` に置換 |
 | M28〜M47 | App Router page.tsx 20 ファイル（ja/en × home, upload, terms, privacy, external-transmission-policy, docs×3, favorites, my-cats） | `header` 注入。favorites / my-cats は `RequireLogin` + `Suspense` も追加。docs-mcp / docs-github-app は `"use cache"` の付け替えも実施 |
-| M48 | `src/features/main/components/home-page.stories.tsx` | args を header 注入に変更 |
+| M48 | `src/features/main/components/home-page.stories.tsx` | args を header 注入に変更 + `view` を削除（`lgtmImages` のモック注入は既存のまま維持） |
 | M49 | `src/features/upload/components/upload-page.stories.tsx` | 同上 |
 | M50 | `src/features/upload/components/upload-form.stories.tsx` | decorator の PageLayout を header 注入に変更 |
 | M51〜M53 | docs 3 ページの stories | 同上 |
 | M54 | `src/features/favorites/components/favorites-page.stories.tsx` | header 注入（ログイン済み Header） |
 | M55 | `src/features/my-cats/components/my-cats-page.stories.tsx` | 同上 |
-| M56 | `src/proxy.ts` | matcher に 12 パス追加 |
+| M56 | `src/proxy.ts` | matcher に 12 パス追加 + `/ja` 正規化リダイレクトの応答ヘッダー横流し修正（F43） |
 
 ## 5. 実装手順
 
@@ -256,6 +280,16 @@ npm install --save-exact better-auth@1.6.23 @better-auth/drizzle-adapter@1.6.23
 grep -n "disableDefaultScope\|userMap" node_modules/@better-auth/core/dist/social-providers/github.mjs
 # state Cookie 検証のデフォルト（F8）
 grep -n "storeStateStrategy\|skipStateCookieCheck" node_modules/better-auth/dist/context/create-context.mjs
+# リクエスト由来 scopes の受け付け（F37）
+grep -n "scopes" node_modules/better-auth/dist/api/routes/sign-in.mjs
+# 再ログイン時の updateAccount による scope 更新（F39）
+grep -n "updateAccount\|scope" node_modules/better-auth/dist/api/routes/callback.mjs
+# getSessionCookie の Cookie 名解決（F36）
+grep -n "getSessionCookie" node_modules/better-auth/dist/cookies/index.mjs
+# drizzle adapter の transaction オプション（F41）
+grep -n "config.transaction" node_modules/@better-auth/drizzle-adapter/dist/index.mjs
+# callback の APIError → redirect 変換条件（F42）
+grep -n "body?.code\|body.code" node_modules/better-auth/dist/api/routes/callback.mjs
 ```
 
 出力が §2.2 の記載（デフォルトスコープの三項演算子、`...userMap` が末尾スプレッド、`storeStateStrategy: options.account?.storeStateStrategy || (isStateful ? "database" : "cookie")`。`isStateful` は `hasServerSessionStore(options)` = `!!options.database || !!options.secondaryStorage` であり、本構成は database 指定のため結果は `"database"`）と食い違う場合は実装を進めず、差分を調査して本計画を修正する事。
@@ -415,13 +449,67 @@ export function mapGithubProfileToUser(
 
 > `avatar_url` は外部 API（GitHub）レスポンスの境界層の型のため snake_case のままでよい（`docs/project-coding-guidelines.md` の「外部APIとの境界層で変換」に合致）。better-auth の `GithubProfile` はこの構造的部分型に代入可能であることを確認済み（F7）。
 
+#### 3-1b. `src/features/auth/functions/oauth-scope-policy.ts`（新規）
+
+```typescript
+/**
+ * OAuth scope の固定化ポリシー（Issue #480 プライバシー設計）。
+ *
+ * better-auth の /sign-in/social と /link-social は body の scopes を
+ * disableDefaultScope の設定に関わらず authorize URL へ無条件に追記するため（F37）、
+ * 追加 scope の要求をアプリケーション側で拒否する。auth.ts の hooks.before /
+ * databaseHooks から利用する。
+ */
+const scopeRestrictedPaths: readonly string[] = [
+  "/sign-in/social",
+  "/link-social",
+];
+
+/**
+ * 追加 scope を要求するリクエストかどうかを判定する。
+ * /link-social は disabledPaths で無効化済みだが、多層防御として判定対象に含める。
+ */
+export function isScopeRequestForbidden(
+  path: string,
+  requestBody: unknown
+): boolean {
+  if (!scopeRestrictedPaths.includes(path)) {
+    return false;
+  }
+
+  if (typeof requestBody !== "object" || requestBody == null) {
+    return false;
+  }
+
+  const { scopes } = requestBody as { readonly scopes?: unknown };
+
+  return Array.isArray(scopes) && scopes.length > 0;
+}
+
+/**
+ * account.scope が空でない（= 何らかの OAuth scope が付与された token を
+ * 保存しようとしている）事を判定する。GitHub は scope 未要求時の token 応答で
+ * 空文字を返すため、null / undefined / 空白のみの文字列は「空」とみなす。
+ */
+export function hasNonEmptyAccountScope(
+  scope: string | null | undefined
+): boolean {
+  return typeof scope === "string" && scope.trim() !== "";
+}
+```
+
 #### 3-2. `src/lib/better-auth/auth.ts`（変更・全文）
 
 ```typescript
 import { drizzleAdapter } from "@better-auth/drizzle-adapter";
 import { betterAuth } from "better-auth";
+import { APIError, createAuthMiddleware } from "better-auth/api";
 import { nextCookies } from "better-auth/next-js";
 import { mapGithubProfileToUser } from "@/features/auth/functions/map-github-profile-to-user";
+import {
+  hasNonEmptyAccountScope,
+  isScopeRequestForbidden,
+} from "@/features/auth/functions/oauth-scope-policy";
 import { authDb } from "./db";
 
 const betterAuthSecret = process.env.BETTER_AUTH_SECRET;
@@ -445,9 +533,33 @@ if (!githubClientSecret) {
   throw new Error("GITHUB_CLIENT_SECRET is not defined");
 }
 
+/**
+ * authorize URL の改変等で広い scope の token が発行された場合でも DB へ保存しない。
+ * databaseHooks の before は false を返すと当該 DB 操作だけが黙ってスキップされ
+ * フローが継続するため、throw で処理全体を中止する（F39）。
+ *
+ * body の code は必須。1.6.23 の OAuth callback は e.body.code が存在する場合のみ
+ * APIError を errorCallbackURL（言語対応 /login?error=...）への redirect に変換し、
+ * 無ければ HTTP 400 のまま返してしまう（F42。既存アカウント再ログインの update 経路で効く）。
+ */
+const rejectNonEmptyAccountScope = (
+  scope: string | null | undefined
+): void => {
+  if (hasNonEmptyAccountScope(scope)) {
+    throw new APIError("BAD_REQUEST", {
+      code: "OAUTH_SCOPE_NOT_ALLOWED",
+      message: "OAuth scopes must be empty",
+    });
+  }
+};
+
 export const auth = betterAuth({
   database: drizzleAdapter(authDb, {
     provider: "sqlite",
+    // 初回 OAuth の user + account 作成を原子化する（F41）。デフォルト false のままだと、
+    // account.create.before（scope 拒否）の throw 時に user 行がロールバックされず、
+    // 匿名化 email の UNIQUE 制約を持つ孤立 user が残ってしまう。
+    transaction: true,
   }),
   secret: betterAuthSecret,
   baseURL: betterAuthUrl,
@@ -461,6 +573,40 @@ export const auth = betterAuth({
   // 飛ぶため、/login の再試行画面へ収束させる。この経路では言語が分からないため ja 版。
   onAPIError: {
     errorURL: `${betterAuthUrl}/login`,
+  },
+  // アカウント連携機能は提供しないため、追加 scope を要求できる /link-social を閉じる（F38。404 になる）。
+  disabledPaths: ["/link-social"],
+  hooks: {
+    // /sign-in/social は body の scopes を authorize URL へ無条件追記するため（F37）、
+    // 非空 scopes を BAD_REQUEST で拒否する（プライバシー設計の API 経路レベルの強制）。
+    // 自前の signinAction は scopes を渡さないため影響しない。
+    before: createAuthMiddleware((ctx) => {
+      if (isScopeRequestForbidden(ctx.path, ctx.body)) {
+        throw new APIError("BAD_REQUEST", {
+          code: "OAUTH_SCOPE_NOT_ALLOWED",
+          message: "Requesting additional OAuth scopes is not allowed",
+        });
+      }
+      return Promise.resolve();
+    }),
+  },
+  databaseHooks: {
+    account: {
+      create: {
+        before: (account) => {
+          rejectNonEmptyAccountScope(account.scope);
+          return Promise.resolve();
+        },
+      },
+      // 既存アカウントの再ログイン時は updateAccount() で scope が更新されるため（F39）、
+      // create だけでなく update の直前にも検証する。
+      update: {
+        before: (account) => {
+          rejectNonEmptyAccountScope(account.scope);
+          return Promise.resolve();
+        },
+      },
+    },
   },
   socialProviders: {
     github: {
@@ -501,6 +647,31 @@ export const getCachedSession = cache(async () => {
 });
 ```
 
+#### 3-3b. `src/lib/better-auth/session-cookie.ts`（新規）
+
+```typescript
+import { getSessionCookie } from "better-auth/cookies";
+import { headers } from "next/headers";
+
+/**
+ * セッション Cookie の有無のみを判定する（DB への問い合わせ・復号は行わない）。
+ *
+ * /logout のガード（RequireSessionCookie）専用。getSessionCookie は Cookie ヘッダーから
+ * better-auth.session_token（本番の __Secure- 接頭辞付きを含む）を探すだけなので（F36）、
+ * Turso 障害時でも失敗しない。auth.ts に依存しないため import 時の環境変数チェックによる
+ * throw も持ち込まない。
+ *
+ * 注意: Cookie の存在確認のみであり、セッションの有効性（期限・失効）は検証しない。
+ * アクセス制御用途（favorites / my-cats の RequireLogin）には使用してはならない。
+ */
+export const hasSessionCookie = async (): Promise<boolean> => {
+  const requestHeaders = await headers();
+  return getSessionCookie(requestHeaders) != null;
+};
+```
+
+> 本プロジェクトは `advanced.cookiePrefix` を設定しないため、`getSessionCookie` のデフォルト（prefix `better-auth`、cookie 名 `session_token`）がそのまま一致する。
+
 #### 3-4. `src/app/(default)/api/auth/[...all]/route.ts`（新規）
 
 ```typescript
@@ -512,7 +683,7 @@ export const { GET, POST } = toNextJsHandler(auth);
 
 > パス `/api/auth/[...all]` は Better Auth のデフォルト規約。GitHub OAuth App の callback URL（`<origin>/api/auth/callback/github`）はこの規約前提で登録済み（F31）。`src/proxy.ts` の matcher には**追加しない**（OAuth コールバックに余計な処理を挟まないため）。
 
-#### 3-5. テスト（§6.1 参照）を作成し `npm run test` で全パスを確認
+#### 3-5. テスト（§6.1 / §6.7 参照）を作成し `npm run test` で全パスを確認
 
 ### Phase 4: Server Action（signin / logout）
 
@@ -902,6 +1073,7 @@ export function HeaderDesktop({
 1. `Props` から `readonly currentUrlPath: IncludeLanguageAppPath;` を削除し、`readonly header: ReactNode;` を追加する。`IncludeLanguageAppPath` の import が不要になったら削除し、`import type { ReactNode } from "react";` を追加する（既に `JSX` を import している場合は `import type { JSX, ReactNode } from "react";` にまとめる）
 2. `PageLayout` への `currentUrlPath={...}` と `isLoggedIn={false}` を削除し、`header={header}` を渡す
 3. favorites / my-cats は内部の `createIncludeLanguageAppPath(...)` 呼び出しと import も削除する
+4. home-page.tsx はさらに `view` prop を廃止し、`lgtmImages` を必須の `ReactNode` に変更する（searchParams への依存を page.tsx 側の Suspense スロットに閉じ込め、Header を含むページ骨格を searchParams の Suspense 境界の外へ出すため。F44。変更後全文は下記）
 
 代表例として `src/features/favorites/components/favorites-page.tsx` の変更後全文:
 
@@ -935,8 +1107,6 @@ export function FavoritesPage({ header, language }: Props) {
 import type { ReactNode } from "react";
 import { PageLayout } from "@/components/page-layout";
 import { HomeActionButtons } from "@/features/main/components/home-action-buttons";
-import { LatestLgtmImages } from "@/features/main/components/latest-lgtm-images";
-import { RandomLgtmImages } from "@/features/main/components/random-lgtm-images";
 import { ServiceDescription } from "@/features/main/components/service-description";
 import type { Language } from "@/types/language";
 
@@ -944,21 +1114,16 @@ interface Props {
   readonly header: ReactNode;
   readonly language: Language;
   /**
-   * LGTMイメージ表示用ReactNode (Storybook等でのモック用)
-   * 省略時は view に応じた実際のサーバーコンポーネントが使用される
+   * LGTM画像表示領域のReactNode。
+   * page.tsx 側で searchParams の view に応じたサーバーコンポーネントを
+   * Suspense 付きで注入する（Storybook ではモックを注入する）。
+   * searchParams への依存をこのスロットに閉じ込める事で、Header を含む
+   * ページ骨格が searchParams の Suspense 境界の外に出て静的シェルに含まれる（F44）。
    */
-  readonly lgtmImages?: ReactNode;
-  readonly view: "random" | "latest";
+  readonly lgtmImages: ReactNode;
 }
 
-export const HomePage = ({ header, language, view, lgtmImages }: Props) => {
-  const renderLgtmImages = () => {
-    if (lgtmImages != null) {
-      return lgtmImages;
-    }
-    return view === "random" ? <RandomLgtmImages /> : <LatestLgtmImages />;
-  };
-
+export const HomePage = ({ header, language, lgtmImages }: Props) => {
   return (
     <PageLayout
       header={header}
@@ -970,12 +1135,14 @@ export const HomePage = ({ header, language, view, lgtmImages }: Props) => {
           <ServiceDescription language={language} />
           <HomeActionButtons language={language} />
         </div>
-        {renderLgtmImages()}
+        {lgtmImages}
       </div>
     </PageLayout>
   );
 };
 ```
+
+> `view` prop と `RandomLgtmImages` / `LatestLgtmImages` の import は page.tsx 側へ移す（下記 §6-2 代表例 1）。
 
 `src/features/upload/components/upload-page.tsx` の変更後全文（props スプレッドがある特殊ケース）:
 
@@ -1020,8 +1187,8 @@ terms / privacy / external-transmission-policy / docs 3 ページも同じ規則
 
 | ファイル | currentUrlPath |
 | --- | --- |
-| `src/app/(default)/page.tsx` | `"/"`（リテラル） |
-| `src/app/(default)/en/page.tsx` | `"/en"`（リテラル） |
+| `src/app/(default)/page.tsx` | `"/"`（リテラル。§6-2 代表例 1 の Suspense 再構成も必要） |
+| `src/app/(default)/en/page.tsx` | `"/en"`（リテラル。同上） |
 | `src/app/(default)/upload/page.tsx` | `createIncludeLanguageAppPath("upload", language)` |
 | `src/app/(default)/en/upload/page.tsx` | 同上 |
 | `src/app/(default)/terms/page.tsx` | `createIncludeLanguageAppPath("terms", language)` |
@@ -1045,19 +1212,41 @@ terms / privacy / external-transmission-policy / docs 3 ページも同じ規則
 2. feature コンポーネントへ渡していた `currentUrlPath={...}` を `header={<SessionHeader currentUrlPath={...} language={language} />}` に変更（`createIncludeLanguageAppPath` の呼び出しはそのまま流用する。home は文字列リテラル `"/"` / `"/en"` のまま）
 3. `metadata` は一切変更しない
 
-代表例 1: `src/app/(default)/page.tsx`（home ja）の `HomePageContent` の return 部分のみ変更:
+代表例 1: `src/app/(default)/page.tsx`（home ja）のコンポーネント部分の変更後。Home は `searchParams`（`view`）の Suspense 境界がページ全体を包んでいる（F44）ため、return の差し替えだけでは `SessionHeader` が境界の内側に入り、静的シェルに Header が含まれなくなる。ページ骨格を境界の外へ出し、view に依存する LGTM 画像領域だけを `lgtmImages` スロットとして境界の内側に残す（`HomePageContent` は廃止）:
 
 ```typescript
-  return (
-    <HomePage
-      header={<SessionHeader currentUrlPath="/" language={language} />}
-      language={language}
-      view={view}
-    />
-  );
+const HomeLgtmImages = async ({
+  searchParams,
+}: {
+  readonly searchParams: Props["searchParams"];
+}) => {
+  const params = await searchParams;
+  const view = params.view ?? "random";
+
+  return view === "random" ? <RandomLgtmImages /> : <LatestLgtmImages />;
+};
+
+const Home: NextPage<Props> = ({ searchParams }) => (
+  <HomePage
+    header={<SessionHeader currentUrlPath="/" language={language} />}
+    language={language}
+    lgtmImages={
+      <Suspense fallback={null}>
+        <HomeLgtmImages searchParams={searchParams} />
+      </Suspense>
+    }
+  />
+);
 ```
 
-en 版（`src/app/(default)/en/page.tsx`）は `currentUrlPath="/en"`。
+import には以下を追加する:
+
+```typescript
+import { LatestLgtmImages } from "@/features/main/components/latest-lgtm-images";
+import { RandomLgtmImages } from "@/features/main/components/random-lgtm-images";
+```
+
+> 画像領域の fallback は従来のページ全体 fallback と同じ `null`（遅延が画像領域のみに縮小される）。en 版（`src/app/(default)/en/page.tsx`）は `currentUrlPath="/en"` とコンポーネント名のみ異なる同一構造。
 
 代表例 2: `src/app/(default)/terms/page.tsx` のコンポーネント部分のみ変更:
 
@@ -1158,7 +1347,7 @@ import { Header } from "@/components/header";
 
 | ファイル | header の値 |
 | --- | --- |
-| `home-page.stories.tsx`（全 6 Stories） | ja 系: `currentUrlPath="/"`, en 系: `currentUrlPath="/en"`、いずれも `isLoggedIn={false}` |
+| `home-page.stories.tsx`（全 6 Stories） | ja 系: `currentUrlPath="/"`, en 系: `currentUrlPath="/en"`、いずれも `isLoggedIn={false}`。args から `view` を削除する（`lgtmImages` のモック注入は既存のまま維持） |
 | `upload-page.stories.tsx`（全 Stories） | ja: `currentUrlPath="/upload"`, en: `currentUrlPath="/en/upload"`、`isLoggedIn={false}` |
 | `upload-form.stories.tsx` | decorator 内の `<PageLayout currentUrlPath={currentUrlPath} isLoggedIn={false} language={language}>` を `<PageLayout header={<Header currentUrlPath={currentUrlPath} isLoggedIn={false} language={language} />} language={language}>` に変更し、`import { Header } from "@/components/header";` を追加 |
 | `docs-how-to-use-page.stories.tsx` / `docs-mcp-page.stories.tsx` / `docs-github-app-page.stories.tsx` | 各 Story が現在 args に持つ `currentUrlPath` 値をそのまま `Header` に移す。`isLoggedIn={false}` |
@@ -1236,6 +1425,44 @@ export async function RequireAnonymous({
   const session = await getCachedSession();
 
   if (session != null) {
+    redirect(createIncludeLanguageAppPath("home", language));
+  }
+
+  return <>{children}</>;
+}
+```
+
+#### 7-2b. `src/features/auth/components/require-session-cookie.tsx`（新規）
+
+```typescript
+import { redirect } from "next/navigation";
+import type { JSX, ReactNode } from "react";
+import { createIncludeLanguageAppPath } from "@/functions/url";
+import { hasSessionCookie } from "@/lib/better-auth/session-cookie";
+import type { Language } from "@/types/language";
+
+interface Props {
+  readonly children: ReactNode;
+  readonly language: Language;
+}
+
+/**
+ * /logout 専用のガード。セッション Cookie の有無のみで判定し、DB へは問い合わせない。
+ *
+ * RequireLogin（getSession() = Turso 照会）を使うと、DB 障害時にガードの時点で例外となり、
+ * Cookie 削除でログアウトできるはずの signOut()（F13）にも再試行画面にも到達できない（§3.5）。
+ * 期限切れ等の無効 Cookie では children（LogoutPage）が描画されるが、signOut は冪等のため安全。
+ *
+ * 実行時 API（headers 経由の Cookie 参照）を使うため、利用側は
+ * <Suspense> 境界の内側に置くこと（cacheComponents の制約）。
+ */
+export async function RequireSessionCookie({
+  language,
+  children,
+}: Props): Promise<JSX.Element> {
+  const sessionCookieExists = await hasSessionCookie();
+
+  if (!sessionCookieExists) {
     redirect(createIncludeLanguageAppPath("home", language));
   }
 
@@ -1474,7 +1701,7 @@ export function LogoutContent({ language, logoutAction }: Props): JSX.Element {
   // effect 再実行でログアウト処理が多重起動しないようにガードする
   const hasStartedRef = useRef(false);
   // 想定外の signOut 失敗はクライアント状態で保持する。URL 遷移を伴わないため、
-  // エラー表示に RequireLogin（セッションの DB 再照会）を経由しない（§3.7）。
+  // エラー表示にサーバー再描画（ガードの再実行）を経由しない（§3.7）。
   const [hasError, setHasError] = useState(false);
   const [isPending, startTransition] = useTransition();
 
@@ -1547,8 +1774,10 @@ interface Props {
 }
 
 /**
- * /logout は未ログインユーザーが RequireLogin でリダイレクトされた後にのみ
- * 描画されるため、Header は静的なログイン済み表示でよい（SessionHeader は不要）。
+ * /logout はセッション Cookie を持たないユーザーが RequireSessionCookie で
+ * リダイレクトされた後にのみ描画されるため、Header は静的なログイン済み表示でよい
+ * （SessionHeader は不要）。期限切れ等の無効 Cookie でも描画され得るが、直後に
+ * logoutAction が Cookie を削除して Home へ遷移するため一瞬の表示に留まる。
  */
 export function LogoutPage({ language, logoutAction }: Props): JSX.Element {
   const currentUrlPath = createIncludeLanguageAppPath("logout", language);
@@ -1668,7 +1897,7 @@ import { Suspense } from "react";
 import { logoutAction } from "@/actions/auth/logout-action";
 import { i18nUrlList } from "@/constants/url";
 import { LogoutPage } from "@/features/auth/components/logout-page";
-import { RequireLogin } from "@/features/auth/components/require-login";
+import { RequireSessionCookie } from "@/features/auth/components/require-session-cookie";
 import { appName, metaTagList } from "@/functions/meta-tag";
 import { convertLanguageToOpenGraphLocale } from "@/functions/open-graph-locale";
 import { appBaseUrl } from "@/lib/config/app-base-url";
@@ -1709,14 +1938,16 @@ export const metadata: Metadata = {
 
 const Logout: NextPage = () => (
   <Suspense fallback={null}>
-    <RequireLogin language={language}>
+    <RequireSessionCookie language={language}>
       <LogoutPage language={language} logoutAction={logoutAction} />
-    </RequireLogin>
+    </RequireSessionCookie>
   </Suspense>
 );
 
 export default Logout;
 ```
+
+> `/logout` のガードは `RequireLogin` ではなく `RequireSessionCookie` を使う（DB 非依存。理由は §3.5）。`RequireLogin` は favorites / my-cats 専用である。
 
 #### 7-11. `src/app/(default)/en/logout/page.tsx`（新規）
 
@@ -1883,7 +2114,9 @@ export const ErrorEnglish: Story = {
 
 #### 7-14. テスト（§6.3 / §6.4 / §6.5 参照）を作成し `npm run test` で全パスを確認
 
-### Phase 8: proxy の matcher 追加
+### Phase 8: proxy の matcher 追加とリダイレクト応答ヘッダーの修正
+
+#### 8-1. matcher に 12 パスを追加
 
 `src/proxy.ts` の `config.matcher` に 12 パスを追加する（変更後全文）:
 
@@ -1921,9 +2154,34 @@ export const config = {
 };
 ```
 
-`proxy` 関数本体は変更しない（セッション判定は行わない）。matcher は Next.js のビルド時静的解析対象のため、リテラル配列のまま記述する（スプレッドや変数参照は不可）。
+matcher は Next.js のビルド時静的解析対象のため、リテラル配列のまま記述する（スプレッドや変数参照は不可）。
 
-> これにより `/ja/login` 等は既存の `/ja` 正規化リダイレクトの対象になり、メンテナンスモード時はこれらのページも maintenance へ rewrite される。`/api/auth/*` は追加しない。
+> これにより `/ja/login` 等は既存の `/ja` 正規化リダイレクトの対象になり、メンテナンスモード時はこれらのページも maintenance へ rewrite される。`/api/auth/*` は追加しない。セッション判定は引き続き行わない。
+
+#### 8-2. `/ja` 正規化リダイレクトの応答ヘッダー横流しを修正
+
+現行実装は `/ja` 正規化リダイレクトの 2 箇所で、`cookie` を含むリクエストヘッダー全体の複製（`requestHeaders`）を `NextResponse.redirect()` の**応答ヘッダー**として渡している（F43）。PR2 でセッション Cookie が導入されると、Cookie 付きで `/ja/*` にアクセスした際の 302 応答に `cookie: better-auth.session_token=...` が写り込み、応答の監視・中継・ログへセッショントークンが漏れる経路になる。redirect のオプションから `headers` を外す（`language === "ja"` 分岐の変更後全文）:
+
+```typescript
+  if (language === "ja") {
+    const removedLanguagePath = removeLanguageFromAppPath(nextUrl.pathname);
+    if (nextUrl.pathname !== "/ja") {
+      return NextResponse.redirect(new URL(removedLanguagePath, request.url), {
+        status: httpStatusCode.found,
+        statusText: "Found",
+      });
+    }
+
+    return NextResponse.redirect(new URL("/", request.url), {
+      status: httpStatusCode.found,
+      statusText: "Found",
+    });
+  }
+```
+
+> `requestHeaders` は rewrite / next の `{ request: { headers } }`（リクエストヘッダーの上書きとしての伝搬）にのみ使う。redirect 後はブラウザが新 URL を再リクエストして proxy が再実行されるため、`appBaseUrlHeaderName` の付与が redirect 応答から消えても機能上の影響は無い。
+
+#### 8-3. テスト（§6.8 参照）を作成し `npm run test` で全パスを確認
 
 ## 6. テストコード
 
@@ -2212,6 +2470,69 @@ describe("src/features/auth/components/require-login.tsx RequireLogin TestCases"
 
 RequireLogin のテストと対になる 3 ケース（セッション有り → `/` へリダイレクト、セッション有り + en → `/en` へリダイレクト、セッション無し → children を描画）。構造は同一のため `RequireAnonymous` に読み替えて作成する。
 
+#### `src/features/auth/components/__tests__/require-session-cookie/require-session-cookie.test.tsx`
+
+```typescript
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { RequireSessionCookie } from "@/features/auth/components/require-session-cookie";
+
+const mockHasSessionCookie = vi.fn();
+
+vi.mock("@/lib/better-auth/session-cookie", () => ({
+  hasSessionCookie: () => mockHasSessionCookie(),
+}));
+
+const mockRedirect = vi.fn((path: string): never => {
+  throw new Error(`NEXT_REDIRECT:${path}`);
+});
+
+vi.mock("next/navigation", () => ({
+  redirect: (path: string) => mockRedirect(path),
+}));
+
+// 注意: このテストでは @/lib/better-auth/auth と @/lib/better-auth/session を意図的に
+// vi.mock しない。auth.ts は import されると環境変数チェックで throw するため、
+// モック無しでテストが成立する事自体が「RequireSessionCookie が DB（セッション API）に
+// 依存していない」事の担保になる。
+describe("src/features/auth/components/require-session-cookie.tsx RequireSessionCookie TestCases", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("should redirect to Japanese home when session cookie does not exist", async () => {
+    mockHasSessionCookie.mockResolvedValue(false);
+
+    await expect(
+      RequireSessionCookie({ children: "logout page", language: "ja" })
+    ).rejects.toThrow("NEXT_REDIRECT:/");
+
+    expect(mockRedirect).toHaveBeenCalledWith("/");
+  });
+
+  it("should redirect to English home when session cookie does not exist and language is en", async () => {
+    mockHasSessionCookie.mockResolvedValue(false);
+
+    await expect(
+      RequireSessionCookie({ children: "logout page", language: "en" })
+    ).rejects.toThrow("NEXT_REDIRECT:/en");
+
+    expect(mockRedirect).toHaveBeenCalledWith("/en");
+  });
+
+  it("should render children when session cookie exists", async () => {
+    mockHasSessionCookie.mockResolvedValue(true);
+
+    const element = await RequireSessionCookie({
+      children: "logout page",
+      language: "ja",
+    });
+
+    expect(element.props.children).toBe("logout page");
+    expect(mockRedirect).not.toHaveBeenCalled();
+  });
+});
+```
+
 ### 6.4 auth-i18n のテスト
 
 #### `src/features/auth/functions/__tests__/auth-i18n/login-page-texts.test.ts`
@@ -2390,11 +2711,207 @@ describe("src/features/auth/components/logout-content.tsx LogoutContent TestCase
 
 #### `src/features/auth/components/__tests__/login-content/login-content.test.tsx`
 
-LogoutContent のテストと同じ構造で `LoginContent` を検証する（`logoutAction` → `signinAction` に読み替え、props に `hasError: false` を追加で渡す）。NEXT_REDIRECT rejection ではエラーメッセージが表示されない事、通常の rejection では表示される事（`hasClientError` 経由）、再試行ボタンで `signinAction` が再実行される事の 3 ケースを作成する。
+LogoutContent のテストと同じ構造で `LoginContent` を検証する（`logoutAction` → `signinAction` に読み替え、props に `hasError: false` を追加で渡す）。NEXT_REDIRECT rejection ではエラーメッセージが表示されない事、通常の rejection では表示される事（`hasClientError` 経由）、再試行ボタンで `signinAction` が再実行される事の 3 ケースに加え、**`?error=` 時の OAuth 自動開始抑止（無限ループ防止の受け入れ基準）** を検証する以下の 2 ケースを作成する。
+
+```typescript
+  it("should not call signinAction on initial render when hasError is true", async () => {
+    const signinAction = vi.fn().mockResolvedValue(undefined);
+
+    render(
+      <LoginContent hasError={true} language="ja" signinAction={signinAction} />
+    );
+
+    // エラー表示（自動開始の抑止画面）が描画され、自動開始は行われない
+    expect(
+      await screen.findByText(
+        "ログインに失敗しました。時間をおいて再度お試しください。"
+      )
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "再試行" })
+    ).toBeInTheDocument();
+    expect(signinAction).not.toHaveBeenCalled();
+  });
+
+  it("should call signinAction once when retry button is pressed after error", async () => {
+    const signinAction = vi.fn().mockResolvedValue(undefined);
+
+    render(
+      <LoginContent hasError={true} language="ja" signinAction={signinAction} />
+    );
+
+    const retryButton = await screen.findByRole("button", { name: "再試行" });
+    await userEvent.click(retryButton);
+
+    await waitFor(() => {
+      expect(signinAction).toHaveBeenCalledTimes(1);
+    });
+  });
+```
 
 ### 6.6 既存テストの更新
 
 §5 Phase 2 の 2-5 に記載済み（`create-include-language-app-path.test.ts` / `meta-tag-list.test.ts`）。
+
+### 6.7 scope 固定化と session-cookie のテスト
+
+#### `src/features/auth/functions/__tests__/oauth-scope-policy/is-scope-request-forbidden.test.ts`
+
+```typescript
+import { describe, expect, it } from "vitest";
+import { isScopeRequestForbidden } from "@/features/auth/functions/oauth-scope-policy";
+
+describe("src/features/auth/functions/oauth-scope-policy.ts isScopeRequestForbidden TestCases", () => {
+  interface TestTable {
+    readonly expected: boolean;
+    readonly path: string;
+    readonly requestBody: unknown;
+  }
+
+  it.each`
+    path                  | requestBody                                          | expected
+    ${"/sign-in/social"}  | ${{ provider: "github", scopes: ["user:email"] }}    | ${true}
+    ${"/sign-in/social"}  | ${{ provider: "github", scopes: ["repo", "user"] }}  | ${true}
+    ${"/sign-in/social"}  | ${{ provider: "github", scopes: [] }}                | ${false}
+    ${"/sign-in/social"}  | ${{ provider: "github" }}                            | ${false}
+    ${"/sign-in/social"}  | ${null}                                              | ${false}
+    ${"/link-social"}     | ${{ provider: "github", scopes: ["user:email"] }}    | ${true}
+    ${"/sign-out"}        | ${{ scopes: ["user:email"] }}                        | ${false}
+  `(
+    "should return $expected when path is $path",
+    ({ path, requestBody, expected }: TestTable) => {
+      expect(isScopeRequestForbidden(path, requestBody)).toBe(expected);
+    }
+  );
+});
+```
+
+#### `src/features/auth/functions/__tests__/oauth-scope-policy/has-non-empty-account-scope.test.ts`
+
+```typescript
+import { describe, expect, it } from "vitest";
+import { hasNonEmptyAccountScope } from "@/features/auth/functions/oauth-scope-policy";
+
+describe("src/features/auth/functions/oauth-scope-policy.ts hasNonEmptyAccountScope TestCases", () => {
+  interface TestTable {
+    readonly expected: boolean;
+    readonly scope: string | null | undefined;
+  }
+
+  it.each`
+    scope                    | expected
+    ${"read:user"}           | ${true}
+    ${"read:user,user:email"}| ${true}
+    ${" "}                   | ${false}
+    ${""}                    | ${false}
+    ${null}                  | ${false}
+    ${undefined}             | ${false}
+  `("should return $expected when scope is $scope", ({ scope, expected }: TestTable) => {
+    expect(hasNonEmptyAccountScope(scope)).toBe(expected);
+  });
+});
+```
+
+#### `src/lib/better-auth/__tests__/session-cookie/has-session-cookie.test.ts`
+
+`next/headers` のみモックし、`better-auth/cookies` の `getSessionCookie` は実物を使う（`__Secure-` 接頭辞の解決を含めた実挙動を検証するため）。`@/lib/better-auth/auth` はモックしない（session-cookie.ts が auth.ts に依存していない事の担保。依存していれば import 時に throw してテストが失敗する）。
+
+```typescript
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { hasSessionCookie } from "@/lib/better-auth/session-cookie";
+
+const mockHeaders = vi.fn();
+
+vi.mock("next/headers", () => ({
+  headers: () => Promise.resolve(mockHeaders()),
+}));
+
+describe("src/lib/better-auth/session-cookie.ts hasSessionCookie TestCases", () => {
+  interface TestTable {
+    readonly cookieHeader: string;
+    readonly expected: boolean;
+  }
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it.each`
+    cookieHeader                                     | expected
+    ${"better-auth.session_token=abc123"}            | ${true}
+    ${"__Secure-better-auth.session_token=abc123"}   | ${true}
+    ${"other=value; better-auth.session_token=abc"}  | ${true}
+    ${"other=value"}                                 | ${false}
+  `(
+    "should return $expected when cookie header is $cookieHeader",
+    async ({ cookieHeader, expected }: TestTable) => {
+      mockHeaders.mockReturnValue(new Headers({ cookie: cookieHeader }));
+
+      expect(await hasSessionCookie()).toBe(expected);
+    }
+  );
+
+  it("should return false when cookie header does not exist", async () => {
+    mockHeaders.mockReturnValue(new Headers());
+
+    expect(await hasSessionCookie()).toBe(false);
+  });
+});
+```
+
+### 6.8 proxy のテスト
+
+#### `src/__tests__/proxy/proxy.test.ts`
+
+`/ja` 正規化リダイレクトの応答にリクエストヘッダー（`cookie` / `authorization`）が写り込まない事（Phase 8-2 の修正の検証）を担保する。Vercel Edge Config に依存する `isBanCountry` / `isInMaintenance` はモックする。
+
+```typescript
+import { NextRequest } from "next/server";
+import { describe, expect, it, vi } from "vitest";
+import { proxy } from "@/proxy";
+
+vi.mock("@/lib/vercel/edge-functions/country", () => ({
+  isBanCountry: () => Promise.resolve(false),
+}));
+
+vi.mock("@/lib/vercel/edge-functions/maintenance", () => ({
+  isInMaintenance: () => Promise.resolve(false),
+}));
+
+describe("src/proxy.ts proxy TestCases", () => {
+  it("should not reflect cookie and authorization headers in redirect response when ja path is normalized", async () => {
+    const request = new NextRequest("http://localhost:2222/ja/upload", {
+      headers: {
+        authorization: "Bearer dummy-token",
+        cookie: "better-auth.session_token=dummy-session-token",
+      },
+    });
+
+    const response = await proxy(request);
+
+    expect(response.status).toBe(302);
+    expect(response.headers.get("location")).toBe(
+      "http://localhost:2222/upload"
+    );
+    expect(response.headers.get("cookie")).toBeNull();
+    expect(response.headers.get("authorization")).toBeNull();
+  });
+
+  it("should not reflect cookie header in redirect response when /ja is normalized to home", async () => {
+    const request = new NextRequest("http://localhost:2222/ja", {
+      headers: {
+        cookie: "better-auth.session_token=dummy-session-token",
+      },
+    });
+
+    const response = await proxy(request);
+
+    expect(response.status).toBe(302);
+    expect(response.headers.get("location")).toBe("http://localhost:2222/");
+    expect(response.headers.get("cookie")).toBeNull();
+  });
+});
+```
 
 ## 7. 品質管理の手順
 
@@ -2416,28 +2933,31 @@ LogoutContent のテストと同じ構造で `LoginContent` を検証する（`l
 3. `http://localhost:2222/my-cats` → `/` へリダイレクト
 4. `http://localhost:2222/logout` → `/` へリダイレクト
 5. en 変種（`/en/favorites` `/en/my-cats` `/en/logout`）→ `/en` へリダイレクト
-6. `http://localhost:2222/ja/login` → `/login` へ 302（proxy の `/ja` 正規化が効いている事）
+6. `http://localhost:2222/ja/login` → `/login` へ 302（proxy の `/ja` 正規化が効いている事）。併せて chrome-devtools のネットワーク記録で、この 302 応答のヘッダーに `cookie` が含まれていない事を確認する（Phase 8-2 の修正の実地確認）
 
 ### 8.2 ログインフロー
 
 1. Header のログインボタンをクリック → `/login` に遷移し「GitHubへリダイレクトしています…」表示の後、GitHub の authorize 画面へ遷移する事を確認
 2. **GitHub の authorize URL の `scope` パラメータが空（または `scope` パラメータ自体が無い）事を確認する**（プライバシー要件の実地検証。chrome-devtools MCP のネットワーク記録、または authorize 画面表示中のアドレスバーの URL で `github.com/login/oauth/authorize` のクエリ文字列を確認する）
 3. authorize 画面で許可 → `http://localhost:2222/`（Home）に戻り、Header がログイン済み表示（GitHub アイコンのドロップダウンメニュー）に切り替わる事を確認
-4. DB の匿名化を確認する。ローカル開発用 Turso DB に対して以下を実行し、`email` が `gh-<数字>@no-email.lgtmeow.invalid` 形式、`name` が GitHub username、`image` がアバター URL である事を確認する:
+4. DB の匿名化を確認する。**値そのものは SELECT せず、期待値 0 の COUNT クエリで検査する**（まさに匿名化・暗号化が失敗しているケースでこの確認が行われるため、値を出力すると実 email や有効な token が端末・エージェントのログに残ってしまう。`name` / `image` は公開情報だが、マッピング失敗時に実名が入り得るため同様に直接出力しない）:
 
 ```bash
-turso db shell <ローカル開発用DB名> "SELECT email, name, image, email_verified FROM user;"
+# 匿名化パターン外の email を持つ user 行数（期待値 0）
+turso db shell <ローカル開発用DB名> "SELECT COUNT(*) AS non_anonymized_users FROM user WHERE email NOT LIKE 'gh-%@no-email.lgtmeow.invalid';"
 ```
 
-実 email・実名がどのカラムにも入っていない事を必ず確認する。
-
-5. access token が暗号化されて保存されている事を確認する:
+5. access token が暗号化されて保存されている事と、scope が空である事を確認する（期待値はいずれも 0）:
 
 ```bash
-turso db shell <ローカル開発用DB名> "SELECT access_token FROM account;"
+# GitHub の平文 token 形式（gho_ / ghu_ / ghp_）のまま保存されている行数（期待値 0）
+turso db shell <ローカル開発用DB名> "SELECT COUNT(*) AS plaintext_tokens FROM account WHERE provider_id = 'github' AND (access_token LIKE 'gho_%' OR access_token LIKE 'ghu_%' OR access_token LIKE 'ghp_%');"
+
+# 非空 scope が保存されている行数（scope 固定化の検証。期待値 0）
+turso db shell <ローカル開発用DB名> "SELECT COUNT(*) AS non_empty_scopes FROM account WHERE provider_id = 'github' AND scope IS NOT NULL AND TRIM(scope) != '';"
 ```
 
-`access_token` の値が GitHub の平文 token 形式（`gho_` 等で始まる文字列）ではない事を確認する。
+> カラム名は `src/lib/better-auth/schema.ts` の定義（`provider_id` / `access_token` / `scope`）に一致させている。COUNT が 0 でない場合も値の SELECT はせず、実装（`mapProfileToUser` / `encryptOAuthTokens` / scope フック）を修正して再ログインからやり直す事。
 
 ### 8.3 ログイン済み状態の確認
 
@@ -2450,13 +2970,19 @@ turso db shell <ローカル開発用DB名> "SELECT access_token FROM account;"
 
 1. Header メニューから「ログアウト」→ `/logout` に遷移し「ログアウトしています…」表示の後、`/` へリダイレクトされる事
 2. Header が未ログイン表示（ログインボタン）に戻る事
-3. DB で session テーブルの行が削除されている事を確認:
+3. `/favorites` へアクセスし、Home へリダイレクトされる事
+
+> **ログアウト成功の主たる確認は 2 と 3（Cookie 削除の帰結）である。** DB の session 行削除は best effort（F13）のため、ログアウト成功の必須条件として扱わない。
+
+4. （補助確認・任意）ログアウトしたユーザーの session 行が残っていない事を、対象ユーザーに絞った COUNT で確認する。session テーブル全体の COUNT は別ブラウザや他ユーザーの行が混ざり判定にならないため使わない:
 
 ```bash
-turso db shell <ローカル開発用DB名> "SELECT COUNT(*) FROM session;"
+turso db shell <ローカル開発用DB名> "SELECT COUNT(*) AS remaining_sessions FROM session WHERE user_id = (SELECT id FROM user WHERE email = 'gh-<GitHub User ID>@no-email.lgtmeow.invalid');"
 ```
 
-4. en フローの確認: `http://localhost:2222/en/login` へアクセスしてログイン → **`/en`（英語版 Home）に戻る事**を確認（`callbackURL` の言語対応の検証）。その後 `/en/logout` でログアウトし `/en` に戻る事を確認
+期待値 0。ただし同一ユーザーが別ブラウザ等でログインしたままの場合は 0 にならない事があり、その場合も 2 と 3 が確認できていればログアウトは成功である。
+
+5. en フローの確認: `http://localhost:2222/en/login` へアクセスしてログイン → **`/en`（英語版 Home）に戻る事**を確認（`callbackURL` の言語対応の検証）。その後 `/en/logout` でログアウトし `/en` に戻る事を確認
 
 ### 8.5 エラーフロー
 
@@ -2480,7 +3006,63 @@ turso db shell <ローカル開発用DB名> "SELECT COUNT(*) FROM session;"
 
 Done 定義の「ログイン → Header 表示切替 → ログアウト → 未ログインリダイレクト」を 8.2 → 8.3 → 8.4 → 8.1(2) の順で通しで実施し、スクリーンショットを取得して PR に添付する。
 
-## 9. Done 定義との対応表
+### 8.8 scope 固定化の確認
+
+auth.ts のフック（§5 Phase 3-2）が実際に効いている事を HTTP レベルで確認する。
+
+1. `/link-social` が無効化されている事（`disabledPaths`。期待値: HTTP 404）:
+
+```bash
+curl -i -X POST http://localhost:2222/api/auth/link-social \
+  -H "Content-Type: application/json" \
+  -H "Origin: http://localhost:2222" \
+  -d '{"provider":"github","callbackURL":"/"}'
+```
+
+2. `/sign-in/social` への非空 `scopes` が拒否される事（`hooks.before`。期待値: HTTP 400）:
+
+```bash
+curl -i -X POST http://localhost:2222/api/auth/sign-in/social \
+  -H "Content-Type: application/json" \
+  -H "Origin: http://localhost:2222" \
+  -d '{"provider":"github","scopes":["user:email"]}'
+```
+
+3. `scopes` 無しの正規リクエストは従来どおり成功する事（degradation が無い事。期待値: HTTP 200 + `url` に GitHub の authorize URL）:
+
+```bash
+curl -i -X POST http://localhost:2222/api/auth/sign-in/social \
+  -H "Content-Type: application/json" \
+  -H "Origin: http://localhost:2222" \
+  -d '{"provider":"github","callbackURL":"/"}'
+```
+
+4. ログアウト → 再ログイン（§8.2 → §8.4 → §8.2）を行った後も、§8.2(5) の `non_empty_scopes` COUNT が 0 のままである事（正常系で scope が空のまま維持される事の確認）
+
+次に、**拒否経路そのもの**を実 OAuth フローで検証する（フックの配線・throw・保存阻止・ロールバックが壊れていても §6.7 の純粋関数テストだけでは検出できないため）。手順は create 経路（新規ユーザー）→ update 経路（既存ユーザー）の順で行う。
+
+5. **create 経路の拒否とロールバックの確認（`databaseHooks.account.create.before` + `transaction: true`）:**
+   1. 対象 GitHub アカウントの行を削除して未登録状態にする（`account` → `session` → `user` の順に、`account_id = '<GitHub User ID>'` / それに紐づく `user_id` で絞って DELETE）。事前に件数を控える:
+
+      ```bash
+      turso db shell <ローカル開発用DB名> "SELECT (SELECT COUNT(*) FROM user) AS users, (SELECT COUNT(*) FROM account) AS accounts, (SELECT COUNT(*) FROM session) AS sessions;"
+      ```
+
+   2. **GitHub 側の grant を取り消す**: <https://github.com/settings/applications> の Authorized OAuth Apps から LGTMeow (local) を Revoke する。**手順 4 までの通常ログインで grant が残っており、grant がある間は GitHub が認可画面を表示せず自動完了する（F32）ため、Revoke しないと次の手順で URL を書き換える機会そのものが訪れない**
+   3. `/login` から OAuth を開始し、GitHub の authorize 画面が表示されたら、アドレスバーの URL に必ず含まれる**空の `scope=` パラメータの値を `scope=user%3Aemail` に置き換えて**開き直してから「Authorize」する（better-auth は scope 空でも `scope=` パラメータ自体は URL に含めるため、末尾への追加ではなく置換で行う。二重に `scope` パラメータを付けない）
+   4. `/login?error=...` に戻り、エラーメッセージと再試行ボタンが表示される事
+   5. 手順 1 の COUNT を再実行し、**3 テーブルとも件数が増えていない事**（user 行のロールバック = F41 の `transaction: true` の検証。ここで user だけ増えている場合は原子化が効いていないので実装を見直す事）
+   6. **手順 2 と同様に再度 Revoke する**（手順 3 の改変認可で `user:email` 付きの grant が新たに残っており、これがあると以降の scope 無指定ログインが「許可済み scope の集合」で自動補完され（F32）、フックに拒否され続けて手順 6-1 の通常ログインが成立しないため）
+
+6. **update 経路の拒否の確認（`databaseHooks.account.update.before` + `body.code` の redirect 変換）:**
+   1. 通常ログイン（§8.2）→ ログアウト（§8.4）を実施し、対象アカウントが登録済みの状態にする（手順 5-6 の Revoke 済みが前提。認可画面が表示されず即座にエラーへ戻る場合は grant が残っているので Revoke からやり直す）
+   2. **GitHub 側の grant を再度 Revoke する**（手順 6-1 の通常ログインで空 scope の grant が再作成されており、Revoke しないと認可画面が表示されず URL を書き換えられない。F32。Revoke してもローカル DB の account 行は残るため、次の手順は既存アカウントの update 経路を通る）
+   3. 手順 5-3 と同様に authorize URL の空の `scope=` を `scope=user%3Aemail` に置き換えて再ログインを試みる
+   4. HTTP 400 の白画面では**なく**、言語対応の `/login?error=...`（再試行画面）へ戻る事（F42 の `code: "OAUTH_SCOPE_NOT_ALLOWED"` による redirect 変換の検証）
+   5. §8.2(5) の `non_empty_scopes` COUNT が 0 のままである事
+   6. GitHub 側の grant をもう一度 Revoke した後、通常ログイン（scope 改変なし）が成功する事（検証後のクリーンアップを兼ねる）
+
+> GitHub の grant はアプリ側の拒否や DB ロールバックでは消えず、ユーザー（ここでは検証者）が Revoke するまで GitHub 側に残り続ける（F32）。この状態は authorize URL を意図的に改変しない限り発生しないため、一般ユーザー向けの案内 UI は作らない（開発責任者の判断で確定）。
 
 | Done 定義（Issue #480 PR2 分） | 本計画の対応箇所 |
 | --- | --- |
@@ -2498,10 +3080,22 @@ Done 定義の「ログイン → Header 表示切替 → ログアウト → �
 | `disableDefaultScope: true` でデフォルトスコープを要求しない | §5 Phase 3-2 / §8.2(2) |
 | `mapProfileToUser` の匿名化をテストで担保 | §6.1 |
 | `/logout`（ja/en）で sign out + 言語対応 Home へリダイレクト（想定外の失敗時はクライアント状態でエラー表示 + 再試行） | §5 Phase 7-6, 7-7, 7-10, 7-11 / §8.4, 8.5, 8.6 |
-| お気に入り / My Cats / ログアウトの未ログイン時 Home リダイレクト（Server Component 側で判定） | §5 Phase 7-1, 7-10, 7-12 / §8.1 |
+| お気に入り / My Cats / ログアウトの未ログイン時 Home リダイレクト（Server Component 側で判定。favorites / my-cats はセッション照会、/logout は Cookie 有無のみで判定） | §5 Phase 7-1, 7-2b, 7-10, 7-12 / §8.1 |
 | `/logout` の href ハードコード解消（`logout` を定数・型・メタタグへ追加） | §5 Phase 2, 5-4, 5-5 |
 | `better-auth` / `@better-auth/drizzle-adapter` を `1.6.23` へ更新 | §5 Phase 1-1 |
 | `.env.example` にプレースホルダ追記 | §5 Phase 1-2 |
+
+### 9.1 計画レビュー指摘由来の追加対応
+
+Issue の Done 定義には含まれないが、計画レビュー（Codex）の指摘を受けて本 PR のスコープに含める対応。
+
+| 追加対応 | 本計画の対応箇所 |
+| --- | --- |
+| `/logout` ガードの DB 非依存化（Turso 障害時でも Cookie 削除でログアウト可能） | §3.5 / §5 Phase 3-3b, 7-2b / §6.3 |
+| OAuth scope 固定化（`/link-social` 無効化・非空 `scopes` 拒否・`account.scope` の create/update 保存前検証・`transaction: true` による user 作成の原子化・`code` 付き throw による再試行画面への redirect） | §3.2 / §5 Phase 3-1b, 3-2 / §6.7 / §8.8（拒否経路の実フロー検証を含む） |
+| `?error=` 時の OAuth 自動開始抑止のテスト | §6.5 |
+| 動作確認 SQL の秘匿値非出力化（期待値 0 の COUNT 検査へ変更） | §8.2(4)(5) / §8.4(4) |
+| proxy の `/ja` 正規化リダイレクト応答へのリクエストヘッダー横流し修正（セッショントークンの応答への写り込み防止） | §5 Phase 8-2, 8-3 / §6.8 / §8.1(6) |
 
 ## 10. 禁止事項・注意点
 
@@ -2513,8 +3107,10 @@ Done 定義の「ログイン → Header 表示切替 → ログアウト → �
 6. **`VERCEL_URL` への fallback を実装しない**（Issue の決定事項。staging 以外の Preview は「閲覧可・ログイン不可」が仕様）
 7. **`session.cookieCache` を導入しない**（負荷が問題になった時点で再検討）
 8. **`SessionHeader` を Storybook から到達するモジュール（`src/components/` の他コンポーネント、`src/features/` 配下）から import しない。** stories も作らない
-9. **`"use cache"` が付いた関数・コンポーネントの内側に `SessionHeader` / `RequireLogin` / `getCachedSession` を置かない**（F21）
+9. **`"use cache"` が付いた関数・コンポーネントの内側に `SessionHeader` / `RequireLogin` / `RequireSessionCookie` / `getCachedSession` / `hasSessionCookie` を置かない**（F21。いずれも実行時 API の `headers()` に依存する）
 10. **`redirect()` を try ブロックの中で呼ばない**（F22。本計画のローカル関数パターンを崩さない）
-11. JWT プラグインは本 Issue では扱わない（backend 連携の別 Issue で対応）
-12. 依頼内容と関係のないリファクタリングを混入させない
+11. **`/logout` のガードに DB 照会を持ち込まない。** `RequireSessionCookie`（Cookie 有無のみ）を `RequireLogin`（`getSession()` = Turso 照会）へ置き換えてはならない（§3.5）
+12. **scope 固定化のフックを緩めない。** `disabledPaths` から `/link-social` を外したり、`hooks.before` / `databaseHooks.account` の scope 検証を削除・迂回したりしない。databaseHooks の before で `false` を返す実装に変えない（黙ってスキップされフローが継続してしまう。F39）。throw する `APIError` から `code` を外さない（redirect 変換されず HTTP 400 になる。F42）。`drizzleAdapter` の `transaction: true` を外さない（scope 拒否時に孤立 user が残る。F41）
+13. JWT プラグインは本 Issue では扱わない（backend 連携の別 Issue で対応）
+14. 依頼内容と関係のないリファクタリングを混入させない
 13. 認証系エンドポイントのレート制限は本 PR のスコープ外とする（<https://github.com/nekochans/lgtm-cat-frontend/issues/490> で別途対応）
