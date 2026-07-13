@@ -9,10 +9,10 @@
 Better Auth の GitHub Social Provider を有効化し、以下を実装する。
 
 1. `/login`（ja/en）にアクセスすると GitHub OAuth フローが自動開始される（ボタン押下不要）
-2. `/logout`（ja/en）にアクセスすると sign out 処理が実行され、言語対応の Home へリダイレクトされる
+2. `/logout`（ja/en）にアクセスすると sign out 処理が実行され、言語対応の Home へリダイレクトされる（想定外の失敗時はクライアント状態でエラーメッセージ + 再試行ボタンを表示する）
 3. お気に入り（`/favorites`）・My Cats（`/my-cats`）・ログアウト（`/logout`）をアクセス制御ページ化する（未ログイン時は言語対応の Home へリダイレクト）
 4. Header のログイン状態表示を `auth.api.getSession()` の結果に基づいて切り替える（`hideLoginButton` と `isLoggedIn` ハードコードの撤去）
-5. GitHub の実 email を一切取得・保存しない（匿名化メールアドレス `gh-<GitHub User ID>@no-email.lgtmeow.invalid` を `user.email` に格納）
+5. GitHub の email scope を要求せず、実 email を DB に永続化しない（匿名化メールアドレス `gh-<GitHub User ID>@no-email.lgtmeow.invalid` を `user.email` に格納。OAuth コールバック処理中に GitHub の公開 email がメモリ上を一時的に通過し得る事は許容する）
 6. `logout` を URL 定数・型・メタタグに追加し、Header の `/logout` ハードコードを解消する
 7. `src/proxy.ts` の matcher に認証系 12 パスを追加する（proxy ではセッション判定を行わない）
 
@@ -38,17 +38,19 @@ Better Auth の GitHub Social Provider を有効化し、以下を実装する�
 | F5 | GitHub プロバイダのデフォルトスコープは `["read:user", "user:email"]`。`disableDefaultScope: true` で空になる。`options.scope` はデフォルトへの**追記**であり、`scope: []` ではデフォルトを除去できない | `@better-auth/core/dist/social-providers/github.mjs` 14-16 行目 |
 | F6 | `mapProfileToUser` の戻り値はデフォルトのユーザーマッピング（`id`/`name`/`email`/`image`/`emailVerified`）の**後にスプレッド**されるため、`email` 等を確実に上書きできる | 同上 75-84 行目 |
 | F7 | `GithubProfile` 型の `id` は `string` と宣言されているが、GitHub API `/user` の実レスポンスでは数値。テンプレートリテラル `` `gh-${profile.id}` `` で使う分には型・実行時とも問題ない | `@better-auth/core/dist/social-providers/github.d.mts` / GitHub REST API 仕様 |
-| F8 | OAuth の state は DB 構成時 `storeStateStrategy: "database"` がデフォルト。verification テーブルへの保存に**加えて署名付き state Cookie** が発行され、コールバック時に `skipStateCookieCheck`（デフォルト false）でない限り Cookie の一致検証が行われる。**state Cookie がブラウザに保存されないと `state_security_mismatch` でログインが失敗する** | `better-auth/dist/state.mjs` 47-58, 103-109 行目 / `better-auth/dist/context/create-context.mjs` 133-134 行目 |
+| F8 | OAuth の state は DB 構成時 `storeStateStrategy: "database"` がデフォルト。verification テーブルへの保存に**加えて署名付き state Cookie** が発行され、コールバック時に `skipStateCookieCheck`（デフォルト false）でない限り Cookie の一致検証が行われる。**state Cookie がブラウザに保存されないと `state_security_mismatch` でログインが失敗する**。なお 1.6.23 ではデフォルト決定の実装が `hasServerSessionStore(options)`（`!!options.database \|\| !!options.secondaryStorage`）ベースの `isStateful` に変わったが、database 構成での結果は同じ `"database"` である | `better-auth/dist/state.mjs` 47-58, 103-109 行目 / `better-auth/dist/context/create-context.mjs` 133-134 行目（1.6.9）/ 1.6.23 npm tarball の `dist/context/create-context.mjs` 47, 136 行目・`dist/context/store-capabilities.mjs` |
 | F9 | したがって Server Action から `auth.api.signInSocial()` を呼ぶ場合、レスポンスの `Set-Cookie`（state Cookie）を Next.js の Cookie ストアへ反映する `nextCookies` プラグインが**必須**。sign out の Cookie 削除も同様 | `better-auth/dist/integrations/next-js.mjs`（`nextCookies` の after フックが `Set-Cookie` を `cookies()` に反映） |
 | F10 | `auth.api.signInSocial()` は body に `provider` / `callbackURL` / `errorCallbackURL` / `newUserCallbackURL` / `disableRedirect` 等を受け取り、`idToken` 無しの場合 `{ url: string, redirect: boolean }` を返す | `better-auth/dist/api/routes/sign-in.mjs` 39-150 行目 |
-| F11 | OAuth コールバックはエラー時に `errorCallbackURL`（未指定時は `baseURL + "/error"`）へ `?error=<コード>`（+ `error_description`）を付与してリダイレクトする。ユーザーが GitHub 側で拒否した場合は `access_denied`、email が取得できない場合は `email_not_found` 等 | `better-auth/dist/api/routes/callback.mjs`（`redirectOnError` 関数） |
+| F11 | OAuth コールバックのエラーは 2 系統ある。(1) state を復元できた後のエラー（ユーザー拒否 `access_denied`・`email_not_found`・**state の期限切れ**（verification 行の取得・解析後に `expiresAt` を検査するため、復元済みの `errorURL` が StateError に引き継がれる）等）はフロー固有の `errorCallbackURL` へ、(2) state を復元できないエラー（state パラメータ欠落・verification 行の欠落や再利用・callback リクエストの schema 不正等）は `onAPIError.errorURL`（未設定時は `baseURL + "/error"` = Better Auth 組み込みエラーページ）へ、いずれも `?error=<コード>`（+ `error_description`）を付与してリダイレクトされる | 1.6.23 npm tarball の `dist/api/routes/callback.mjs` 32, 45-56 行目 / `dist/oauth2/state.mjs` 33-46 行目 / `dist/state.mjs` StateError クラス・126-129 行目（期限切れ StateError への `errorURL` 引き継ぎ）/ `dist/oauth2/errors.mjs`（`redirectOnError`）/ `@better-auth/core/dist/types/init-options.d.mts` 1246-1268 行目 |
 | F12 | コールバック成功時はセッション Cookie を設定して `callbackURL` へリダイレクトする。`userInfo.email` が null だと `email_not_found` エラーになるため、email 匿名化（F6）は必須 | 同上 137-175 行目 |
-| F13 | `auth.api.signOut()` は `requireHeaders: true`（`headers` の受け渡しが必須）。セッション Cookie が有れば DB のセッション行を削除し、無くても throw せず Cookie 削除のみ行い `{ success: true }` を返す | `better-auth/dist/api/routes/sign-out.mjs` |
+| F13 | `auth.api.signOut()` は `requireHeaders: true`（`headers` の受け渡しが必須）。セッション Cookie が有れば DB のセッション行削除を**試みる**が、削除時の例外は内部で捕捉されログ出力のみ（**DB 行削除は best effort**）。その後 Cookie を削除し常に `{ success: true }` を返す。セッション Cookie が無い場合も throw しない。つまり DB 障害でも通常は throw せず、throw し得るのは想定外の異常時のみ | `better-auth/dist/api/routes/sign-out.mjs` 21-27 行目（1.6.9 / 1.6.23 で同一実装。1.6.23 は npm tarball で確認） |
 | F14 | `auth.api.getSession()` も `requireHeaders: true`。セッション Cookie が無い場合は **DB へ問い合わせず** null を返す（匿名訪問者は Turso 負荷ゼロ） | `better-auth/dist/api/routes/session.mjs` 16 行目以降 |
 | F15 | `toNextJsHandler(auth)` は `GET`/`POST` 等のハンドラを返す。公式ドキュメントの推奨は `api/auth/[...all]/route.ts` に `export const { GET, POST } = toNextJsHandler(auth)` | `better-auth/dist/integrations/next-js.mjs` / <https://www.better-auth.com/docs/integrations/next> |
 | F16 | `nextCookies()` は「plugins 配列の最後に置く」ことが公式ドキュメントで指定されている | <https://www.better-auth.com/docs/integrations/next> |
 | F17 | email を返さないプロバイダに対し `mapProfileToUser` でプレースホルダー email を合成するのは公式の案内された手法（「Synthesized emails are placeholders, not contact addresses」） | <https://www.better-auth.com/docs/concepts/oauth> |
-| F18 | GitHub provider ドキュメントの「You MUST include the user:email scope」は email をプロバイダから取得する前提の注意書き。本設計は email 取得自体を廃止し匿名化値で置き換えるため該当しない | <https://www.better-auth.com/docs/authentication/github> + F5/F6/F12 の組み合わせ |
+| F18 | GitHub provider ドキュメントの「You MUST include the user:email scope」は email をプロバイダから取得する前提の注意書き。本設計は email scope を要求せず匿名化値で置き換えるため該当しない | <https://www.better-auth.com/docs/authentication/github> + F5/F6/F12 の組み合わせ |
+| F33 | GitHub provider の `getUserInfo` は `/user` 取得後、scope の有無に関わらず `/user/emails` も呼ぶ（scope 無しでは失敗し、email の補完は行われない）。また `/user` 応答の `email` にはユーザーが公開設定した email が入り得る。したがって「実 email を一切取得しない」はコード上保証できず、保証できるのは **DB へ永続化しない事**（F6 の上書き）である | `@better-auth/core/dist/social-providers/github.mjs` 62-75 行目 |
+| F34 | OAuth callback で取得した access token は `account.access_token` に保存される。`account.encryptOAuthTokens` はデフォルト false（平文保存）で、true を設定すると `symmetricEncrypt` により暗号化して保存される。スキーマ変更は不要 | `better-auth/dist/oauth2/utils.mjs` 12, 22 行目 / `@better-auth/core/dist/types/init-options.d.mts` 965 行目 |
 
 ### 2.3 Next.js 16.2.6 の仕様（インストール済みパッケージ同梱ドキュメントで確認）
 
@@ -59,6 +61,7 @@ Better Auth の GitHub Social Provider を有効化し、以下を実装する�
 | F21 | `"use cache"` が付いた関数・コンポーネントの**内側**では `headers()` / `cookies()` を直接呼べない。「page ファイル内で import してネストしたコンポーネントは page のキャッシュ出力の一部になる」ため、`"use cache"` なページコンポーネントの内側にセッション参照コンポーネントを置くことはできない。children として**外から**渡す分はキャッシュを通過（pass-through）できる | `01-app/03-api-reference/01-directives/use-cache.md` 154-178, 196, 328 行目 |
 | F22 | `redirect()` は Server Action / Server Component で使用可能。`NEXT_REDIRECT` を throw するため **try ブロックの外**で呼ぶ。絶対 URL（外部 URL）も渡せる | `01-app/03-api-reference/04-functions/redirect.md` 50-55 行目 |
 | F23 | `cacheComponents` 有効時のクライアントナビゲーションでは React `<Activity>` により route が hidden になり、復帰時に **effect が再実行される**。マウント時 1 回だけ実行したい処理には ref ガードが必要 | `01-app/03-api-reference/05-config/01-next-config-js/cacheComponents.md` 32-46 行目 |
+| F35 | `redirect()` は内部エラー（`NEXT_REDIRECT`）の throw で実装されており、アプリの try/catch で捕捉してはならない。捕捉し得る箇所では `unstable_rethrow`（next/navigation）で再送出する（対象として redirect / notFound / permanentRedirect が明記されている）。クライアントから Server Action を呼んだ場合、**成功時の redirect() も Action Promise の `NEXT_REDIRECT` rejection として観測される** | `01-app/03-api-reference/04-functions/unstable_rethrow.md` / 計画レビュー Round 3（Codex による Next.js 16.2.6 の挙動検証） |
 
 ### 2.4 リポジトリの現状（実ファイルで確認）
 
@@ -83,12 +86,15 @@ Better Auth の GitHub Social Provider を有効化し、以下を実装する�
 - `src/lib/better-auth/auth.ts` に `nextCookies` プラグインを追加する。F8/F9 の通り、これが無いと OAuth の state Cookie / セッション Cookie の設定・削除がブラウザに反映されず**ログイン自体が成立しない**
 - Server Action は `src/AGENTS.md` の型分離パターンに従い、`src/actions/auth/` 配下に配置する（型は `types/` サブディレクトリ、コンポーネントは型のみに依存し、実体は page.tsx から props で注入）
 
-### 3.2 プライバシー設計: 実 email を取得・保存しない
+### 3.2 プライバシー設計: email scope を要求せず、実 email を DB に永続化しない
+
+本設計が保証するのは「email scope を要求しない事」と「実 email を DB に永続化しない事」の 2 点である。better-auth の `getUserInfo` は `/user/emails` を無条件に呼び（scope 無しでは失敗する）、`/user` 応答の公開 email がメモリ上を一時的に通過し得るため、「一切取得しない」はコード上保証できない（F33）。
 
 - `disableDefaultScope: true` でデフォルトスコープ（`read:user`, `user:email`）を外す（F5）
-- `mapProfileToUser` で `user.email` を `gh-<GitHub User ID>@no-email.lgtmeow.invalid` に置換する（F6）。スコープ無しでも公開プロフィールに public email を設定しているユーザーは `profile.email` に実 email が入り得るため、この上書きは必須
+- `mapProfileToUser` で `user.email` を `gh-<GitHub User ID>@no-email.lgtmeow.invalid` に置換する（F6）。スコープ無しでも公開プロフィールに public email を設定しているユーザーは `profile.email` に実 email が入り得るため、この上書きは必須（これが「DB へ永続化しない」の実体である）
 - 変換ロジックは純粋関数 `mapGithubProfileToUser` として `src/features/auth/functions/` に切り出し、テストで匿名化値の格納を担保する
-- 保存される情報: GitHub User ID（`account.accountId`）、GitHub username（`user.name`）、アバター URL（`user.image`）、匿名化 email（`user.email`）。実名・実 email は保存しない
+- OAuth の access token は `account.access_token` に保存される。scope が空のため権限は公開情報の読み取り相当だが、平文保存を避けるため `account: { encryptOAuthTokens: true }` を設定して暗号化保存する（F34。スキーマ変更は不要）
+- 保存される情報: GitHub User ID（`account.accountId`）、GitHub username（`user.name`）、アバター URL（`user.image`）、匿名化 email（`user.email`）、暗号化された access token（`account.access_token`）。実名・実 email は保存しない
 - `.invalid` TLD は RFC 6761 で予約済みのため誤送信事故が起きない
 
 ### 3.3 セッション取得はリクエスト単位でキャッシュする
@@ -113,6 +119,7 @@ src/app/**/page.tsx（Storybook から参照されない、auth.ts に依存し�
 - `PageLayout` の props を `currentUrlPath` / `isLoggedIn` から `header: ReactNode`（必須）に変更する。必須にすることで、対応漏れのページが TypeScript エラーとして検出される
 - fallback は未ログイン Header（ログインボタン付き）。ログイン済みユーザーには初回描画の一瞬だけログインボタンが見えてから実体に置き換わるが、静的シェルを維持するための意図した挙動である
 - `"use cache"` なページコンポーネント（docs-mcp / docs-github-app）の**内側**に `SessionHeader` は置けない（F21）ため、これらはページコンポーネントから `"use cache"` を外し、キャッシュはデータ読み込み関数側に付け替える（§5 Phase 6-3）
+- Issue の当初案は「Header のユーザー領域のみを async Server Component 化し、"use client" の Header へ slot として渡す」であったが、モバイル Header の Drawer メニューがクライアント状態のコールバックとログイン状態の両方に依存するため、本計画では Header 全体を Suspense で包み boolean を渡す方式へ意図的に設計変更した。経緯は Issue #480 にコメントで記録済み: <https://github.com/nekochans/lgtm-cat-frontend/issues/480#issuecomment-4955939864>
 
 ### 3.5 アクセス制御: Server Component のガードコンポーネント
 
@@ -128,6 +135,7 @@ src/app/**/page.tsx（Storybook から参照されない、auth.ts に依存し�
 - 自動起動には ref ガードを入れる。React StrictMode の開発時二重実行と、`cacheComponents` の Activity 復帰による effect 再実行（F23）の両方への対策
 - `?error=` クエリが付いている場合は自動開始を**抑止**し、エラーメッセージと再試行ボタンを表示する（自動開始のままだと「失敗 → /login に戻る → また自動開始」の無限ループになるため）。エラーコードの値は画面に表示せず、言語別の固定メッセージのみを表示する
 - `signinAction` は `callbackURL` に言語対応 Home（`/` または `/en`）、`errorCallbackURL` に言語対応 `/login` の**相対パス**を渡す（相対パスは trustedOrigins 検証を常に通過する）
+- `errorCallbackURL` が使われるのは state を復元できた後のエラーのみ（F11。**state の期限切れも通常はここに含まれ、言語対応の `/login` へ戻る**）。state を復元できないコールバック失敗（state パラメータ欠落・verification 行の欠落や再利用・schema 不正等）は `onAPIError.errorURL` へ送られるため、auth.ts で `onAPIError: { errorURL: `${betterAuthUrl}/login` }` を設定し、これらも `/login?error=...` の再試行画面へ収束させる。この経路では元の言語情報が失われているため ja 版 `/login` への遷移となる（意図した割り切り。稀な異常系であり、再試行ボタンから再ログインできる）
 - メタデータに `robots: { index: false, follow: false }` を設定する
 
 ### 3.7 `/logout` ページ: 同じ自動実行パターン
@@ -136,7 +144,9 @@ src/app/**/page.tsx（Storybook から参照されない、auth.ts に依存し�
 - ログイン済みなら「ログアウトしています…」表示のクライアントコンポーネント `LogoutContent` を描画し、`useEffect` で `logoutAction` を自動起動する（ref ガード付き）
 - Server Component からは Cookie を書き換えられない Next.js の制約があるため page.tsx 内で直接 signOut する実装は不可。GET の Route Handler 方式はプリフェッチで意図せずログアウトする危険があるため採用しない
 - この設計により、Header の `/logout` リンクが Next.js の `<Link>` プリフェッチで事前描画されても安全である（`/logout` ページの Server Component 描画には副作用が無く、実際の sign out はクライアントの effect が `logoutAction` を呼んだ時にのみ実行される）。`/login` の自動開始も同じ理由でプリフェッチ安全（effect はプリフェッチでは実行されない）
-- `auth.api.signOut()` はセッションが無くても throw しない（F13）ため、`logoutAction` はエラー分岐を持たず常に Home へ `redirect()` する
+- `auth.api.signOut()` は DB のセッション行削除を best effort で行い（削除失敗は better-auth 内部で捕捉されログ出力のみ）、Cookie を削除して常に success を返す（F13）。ログアウトの一次保証は **Cookie 削除**であり、DB に残った session 行は `expiresAt` で失効する。したがって「DB 行削除の失敗」でログアウト失敗画面に遷移することはない
+- `logoutAction` は try-catch を持たない。成功時は言語対応の Home へ `redirect()` し、想定外の例外（F13 の通り通常は発生しない）はそのまま呼び出し元のクライアントへ伝播させる
+- `LogoutContent` は `logoutAction` の rejection をクライアント側で catch し、クライアント状態（`useState`）で言語別の固定エラーメッセージと再試行ボタンを表示する。**成功時の redirect() も Action Promise の `NEXT_REDIRECT` rejection として観測される（F35）ため、catch の先頭で `unstable_rethrow` を呼んで内部エラーを transition へ再送出し、実際の失敗だけをエラー表示に落とす**。URL 遷移やサーバー再描画を伴わないため、障害が継続していても `RequireLogin`（セッションの DB 再照会）を経由せずエラー表示できる。エラー内容の値は画面に表示しない
 
 ### 3.8 命名・配置の整理
 
@@ -151,7 +161,7 @@ src/app/**/page.tsx（Storybook から参照されない、auth.ts に依存し�
 
 ## 4. 変更ファイル一覧
 
-### 新規（28 ファイル）
+### 新規（30 ファイル）
 
 | # | パス | 内容 |
 | --- | --- | --- |
@@ -177,6 +187,8 @@ src/app/**/page.tsx（Storybook から参照されない、auth.ts に依存し�
 | N20 | `src/features/auth/components/logout-page.tsx` | /logout のページコンポーネント |
 | N21 | `src/features/auth/components/logout-page.stories.tsx` | stories（モック action 注入） |
 | N22 | `src/lib/better-auth/session.ts` | `getCachedSession`（React cache） |
+| N29 | `src/features/auth/components/__tests__/login-content/login-content.test.tsx` | `LoginContent` のテスト（redirect rejection の区別） |
+| N30 | `src/features/auth/components/__tests__/logout-content/logout-content.test.tsx` | `LogoutContent` のテスト（redirect rejection の区別） |
 
 さらに App Router のファイル:
 
@@ -193,7 +205,7 @@ src/app/**/page.tsx（Storybook から参照されない、auth.ts に依存し�
 
 | # | パス | 内容 |
 | --- | --- | --- |
-| M1 | `package.json` | `better-auth` / `@better-auth/drizzle-adapter` を `1.6.23` へ |
+| M1 | `package.json` / `package-lock.json` | `better-auth` / `@better-auth/drizzle-adapter` を `1.6.23` へ（lock ファイルは `npm install` が自動更新するため必ず一緒にコミットする） |
 | M2 | `.env.example` | `GITHUB_CLIENT_ID=` / `GITHUB_CLIENT_SECRET=` を追記 |
 | M3 | `src/types/url.ts` | `AppPathName` に `logout` 追加 |
 | M4 | `src/constants/url.ts` | `appPathList` / `i18nUrlList` に `logout` 追加 |
@@ -201,7 +213,7 @@ src/app/**/page.tsx（Storybook から参照されない、auth.ts に依存し�
 | M6 | `src/lib/config/app-base-url.ts` | `appUrlList` に `logout` 追加 |
 | M7 | `src/functions/__tests__/url/create-include-language-app-path.test.ts` | `login` / `logout` のケース追加 |
 | M8 | `src/functions/__tests__/meta-tag/meta-tag-list.test.ts` | `logout` タイトル検証追加 |
-| M9 | `src/lib/better-auth/auth.ts` | GitHub プロバイダ + `nextCookies` 追加 |
+| M9 | `src/lib/better-auth/auth.ts` | GitHub プロバイダ + `nextCookies` + `account.encryptOAuthTokens` + `onAPIError.errorURL` 追加 |
 | M10 | `src/components/page-layout.tsx` | `header: ReactNode` 必須 props 化 |
 | M11 | `src/components/header.tsx` | `hideLoginButton` 撤去 |
 | M12 | `src/components/header-desktop.tsx` | `hideLoginButton` 撤去 + `/logout` を関数化 |
@@ -235,8 +247,9 @@ npm install --save-exact better-auth@1.6.23 @better-auth/drizzle-adapter@1.6.23
 実行後、以下を確認する。
 
 1. `package.json` の両エントリが `"1.6.23"`（`^` 無し）になっている事
-2. `npm run test` が全パスする事
-3. §2.2 の根拠となる実装が更新後も変わっていない事（本計画は 1.6.9 のソースで検証したため、念のため再確認する）:
+2. `package-lock.json` 内の `better-auth` / `@better-auth/drizzle-adapter` も `1.6.23` に更新されている事（`npm ls better-auth @better-auth/drizzle-adapter` で確認）。lock ファイルは必ず `package.json` と一緒にコミットする（漏れると `npm ci` が失敗する）
+3. `npm run test` が全パスする事
+4. §2.2 の根拠となる実装が更新後も変わっていない事（本計画は 1.6.9 のソースで検証したため、念のため再確認する）:
 
 ```bash
 # デフォルトスコープと mapProfileToUser のスプレッド位置（F5 / F6）
@@ -245,7 +258,7 @@ grep -n "disableDefaultScope\|userMap" node_modules/@better-auth/core/dist/socia
 grep -n "storeStateStrategy\|skipStateCookieCheck" node_modules/better-auth/dist/context/create-context.mjs
 ```
 
-出力が §2.2 の記載（デフォルトスコープの三項演算子、`...userMap` が末尾スプレッド、`storeStateStrategy: options.account?.storeStateStrategy || (options.database ? "database" : "cookie")`）と食い違う場合は実装を進めず、差分を調査して本計画を修正する事。
+出力が §2.2 の記載（デフォルトスコープの三項演算子、`...userMap` が末尾スプレッド、`storeStateStrategy: options.account?.storeStateStrategy || (isStateful ? "database" : "cookie")`。`isStateful` は `hasServerSessionStore(options)` = `!!options.database || !!options.secondaryStorage` であり、本構成は database 指定のため結果は `"database"`）と食い違う場合は実装を進めず、差分を調査して本計画を修正する事。
 
 #### 1-2. `.env.example` に追記
 
@@ -367,7 +380,7 @@ function logoutPageTitle(language: Language): string {
  * GitHub OAuth プロフィールから Better Auth の user レコードへ保存する値への変換。
  *
  * プライバシー設計（Issue #480）:
- * - 実 email は取得・保存しない。user.email は NOT NULL + UNIQUE 制約があるため、
+ * - 実 email は DB に永続化しない。user.email は NOT NULL + UNIQUE 制約があるため、
  *   GitHub User ID から導出した匿名化メールアドレスで埋める。
  * - `.invalid` TLD は RFC 6761 で予約済みであり、どの SMTP も配送できない。
  * - name には GitHub username（公開情報）、image にはアバター URL（公開情報）を保存する。
@@ -438,6 +451,17 @@ export const auth = betterAuth({
   }),
   secret: betterAuthSecret,
   baseURL: betterAuthUrl,
+  // OAuth の access token を account.access_token へ平文のまま保存しないための設定。
+  // scope 空でも token 自体は発行されるため暗号化して保存する（F34。スキーマ変更不要）。
+  account: {
+    encryptOAuthTokens: true,
+  },
+  // state を復元できない OAuth コールバック失敗（state 欠落・verification 行欠落等）の
+  // 遷移先（F11）。未設定だと Better Auth 組み込みのエラーページ（/api/auth/error）に
+  // 飛ぶため、/login の再試行画面へ収束させる。この経路では言語が分からないため ja 版。
+  onAPIError: {
+    errorURL: `${betterAuthUrl}/login`,
+  },
   socialProviders: {
     github: {
       clientId: githubClientId,
@@ -514,7 +538,8 @@ import type { Language } from "@/types/language";
 /**
  * サインアウトを実行する Server Action の型。
  *
- * 実行後は言語対応の Home へ redirect() するため、正常終了で resolve することはない。
+ * 成功時は言語対応の Home へ redirect() する（正常終了で resolve することはない）。
+ * 想定外の失敗時は例外がそのまま呼び出し元（クライアント）へ伝播する。
  */
 export type LogoutAction = (language: Language) => Promise<void>;
 ```
@@ -593,26 +618,19 @@ import { auth } from "@/lib/better-auth/auth";
 import type { Language } from "@/types/language";
 
 /**
- * auth.api.signOut はセッション行の削除とセッション Cookie の削除を行う。
- * セッションが既に無い場合も throw せず成功する（better-auth 1.6 系の仕様）。
- * 万一の APIError でもユーザーを Home へ戻すため、失敗は握り潰す。
- * redirect() は throw で制御されるため try ブロックの外で呼ぶ。
+ * auth.api.signOut はセッション行の削除（best effort。削除失敗は better-auth 内部で
+ * 捕捉されログ出力のみ）とセッション Cookie の削除を行い、常に success を返す（F13）。
+ * したがってここで throw が起きるのは想定外の異常時のみ。その場合は catch せず
+ * 呼び出し元（LogoutContent）へ伝播させ、クライアント側でエラー表示する。
  */
-const trySignOut = async (): Promise<void> => {
-  const requestHeaders = await headers();
-
-  try {
-    await auth.api.signOut({ headers: requestHeaders });
-  } catch {
-    // 何もしない（Cookie が残っていても再度 /logout で削除を試みられる）
-  }
-};
-
 export const logoutAction: LogoutAction = async (
   language: Language
 ): Promise<void> => {
   const safeLanguage = isLanguage(language) ? language : "ja";
-  await trySignOut();
+  const requestHeaders = await headers();
+
+  await auth.api.signOut({ headers: requestHeaders });
+
   redirect(createIncludeLanguageAppPath("home", safeLanguage));
 };
 ```
@@ -842,7 +860,7 @@ export function HeaderDesktop({
 
 #### 5-6. `src/features/errors/components/error-layout.tsx`（変更）
 
-`Header` から `hideLoginButton={true}` と TODO コメントを削除する（`isLoggedIn={false}` は維持）。エラー系ページ・メンテナンスページの Header は静的な未ログイン表示のままとする（error.tsx は "use client" でありセッション取得不可。ログインボタンは表示されるようになるが、/login が実装されるため正しい導線である）。
+`Header` から `hideLoginButton={true}` と TODO コメントを削除する（`isLoggedIn={false}` は維持）。エラー系ページ・メンテナンスページの Header は静的な未ログイン表示のままとする（error.tsx は "use client" でありセッション取得不可。ログインボタンは表示されるようになるが、/login が実装されるため正しい導線である）。なお「エラー系・メンテナンスページではログイン済みユーザーにも未ログイン Header が表示される」挙動は、計画レビューで合意済みの意図した制限である（not-found / maintenance をセッション連動させる対応は本 PR のスコープ外とする）。
 
 ```typescript
       <Header
@@ -1258,7 +1276,9 @@ export function loginPageTexts(language: Language): LoginPageTexts {
 }
 
 interface LogoutPageTexts {
+  readonly failedMessage: string;
   readonly loggingOutMessage: string;
+  readonly retryButtonText: string;
 }
 
 export function logoutPageTexts(language: Language): LogoutPageTexts {
@@ -1266,10 +1286,15 @@ export function logoutPageTexts(language: Language): LogoutPageTexts {
     case "ja":
       return {
         loggingOutMessage: "ログアウトしています…",
+        failedMessage:
+          "ログアウトに失敗しました。時間をおいて再度お試しください。",
+        retryButtonText: "再試行",
       };
     case "en":
       return {
         loggingOutMessage: "Signing out…",
+        failedMessage: "Sign out failed. Please try again later.",
+        retryButtonText: "Retry",
       };
     default:
       return assertNever(language);
@@ -1282,7 +1307,15 @@ export function logoutPageTexts(language: Language): LogoutPageTexts {
 ```typescript
 "use client";
 
-import { type JSX, useEffect, useRef, useTransition } from "react";
+import { unstable_rethrow } from "next/navigation";
+import {
+  type JSX,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import type { SigninAction } from "@/actions/auth/types/signin-action";
 import { IconButton } from "@/components/icon-button";
 import { loginPageTexts } from "@/features/auth/functions/auth-i18n";
@@ -1303,17 +1336,34 @@ export function LoginContent({
   // React StrictMode（開発時）の二重実行と、cacheComponents の Activity 復帰による
   // effect 再実行で OAuth フローが多重起動しないようにガードする
   const hasStartedRef = useRef(false);
-  const [isRetrying, startRetryTransition] = useTransition();
+  // Server Action の呼び出し自体が失敗した場合（ネットワーク断等）のクライアント状態。
+  // OAuth コールバック起点の失敗（?error= クエリ）とは別系統。
+  const [hasClientError, setHasClientError] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
+  // 成功時（GitHub への redirect()）も Action Promise は NEXT_REDIRECT で reject される
+  // （F35）。unstable_rethrow で内部エラーを transition へ再送出し、Next.js のルーターに
+  // 遷移として処理させる。catch に残るのは Server Action 呼び出し自体の失敗のみ。
+  const startSignin = useCallback(() => {
+    startTransition(async () => {
+      try {
+        await signinAction(language);
+      } catch (error) {
+        unstable_rethrow(error);
+        setHasClientError(true);
+      }
+    });
+  }, [language, signinAction]);
 
   useEffect(() => {
     if (hasError || hasStartedRef.current) {
       return;
     }
     hasStartedRef.current = true;
-    void signinAction(language);
-  }, [hasError, language, signinAction]);
+    startSignin();
+  }, [hasError, startSignin]);
 
-  if (hasError) {
+  if (hasError || hasClientError) {
     return (
       <div className="flex w-full flex-col items-center gap-7 px-7 py-10 md:py-[60px]">
         <p className="text-center text-base text-orange-900 md:text-xl">
@@ -1321,12 +1371,8 @@ export function LoginContent({
         </p>
         <IconButton
           displayText={texts.retryButtonText}
-          isLoading={isRetrying}
-          onPress={() => {
-            startRetryTransition(async () => {
-              await signinAction(language);
-            });
-          }}
+          isLoading={isPending}
+          onPress={startSignin}
           showGithubIcon={true}
         />
       </div>
@@ -1346,7 +1392,7 @@ export function LoginContent({
 }
 ```
 
-> `?error=` の具体的な値（`access_denied` / `signin_failed` 等）は画面に表示しない。再試行ボタンは連打防止のため `useTransition` の pending 状態で `isLoading` にする。
+> `?error=` の具体的な値（`access_denied` / `signin_failed` 等）は画面に表示しない。再試行ボタンは連打防止のため `useTransition` の pending 状態で `isLoading` にする。成功時も Action Promise が `NEXT_REDIRECT` で reject される（F35）ため、自動開始・再試行とも transition 内で `unstable_rethrow` を通す（旧設計の `void signinAction(language)` は成功のたびに未処理の rejection を発生させるため不可）。Server Action の呼び出し自体が失敗した場合のみ `hasClientError` でエラー表示に切り替える。
 
 #### 7-5. `src/features/auth/components/login-page.tsx`（新規）
 
@@ -1403,8 +1449,17 @@ export function LoginPage({
 ```typescript
 "use client";
 
-import { type JSX, useEffect, useRef } from "react";
+import { unstable_rethrow } from "next/navigation";
+import {
+  type JSX,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import type { LogoutAction } from "@/actions/auth/types/logout-action";
+import { IconButton } from "@/components/icon-button";
 import { logoutPageTexts } from "@/features/auth/functions/auth-i18n";
 import type { Language } from "@/types/language";
 
@@ -1418,14 +1473,47 @@ export function LogoutContent({ language, logoutAction }: Props): JSX.Element {
   // React StrictMode（開発時）の二重実行と、cacheComponents の Activity 復帰による
   // effect 再実行でログアウト処理が多重起動しないようにガードする
   const hasStartedRef = useRef(false);
+  // 想定外の signOut 失敗はクライアント状態で保持する。URL 遷移を伴わないため、
+  // エラー表示に RequireLogin（セッションの DB 再照会）を経由しない（§3.7）。
+  const [hasError, setHasError] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
+  // 成功時の redirect() も Action Promise は NEXT_REDIRECT で reject される（F35）。
+  // unstable_rethrow で内部エラーを transition へ再送出し、Next.js のルーターに
+  // 遷移として処理させる。catch に残るのは実際の失敗のみ。
+  const runLogout = useCallback(() => {
+    startTransition(async () => {
+      try {
+        await logoutAction(language);
+      } catch (error) {
+        unstable_rethrow(error);
+        setHasError(true);
+      }
+    });
+  }, [language, logoutAction]);
 
   useEffect(() => {
     if (hasStartedRef.current) {
       return;
     }
     hasStartedRef.current = true;
-    void logoutAction(language);
-  }, [language, logoutAction]);
+    runLogout();
+  }, [runLogout]);
+
+  if (hasError) {
+    return (
+      <div className="flex w-full flex-col items-center gap-7 px-7 py-10 md:py-[60px]">
+        <p className="text-center text-base text-orange-900 md:text-xl">
+          {texts.failedMessage}
+        </p>
+        <IconButton
+          displayText={texts.retryButtonText}
+          isLoading={isPending}
+          onPress={runLogout}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="flex w-full flex-col items-center gap-7 px-7 py-10 md:py-[60px]">
@@ -1439,6 +1527,8 @@ export function LogoutContent({ language, logoutAction }: Props): JSX.Element {
   );
 }
 ```
+
+> 成功時の redirect() も Action Promise が `NEXT_REDIRECT` で reject される（F35）。catch の先頭の `unstable_rethrow` が内部エラーを transition へ再送出し、Next.js のルーターが遷移として処理するため、`setHasError(true)` に到達するのは実際の失敗のみ。再試行ボタンは連打防止のため `useTransition` の pending 状態で `isLoading` にする。再試行が再度失敗した場合もエラー表示が維持される。エラー内容の値は画面に表示しない。redirect rejection と通常の rejection の区別は §6.5 のテストで担保する。
 
 #### 7-7. `src/features/auth/components/logout-page.tsx`（新規）
 
@@ -1739,6 +1829,14 @@ const mockLogoutAction = async (): Promise<void> => {
   await Promise.resolve();
 };
 
+/**
+ * エラー表示 Story 用のモック。自動実行時の catch に入り、
+ * エラーメッセージと再試行ボタンが表示される。
+ */
+const mockFailingLogoutAction = async (): Promise<void> => {
+  await Promise.reject(new Error("mock sign out failure"));
+};
+
 const meta = {
   component: LogoutPage,
   title: "features/auth/LogoutPage",
@@ -1765,9 +1863,25 @@ export const English: Story = {
     logoutAction: mockLogoutAction,
   },
 };
+
+export const ErrorJapanese: Story = {
+  args: {
+    language: "ja",
+    logoutAction: mockFailingLogoutAction,
+  },
+};
+
+export const ErrorEnglish: Story = {
+  args: {
+    language: "en",
+    logoutAction: mockFailingLogoutAction,
+  },
+};
 ```
 
-#### 7-14. テスト（§6.3 / §6.4 参照）を作成し `npm run test` で全パスを確認
+> **未確認事項**: `LoginContent` / `LogoutContent` は next/navigation の `unstable_rethrow` を import する。@storybook/nextjs-vite は next/navigation のモックを提供するが、`unstable_rethrow` がそのモックに含まれるかは実装時に Storybook を起動して確認する事。含まれない場合は Storybook 側のモック設定で補う。
+
+#### 7-14. テスト（§6.3 / §6.4 / §6.5 参照）を作成し `npm run test` で全パスを確認
 
 ### Phase 8: proxy の matcher 追加
 
@@ -2020,12 +2134,12 @@ describe("src/actions/auth/logout-action.ts logoutAction TestCases", () => {
     expect(mockRedirect).toHaveBeenCalledWith("/en");
   });
 
-  it("should redirect to home even when signOut throws", async () => {
-    mockSignOut.mockRejectedValue(new Error("session not found"));
+  it("should propagate error to caller when signOut throws unexpectedly", async () => {
+    mockSignOut.mockRejectedValue(new Error("unexpected failure"));
 
-    await expect(logoutAction("ja")).rejects.toThrow("NEXT_REDIRECT");
+    await expect(logoutAction("ja")).rejects.toThrow("unexpected failure");
 
-    expect(mockRedirect).toHaveBeenCalledWith("/");
+    expect(mockRedirect).not.toHaveBeenCalled();
   });
 });
 ```
@@ -2139,9 +2253,146 @@ describe("src/features/auth/functions/auth-i18n.ts loginPageTexts TestCases", ()
 
 #### `src/features/auth/functions/__tests__/auth-i18n/logout-page-texts.test.ts`
 
-同じ構造で `logoutPageTexts` の ja / en を検証する（`loggingOutMessage` のみ）。
+同じ構造で `logoutPageTexts` の ja / en を検証する（`loggingOutMessage` / `failedMessage` / `retryButtonText` の 3 つ）。
 
-### 6.5 既存テストの更新
+### 6.5 LoginContent / LogoutContent のテスト（redirect rejection の区別）
+
+F35 の通り、成功時の redirect() も Action Promise の `NEXT_REDIRECT` rejection として観測されるため、「redirect による rejection ではエラー表示しない / 実際の失敗では表示する」の区別をテストで担保する。既存のコンポーネントテスト（`upload-success.test.tsx` 等）と同じく `@testing-library/react` を使う。
+
+#### `src/features/auth/components/__tests__/logout-content/logout-content.test.tsx`
+
+```typescript
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { Component, type ReactNode } from "react";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { LogoutContent } from "@/features/auth/components/logout-content";
+
+// unstable_rethrow の契約（Next.js 内部エラーのみ再送出する）を再現するモック。
+// NEXT_REDIRECT は digest が "NEXT_REDIRECT" で始まる Error として表現される。
+vi.mock("next/navigation", () => ({
+  unstable_rethrow: (error: unknown) => {
+    if (
+      error instanceof Error &&
+      "digest" in error &&
+      typeof error.digest === "string" &&
+      error.digest.startsWith("NEXT_REDIRECT")
+    ) {
+      throw error;
+    }
+  },
+}));
+
+interface RedirectBoundaryProps {
+  readonly children: ReactNode;
+}
+
+interface RedirectBoundaryState {
+  readonly caughtRedirect: boolean;
+}
+
+/**
+ * 再送出された NEXT_REDIRECT を受け止める境界。
+ * 実環境では Next.js のルーターが遷移として処理する部分の代役。
+ */
+class RedirectBoundary extends Component<
+  RedirectBoundaryProps,
+  RedirectBoundaryState
+> {
+  state: RedirectBoundaryState = { caughtRedirect: false };
+
+  static getDerivedStateFromError(): RedirectBoundaryState {
+    return { caughtRedirect: true };
+  }
+
+  render() {
+    if (this.state.caughtRedirect) {
+      return <p>redirected</p>;
+    }
+    return this.props.children;
+  }
+}
+
+const createRedirectError = (): Error =>
+  Object.assign(new Error("NEXT_REDIRECT"), {
+    digest: "NEXT_REDIRECT;push;/;307;",
+  });
+
+describe("src/features/auth/components/logout-content.tsx LogoutContent TestCases", () => {
+  afterEach(() => {
+    cleanup();
+  });
+
+  it("should not show error message when logoutAction rejects with NEXT_REDIRECT", async () => {
+    const redirectingLogoutAction = vi
+      .fn()
+      .mockRejectedValue(createRedirectError());
+
+    render(
+      <RedirectBoundary>
+        <LogoutContent language="ja" logoutAction={redirectingLogoutAction} />
+      </RedirectBoundary>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText("redirected")).toBeInTheDocument();
+    });
+    expect(
+      screen.queryByText(
+        "ログアウトに失敗しました。時間をおいて再度お試しください。"
+      )
+    ).not.toBeInTheDocument();
+  });
+
+  it("should show error message and retry button when logoutAction rejects with an unexpected error", async () => {
+    const failingLogoutAction = vi
+      .fn()
+      .mockRejectedValue(new Error("unexpected failure"));
+
+    render(
+      <RedirectBoundary>
+        <LogoutContent language="ja" logoutAction={failingLogoutAction} />
+      </RedirectBoundary>
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(
+          "ログアウトに失敗しました。時間をおいて再度お試しください。"
+        )
+      ).toBeInTheDocument();
+    });
+    expect(screen.getByRole("button", { name: "再試行" })).toBeInTheDocument();
+  });
+
+  it("should call logoutAction again when retry button is pressed", async () => {
+    const failingLogoutAction = vi
+      .fn()
+      .mockRejectedValue(new Error("unexpected failure"));
+
+    render(
+      <RedirectBoundary>
+        <LogoutContent language="ja" logoutAction={failingLogoutAction} />
+      </RedirectBoundary>
+    );
+
+    const retryButton = await screen.findByRole("button", {
+      name: "再試行",
+    });
+    await userEvent.click(retryButton);
+
+    await waitFor(() => {
+      expect(failingLogoutAction).toHaveBeenCalledTimes(2);
+    });
+  });
+});
+```
+
+#### `src/features/auth/components/__tests__/login-content/login-content.test.tsx`
+
+LogoutContent のテストと同じ構造で `LoginContent` を検証する（`logoutAction` → `signinAction` に読み替え、props に `hasError: false` を追加で渡す）。NEXT_REDIRECT rejection ではエラーメッセージが表示されない事、通常の rejection では表示される事（`hasClientError` 経由）、再試行ボタンで `signinAction` が再実行される事の 3 ケースを作成する。
+
+### 6.6 既存テストの更新
 
 §5 Phase 2 の 2-5 に記載済み（`create-include-language-app-path.test.ts` / `meta-tag-list.test.ts`）。
 
@@ -2180,6 +2431,14 @@ turso db shell <ローカル開発用DB名> "SELECT email, name, image, email_ve
 
 実 email・実名がどのカラムにも入っていない事を必ず確認する。
 
+5. access token が暗号化されて保存されている事を確認する:
+
+```bash
+turso db shell <ローカル開発用DB名> "SELECT access_token FROM account;"
+```
+
+`access_token` の値が GitHub の平文 token 形式（`gho_` 等で始まる文字列）ではない事を確認する。
+
 ### 8.3 ログイン済み状態の確認
 
 1. Header メニューから「お気に入り」→ `/favorites` が Coming Soon 表示で開ける事（リダイレクトされない事）
@@ -2204,13 +2463,15 @@ turso db shell <ローカル開発用DB名> "SELECT COUNT(*) FROM session;"
 1. `http://localhost:2222/login?error=access_denied` へ直接アクセス → OAuth が自動開始**されず**、エラーメッセージと再試行ボタンが表示される事
 2. 再試行ボタンをクリック → GitHub authorize 画面へ遷移する事
 3. （可能なら）GitHub authorize 画面で「Cancel」を選択 → `/login?error=access_denied` に戻り、無限ループにならない事
+4. ログアウト失敗時の表示（エラーメッセージ + 再試行ボタン）は、ローカルで DB 障害等を再現できないため Storybook の `ErrorJapanese` / `ErrorEnglish` Story で確認する（§8.6）
+5. `http://localhost:2222/api/auth/callback/github?state=invalid` へ直接アクセス → `/login?error=...` にリダイレクトされ、エラーメッセージと再試行ボタンが表示される事（state を復元できない失敗が `onAPIError.errorURL` により /login へ収束する事の確認）
 
 ### 8.6 Storybook
 
 `npm run storybook`（port 6006）で以下を確認する。
 
 1. `features/auth/LoginPage` の Japanese / English / ErrorJapanese / ErrorEnglish
-2. `features/auth/LogoutPage` の Japanese / English
+2. `features/auth/LogoutPage` の Japanese / English / ErrorJapanese / ErrorEnglish（Error 系は失敗する logoutAction モックによりエラーメッセージ + 再試行ボタンが表示される事）
 3. `Header` 系の未ログイン / ログイン済み Stories（`HiddenLoginButton*` が消えている事）
 4. `features/favorites/FavoritesPage` / `features/my-cats/MyCatsPage` がログイン済み Header 付きで表示される事
 5. HomePage / UploadPage / docs 系の既存 Stories が壊れていない事
@@ -2226,8 +2487,8 @@ Done 定義の「ログイン → Header 表示切替 → ログアウト → �
 | Better Auth の GitHub Social Provider が有効化 | §5 Phase 3-2 |
 | `/api/auth/*` エンドポイントが正常動作 | §5 Phase 3-4 / §8.2 |
 | `/login`（ja/en）で OAuth 自動開始（ボタン押下不要） | §5 Phase 7-4〜7-9 / §8.2 |
-| OAuth 失敗時 `/login?error=...` で自動開始抑止 + 再試行 | §5 Phase 7-4 / §8.5 |
-| Header のログイン状態表示が `getSession()` 連動（`hideLoginButton` / `isLoggedIn` ハードコード撤去） | §5 Phase 5, 6 / §8.1, 8.3 |
+| OAuth 失敗時 `/login?error=...` で自動開始抑止 + 再試行（state を復元できない失敗も `onAPIError.errorURL` で /login へ収束） | §3.6 / §5 Phase 3-2, 7-4 / §8.5 |
+| Header のログイン状態表示が `getSession()` 連動（`hideLoginButton` / `isLoggedIn` ハードコード撤去。ErrorLayout のみ未ログイン固定表示とする合意済みの例外あり、§5 Phase 5-6 参照） | §5 Phase 5, 6 / §8.1, 8.3 |
 | proxy matcher に認証系パス追加（セッション判定はしない） | §5 Phase 8 |
 | Storybook でログイン済み・未ログイン両状態 | §5 Phase 5-7, 6-4, 7-13 / §8.6 |
 | テストコードが用意されている | §6 |
@@ -2236,7 +2497,7 @@ Done 定義の「ログイン → Header 表示切替 → ログアウト → �
 | `user.email` に匿名化値（`gh-<id>@no-email.lgtmeow.invalid`） | 同上 |
 | `disableDefaultScope: true` でデフォルトスコープを要求しない | §5 Phase 3-2 / §8.2(2) |
 | `mapProfileToUser` の匿名化をテストで担保 | §6.1 |
-| `/logout`（ja/en）で sign out + 言語対応 Home へリダイレクト | §5 Phase 7-6, 7-7, 7-10, 7-11 / §8.4 |
+| `/logout`（ja/en）で sign out + 言語対応 Home へリダイレクト（想定外の失敗時はクライアント状態でエラー表示 + 再試行） | §5 Phase 7-6, 7-7, 7-10, 7-11 / §8.4, 8.5, 8.6 |
 | お気に入り / My Cats / ログアウトの未ログイン時 Home リダイレクト（Server Component 側で判定） | §5 Phase 7-1, 7-10, 7-12 / §8.1 |
 | `/logout` の href ハードコード解消（`logout` を定数・型・メタタグへ追加） | §5 Phase 2, 5-4, 5-5 |
 | `better-auth` / `@better-auth/drizzle-adapter` を `1.6.23` へ更新 | §5 Phase 1-1 |
@@ -2256,3 +2517,4 @@ Done 定義の「ログイン → Header 表示切替 → ログアウト → �
 10. **`redirect()` を try ブロックの中で呼ばない**（F22。本計画のローカル関数パターンを崩さない）
 11. JWT プラグインは本 Issue では扱わない（backend 連携の別 Issue で対応）
 12. 依頼内容と関係のないリファクタリングを混入させない
+13. 認証系エンドポイントのレート制限は本 PR のスコープ外とする（<https://github.com/nekochans/lgtm-cat-frontend/issues/490> で別途対応）
