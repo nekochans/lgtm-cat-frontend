@@ -28,12 +28,14 @@ interface Props {
   readonly currentUrlPath: IncludeLanguageAppPath;
   readonly isLoggedIn: boolean;
   readonly language: Language;
+  readonly loginReturnTo?: IncludeLanguageAppPath;
 }
 
 export function HeaderDesktop({
   language,
   currentUrlPath,
   isLoggedIn,
+  loginReturnTo,
 }: Props): JSX.Element {
   const githubApp = createGitHubAppLinksFromLanguages(language);
   const howToUse = createHowToUseLinksFromLanguages(language);
@@ -187,7 +189,10 @@ export function HeaderDesktop({
                 </Dropdown.Popover>
               </Dropdown>
             ) : (
-              <LoginButton language={language} />
+              <LoginButton
+                currentUrlPath={loginReturnTo ?? currentUrlPath}
+                language={language}
+              />
             )}
           </div>
         </div>

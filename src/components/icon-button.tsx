@@ -2,7 +2,7 @@
 import { Button, type ButtonProps } from "@heroui/react";
 import Link from "next/link";
 import type { ComponentProps, JSX } from "react";
-import type { IncludeLanguageAppPath } from "@/types/url";
+import type { IncludeLanguageAppHref } from "@/types/url";
 import { GithubIcon } from "./icons/github-icon";
 
 function RepeatIcon() {
@@ -71,7 +71,7 @@ type Props = Omit<ComponentProps<"button">, "onClick"> & {
   readonly isPressed?: boolean;
   readonly isLoading?: boolean;
   readonly className?: string;
-  readonly link?: IncludeLanguageAppPath;
+  readonly link?: IncludeLanguageAppHref;
   readonly onPress?: ButtonProps["onPress"];
 };
 

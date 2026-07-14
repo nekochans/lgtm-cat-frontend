@@ -58,6 +58,32 @@ describe("src/actions/auth/login-action.ts loginAction TestCases", () => {
     );
   });
 
+  it("should use Japanese return path for callback and error callback", async () => {
+    await expect(loginAction("ja", "/upload")).rejects.toThrow("NEXT_REDIRECT");
+
+    expect(mockSignInSocial).toHaveBeenCalledWith({
+      body: {
+        provider: "github",
+        callbackURL: "/upload",
+        errorCallbackURL: "/login?returnTo=%2Fupload",
+      },
+    });
+  });
+
+  it("should use English return path for callback and error callback", async () => {
+    await expect(loginAction("en", "/en/upload")).rejects.toThrow(
+      "NEXT_REDIRECT"
+    );
+
+    expect(mockSignInSocial).toHaveBeenCalledWith({
+      body: {
+        provider: "github",
+        callbackURL: "/en/upload",
+        errorCallbackURL: "/en/login?returnTo=%2Fen%2Fupload",
+      },
+    });
+  });
+
   it("should redirect to login page with error query when signInSocial throws", async () => {
     mockSignInSocial.mockRejectedValue(new Error("network error"));
 
@@ -74,12 +100,63 @@ describe("src/actions/auth/login-action.ts loginAction TestCases", () => {
     expect(mockRedirect).toHaveBeenCalledWith("/en/login?error=signin_failed");
   });
 
+  it("should retain return path when signInSocial throws", async () => {
+    mockSignInSocial.mockRejectedValue(new Error("network error"));
+
+    await expect(loginAction("en", "/en/upload")).rejects.toThrow(
+      "NEXT_REDIRECT"
+    );
+
+    expect(mockRedirect).toHaveBeenCalledWith(
+      "/en/login?returnTo=%2Fen%2Fupload&error=signin_failed"
+    );
+  });
+
   it("should redirect to login page with error query when signInSocial returns no url", async () => {
     mockSignInSocial.mockResolvedValue({ redirect: false, url: undefined });
 
     await expect(loginAction("ja")).rejects.toThrow("NEXT_REDIRECT");
 
     expect(mockRedirect).toHaveBeenCalledWith("/login?error=signin_failed");
+  });
+
+  it("should retain return path when signInSocial returns no url", async () => {
+    mockSignInSocial.mockResolvedValue({ redirect: false, url: undefined });
+
+    await expect(loginAction("ja", "/upload")).rejects.toThrow("NEXT_REDIRECT");
+
+    expect(mockRedirect).toHaveBeenCalledWith(
+      "/login?returnTo=%2Fupload&error=signin_failed"
+    );
+  });
+
+  it("should fall back to English home when return path is external", async () => {
+    await expect(
+      loginAction(
+        "en",
+        "https://evil.example" as unknown as Parameters<typeof loginAction>[1]
+      )
+    ).rejects.toThrow("NEXT_REDIRECT");
+
+    expect(mockSignInSocial).toHaveBeenCalledWith({
+      body: {
+        provider: "github",
+        callbackURL: "/en",
+        errorCallbackURL: "/en/login",
+      },
+    });
+  });
+
+  it("should fall back to English home when return path language does not match", async () => {
+    await expect(loginAction("en", "/upload")).rejects.toThrow("NEXT_REDIRECT");
+
+    expect(mockSignInSocial).toHaveBeenCalledWith({
+      body: {
+        provider: "github",
+        callbackURL: "/en",
+        errorCallbackURL: "/en/login",
+      },
+    });
   });
 
   it("should fall back to Japanese when language is invalid at runtime", async () => {

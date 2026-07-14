@@ -10,12 +10,14 @@ interface Props {
   readonly currentUrlPath: IncludeLanguageAppPath;
   readonly isLoggedIn: boolean;
   readonly language: Language;
+  readonly loginReturnTo?: IncludeLanguageAppPath;
 }
 
 export function Header({
   language,
   currentUrlPath,
   isLoggedIn,
+  loginReturnTo,
 }: Props): JSX.Element {
   return (
     <>
@@ -25,6 +27,7 @@ export function Header({
           currentUrlPath={currentUrlPath}
           isLoggedIn={isLoggedIn}
           language={language}
+          loginReturnTo={loginReturnTo}
         />
       </div>
       {/* デスクトップ: md以上で表示 */}
@@ -33,6 +36,7 @@ export function Header({
           currentUrlPath={currentUrlPath}
           isLoggedIn={isLoggedIn}
           language={language}
+          loginReturnTo={loginReturnTo}
         />
       </div>
     </>

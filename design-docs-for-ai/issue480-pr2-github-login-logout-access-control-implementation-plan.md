@@ -8,7 +8,7 @@
 
 Better Auth の GitHub Social Provider を有効化し、以下を実装する。
 
-1. `/login`（ja/en）にアクセスすると GitHub OAuth フローが自動開始される（ボタン押下不要）
+1. `/login`（ja/en）にアクセスすると GitHub OAuth フローが自動開始される（ボタン押下不要）。Header から遷移した場合は `returnTo` で元のページを引き継ぎ、ログイン成功後に戻る
 2. `/logout`（ja/en）にアクセスすると sign out 処理が実行され、言語対応の Home へリダイレクトされる（想定外の失敗時はクライアント状態でエラーメッセージ + 再試行ボタンを表示する）
 3. お気に入り（`/favorites`）・My Cats（`/my-cats`）・ログアウト（`/logout`）をアクセス制御ページ化する（未ログイン時は言語対応の Home へリダイレクト）。`/favorites`・`/my-cats` はセッション照会（DB）で判定し、`/logout` は DB 障害時でもログアウトできるようセッション Cookie の有無のみで判定する
 4. Header のログイン状態表示を `auth.api.getSession()` の結果に基づいて切り替える（`hideLoginButton` と `isLoggedIn` ハードコードの撤去）
@@ -59,6 +59,7 @@ Better Auth の GitHub Social Provider を有効化し、以下を実装する�
 | F40 | `createAuthMiddleware` / `APIError` は `better-auth/api` から export されている。`hooks.before` は全エンドポイントの処理前に実行され、`auth.api.*` 経由のサーバー側呼び出しにも適用される | `better-auth/dist/api/index.mjs` 26, 216 行目 / `better-auth/dist/api/to-auth-endpoints.mjs` 73-93, 190-230 行目 |
 | F41 | `createOAuthUser`（初回 OAuth の user + account 作成）は `runWithTransaction` でラップされているが、drizzle adapter の `transaction` オプションは**デフォルト false** のため、既定では user 作成後に account 作成が失敗しても user 行はロールバックされない（孤立 user が残る）。`drizzleAdapter(db, { transaction: true })` を設定すると `db.transaction()` で実行され原子化される | `better-auth/dist/db/internal-adapter.mjs`（`createOAuthUser` の `runWithTransaction`。1.6.9 / 1.6.23 とも）/ `@better-auth/drizzle-adapter` `dist/index.mjs`（1.6.9: 442 行目、1.6.23: 578 行目の `config.transaction ?? false`） |
 | F42 | 1.6.23 の OAuth callback は `handleOAuthUserInfo` を try-catch で包み、伝播した APIError を **`e.body.code` が存在する場合のみ** `errorCallbackURL` への redirect に変換する（無ければ再 throw = HTTP 400 応答）。既存アカウント再ログイン時の `updateAccount`（= `databaseHooks.account.update.before` の throw 元）はこの経路を通る。一方、新規ユーザー作成（`createOAuthUser`）の APIError は `link-account.mjs` 内部で捕捉され `{ error: e.message }` として返り、`body.code` が無くても redirect になる | 1.6.23 npm tarball の `dist/api/routes/callback.mjs` 140-156 行目（`if (isAPIError(e) && e.body?.code) redirectOnError(...)`）/ `dist/oauth2/link-account.mjs` 115-121 行目 |
+| F45 | 1.6.23 の `redirectOnError` は `errorCallbackURL` に既存クエリがある場合、区切り文字に `&` を使って `error` / `error_description` を追加する。したがって `errorCallbackURL` の `returnTo` を OAuth エラー後も保持できる | `better-auth/dist/oauth2/errors.mjs` 12-16 行目 |
 
 ### 2.3 Next.js 16.2.6 の仕様（インストール済みパッケージ同梱ドキュメントで確認）
 
@@ -136,7 +137,7 @@ src/app/**/page.tsx（Storybook から参照されない、auth.ts に依存し�
 
 ### 3.5 アクセス制御: Server Component のガードコンポーネント
 
-- `RequireLogin`（未ログインなら言語対応 Home へ `redirect()`）・`RequireAnonymous`（ログイン済みなら言語対応 Home へ `redirect()`）・`RequireSessionCookie`（セッション Cookie が無ければ言語対応 Home へ `redirect()`）を `src/features/auth/components/` に新設する
+- `RequireLogin`（未ログインなら言語対応 Home へ `redirect()`）・`RequireAnonymous`（ログイン済みなら検証済みの `returnTo`、未指定・不正なら言語対応 Home へ `redirect()`）・`RequireSessionCookie`（セッション Cookie が無ければ言語対応 Home へ `redirect()`）を `src/features/auth/components/` に新設する
 - お気に入り / My Cats は `RequireLogin`、`/login` は `RequireAnonymous`、`/logout` は `RequireSessionCookie` で包む
 - **`/logout` に `RequireLogin` を使ってはならない。** `RequireLogin` は `getSession()` で Turso へ照会するため、有効な Cookie を持つユーザーの DB 障害時にガードの時点で例外となり、「DB 障害でも Cookie 削除でログアウトできる」はずの `signOut()`（F13）にも再試行画面にも到達できなくなる。`RequireSessionCookie` は `getSessionCookie`（F36）で Cookie の有無のみを判定し DB へ問い合わせないため、Turso 障害時でもログアウトが成立する。期限切れ等の無効 Cookie では LogoutPage が描画されるが、`signOut` は冪等（Cookie 削除 + best effort の行削除）のため実害はない
 - **proxy ではセッション判定を行わない**。`src/proxy.ts` の変更は matcher へのパス追加と、`/ja` 正規化リダイレクトの応答へリクエストヘッダー（`cookie` を含む）を横流ししている既存不具合の修正（F43。§5 Phase 8-2）のみ
@@ -144,12 +145,14 @@ src/app/**/page.tsx（Storybook から参照されない、auth.ts に依存し�
 
 ### 3.6 `/login` ページ: 遷移した瞬間に OAuth を自動開始する通過点
 
-- page.tsx（`RequireAnonymous` 内）でログイン済みなら Home へリダイレクト
+- page.tsx で `returnTo` を検証し、`RequireAnonymous` 内でログイン済みなら検証済みの戻り先へリダイレクトする。未指定・不正な値は言語対応 Home へフォールバックする
 - 未ログインなら「GitHubへリダイレクトしています…」表示のクライアントコンポーネント `LoginContent` を描画し、`useEffect` で `loginAction` を自動起動する
 - 自動起動には ref ガードを入れる。React StrictMode の開発時二重実行と、`cacheComponents` の Activity 復帰による effect 再実行（F23）の両方への対策
 - `?error=` クエリが付いている場合は自動開始を**抑止**し、エラーメッセージと再試行ボタンを表示する（自動開始のままだと「失敗 → /login に戻る → また自動開始」の無限ループになるため）。エラーコードの値は画面に表示せず、言語別の固定メッセージのみを表示する
-- `loginAction` は `callbackURL` に言語対応 Home（`/` または `/en`）、`errorCallbackURL` に言語対応 `/login` の**相対パス**を渡す（相対パスは trustedOrigins 検証を常に通過する）
-- `errorCallbackURL` が使われるのは state を復元できた後のエラーのみ（F11。**state の期限切れも通常はここに含まれ、言語対応の `/login` へ戻る**）。state を復元できないコールバック失敗（state パラメータ欠落・verification 行の欠落や再利用・schema 不正等）は `onAPIError.errorURL` へ送られるため、auth.ts で `onAPIError: { errorURL: `${betterAuthUrl}/login` }` を設定し、これらも `/login?error=...` の再試行画面へ収束させる。この経路では元の言語情報が失われているため ja 版 `/login` への遷移となる（意図した割り切り。稀な異常系であり、再試行ボタンから再ログインできる）
+- Header のログインリンクは現在の正規パスを `/login?returnTo=...` で渡す。Home は既定値なのでクエリを省略し、既存の `/login` / `/en/login` を維持する
+- `returnTo` は `home` / `upload` / `terms` / `privacy` / `external-transmission-policy` / `favorites` / `my-cats` / docs 3 ページの言語対応正規パスとの完全一致だけを許可する。外部 URL、protocol-relative URL、クエリ・fragment 付きパス、`/ja/*`、言語不一致、`login` / `logout` / `error` / `maintenance` は拒否して言語対応 Home へフォールバックする
+- `loginAction` は HTTP から直接呼べるため `returnTo` を再検証し、検証済みの相対パスだけを `callbackURL` に渡す。`errorCallbackURL` にも同じ `returnTo` を含め、OAuth エラー後の再試行でも戻り先を保持する（F45）
+- `errorCallbackURL` が使われるのは state を復元できた後のエラーのみ（F11。**state の期限切れも通常はここに含まれ、言語対応の `/login` と `returnTo` へ戻る**）。state を復元できないコールバック失敗（state パラメータ欠落・verification 行の欠落や再利用・schema 不正等）は `onAPIError.errorURL` へ送られるため、auth.ts で `onAPIError: { errorURL: `${betterAuthUrl}/login` }` を設定し、これらも `/login?error=...` の再試行画面へ収束させる。この経路では元の言語情報と戻り先を復元できないため ja 版 `/login` への遷移となる（意図した割り切り。稀な異常系であり、再試行ボタンから再ログインできる）
 - メタデータに `robots: { index: false, follow: false }` を設定する
 
 ### 3.7 `/logout` ページ: 同じ自動実行パターン
@@ -2937,9 +2940,9 @@ describe("src/proxy.ts proxy TestCases", () => {
 
 ### 8.2 ログインフロー
 
-1. Header のログインボタンをクリック → `/login` に遷移し「GitHubへリダイレクトしています…」表示の後、GitHub の authorize 画面へ遷移する事を確認
+1. `http://localhost:2222/en/upload` で Header のログインボタンをクリック → `/en/login?returnTo=%2Fen%2Fupload` に遷移し「Redirecting to GitHub…」表示の後、GitHub の authorize 画面へ遷移する事を確認
 2. **GitHub の authorize URL の `scope` パラメータが空（または `scope` パラメータ自体が無い）事を確認する**（プライバシー要件の実地検証。chrome-devtools MCP のネットワーク記録、または authorize 画面表示中のアドレスバーの URL で `github.com/login/oauth/authorize` のクエリ文字列を確認する）
-3. authorize 画面で許可 → `http://localhost:2222/`（Home）に戻り、Header がログイン済み表示（GitHub アイコンのドロップダウンメニュー）に切り替わる事を確認
+3. authorize 画面で許可 → `http://localhost:2222/en/upload` に戻り、Header がログイン済み表示（GitHub アイコンのドロップダウンメニュー）に切り替わる事を確認
 4. DB の匿名化を確認する。**値そのものは SELECT せず、期待値 0 の COUNT クエリで検査する**（まさに匿名化・暗号化が失敗しているケースでこの確認が行われるため、値を出力すると実 email や有効な token が端末・エージェントのログに残ってしまう。`name` / `image` は公開情報だが、マッピング失敗時に実名が入り得るため同様に直接出力しない）:
 
 ```bash
@@ -2986,9 +2989,9 @@ turso db shell <ローカル開発用DB名> "SELECT COUNT(*) AS remaining_sessio
 
 ### 8.5 エラーフロー
 
-1. `http://localhost:2222/login?error=access_denied` へ直接アクセス → OAuth が自動開始**されず**、エラーメッセージと再試行ボタンが表示される事
-2. 再試行ボタンをクリック → GitHub authorize 画面へ遷移する事
-3. （可能なら）GitHub authorize 画面で「Cancel」を選択 → `/login?error=access_denied` に戻り、無限ループにならない事
+1. `http://localhost:2222/en/login?returnTo=%2Fen%2Fupload&error=access_denied` へ直接アクセス → OAuth が自動開始**されず**、エラーメッセージと再試行ボタンが表示される事
+2. 再試行ボタンをクリック → GitHub authorize 画面へ遷移し、許可後に `/en/upload` へ戻る事
+3. （可能なら）GitHub authorize 画面で「Cancel」を選択 → `/en/login?returnTo=%2Fen%2Fupload&error=access_denied` に戻り、無限ループにならない事
 4. ログアウト失敗時の表示（エラーメッセージ + 再試行ボタン）は、ローカルで DB 障害等を再現できないため Storybook の `ErrorJapanese` / `ErrorEnglish` Story で確認する（§8.6）
 5. `http://localhost:2222/api/auth/callback/github?state=invalid` へ直接アクセス → `/login?error=...` にリダイレクトされ、エラーメッセージと再試行ボタンが表示される事（state を復元できない失敗が `onAPIError.errorURL` により /login へ収束する事の確認）
 
@@ -3069,6 +3072,7 @@ curl -i -X POST http://localhost:2222/api/auth/sign-in/social \
 | Better Auth の GitHub Social Provider が有効化 | §5 Phase 3-2 |
 | `/api/auth/*` エンドポイントが正常動作 | §5 Phase 3-4 / §8.2 |
 | `/login`（ja/en）で OAuth 自動開始（ボタン押下不要） | §5 Phase 7-4〜7-9 / §8.2 |
+| Header からのログイン成功後に元のページへ戻る（不正な `returnTo` は Home へフォールバック） | §3.5, 3.6 / §8.2, 8.5 / §9.2 |
 | OAuth 失敗時 `/login?error=...` で自動開始抑止 + 再試行（state を復元できない失敗も `onAPIError.errorURL` で /login へ収束） | §3.6 / §5 Phase 3-2, 7-4 / §8.5 |
 | Header のログイン状態表示が `getSession()` 連動（`hideLoginButton` / `isLoggedIn` ハードコード撤去。ErrorLayout のみ未ログイン固定表示とする合意済みの例外あり、§5 Phase 5-6 参照） | §5 Phase 5, 6 / §8.1, 8.3 |
 | proxy matcher に認証系パス追加（セッション判定はしない） | §5 Phase 8 |
@@ -3097,6 +3101,21 @@ Issue の Done 定義には含まれないが、計画レビュー（Codex）の
 | 動作確認 SQL の秘匿値非出力化（期待値 0 の COUNT 検査へ変更） | §8.2(4)(5) / §8.4(4) |
 | proxy の `/ja` 正規化リダイレクト応答へのリクエストヘッダー横流し修正（セッショントークンの応答への写り込み防止） | §5 Phase 8-2, 8-3 / §6.8 / §8.1(6) |
 
+### 9.2 実装後の追加対応: ログイン前ページへの復帰
+
+初回実装後の動作確認で、Header からログインすると常に言語対応 Home へ戻り、元のページを失う事が判明したため追加する。本節は §5 Phase 7 と §6 のログイン関連コード例に対する差分仕様として優先する。
+
+| 対象 | 対応 |
+| --- | --- |
+| `src/functions/auth.ts` | `resolveLoginReturnPath` で言語ごとの既知正規パスだけを許可し、`createLoginAppPath` で `returnTo` / `error` を URL エンコードする |
+| Header（desktop / mobile） | 通常ページでは `currentUrlPath` をログインリンクの `returnTo` に渡す。ログインエラー画面では検証済みの `loginReturnTo` を明示的に渡し、Header のログインボタンでも戻り先を維持する。desktop / mobile は別実装のため個別にテストする |
+| ja/en login page | `searchParams.returnTo` を純粋関数で検証し、`RequireAnonymous` と `LoginPage` へ渡す。配列値を含む不正入力は Home へフォールバックする |
+| `LoginContent` / `loginAction` | 自動開始・再試行の両方で同じ戻り先を渡す。Server Action で再検証した値だけを Better Auth の `callbackURL` / `errorCallbackURL` に設定する |
+| `RequireAnonymous` | 既にセッションがある場合も、検証済みの元ページへ戻す |
+| テスト | 純粋関数の許可・拒否表、URL エンコード、desktop / mobile の href、Action の callback・失敗、LoginContent の再試行、RequireAnonymous のリダイレクトを追加する |
+
+state 自体を復元できない OAuth 異常では、state 内の `errorCallbackURL` も取得できないため `returnTo` は保持できない。この経路だけは従来どおり ja の `/login?error=...` へフォールバックする。
+
 ## 10. 禁止事項・注意点
 
 1. **クライアント側 SDK（`createAuthClient()` / `auth-client.ts`）を作成しない。** クライアントコンポーネントは better-auth に一切依存させない
@@ -3113,4 +3132,5 @@ Issue の Done 定義には含まれないが、計画レビュー（Codex）の
 12. **scope 固定化のフックを緩めない。** `disabledPaths` から `/link-social` を外したり、`hooks.before` / `databaseHooks.account` の scope 検証を削除・迂回したりしない。databaseHooks の before で `false` を返す実装に変えない（黙ってスキップされフローが継続してしまう。F39）。throw する `APIError` から `code` を外さない（redirect 変換されず HTTP 400 になる。F42）。`drizzleAdapter` の `transaction: true` を外さない（scope 拒否時に孤立 user が残る。F41）
 13. JWT プラグインは本 Issue では扱わない（backend 連携の別 Issue で対応）
 14. 依頼内容と関係のないリファクタリングを混入させない
-13. 認証系エンドポイントのレート制限は本 PR のスコープ外とする（<https://github.com/nekochans/lgtm-cat-frontend/issues/490> で別途対応）
+15. 認証系エンドポイントのレート制限は本 PR のスコープ外とする（<https://github.com/nekochans/lgtm-cat-frontend/issues/490> で別途対応）
+16. **`returnTo` を未検証のまま `redirect()` や Better Auth の `callbackURL` に渡さない。** 外部 URL と未知のパスは必ず言語対応 Home へフォールバックする

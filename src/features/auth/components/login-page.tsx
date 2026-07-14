@@ -5,11 +5,13 @@ import { PageLayout } from "@/components/page-layout";
 import { LoginContent } from "@/features/auth/components/login-content";
 import { createIncludeLanguageAppPath } from "@/functions/url";
 import type { Language } from "@/types/language";
+import type { IncludeLanguageAppPath } from "@/types/url";
 
 interface Props {
   readonly hasError: boolean;
   readonly language: Language;
   readonly loginAction: LoginAction;
+  readonly returnTo?: IncludeLanguageAppPath;
 }
 
 /**
@@ -20,6 +22,7 @@ export function LoginPage({
   hasError,
   language,
   loginAction,
+  returnTo,
 }: Props): JSX.Element {
   const currentUrlPath = createIncludeLanguageAppPath("login", language);
 
@@ -30,6 +33,7 @@ export function LoginPage({
           currentUrlPath={currentUrlPath}
           isLoggedIn={false}
           language={language}
+          loginReturnTo={returnTo}
         />
       }
       language={language}
@@ -39,6 +43,7 @@ export function LoginPage({
         hasError={hasError}
         language={language}
         loginAction={loginAction}
+        returnTo={returnTo}
       />
     </PageLayout>
   );

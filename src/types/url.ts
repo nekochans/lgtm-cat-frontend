@@ -25,3 +25,7 @@ export type IncludeLanguageAppPath =
   | `/${Language}${AppPath}`
   | `/${Language}`
   | "/";
+
+export type IncludeLanguageAppHref =
+  | IncludeLanguageAppPath
+  | `${IncludeLanguageAppPath}?${string}`;

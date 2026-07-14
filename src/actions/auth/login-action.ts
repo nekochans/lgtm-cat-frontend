@@ -2,10 +2,11 @@
 
 import { redirect } from "next/navigation";
 import type { LoginAction } from "@/actions/auth/types/login-action";
+import { createLoginAppPath, resolveLoginReturnPath } from "@/functions/auth";
 import { isLanguage } from "@/functions/language";
-import { createIncludeLanguageAppPath } from "@/functions/url";
 import { auth } from "@/lib/better-auth/auth";
 import type { Language } from "@/types/language";
+import type { IncludeLanguageAppPath } from "@/types/url";
 
 interface TryStartGithubLoginResult {
   readonly githubAuthorizationUrl?: string;
@@ -20,15 +21,16 @@ interface TryStartGithubLoginResult {
  * そのため try-catch はローカル関数に閉じ込め、結果オブジェクトで返す。
  */
 const tryStartGithubLogin = async (
-  language: Language
+  language: Language,
+  returnTo: IncludeLanguageAppPath
 ): Promise<TryStartGithubLoginResult> => {
   try {
     const authorizationResponse = await auth.api.signInSocial({
       body: {
         provider: "github",
         // 相対パスは better-auth の trustedOrigins 検証を常に通過する
-        callbackURL: createIncludeLanguageAppPath("home", language),
-        errorCallbackURL: createIncludeLanguageAppPath("login", language),
+        callbackURL: returnTo,
+        errorCallbackURL: createLoginAppPath(language, { returnTo }),
       },
     });
 
@@ -39,15 +41,23 @@ const tryStartGithubLogin = async (
 };
 
 export const loginAction: LoginAction = async (
-  language: Language
+  language: Language,
+  returnTo?: IncludeLanguageAppPath
 ): Promise<void> => {
-  // Server Action は HTTP 経由で任意の値を送り込めるため、実行時にも言語を検証する
+  // Server Action は HTTP 経由で任意の値を送り込めるため、実行時にも入力を検証する
   const safeLanguage = isLanguage(language) ? language : "ja";
-  const { githubAuthorizationUrl } = await tryStartGithubLogin(safeLanguage);
+  const safeReturnTo = resolveLoginReturnPath(returnTo, safeLanguage);
+  const { githubAuthorizationUrl } = await tryStartGithubLogin(
+    safeLanguage,
+    safeReturnTo
+  );
 
   if (!githubAuthorizationUrl) {
     redirect(
-      `${createIncludeLanguageAppPath("login", safeLanguage)}?error=signin_failed`
+      createLoginAppPath(safeLanguage, {
+        error: "signin_failed",
+        returnTo: safeReturnTo,
+      })
     );
   }
 

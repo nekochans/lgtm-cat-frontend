@@ -46,6 +46,42 @@ describe("src/features/auth/components/require-anonymous.tsx RequireAnonymous Te
     expect(mockRedirect).toHaveBeenCalledWith("/en");
   });
 
+  it("should redirect to return path when session exists", async () => {
+    mockGetCachedSession.mockResolvedValue({
+      user: { id: "user-1" },
+      session: { id: "session-1" },
+    });
+
+    await expect(
+      RequireAnonymous({
+        children: "login page",
+        language: "en",
+        returnTo: "/en/upload",
+      })
+    ).rejects.toThrow("NEXT_REDIRECT:/en/upload");
+
+    expect(mockRedirect).toHaveBeenCalledWith("/en/upload");
+  });
+
+  it("should fall back to home when return path is invalid at runtime", async () => {
+    mockGetCachedSession.mockResolvedValue({
+      user: { id: "user-1" },
+      session: { id: "session-1" },
+    });
+
+    await expect(
+      RequireAnonymous({
+        children: "login page",
+        language: "en",
+        returnTo: "https://evil.example" as unknown as Parameters<
+          typeof RequireAnonymous
+        >[0]["returnTo"],
+      })
+    ).rejects.toThrow("NEXT_REDIRECT:/en");
+
+    expect(mockRedirect).toHaveBeenCalledWith("/en");
+  });
+
   it("should render children when session does not exist", async () => {
     mockGetCachedSession.mockResolvedValue(null);
 

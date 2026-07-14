@@ -4,6 +4,7 @@ import { loginAction } from "@/actions/auth/login-action";
 import { i18nUrlList } from "@/constants/url";
 import { LoginPage } from "@/features/auth/components/login-page";
 import { RequireAnonymous } from "@/features/auth/components/require-anonymous";
+import { resolveLoginReturnPath } from "@/functions/auth";
 import { appName, metaTagList } from "@/functions/meta-tag";
 import { convertLanguageToOpenGraphLocale } from "@/functions/open-graph-locale";
 import { appBaseUrl } from "@/lib/config/app-base-url";
@@ -45,6 +46,7 @@ export const metadata: Metadata = {
 interface Props {
   readonly searchParams: Promise<{
     readonly error?: string;
+    readonly returnTo?: string | readonly string[];
   }>;
 }
 
@@ -55,13 +57,15 @@ const EnLoginPageContent = async ({
 }) => {
   const params = await searchParams;
   const hasError = params.error != null;
+  const returnTo = resolveLoginReturnPath(params.returnTo, language);
 
   return (
-    <RequireAnonymous language={language}>
+    <RequireAnonymous language={language} returnTo={returnTo}>
       <LoginPage
         hasError={hasError}
         language={language}
         loginAction={loginAction}
+        returnTo={returnTo}
       />
     </RequireAnonymous>
   );

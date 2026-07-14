@@ -71,6 +71,7 @@ describe("src/features/auth/components/login-content.tsx LoginContent TestCases"
           hasError={false}
           language="ja"
           loginAction={redirectingLoginAction}
+          returnTo="/upload"
         />
       </RedirectBoundary>
     );
@@ -83,6 +84,7 @@ describe("src/features/auth/components/login-content.tsx LoginContent TestCases"
         "ログインに失敗しました。時間をおいて再度お試しください。"
       )
     ).not.toBeInTheDocument();
+    expect(redirectingLoginAction).toHaveBeenCalledWith("ja", "/upload");
   });
 
   it("should show error message and retry button when loginAction rejects with an unexpected error", async () => {
@@ -96,6 +98,7 @@ describe("src/features/auth/components/login-content.tsx LoginContent TestCases"
           hasError={false}
           language="ja"
           loginAction={failingLoginAction}
+          returnTo="/upload"
         />
       </RedirectBoundary>
     );
@@ -120,6 +123,7 @@ describe("src/features/auth/components/login-content.tsx LoginContent TestCases"
           hasError={false}
           language="ja"
           loginAction={failingLoginAction}
+          returnTo="/upload"
         />
       </RedirectBoundary>
     );
@@ -132,13 +136,20 @@ describe("src/features/auth/components/login-content.tsx LoginContent TestCases"
     await waitFor(() => {
       expect(failingLoginAction).toHaveBeenCalledTimes(2);
     });
+    expect(failingLoginAction).toHaveBeenNthCalledWith(1, "ja", "/upload");
+    expect(failingLoginAction).toHaveBeenNthCalledWith(2, "ja", "/upload");
   });
 
   it("should not call loginAction on initial render when hasError is true", async () => {
     const loginAction = vi.fn().mockResolvedValue(undefined);
 
     render(
-      <LoginContent hasError={true} language="ja" loginAction={loginAction} />
+      <LoginContent
+        hasError={true}
+        language="ja"
+        loginAction={loginAction}
+        returnTo="/upload"
+      />
     );
 
     expect(
@@ -155,7 +166,12 @@ describe("src/features/auth/components/login-content.tsx LoginContent TestCases"
     const user = userEvent.setup();
 
     render(
-      <LoginContent hasError={true} language="ja" loginAction={loginAction} />
+      <LoginContent
+        hasError={true}
+        language="ja"
+        loginAction={loginAction}
+        returnTo="/upload"
+      />
     );
 
     const retryButton = await screen.findByRole("button", { name: "再試行" });
@@ -164,5 +180,6 @@ describe("src/features/auth/components/login-content.tsx LoginContent TestCases"
     await waitFor(() => {
       expect(loginAction).toHaveBeenCalledTimes(1);
     });
+    expect(loginAction).toHaveBeenCalledWith("ja", "/upload");
   });
 });

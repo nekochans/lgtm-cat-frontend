@@ -13,17 +13,20 @@ import type { LoginAction } from "@/actions/auth/types/login-action";
 import { IconButton } from "@/components/icon-button";
 import { loginPageTexts } from "@/features/auth/functions/auth-i18n";
 import type { Language } from "@/types/language";
+import type { IncludeLanguageAppPath } from "@/types/url";
 
 interface Props {
   readonly hasError: boolean;
   readonly language: Language;
   readonly loginAction: LoginAction;
+  readonly returnTo?: IncludeLanguageAppPath;
 }
 
 export function LoginContent({
   hasError,
   language,
   loginAction,
+  returnTo,
 }: Props): JSX.Element {
   const texts = loginPageTexts(language);
   // React StrictMode（開発時）の二重実行と、cacheComponents の Activity 復帰による
@@ -40,13 +43,13 @@ export function LoginContent({
   const startLogin = useCallback(() => {
     startTransition(async () => {
       try {
-        await loginAction(language);
+        await loginAction(language, returnTo);
       } catch (error) {
         unstable_rethrow(error);
         setHasClientError(true);
       }
     });
-  }, [language, loginAction]);
+  }, [language, loginAction, returnTo]);
 
   useEffect(() => {
     if (hasError || hasStartedRef.current) {

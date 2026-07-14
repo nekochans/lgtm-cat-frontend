@@ -11,12 +11,14 @@ type Story = StoryObj<typeof meta>;
 
 export const LoginButtonInJapanese: Story = {
   args: {
+    currentUrlPath: "/upload",
     language: "ja",
   },
 };
 
 export const LoginButtonInEnglish: Story = {
   args: {
+    currentUrlPath: "/en/upload",
     language: "en",
   },
 };
