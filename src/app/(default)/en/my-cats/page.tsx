@@ -1,8 +1,12 @@
 import type { Metadata, NextPage } from "next";
+import { Suspense } from "react";
+import { SessionHeader } from "@/components/session-header";
 import { i18nUrlList } from "@/constants/url";
+import { RequireLogin } from "@/features/auth/components/require-login";
 import { MyCatsPage } from "@/features/my-cats/components/my-cats-page";
 import { appName, metaTagList } from "@/functions/meta-tag";
 import { convertLanguageToOpenGraphLocale } from "@/functions/open-graph-locale";
+import { createIncludeLanguageAppPath } from "@/functions/url";
 import { appBaseUrl } from "@/lib/config/app-base-url";
 import type { Language } from "@/types/language";
 
@@ -39,6 +43,20 @@ export const metadata: Metadata = {
   },
 };
 
-const EnMyCats: NextPage = () => <MyCatsPage language={language} />;
+const EnMyCats: NextPage = () => (
+  <Suspense fallback={null}>
+    <RequireLogin language={language}>
+      <MyCatsPage
+        header={
+          <SessionHeader
+            currentUrlPath={createIncludeLanguageAppPath("my-cats", language)}
+            language={language}
+          />
+        }
+        language={language}
+      />
+    </RequireLogin>
+  </Suspense>
+);
 
 export default EnMyCats;

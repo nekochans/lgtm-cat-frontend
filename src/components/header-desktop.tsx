@@ -26,8 +26,6 @@ import type { IncludeLanguageAppPath } from "@/types/url";
 
 interface Props {
   readonly currentUrlPath: IncludeLanguageAppPath;
-  // TODO: ログイン機能実装後は hideLoginButton Propsを削除する
-  readonly hideLoginButton?: boolean;
   readonly isLoggedIn: boolean;
   readonly language: Language;
 }
@@ -35,7 +33,6 @@ interface Props {
 export function HeaderDesktop({
   language,
   currentUrlPath,
-  hideLoginButton,
   isLoggedIn,
 }: Props): JSX.Element {
   const githubApp = createGitHubAppLinksFromLanguages(language);
@@ -180,7 +177,7 @@ export function HeaderDesktop({
                     </Dropdown.Item>
                     <Dropdown.Item
                       className="data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm"
-                      href="/logout"
+                      href={createIncludeLanguageAppPath("logout", language)}
                       id="logout"
                       textValue={logoutText(language)}
                     >
@@ -190,8 +187,7 @@ export function HeaderDesktop({
                 </Dropdown.Popover>
               </Dropdown>
             ) : (
-              // TODO: ログイン機能実装後は hideLoginButton による条件分岐を削除する
-              !hideLoginButton && <LoginButton language={language} />
+              <LoginButton language={language} />
             )}
           </div>
         </div>

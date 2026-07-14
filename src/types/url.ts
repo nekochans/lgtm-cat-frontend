@@ -11,6 +11,7 @@ export type AppPathName =
   | "maintenance"
   | "external-transmission-policy"
   | "login"
+  | "logout"
   | "favorites"
   | "my-cats"
   | "docs-how-to-use"

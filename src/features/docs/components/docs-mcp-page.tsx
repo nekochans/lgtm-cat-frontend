@@ -12,12 +12,11 @@ import {
   type McpTransportSection,
 } from "@/features/docs/functions/mcp-text";
 import type { Language } from "@/types/language";
-import type { IncludeLanguageAppPath } from "@/types/url";
 
 // Props から DocsMcpPageProps にリネーム
 interface DocsMcpPageProps {
-  readonly currentUrlPath: IncludeLanguageAppPath;
   readonly externalCodes: McpExternalCodes;
+  readonly header: ReactNode;
   readonly language: Language;
 }
 
@@ -201,9 +200,9 @@ function GitHubActionsExampleSection({
 }
 
 export function DocsMcpPage({
-  currentUrlPath,
-  language,
   externalCodes,
+  header,
+  language,
 }: DocsMcpPageProps) {
   const baseTexts = getMcpTexts(language);
 
@@ -254,8 +253,7 @@ export function DocsMcpPage({
 
   return (
     <PageLayout
-      currentUrlPath={currentUrlPath}
-      isLoggedIn={false}
+      header={header}
       language={language}
       mainClassName="flex w-full flex-1 flex-col items-center bg-background"
     >

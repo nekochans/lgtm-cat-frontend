@@ -109,6 +109,17 @@ function loginPageTitle(language: Language): string {
   }
 }
 
+function logoutPageTitle(language: Language): string {
+  switch (language) {
+    case "ja":
+      return `${defaultTitle} ログアウト`;
+    case "en":
+      return `${defaultTitle} Logout`;
+    default:
+      return assertNever(language);
+  }
+}
+
 function favoritesPageTitle(language: Language): string {
   switch (language) {
     case "ja":
@@ -232,6 +243,12 @@ export function metaTagList(language: Language, appBaseUrl: Url): MetaTagList {
       title: loginPageTitle(language),
       ogpImgUrl,
       ogpTargetUrl: createI18nUrlFromBase(appBaseUrl, "login", language),
+      appName,
+    },
+    logout: {
+      title: logoutPageTitle(language),
+      ogpImgUrl,
+      ogpTargetUrl: createI18nUrlFromBase(appBaseUrl, "logout", language),
       appName,
     },
     favorites: {

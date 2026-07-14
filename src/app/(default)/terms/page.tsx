@@ -1,6 +1,7 @@
 import type { Metadata, NextPage } from "next";
 import { cacheLife } from "next/cache";
 import { notFound } from "next/navigation";
+import { SessionHeader } from "@/components/session-header";
 import { i18nUrlList } from "@/constants/url";
 import { TermsPage } from "@/features/terms/components/terms-page";
 import { appName, metaTagList } from "@/functions/meta-tag";
@@ -60,7 +61,12 @@ const Terms: NextPage = async () => {
 
   return (
     <TermsPage
-      currentUrlPath={createIncludeLanguageAppPath("terms", language)}
+      header={
+        <SessionHeader
+          currentUrlPath={createIncludeLanguageAppPath("terms", language)}
+          language={language}
+        />
+      }
       language={language}
       markdownContent={markdownContent}
     />

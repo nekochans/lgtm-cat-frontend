@@ -27,6 +27,18 @@ export const config = {
     "/maintenance",
     "/en/maintenance",
     "/ja/maintenance",
+    "/login",
+    "/en/login",
+    "/ja/login",
+    "/logout",
+    "/en/logout",
+    "/ja/logout",
+    "/favorites",
+    "/en/favorites",
+    "/ja/favorites",
+    "/my-cats",
+    "/en/my-cats",
+    "/ja/my-cats",
   ],
 };
 
@@ -72,14 +84,12 @@ export async function proxy(request: NextRequest) {
       return NextResponse.redirect(new URL(removedLanguagePath, request.url), {
         status: httpStatusCode.found,
         statusText: "Found",
-        headers: requestHeaders,
       });
     }
 
     return NextResponse.redirect(new URL("/", request.url), {
       status: httpStatusCode.found,
       statusText: "Found",
-      headers: requestHeaders,
     });
   }
 

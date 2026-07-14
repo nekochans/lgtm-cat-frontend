@@ -1,17 +1,17 @@
+import type { ReactNode } from "react";
 import { ComingSoonContent } from "@/components/coming-soon-content";
 import { PageLayout } from "@/components/page-layout";
-import { createIncludeLanguageAppPath } from "@/functions/url";
 import type { Language } from "@/types/language";
 
 interface Props {
+  readonly header: ReactNode;
   readonly language: Language;
 }
 
-export function MyCatsPage({ language }: Props) {
+export function MyCatsPage({ header, language }: Props) {
   return (
     <PageLayout
-      currentUrlPath={createIncludeLanguageAppPath("my-cats", language)}
-      isLoggedIn={false}
+      header={header}
       language={language}
       mainClassName="flex w-full flex-1 flex-col items-center"
     >

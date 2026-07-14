@@ -1,4 +1,5 @@
 import type { Metadata, NextPage } from "next";
+import { SessionHeader } from "@/components/session-header";
 import { i18nUrlList } from "@/constants/url";
 import { UploadPage } from "@/features/upload/components/upload-page";
 import { appName, metaTagList } from "@/functions/meta-tag";
@@ -39,7 +40,12 @@ export const metadata: Metadata = {
 
 const EnUpload: NextPage = () => (
   <UploadPage
-    currentUrlPath={createIncludeLanguageAppPath("upload", language)}
+    header={
+      <SessionHeader
+        currentUrlPath={createIncludeLanguageAppPath("upload", language)}
+        language={language}
+      />
+    }
     language={language}
   />
 );

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { Header } from "@/components/header";
 // 重要: import type を使用してサーバー専用モジュールの混入を防止
 import type { McpExternalCodes } from "../functions/mcp-code-loader";
 import { DocsMcpPage } from "./docs-mcp-page";
@@ -158,9 +159,11 @@ type Story = StoryObj<typeof meta>;
  */
 export const Japanese: Story = {
   args: {
-    language: "ja",
-    currentUrlPath: "/docs/mcp",
     externalCodes: mockExternalCodes,
+    header: (
+      <Header currentUrlPath="/docs/mcp" isLoggedIn={false} language="ja" />
+    ),
+    language: "ja",
   },
   parameters: {
     nextjs: {
@@ -176,9 +179,11 @@ export const Japanese: Story = {
  */
 export const English: Story = {
   args: {
-    language: "en",
-    currentUrlPath: "/en/docs/mcp",
     externalCodes: mockExternalCodes,
+    header: (
+      <Header currentUrlPath="/en/docs/mcp" isLoggedIn={false} language="en" />
+    ),
+    language: "en",
   },
   parameters: {
     nextjs: {

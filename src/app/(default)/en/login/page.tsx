@@ -1,0 +1,76 @@
+import type { Metadata, NextPage } from "next";
+import { Suspense } from "react";
+import { signinAction } from "@/actions/auth/signin-action";
+import { i18nUrlList } from "@/constants/url";
+import { LoginPage } from "@/features/auth/components/login-page";
+import { RequireAnonymous } from "@/features/auth/components/require-anonymous";
+import { appName, metaTagList } from "@/functions/meta-tag";
+import { convertLanguageToOpenGraphLocale } from "@/functions/open-graph-locale";
+import { appBaseUrl } from "@/lib/config/app-base-url";
+import type { Language } from "@/types/language";
+
+const language: Language = "en";
+
+export const metadata: Metadata = {
+  title: metaTagList(language, appBaseUrl()).login.title,
+  openGraph: {
+    title: metaTagList(language, appBaseUrl()).login.title,
+    url: metaTagList(language, appBaseUrl()).login.ogpTargetUrl,
+    siteName: appName,
+    images: [
+      {
+        url: metaTagList(language, appBaseUrl()).login.ogpImgUrl,
+        width: 1200,
+        height: 630,
+        alt: metaTagList(language, appBaseUrl()).login.title,
+      },
+    ],
+    locale: convertLanguageToOpenGraphLocale(language),
+    type: "website",
+  },
+  metadataBase: new URL(appBaseUrl()),
+  alternates: {
+    canonical: i18nUrlList.login.en,
+    languages: {
+      ja: i18nUrlList.login.ja,
+      en: i18nUrlList.login.en,
+    },
+  },
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
+
+interface Props {
+  readonly searchParams: Promise<{
+    readonly error?: string;
+  }>;
+}
+
+const EnLoginPageContent = async ({
+  searchParams,
+}: {
+  readonly searchParams: Props["searchParams"];
+}) => {
+  const params = await searchParams;
+  const hasError = params.error != null;
+
+  return (
+    <RequireAnonymous language={language}>
+      <LoginPage
+        hasError={hasError}
+        language={language}
+        signinAction={signinAction}
+      />
+    </RequireAnonymous>
+  );
+};
+
+const EnLogin: NextPage<Props> = ({ searchParams }) => (
+  <Suspense fallback={null}>
+    <EnLoginPageContent searchParams={searchParams} />
+  </Suspense>
+);
+
+export default EnLogin;

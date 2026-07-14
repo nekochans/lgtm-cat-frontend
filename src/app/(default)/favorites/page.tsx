@@ -1,8 +1,12 @@
 import type { Metadata, NextPage } from "next";
+import { Suspense } from "react";
+import { SessionHeader } from "@/components/session-header";
 import { i18nUrlList } from "@/constants/url";
+import { RequireLogin } from "@/features/auth/components/require-login";
 import { FavoritesPage } from "@/features/favorites/components/favorites-page";
 import { appName, metaTagList } from "@/functions/meta-tag";
 import { convertLanguageToOpenGraphLocale } from "@/functions/open-graph-locale";
+import { createIncludeLanguageAppPath } from "@/functions/url";
 import { appBaseUrl } from "@/lib/config/app-base-url";
 import type { Language } from "@/types/language";
 
@@ -39,6 +43,20 @@ export const metadata: Metadata = {
   },
 };
 
-const Favorites: NextPage = () => <FavoritesPage language={language} />;
+const Favorites: NextPage = () => (
+  <Suspense fallback={null}>
+    <RequireLogin language={language}>
+      <FavoritesPage
+        header={
+          <SessionHeader
+            currentUrlPath={createIncludeLanguageAppPath("favorites", language)}
+            language={language}
+          />
+        }
+        language={language}
+      />
+    </RequireLogin>
+  </Suspense>
+);
 
 export default Favorites;

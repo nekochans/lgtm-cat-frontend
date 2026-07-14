@@ -24,7 +24,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "3.1045.0",
     "@aws-sdk/s3-request-presigner": "3.1045.0",
-    "@better-auth/drizzle-adapter": "1.6.9",
+    "@better-auth/drizzle-adapter": "1.6.23",
     "@heroui/react": "3.0.3",
     "@heroui/styles": "3.0.3",
     "@libsql/client": "0.17.3",
@@ -34,7 +34,7 @@
     "@upstash/redis": "1.38.0",
     "@vercel/edge-config": "1.4.3",
     "@vercel/functions": "3.5.0",
-    "better-auth": "1.6.9",
+    "better-auth": "1.6.23",
     "drizzle-orm": "0.45.2",
     "next": "16.2.6",
     "next-themes": "0.4.6",

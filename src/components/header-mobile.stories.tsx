@@ -45,13 +45,3 @@ export const LoggedInHeaderMobileInEnglish: Story = {
     isLoggedIn: true,
   },
 };
-
-// TODO: ログイン機能実装後はこのStoryを削除する
-export const HiddenLoginButtonMobileInJapanese: Story = {
-  args: {
-    currentUrlPath: "/",
-    hideLoginButton: true,
-    isLoggedIn: false,
-    language: "ja",
-  },
-};
