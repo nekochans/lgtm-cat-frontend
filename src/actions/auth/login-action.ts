@@ -1,13 +1,13 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import type { SigninAction } from "@/actions/auth/types/signin-action";
+import type { LoginAction } from "@/actions/auth/types/login-action";
 import { isLanguage } from "@/functions/language";
 import { createIncludeLanguageAppPath } from "@/functions/url";
 import { auth } from "@/lib/better-auth/auth";
 import type { Language } from "@/types/language";
 
-interface TrySignInSocialResult {
+interface TryStartGithubLoginResult {
   readonly githubAuthorizationUrl?: string;
 }
 
@@ -19,11 +19,11 @@ interface TrySignInSocialResult {
  * redirect() は throw で制御されるため try ブロックの外で呼ぶ必要がある。
  * そのため try-catch はローカル関数に閉じ込め、結果オブジェクトで返す。
  */
-const trySignInSocial = async (
+const tryStartGithubLogin = async (
   language: Language
-): Promise<TrySignInSocialResult> => {
+): Promise<TryStartGithubLoginResult> => {
   try {
-    const signInResponse = await auth.api.signInSocial({
+    const authorizationResponse = await auth.api.signInSocial({
       body: {
         provider: "github",
         // 相対パスは better-auth の trustedOrigins 検証を常に通過する
@@ -32,18 +32,18 @@ const trySignInSocial = async (
       },
     });
 
-    return { githubAuthorizationUrl: signInResponse.url };
+    return { githubAuthorizationUrl: authorizationResponse.url };
   } catch {
     return {};
   }
 };
 
-export const signinAction: SigninAction = async (
+export const loginAction: LoginAction = async (
   language: Language
 ): Promise<void> => {
   // Server Action は HTTP 経由で任意の値を送り込めるため、実行時にも言語を検証する
   const safeLanguage = isLanguage(language) ? language : "ja";
-  const { githubAuthorizationUrl } = await trySignInSocial(safeLanguage);
+  const { githubAuthorizationUrl } = await tryStartGithubLogin(safeLanguage);
 
   if (!githubAuthorizationUrl) {
     redirect(

@@ -2,10 +2,10 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { LoginPage } from "./login-page";
 
 /**
- * Storybook 用のモック signinAction。
+ * Storybook 用のモック loginAction。
  * 自動開始 Story ではマウント時にこの関数が呼ばれるが、リダイレクトは発生しない。
  */
-const mockSigninAction = async (): Promise<void> => {
+const mockLoginAction = async (): Promise<void> => {
   await Promise.resolve();
 };
 
@@ -26,7 +26,7 @@ export const Japanese: Story = {
   args: {
     hasError: false,
     language: "ja",
-    signinAction: mockSigninAction,
+    loginAction: mockLoginAction,
   },
 };
 
@@ -34,7 +34,7 @@ export const English: Story = {
   args: {
     hasError: false,
     language: "en",
-    signinAction: mockSigninAction,
+    loginAction: mockLoginAction,
   },
 };
 
@@ -42,7 +42,7 @@ export const ErrorJapanese: Story = {
   args: {
     hasError: true,
     language: "ja",
-    signinAction: mockSigninAction,
+    loginAction: mockLoginAction,
   },
 };
 
@@ -50,6 +50,6 @@ export const ErrorEnglish: Story = {
   args: {
     hasError: true,
     language: "en",
-    signinAction: mockSigninAction,
+    loginAction: mockLoginAction,
   },
 };

@@ -60,8 +60,8 @@ describe("src/features/auth/components/login-content.tsx LoginContent TestCases"
     cleanup();
   });
 
-  it("should not show error message when signinAction rejects with NEXT_REDIRECT", async () => {
-    const redirectingSigninAction = vi
+  it("should not show error message when loginAction rejects with NEXT_REDIRECT", async () => {
+    const redirectingLoginAction = vi
       .fn()
       .mockRejectedValue(createRedirectError());
 
@@ -70,7 +70,7 @@ describe("src/features/auth/components/login-content.tsx LoginContent TestCases"
         <LoginContent
           hasError={false}
           language="ja"
-          signinAction={redirectingSigninAction}
+          loginAction={redirectingLoginAction}
         />
       </RedirectBoundary>
     );
@@ -85,8 +85,8 @@ describe("src/features/auth/components/login-content.tsx LoginContent TestCases"
     ).not.toBeInTheDocument();
   });
 
-  it("should show error message and retry button when signinAction rejects with an unexpected error", async () => {
-    const failingSigninAction = vi
+  it("should show error message and retry button when loginAction rejects with an unexpected error", async () => {
+    const failingLoginAction = vi
       .fn()
       .mockRejectedValue(new Error("unexpected failure"));
 
@@ -95,7 +95,7 @@ describe("src/features/auth/components/login-content.tsx LoginContent TestCases"
         <LoginContent
           hasError={false}
           language="ja"
-          signinAction={failingSigninAction}
+          loginAction={failingLoginAction}
         />
       </RedirectBoundary>
     );
@@ -108,8 +108,8 @@ describe("src/features/auth/components/login-content.tsx LoginContent TestCases"
     expect(screen.getByRole("button", { name: "再試行" })).toBeInTheDocument();
   });
 
-  it("should call signinAction again when retry button is pressed", async () => {
-    const failingSigninAction = vi
+  it("should call loginAction again when retry button is pressed", async () => {
+    const failingLoginAction = vi
       .fn()
       .mockRejectedValue(new Error("unexpected failure"));
     const user = userEvent.setup();
@@ -119,7 +119,7 @@ describe("src/features/auth/components/login-content.tsx LoginContent TestCases"
         <LoginContent
           hasError={false}
           language="ja"
-          signinAction={failingSigninAction}
+          loginAction={failingLoginAction}
         />
       </RedirectBoundary>
     );
@@ -130,15 +130,15 @@ describe("src/features/auth/components/login-content.tsx LoginContent TestCases"
     await user.click(retryButton);
 
     await waitFor(() => {
-      expect(failingSigninAction).toHaveBeenCalledTimes(2);
+      expect(failingLoginAction).toHaveBeenCalledTimes(2);
     });
   });
 
-  it("should not call signinAction on initial render when hasError is true", async () => {
-    const signinAction = vi.fn().mockResolvedValue(undefined);
+  it("should not call loginAction on initial render when hasError is true", async () => {
+    const loginAction = vi.fn().mockResolvedValue(undefined);
 
     render(
-      <LoginContent hasError={true} language="ja" signinAction={signinAction} />
+      <LoginContent hasError={true} language="ja" loginAction={loginAction} />
     );
 
     expect(
@@ -147,22 +147,22 @@ describe("src/features/auth/components/login-content.tsx LoginContent TestCases"
       )
     ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "再試行" })).toBeInTheDocument();
-    expect(signinAction).not.toHaveBeenCalled();
+    expect(loginAction).not.toHaveBeenCalled();
   });
 
-  it("should call signinAction once when retry button is pressed after error", async () => {
-    const signinAction = vi.fn().mockResolvedValue(undefined);
+  it("should call loginAction once when retry button is pressed after error", async () => {
+    const loginAction = vi.fn().mockResolvedValue(undefined);
     const user = userEvent.setup();
 
     render(
-      <LoginContent hasError={true} language="ja" signinAction={signinAction} />
+      <LoginContent hasError={true} language="ja" loginAction={loginAction} />
     );
 
     const retryButton = await screen.findByRole("button", { name: "再試行" });
     await user.click(retryButton);
 
     await waitFor(() => {
-      expect(signinAction).toHaveBeenCalledTimes(1);
+      expect(loginAction).toHaveBeenCalledTimes(1);
     });
   });
 });

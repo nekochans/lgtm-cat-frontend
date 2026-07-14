@@ -9,7 +9,7 @@ import {
   useState,
   useTransition,
 } from "react";
-import type { SigninAction } from "@/actions/auth/types/signin-action";
+import type { LoginAction } from "@/actions/auth/types/login-action";
 import { IconButton } from "@/components/icon-button";
 import { loginPageTexts } from "@/features/auth/functions/auth-i18n";
 import type { Language } from "@/types/language";
@@ -17,13 +17,13 @@ import type { Language } from "@/types/language";
 interface Props {
   readonly hasError: boolean;
   readonly language: Language;
-  readonly signinAction: SigninAction;
+  readonly loginAction: LoginAction;
 }
 
 export function LoginContent({
   hasError,
   language,
-  signinAction,
+  loginAction,
 }: Props): JSX.Element {
   const texts = loginPageTexts(language);
   // React StrictMode（開発時）の二重実行と、cacheComponents の Activity 復帰による
@@ -37,24 +37,24 @@ export function LoginContent({
   // 成功時（GitHub への redirect()）も Action Promise は NEXT_REDIRECT で reject される。
   // unstable_rethrow で内部エラーを transition へ再送出し、Next.js のルーターに
   // 遷移として処理させる。catch に残るのは Server Action 呼び出し自体の失敗のみ。
-  const startSignin = useCallback(() => {
+  const startLogin = useCallback(() => {
     startTransition(async () => {
       try {
-        await signinAction(language);
+        await loginAction(language);
       } catch (error) {
         unstable_rethrow(error);
         setHasClientError(true);
       }
     });
-  }, [language, signinAction]);
+  }, [language, loginAction]);
 
   useEffect(() => {
     if (hasError || hasStartedRef.current) {
       return;
     }
     hasStartedRef.current = true;
-    startSignin();
-  }, [hasError, startSignin]);
+    startLogin();
+  }, [hasError, startLogin]);
 
   if (hasError || hasClientError) {
     return (
@@ -65,7 +65,7 @@ export function LoginContent({
         <IconButton
           displayText={texts.retryButtonText}
           isLoading={isPending}
-          onPress={startSignin}
+          onPress={startLogin}
           showGithubIcon={true}
         />
       </div>

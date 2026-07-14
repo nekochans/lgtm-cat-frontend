@@ -74,7 +74,7 @@ export const auth = betterAuth({
   hooks: {
     // /sign-in/social は body の scopes を authorize URL へ無条件追記するため（F37）、
     // 非空 scopes を BAD_REQUEST で拒否する（プライバシー設計の API 経路レベルの強制）。
-    // 自前の signinAction は scopes を渡さないため影響しない。
+    // 自前の loginAction は scopes を渡さないため影響しない。
     before: createAuthMiddleware((ctx) => {
       if (isScopeRequestForbidden(ctx.path, ctx.body)) {
         throw new APIError("BAD_REQUEST", {

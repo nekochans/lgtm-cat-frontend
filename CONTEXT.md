@@ -5,7 +5,7 @@
 ## Language
 
 **ログイン**:
-GitHub アカウントによるサインイン。LGTMeow の認証手段は GitHub OAuth のみで、Email/Password 認証は提供しない。
+GitHub アカウントによる利用者認証。LGTMeow の認証手段は GitHub OAuth のみで、Email/Password 認証は提供しない。
 _Avoid_: サインイン、GitHub 連携
 
 **匿名化メールアドレス**:

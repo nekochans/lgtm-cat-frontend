@@ -1,6 +1,6 @@
 import type { Metadata, NextPage } from "next";
 import { Suspense } from "react";
-import { signinAction } from "@/actions/auth/signin-action";
+import { loginAction } from "@/actions/auth/login-action";
 import { i18nUrlList } from "@/constants/url";
 import { LoginPage } from "@/features/auth/components/login-page";
 import { RequireAnonymous } from "@/features/auth/components/require-anonymous";
@@ -61,7 +61,7 @@ const EnLoginPageContent = async ({
       <LoginPage
         hasError={hasError}
         language={language}
-        signinAction={signinAction}
+        loginAction={loginAction}
       />
     </RequireAnonymous>
   );

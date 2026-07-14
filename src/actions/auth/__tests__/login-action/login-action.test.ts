@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { signinAction } from "@/actions/auth/signin-action";
+import { loginAction } from "@/actions/auth/login-action";
 
 const mockSignInSocial = vi.fn();
 
@@ -19,7 +19,7 @@ vi.mock("next/navigation", () => ({
   redirect: (path: string) => mockRedirect(path),
 }));
 
-describe("src/actions/auth/signin-action.ts signinAction TestCases", () => {
+describe("src/actions/auth/login-action.ts loginAction TestCases", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockSignInSocial.mockResolvedValue({
@@ -29,7 +29,7 @@ describe("src/actions/auth/signin-action.ts signinAction TestCases", () => {
   });
 
   it("should call signInSocial with Japanese callback URLs and redirect to GitHub when language is ja", async () => {
-    await expect(signinAction("ja")).rejects.toThrow("NEXT_REDIRECT");
+    await expect(loginAction("ja")).rejects.toThrow("NEXT_REDIRECT");
 
     expect(mockSignInSocial).toHaveBeenCalledWith({
       body: {
@@ -44,7 +44,7 @@ describe("src/actions/auth/signin-action.ts signinAction TestCases", () => {
   });
 
   it("should call signInSocial with English callback URLs and redirect to GitHub when language is en", async () => {
-    await expect(signinAction("en")).rejects.toThrow("NEXT_REDIRECT");
+    await expect(loginAction("en")).rejects.toThrow("NEXT_REDIRECT");
 
     expect(mockSignInSocial).toHaveBeenCalledWith({
       body: {
@@ -61,7 +61,7 @@ describe("src/actions/auth/signin-action.ts signinAction TestCases", () => {
   it("should redirect to login page with error query when signInSocial throws", async () => {
     mockSignInSocial.mockRejectedValue(new Error("network error"));
 
-    await expect(signinAction("ja")).rejects.toThrow("NEXT_REDIRECT");
+    await expect(loginAction("ja")).rejects.toThrow("NEXT_REDIRECT");
 
     expect(mockRedirect).toHaveBeenCalledWith("/login?error=signin_failed");
   });
@@ -69,7 +69,7 @@ describe("src/actions/auth/signin-action.ts signinAction TestCases", () => {
   it("should redirect to English login page with error query when signInSocial throws and language is en", async () => {
     mockSignInSocial.mockRejectedValue(new Error("network error"));
 
-    await expect(signinAction("en")).rejects.toThrow("NEXT_REDIRECT");
+    await expect(loginAction("en")).rejects.toThrow("NEXT_REDIRECT");
 
     expect(mockRedirect).toHaveBeenCalledWith("/en/login?error=signin_failed");
   });
@@ -77,14 +77,14 @@ describe("src/actions/auth/signin-action.ts signinAction TestCases", () => {
   it("should redirect to login page with error query when signInSocial returns no url", async () => {
     mockSignInSocial.mockResolvedValue({ redirect: false, url: undefined });
 
-    await expect(signinAction("ja")).rejects.toThrow("NEXT_REDIRECT");
+    await expect(loginAction("ja")).rejects.toThrow("NEXT_REDIRECT");
 
     expect(mockRedirect).toHaveBeenCalledWith("/login?error=signin_failed");
   });
 
   it("should fall back to Japanese when language is invalid at runtime", async () => {
     await expect(
-      signinAction("fr" as unknown as Parameters<typeof signinAction>[0])
+      loginAction("fr" as unknown as Parameters<typeof loginAction>[0])
     ).rejects.toThrow("NEXT_REDIRECT");
 
     expect(mockSignInSocial).toHaveBeenCalledWith({

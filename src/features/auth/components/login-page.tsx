@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import type { SigninAction } from "@/actions/auth/types/signin-action";
+import type { LoginAction } from "@/actions/auth/types/login-action";
 import { Header } from "@/components/header";
 import { PageLayout } from "@/components/page-layout";
 import { LoginContent } from "@/features/auth/components/login-content";
@@ -9,7 +9,7 @@ import type { Language } from "@/types/language";
 interface Props {
   readonly hasError: boolean;
   readonly language: Language;
-  readonly signinAction: SigninAction;
+  readonly loginAction: LoginAction;
 }
 
 /**
@@ -19,7 +19,7 @@ interface Props {
 export function LoginPage({
   hasError,
   language,
-  signinAction,
+  loginAction,
 }: Props): JSX.Element {
   const currentUrlPath = createIncludeLanguageAppPath("login", language);
 
@@ -38,7 +38,7 @@ export function LoginPage({
       <LoginContent
         hasError={hasError}
         language={language}
-        signinAction={signinAction}
+        loginAction={loginAction}
       />
     </PageLayout>
   );

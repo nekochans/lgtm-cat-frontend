@@ -91,8 +91,8 @@ Better Auth の GitHub Social Provider を有効化し、以下を実装する�
 
 ### 3.1 認証処理は Server Action 方式で統一
 
-- サインイン: `signinAction`（`auth.api.signInSocial()` を呼び、返却された GitHub authorize URL へ `redirect()`）
-- サインアウト: `logoutAction`（`auth.api.signOut()` を呼び、言語対応の Home へ `redirect()`）
+- ログイン: `loginAction`（`auth.api.signInSocial()` を呼び、返却された GitHub authorize URL へ `redirect()`）
+- ログアウト: `logoutAction`（`auth.api.signOut()` を呼び、言語対応の Home へ `redirect()`）
 - `src/lib/better-auth/auth.ts` に `nextCookies` プラグインを追加する。F8/F9 の通り、これが無いと OAuth の state Cookie / セッション Cookie の設定・削除がブラウザに反映されず**ログイン自体が成立しない**
 - Server Action は `src/AGENTS.md` の型分離パターンに従い、`src/actions/auth/` 配下に配置する（型は `types/` サブディレクトリ、コンポーネントは型のみに依存し、実体は page.tsx から props で注入）
 
@@ -145,10 +145,10 @@ src/app/**/page.tsx（Storybook から参照されない、auth.ts に依存し�
 ### 3.6 `/login` ページ: 遷移した瞬間に OAuth を自動開始する通過点
 
 - page.tsx（`RequireAnonymous` 内）でログイン済みなら Home へリダイレクト
-- 未ログインなら「GitHubへリダイレクトしています…」表示のクライアントコンポーネント `LoginContent` を描画し、`useEffect` で `signinAction` を自動起動する
+- 未ログインなら「GitHubへリダイレクトしています…」表示のクライアントコンポーネント `LoginContent` を描画し、`useEffect` で `loginAction` を自動起動する
 - 自動起動には ref ガードを入れる。React StrictMode の開発時二重実行と、`cacheComponents` の Activity 復帰による effect 再実行（F23）の両方への対策
 - `?error=` クエリが付いている場合は自動開始を**抑止**し、エラーメッセージと再試行ボタンを表示する（自動開始のままだと「失敗 → /login に戻る → また自動開始」の無限ループになるため）。エラーコードの値は画面に表示せず、言語別の固定メッセージのみを表示する
-- `signinAction` は `callbackURL` に言語対応 Home（`/` または `/en`）、`errorCallbackURL` に言語対応 `/login` の**相対パス**を渡す（相対パスは trustedOrigins 検証を常に通過する）
+- `loginAction` は `callbackURL` に言語対応 Home（`/` または `/en`）、`errorCallbackURL` に言語対応 `/login` の**相対パス**を渡す（相対パスは trustedOrigins 検証を常に通過する）
 - `errorCallbackURL` が使われるのは state を復元できた後のエラーのみ（F11。**state の期限切れも通常はここに含まれ、言語対応の `/login` へ戻る**）。state を復元できないコールバック失敗（state パラメータ欠落・verification 行の欠落や再利用・schema 不正等）は `onAPIError.errorURL` へ送られるため、auth.ts で `onAPIError: { errorURL: `${betterAuthUrl}/login` }` を設定し、これらも `/login?error=...` の再試行画面へ収束させる。この経路では元の言語情報が失われているため ja 版 `/login` への遷移となる（意図した割り切り。稀な異常系であり、再試行ボタンから再ログインできる）
 - メタデータに `robots: { index: false, follow: false }` を設定する
 
@@ -166,7 +166,7 @@ src/app/**/page.tsx（Storybook から参照されない、auth.ts に依存し�
 
 | 対象 | 配置 | 理由 |
 | --- | --- | --- |
-| `signinAction` / `logoutAction` + 型 + テスト | `src/actions/auth/` | `src/AGENTS.md` の型分離パターンの例示と同じ配置。login / logout 両ページ（ja/en 計 4 ページ）から共通利用される |
+| `loginAction` / `logoutAction` + 型 + テスト | `src/actions/auth/` | `src/AGENTS.md` の型分離パターンの例示と同じ配置。login / logout 両ページ（ja/en 計 4 ページ）から共通利用される |
 | `mapGithubProfileToUser` + テスト | `src/features/auth/functions/` | 認証機能に閉じたビジネスロジック。`src/lib/` → `src/features/` の依存は許可されている（DDD のインフラ層→ドメイン層） |
 | `isScopeRequestForbidden` / `hasNonEmptyAccountScope` + テスト | `src/features/auth/functions/oauth-scope-policy.ts` | scope 固定化の判定ロジック（純粋関数）。auth.ts のフックから利用する |
 | `RequireLogin` / `RequireAnonymous` / `RequireSessionCookie` / `LoginPage` / `LoginContent` / `LogoutPage` / `LogoutContent` + stories + テスト | `src/features/auth/components/` | 認証機能に閉じた UI |
@@ -181,11 +181,11 @@ src/app/**/page.tsx（Storybook から参照されない、auth.ts に依存し�
 
 | # | パス | 内容 |
 | --- | --- | --- |
-| N1 | `src/actions/auth/types/signin-action.ts` | `SigninAction` 型 |
+| N1 | `src/actions/auth/types/login-action.ts` | `LoginAction` 型 |
 | N2 | `src/actions/auth/types/logout-action.ts` | `LogoutAction` 型 |
-| N3 | `src/actions/auth/signin-action.ts` | サインイン Server Action |
+| N3 | `src/actions/auth/login-action.ts` | ログイン Server Action |
 | N4 | `src/actions/auth/logout-action.ts` | ログアウト Server Action |
-| N5 | `src/actions/auth/__tests__/signin-action/signin-action.test.ts` | テスト |
+| N5 | `src/actions/auth/__tests__/login-action/login-action.test.ts` | テスト |
 | N6 | `src/actions/auth/__tests__/logout-action/logout-action.test.ts` | テスト |
 | N7 | `src/features/auth/functions/map-github-profile-to-user.ts` | GitHub プロフィール変換（email 匿名化） |
 | N8 | `src/features/auth/functions/auth-i18n.ts` | login / logout ページの i18n テキスト |
@@ -579,7 +579,7 @@ export const auth = betterAuth({
   hooks: {
     // /sign-in/social は body の scopes を authorize URL へ無条件追記するため（F37）、
     // 非空 scopes を BAD_REQUEST で拒否する（プライバシー設計の API 経路レベルの強制）。
-    // 自前の signinAction は scopes を渡さないため影響しない。
+    // 自前の loginAction は scopes を渡さないため影響しない。
     before: createAuthMiddleware((ctx) => {
       if (isScopeRequestForbidden(ctx.path, ctx.body)) {
         throw new APIError("BAD_REQUEST", {
@@ -685,9 +685,9 @@ export const { GET, POST } = toNextJsHandler(auth);
 
 #### 3-5. テスト（§6.1 / §6.7 参照）を作成し `npm run test` で全パスを確認
 
-### Phase 4: Server Action（signin / logout）
+### Phase 4: Server Action（login / logout）
 
-#### 4-1. `src/actions/auth/types/signin-action.ts`（新規）
+#### 4-1. `src/actions/auth/types/login-action.ts`（新規）
 
 ```typescript
 import type { Language } from "@/types/language";
@@ -698,7 +698,7 @@ import type { Language } from "@/types/language";
  * 成功時は GitHub の authorize URL へ、失敗時は `/login?error=signin_failed` へ
  * redirect() するため、正常終了で resolve することはない（redirect は内部で throw する）。
  */
-export type SigninAction = (language: Language) => Promise<void>;
+export type LoginAction = (language: Language) => Promise<void>;
 ```
 
 #### 4-2. `src/actions/auth/types/logout-action.ts`（新規）
@@ -707,7 +707,7 @@ export type SigninAction = (language: Language) => Promise<void>;
 import type { Language } from "@/types/language";
 
 /**
- * サインアウトを実行する Server Action の型。
+ * ログアウトを実行する Server Action の型。
  *
  * 成功時は言語対応の Home へ redirect() する（正常終了で resolve することはない）。
  * 想定外の失敗時は例外がそのまま呼び出し元（クライアント）へ伝播する。
@@ -715,19 +715,19 @@ import type { Language } from "@/types/language";
 export type LogoutAction = (language: Language) => Promise<void>;
 ```
 
-#### 4-3. `src/actions/auth/signin-action.ts`（新規）
+#### 4-3. `src/actions/auth/login-action.ts`（新規）
 
 ```typescript
 "use server";
 
 import { redirect } from "next/navigation";
-import type { SigninAction } from "@/actions/auth/types/signin-action";
+import type { LoginAction } from "@/actions/auth/types/login-action";
 import { isLanguage } from "@/functions/language";
 import { createIncludeLanguageAppPath } from "@/functions/url";
 import { auth } from "@/lib/better-auth/auth";
 import type { Language } from "@/types/language";
 
-interface TrySignInSocialResult {
+interface TryStartGithubLoginResult {
   readonly githubAuthorizationUrl?: string;
 }
 
@@ -739,11 +739,11 @@ interface TrySignInSocialResult {
  * redirect() は throw で制御されるため try ブロックの外で呼ぶ必要がある。
  * そのため try-catch はローカル関数に閉じ込め、結果オブジェクトで返す。
  */
-const trySignInSocial = async (
+const tryStartGithubLogin = async (
   language: Language
-): Promise<TrySignInSocialResult> => {
+): Promise<TryStartGithubLoginResult> => {
   try {
-    const signInResponse = await auth.api.signInSocial({
+    const authorizationResponse = await auth.api.signInSocial({
       body: {
         provider: "github",
         // 相対パスは better-auth の trustedOrigins 検証を常に通過する
@@ -752,18 +752,18 @@ const trySignInSocial = async (
       },
     });
 
-    return { githubAuthorizationUrl: signInResponse.url };
+    return { githubAuthorizationUrl: authorizationResponse.url };
   } catch {
     return {};
   }
 };
 
-export const signinAction: SigninAction = async (
+export const loginAction: LoginAction = async (
   language: Language
 ): Promise<void> => {
   // Server Action は HTTP 経由で任意の値を送り込めるため、実行時にも言語を検証する
   const safeLanguage = isLanguage(language) ? language : "ja";
-  const { githubAuthorizationUrl } = await trySignInSocial(safeLanguage);
+  const { githubAuthorizationUrl } = await tryStartGithubLogin(safeLanguage);
 
   if (!githubAuthorizationUrl) {
     redirect(
@@ -1543,7 +1543,7 @@ import {
   useState,
   useTransition,
 } from "react";
-import type { SigninAction } from "@/actions/auth/types/signin-action";
+import type { LoginAction } from "@/actions/auth/types/login-action";
 import { IconButton } from "@/components/icon-button";
 import { loginPageTexts } from "@/features/auth/functions/auth-i18n";
 import type { Language } from "@/types/language";
@@ -1551,13 +1551,13 @@ import type { Language } from "@/types/language";
 interface Props {
   readonly hasError: boolean;
   readonly language: Language;
-  readonly signinAction: SigninAction;
+  readonly loginAction: LoginAction;
 }
 
 export function LoginContent({
   hasError,
   language,
-  signinAction,
+  loginAction,
 }: Props): JSX.Element {
   const texts = loginPageTexts(language);
   // React StrictMode（開発時）の二重実行と、cacheComponents の Activity 復帰による
@@ -1571,24 +1571,24 @@ export function LoginContent({
   // 成功時（GitHub への redirect()）も Action Promise は NEXT_REDIRECT で reject される
   // （F35）。unstable_rethrow で内部エラーを transition へ再送出し、Next.js のルーターに
   // 遷移として処理させる。catch に残るのは Server Action 呼び出し自体の失敗のみ。
-  const startSignin = useCallback(() => {
+  const startLogin = useCallback(() => {
     startTransition(async () => {
       try {
-        await signinAction(language);
+        await loginAction(language);
       } catch (error) {
         unstable_rethrow(error);
         setHasClientError(true);
       }
     });
-  }, [language, signinAction]);
+  }, [language, loginAction]);
 
   useEffect(() => {
     if (hasError || hasStartedRef.current) {
       return;
     }
     hasStartedRef.current = true;
-    startSignin();
-  }, [hasError, startSignin]);
+    startLogin();
+  }, [hasError, startLogin]);
 
   if (hasError || hasClientError) {
     return (
@@ -1599,7 +1599,7 @@ export function LoginContent({
         <IconButton
           displayText={texts.retryButtonText}
           isLoading={isPending}
-          onPress={startSignin}
+          onPress={startLogin}
           showGithubIcon={true}
         />
       </div>
@@ -1619,13 +1619,13 @@ export function LoginContent({
 }
 ```
 
-> `?error=` の具体的な値（`access_denied` / `signin_failed` 等）は画面に表示しない。再試行ボタンは連打防止のため `useTransition` の pending 状態で `isLoading` にする。成功時も Action Promise が `NEXT_REDIRECT` で reject される（F35）ため、自動開始・再試行とも transition 内で `unstable_rethrow` を通す（旧設計の `void signinAction(language)` は成功のたびに未処理の rejection を発生させるため不可）。Server Action の呼び出し自体が失敗した場合のみ `hasClientError` でエラー表示に切り替える。
+> `?error=` の具体的な値（`access_denied` / `signin_failed` 等）は画面に表示しない。再試行ボタンは連打防止のため `useTransition` の pending 状態で `isLoading` にする。成功時も Action Promise が `NEXT_REDIRECT` で reject される（F35）ため、自動開始・再試行とも transition 内で `unstable_rethrow` を通す（旧設計の `void loginAction(language)` は成功のたびに未処理の rejection を発生させるため不可）。Server Action の呼び出し自体が失敗した場合のみ `hasClientError` でエラー表示に切り替える。
 
 #### 7-5. `src/features/auth/components/login-page.tsx`（新規）
 
 ```typescript
 import type { JSX } from "react";
-import type { SigninAction } from "@/actions/auth/types/signin-action";
+import type { LoginAction } from "@/actions/auth/types/login-action";
 import { Header } from "@/components/header";
 import { PageLayout } from "@/components/page-layout";
 import { LoginContent } from "@/features/auth/components/login-content";
@@ -1635,7 +1635,7 @@ import type { Language } from "@/types/language";
 interface Props {
   readonly hasError: boolean;
   readonly language: Language;
-  readonly signinAction: SigninAction;
+  readonly loginAction: LoginAction;
 }
 
 /**
@@ -1645,7 +1645,7 @@ interface Props {
 export function LoginPage({
   hasError,
   language,
-  signinAction,
+  loginAction,
 }: Props): JSX.Element {
   const currentUrlPath = createIncludeLanguageAppPath("login", language);
 
@@ -1664,7 +1664,7 @@ export function LoginPage({
       <LoginContent
         hasError={hasError}
         language={language}
-        signinAction={signinAction}
+        loginAction={loginAction}
       />
     </PageLayout>
   );
@@ -1805,7 +1805,7 @@ export function LogoutPage({ language, logoutAction }: Props): JSX.Element {
 ```typescript
 import type { Metadata, NextPage } from "next";
 import { Suspense } from "react";
-import { signinAction } from "@/actions/auth/signin-action";
+import { loginAction } from "@/actions/auth/login-action";
 import { i18nUrlList } from "@/constants/url";
 import { LoginPage } from "@/features/auth/components/login-page";
 import { RequireAnonymous } from "@/features/auth/components/require-anonymous";
@@ -1866,7 +1866,7 @@ const LoginPageContent = async ({
       <LoginPage
         hasError={hasError}
         language={language}
-        signinAction={signinAction}
+        loginAction={loginAction}
       />
     </RequireAnonymous>
   );
@@ -1997,10 +1997,10 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { LoginPage } from "./login-page";
 
 /**
- * Storybook 用のモック signinAction。
+ * Storybook 用のモック loginAction。
  * 自動開始 Story ではマウント時にこの関数が呼ばれるが、リダイレクトは発生しない。
  */
-const mockSigninAction = async (): Promise<void> => {
+const mockLoginAction = async (): Promise<void> => {
   await Promise.resolve();
 };
 
@@ -2021,7 +2021,7 @@ export const Japanese: Story = {
   args: {
     hasError: false,
     language: "ja",
-    signinAction: mockSigninAction,
+    loginAction: mockLoginAction,
   },
 };
 
@@ -2029,7 +2029,7 @@ export const English: Story = {
   args: {
     hasError: false,
     language: "en",
-    signinAction: mockSigninAction,
+    loginAction: mockLoginAction,
   },
 };
 
@@ -2037,7 +2037,7 @@ export const ErrorJapanese: Story = {
   args: {
     hasError: true,
     language: "ja",
-    signinAction: mockSigninAction,
+    loginAction: mockLoginAction,
   },
 };
 
@@ -2045,7 +2045,7 @@ export const ErrorEnglish: Story = {
   args: {
     hasError: true,
     language: "en",
-    signinAction: mockSigninAction,
+    loginAction: mockLoginAction,
   },
 };
 ```
@@ -2240,11 +2240,11 @@ describe("src/features/auth/functions/map-github-profile-to-user.ts mapGithubPro
 
 ### 6.2 Server Action のテスト
 
-#### `src/actions/auth/__tests__/signin-action/signin-action.test.ts`
+#### `src/actions/auth/__tests__/login-action/login-action.test.ts`
 
 ```typescript
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { signinAction } from "@/actions/auth/signin-action";
+import { loginAction } from "@/actions/auth/login-action";
 
 const mockSignInSocial = vi.fn();
 
@@ -2264,7 +2264,7 @@ vi.mock("next/navigation", () => ({
   redirect: (path: string) => mockRedirect(path),
 }));
 
-describe("src/actions/auth/signin-action.ts signinAction TestCases", () => {
+describe("src/actions/auth/login-action.ts loginAction TestCases", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockSignInSocial.mockResolvedValue({
@@ -2274,7 +2274,7 @@ describe("src/actions/auth/signin-action.ts signinAction TestCases", () => {
   });
 
   it("should call signInSocial with Japanese callback URLs and redirect to GitHub when language is ja", async () => {
-    await expect(signinAction("ja")).rejects.toThrow("NEXT_REDIRECT");
+    await expect(loginAction("ja")).rejects.toThrow("NEXT_REDIRECT");
 
     expect(mockSignInSocial).toHaveBeenCalledWith({
       body: {
@@ -2289,7 +2289,7 @@ describe("src/actions/auth/signin-action.ts signinAction TestCases", () => {
   });
 
   it("should call signInSocial with English callback URLs and redirect to GitHub when language is en", async () => {
-    await expect(signinAction("en")).rejects.toThrow("NEXT_REDIRECT");
+    await expect(loginAction("en")).rejects.toThrow("NEXT_REDIRECT");
 
     expect(mockSignInSocial).toHaveBeenCalledWith({
       body: {
@@ -2306,7 +2306,7 @@ describe("src/actions/auth/signin-action.ts signinAction TestCases", () => {
   it("should redirect to login page with error query when signInSocial throws", async () => {
     mockSignInSocial.mockRejectedValue(new Error("network error"));
 
-    await expect(signinAction("ja")).rejects.toThrow("NEXT_REDIRECT");
+    await expect(loginAction("ja")).rejects.toThrow("NEXT_REDIRECT");
 
     expect(mockRedirect).toHaveBeenCalledWith("/login?error=signin_failed");
   });
@@ -2314,7 +2314,7 @@ describe("src/actions/auth/signin-action.ts signinAction TestCases", () => {
   it("should redirect to English login page with error query when signInSocial throws and language is en", async () => {
     mockSignInSocial.mockRejectedValue(new Error("network error"));
 
-    await expect(signinAction("en")).rejects.toThrow("NEXT_REDIRECT");
+    await expect(loginAction("en")).rejects.toThrow("NEXT_REDIRECT");
 
     expect(mockRedirect).toHaveBeenCalledWith("/en/login?error=signin_failed");
   });
@@ -2322,14 +2322,14 @@ describe("src/actions/auth/signin-action.ts signinAction TestCases", () => {
   it("should redirect to login page with error query when signInSocial returns no url", async () => {
     mockSignInSocial.mockResolvedValue({ redirect: false, url: undefined });
 
-    await expect(signinAction("ja")).rejects.toThrow("NEXT_REDIRECT");
+    await expect(loginAction("ja")).rejects.toThrow("NEXT_REDIRECT");
 
     expect(mockRedirect).toHaveBeenCalledWith("/login?error=signin_failed");
   });
 
   it("should fall back to Japanese when language is invalid at runtime", async () => {
     await expect(
-      signinAction("fr" as unknown as Parameters<typeof signinAction>[0])
+      loginAction("fr" as unknown as Parameters<typeof loginAction>[0])
     ).rejects.toThrow("NEXT_REDIRECT");
 
     expect(mockSignInSocial).toHaveBeenCalledWith({
@@ -2711,14 +2711,14 @@ describe("src/features/auth/components/logout-content.tsx LogoutContent TestCase
 
 #### `src/features/auth/components/__tests__/login-content/login-content.test.tsx`
 
-LogoutContent のテストと同じ構造で `LoginContent` を検証する（`logoutAction` → `signinAction` に読み替え、props に `hasError: false` を追加で渡す）。NEXT_REDIRECT rejection ではエラーメッセージが表示されない事、通常の rejection では表示される事（`hasClientError` 経由）、再試行ボタンで `signinAction` が再実行される事の 3 ケースに加え、**`?error=` 時の OAuth 自動開始抑止（無限ループ防止の受け入れ基準）** を検証する以下の 2 ケースを作成する。
+LogoutContent のテストと同じ構造で `LoginContent` を検証する（`logoutAction` → `loginAction` に読み替え、props に `hasError: false` を追加で渡す）。NEXT_REDIRECT rejection ではエラーメッセージが表示されない事、通常の rejection では表示される事（`hasClientError` 経由）、再試行ボタンで `loginAction` が再実行される事の 3 ケースに加え、**`?error=` 時の OAuth 自動開始抑止（無限ループ防止の受け入れ基準）** を検証する以下の 2 ケースを作成する。
 
 ```typescript
-  it("should not call signinAction on initial render when hasError is true", async () => {
-    const signinAction = vi.fn().mockResolvedValue(undefined);
+  it("should not call loginAction on initial render when hasError is true", async () => {
+    const loginAction = vi.fn().mockResolvedValue(undefined);
 
     render(
-      <LoginContent hasError={true} language="ja" signinAction={signinAction} />
+      <LoginContent hasError={true} language="ja" loginAction={loginAction} />
     );
 
     // エラー表示（自動開始の抑止画面）が描画され、自動開始は行われない
@@ -2730,21 +2730,21 @@ LogoutContent のテストと同じ構造で `LoginContent` を検証する（`l
     expect(
       screen.getByRole("button", { name: "再試行" })
     ).toBeInTheDocument();
-    expect(signinAction).not.toHaveBeenCalled();
+    expect(loginAction).not.toHaveBeenCalled();
   });
 
-  it("should call signinAction once when retry button is pressed after error", async () => {
-    const signinAction = vi.fn().mockResolvedValue(undefined);
+  it("should call loginAction once when retry button is pressed after error", async () => {
+    const loginAction = vi.fn().mockResolvedValue(undefined);
 
     render(
-      <LoginContent hasError={true} language="ja" signinAction={signinAction} />
+      <LoginContent hasError={true} language="ja" loginAction={loginAction} />
     );
 
     const retryButton = await screen.findByRole("button", { name: "再試行" });
     await userEvent.click(retryButton);
 
     await waitFor(() => {
-      expect(signinAction).toHaveBeenCalledTimes(1);
+      expect(loginAction).toHaveBeenCalledTimes(1);
     });
   });
 ```
