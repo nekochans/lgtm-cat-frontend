@@ -4,7 +4,10 @@ import { loginAction } from "@/actions/auth/login-action";
 import { i18nUrlList } from "@/constants/url";
 import { LoginPage } from "@/features/auth/components/login-page";
 import { RequireAnonymous } from "@/features/auth/components/require-anonymous";
-import { resolveLoginReturnPath } from "@/functions/auth";
+import {
+  resolveLoginErrorCode,
+  resolveLoginReturnPath,
+} from "@/functions/auth";
 import { appName, metaTagList } from "@/functions/meta-tag";
 import { convertLanguageToOpenGraphLocale } from "@/functions/open-graph-locale";
 import { appBaseUrl } from "@/lib/config/app-base-url";
@@ -45,7 +48,7 @@ export const metadata: Metadata = {
 
 interface Props {
   readonly searchParams: Promise<{
-    readonly error?: string;
+    readonly error?: string | readonly string[];
     readonly returnTo?: string | readonly string[];
   }>;
 }
@@ -56,13 +59,13 @@ const LoginPageContent = async ({
   readonly searchParams: Props["searchParams"];
 }) => {
   const params = await searchParams;
-  const hasError = params.error != null;
+  const errorCode = resolveLoginErrorCode(params.error);
   const returnTo = resolveLoginReturnPath(params.returnTo, language);
 
   return (
     <RequireAnonymous language={language} returnTo={returnTo}>
       <LoginPage
-        hasError={hasError}
+        errorCode={errorCode}
         language={language}
         loginAction={loginAction}
         returnTo={returnTo}

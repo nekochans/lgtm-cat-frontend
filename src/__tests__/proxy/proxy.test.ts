@@ -29,6 +29,30 @@ describe("src/proxy.ts proxy TestCases", () => {
     expect(response.headers.get("authorization")).toBeNull();
   });
 
+  it("should preserve query string when ja login path is normalized", async () => {
+    const request = new NextRequest(
+      "http://localhost:2222/ja/login?returnTo=%2Fupload&error=access_denied"
+    );
+
+    const response = await proxy(request);
+
+    expect(response.status).toBe(302);
+    expect(response.headers.get("location")).toBe(
+      "http://localhost:2222/login?returnTo=%2Fupload&error=access_denied"
+    );
+  });
+
+  it("should preserve query string when /ja is normalized to home", async () => {
+    const request = new NextRequest("http://localhost:2222/ja?error=1");
+
+    const response = await proxy(request);
+
+    expect(response.status).toBe(302);
+    expect(response.headers.get("location")).toBe(
+      "http://localhost:2222/?error=1"
+    );
+  });
+
   it("should not reflect cookie header in redirect response when /ja is normalized to home", async () => {
     const request = new NextRequest("http://localhost:2222/ja", {
       headers: {

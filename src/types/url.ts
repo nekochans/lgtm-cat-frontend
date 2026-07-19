@@ -29,3 +29,12 @@ export type IncludeLanguageAppPath =
 export type IncludeLanguageAppHref =
   | IncludeLanguageAppPath
   | `${IncludeLanguageAppPath}?${string}`;
+
+/**
+ * ヘッダーの言語切替リンクの遷移先。
+ * ログインページのようにクエリ（returnTo / error）を引き継ぐ必要があるページが、
+ * 既定の pathname だけの切替を上書きするために使う。
+ */
+export type LanguageSwitchHrefs = Readonly<
+  Record<Language, IncludeLanguageAppHref>
+>;

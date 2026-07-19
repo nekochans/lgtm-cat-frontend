@@ -9,7 +9,7 @@ GitHub アカウントによる利用者認証。LGTMeow の認証手段は GitH
 _Avoid_: サインイン、GitHub 連携
 
 **匿名化メールアドレス**:
-実メールアドレスの代わりに `user.email` へ格納するダミー値。形式は `gh-<GitHub User ID>@no-email.lgtmeow.invalid`。LGTMeow はユーザーの実メールアドレスを一切取得・保存しない。
+実メールアドレスの代わりに `user.email` へ格納するダミー値。形式は `gh-<GitHub User ID>@no-email.lgtmeow.invalid`。LGTMeow は `user:email` scope を要求せず、実メールアドレスを DB に保存しない（GitHub の公開プロフィールに実メールアドレスが含まれる場合、OAuth 処理中にメモリ上を通過することはある）。
 _Avoid_: ダミーメール、仮メール
 
 **アクセス制御ページ**:

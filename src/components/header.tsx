@@ -4,17 +4,19 @@ import type { JSX } from "react";
 import { HeaderDesktop } from "@/components/header-desktop";
 import { HeaderMobile } from "@/components/header-mobile";
 import type { Language } from "@/types/language";
-import type { IncludeLanguageAppPath } from "@/types/url";
+import type { IncludeLanguageAppPath, LanguageSwitchHrefs } from "@/types/url";
 
 interface Props {
   readonly currentUrlPath: IncludeLanguageAppPath;
   readonly isLoggedIn: boolean;
   readonly language: Language;
+  readonly languageSwitchHrefs?: LanguageSwitchHrefs;
   readonly loginReturnTo?: IncludeLanguageAppPath;
 }
 
 export function Header({
   language,
+  languageSwitchHrefs,
   currentUrlPath,
   isLoggedIn,
   loginReturnTo,
@@ -27,6 +29,7 @@ export function Header({
           currentUrlPath={currentUrlPath}
           isLoggedIn={isLoggedIn}
           language={language}
+          languageSwitchHrefs={languageSwitchHrefs}
           loginReturnTo={loginReturnTo}
         />
       </div>
@@ -36,6 +39,7 @@ export function Header({
           currentUrlPath={currentUrlPath}
           isLoggedIn={isLoggedIn}
           language={language}
+          languageSwitchHrefs={languageSwitchHrefs}
           loginReturnTo={loginReturnTo}
         />
       </div>

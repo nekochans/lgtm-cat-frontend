@@ -24,7 +24,6 @@ type Story = StoryObj<typeof meta>;
 
 export const Japanese: Story = {
   args: {
-    hasError: false,
     language: "ja",
     loginAction: mockLoginAction,
   },
@@ -32,7 +31,6 @@ export const Japanese: Story = {
 
 export const English: Story = {
   args: {
-    hasError: false,
     language: "en",
     loginAction: mockLoginAction,
   },
@@ -40,7 +38,7 @@ export const English: Story = {
 
 export const ErrorJapanese: Story = {
   args: {
-    hasError: true,
+    errorCode: "signin_failed",
     language: "ja",
     loginAction: mockLoginAction,
   },
@@ -48,7 +46,7 @@ export const ErrorJapanese: Story = {
 
 export const ErrorEnglish: Story = {
   args: {
-    hasError: true,
+    errorCode: "signin_failed",
     language: "en",
     loginAction: mockLoginAction,
   },

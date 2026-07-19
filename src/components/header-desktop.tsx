@@ -22,17 +22,19 @@ import { removeLanguageFromAppPath } from "@/functions/language";
 import { createMcpLinksFromLanguages } from "@/functions/mcp";
 import { createIncludeLanguageAppPath } from "@/functions/url";
 import type { Language } from "@/types/language";
-import type { IncludeLanguageAppPath } from "@/types/url";
+import type { IncludeLanguageAppPath, LanguageSwitchHrefs } from "@/types/url";
 
 interface Props {
   readonly currentUrlPath: IncludeLanguageAppPath;
   readonly isLoggedIn: boolean;
   readonly language: Language;
+  readonly languageSwitchHrefs?: LanguageSwitchHrefs;
   readonly loginReturnTo?: IncludeLanguageAppPath;
 }
 
 export function HeaderDesktop({
   language,
+  languageSwitchHrefs,
   currentUrlPath,
   isLoggedIn,
   loginReturnTo,
@@ -110,7 +112,7 @@ export function HeaderDesktop({
                     className={`data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm ${
                       language === "ja" ? "!bg-orange-400" : ""
                     }`}
-                    href={removedLanguagePath}
+                    href={languageSwitchHrefs?.ja ?? removedLanguagePath}
                     id="ja"
                     textValue="日本語"
                   >
@@ -128,9 +130,10 @@ export function HeaderDesktop({
                       language === "en" ? "!bg-orange-400" : ""
                     }`}
                     href={
-                      removedLanguagePath === "/"
+                      languageSwitchHrefs?.en ??
+                      (removedLanguagePath === "/"
                         ? "/en"
-                        : `/en${removedLanguagePath}`
+                        : `/en${removedLanguagePath}`)
                     }
                     id="en"
                     textValue="English"

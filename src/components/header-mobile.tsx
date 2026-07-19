@@ -29,12 +29,13 @@ import { createLoginAppPath } from "@/functions/auth";
 import { removeLanguageFromAppPath } from "@/functions/language";
 import { createIncludeLanguageAppPath } from "@/functions/url";
 import type { Language } from "@/types/language";
-import type { IncludeLanguageAppPath } from "@/types/url";
+import type { IncludeLanguageAppPath, LanguageSwitchHrefs } from "@/types/url";
 
 interface Props {
   readonly currentUrlPath: IncludeLanguageAppPath;
   readonly isLoggedIn: boolean;
   readonly language: Language;
+  readonly languageSwitchHrefs?: LanguageSwitchHrefs;
   readonly loginReturnTo?: IncludeLanguageAppPath;
 }
 
@@ -50,12 +51,14 @@ function drawerAriaLabel(menuType: MenuType, language: Language): string {
 
 interface LanguageMenuNavProps {
   readonly language: Language;
+  readonly languageSwitchHrefs?: LanguageSwitchHrefs;
   readonly onLinkClick: () => void;
   readonly removedLanguagePath: string;
 }
 
 function LanguageMenuNav({
   language,
+  languageSwitchHrefs,
   removedLanguagePath,
   onLinkClick,
 }: LanguageMenuNavProps): JSX.Element {
@@ -70,7 +73,7 @@ function LanguageMenuNav({
     <nav className="mb-4">
       <Link
         className={`flex h-[70px] items-center gap-3 border-orange-200 border-b px-5 py-3 text-background text-base ${jaClassName}`}
-        href={removedLanguagePath}
+        href={languageSwitchHrefs?.ja ?? removedLanguagePath}
         onClick={onLinkClick}
       >
         {isJapanese && <RightIcon />}
@@ -78,7 +81,10 @@ function LanguageMenuNav({
       </Link>
       <Link
         className={`flex h-[70px] items-center gap-3 border-orange-200 border-b px-5 py-3 text-background text-base ${enClassName}`}
-        href={removedLanguagePath === "/" ? "/en" : `/en${removedLanguagePath}`}
+        href={
+          languageSwitchHrefs?.en ??
+          (removedLanguagePath === "/" ? "/en" : `/en${removedLanguagePath}`)
+        }
         onClick={onLinkClick}
       >
         {isEnglish && <RightIcon />}
@@ -91,6 +97,7 @@ function LanguageMenuNav({
 interface UnloggedInMenuProps {
   readonly currentUrlPath: IncludeLanguageAppPath;
   readonly language: Language;
+  readonly languageSwitchHrefs?: LanguageSwitchHrefs;
   readonly menuType: MenuType;
   readonly onCloseMenus: () => void;
   readonly removedLanguagePath: string;
@@ -99,6 +106,7 @@ interface UnloggedInMenuProps {
 function UnloggedInMenu({
   currentUrlPath,
   language,
+  languageSwitchHrefs,
   removedLanguagePath,
   menuType,
   onCloseMenus,
@@ -118,6 +126,7 @@ function UnloggedInMenu({
       {menuType === "language" && (
         <LanguageMenuNav
           language={language}
+          languageSwitchHrefs={languageSwitchHrefs}
           onLinkClick={onCloseMenus}
           removedLanguagePath={removedLanguagePath}
         />
@@ -169,6 +178,7 @@ function UnloggedInMenu({
 
 interface LoggedInMenuProps {
   readonly language: Language;
+  readonly languageSwitchHrefs?: LanguageSwitchHrefs;
   readonly menuType: MenuType;
   readonly onCloseMenus: () => void;
   readonly removedLanguagePath: string;
@@ -176,6 +186,7 @@ interface LoggedInMenuProps {
 
 function LoggedInMenu({
   language,
+  languageSwitchHrefs,
   removedLanguagePath,
   menuType,
   onCloseMenus,
@@ -194,6 +205,7 @@ function LoggedInMenu({
       {menuType === "language" && (
         <LanguageMenuNav
           language={language}
+          languageSwitchHrefs={languageSwitchHrefs}
           onLinkClick={onCloseMenus}
           removedLanguagePath={removedLanguagePath}
         />
@@ -226,6 +238,7 @@ function LoggedInMenu({
 
 export function HeaderMobile({
   language,
+  languageSwitchHrefs,
   currentUrlPath,
   isLoggedIn,
   loginReturnTo,
@@ -316,6 +329,7 @@ export function HeaderMobile({
                   <UnloggedInMenu
                     currentUrlPath={loginReturnTo ?? currentUrlPath}
                     language={language}
+                    languageSwitchHrefs={languageSwitchHrefs}
                     menuType={menuType}
                     onCloseMenus={handleCloseMenus}
                     removedLanguagePath={removedLanguagePath}
@@ -324,6 +338,7 @@ export function HeaderMobile({
                 {isLoggedIn && (
                   <LoggedInMenu
                     language={language}
+                    languageSwitchHrefs={languageSwitchHrefs}
                     menuType={menuType}
                     onCloseMenus={handleCloseMenus}
                     removedLanguagePath={removedLanguagePath}

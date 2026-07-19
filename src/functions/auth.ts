@@ -49,6 +49,23 @@ export function resolveLoginReturnPath(
 }
 
 /**
+ * ログインページの error クエリからエラーコードを取り出す。
+ * searchParams は同名クエリの重複で配列になり得るため、先頭の文字列だけを採用する。
+ * 値は表示には使わず、エラー状態の有無の判定と言語切替リンクへの引き継ぎに使う。
+ */
+export function resolveLoginErrorCode(error: unknown): string | undefined {
+  if (typeof error === "string") {
+    return error;
+  }
+
+  if (Array.isArray(error) && typeof error[0] === "string") {
+    return error[0];
+  }
+
+  return;
+}
+
+/**
  * ログインページへの内部リンクを組み立てる。
  * Home は既定の戻り先なので returnTo を付けず、既存の URL を維持する。
  */

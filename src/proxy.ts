@@ -79,15 +79,12 @@ export async function proxy(request: NextRequest) {
   }
 
   if (language === "ja") {
-    const removedLanguagePath = removeLanguageFromAppPath(nextUrl.pathname);
-    if (nextUrl.pathname !== "/ja") {
-      return NextResponse.redirect(new URL(removedLanguagePath, request.url), {
-        status: httpStatusCode.found,
-        statusText: "Found",
-      });
-    }
+    // /ja/login?returnTo=...&error=... のようなクエリ（ログインの戻り先・エラー状態）を
+    // 正規化後も維持するため、pathname だけを差し替えてリダイレクトする
+    const redirectUrl = nextUrl.clone();
+    redirectUrl.pathname = removeLanguageFromAppPath(nextUrl.pathname);
 
-    return NextResponse.redirect(new URL("/", request.url), {
+    return NextResponse.redirect(redirectUrl, {
       status: httpStatusCode.found,
       statusText: "Found",
     });
