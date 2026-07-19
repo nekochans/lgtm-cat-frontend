@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { Header } from "@/components/header";
 import { DocsGitHubAppPage } from "./docs-github-app-page";
 
 const meta = {
@@ -19,8 +20,14 @@ type Story = StoryObj<typeof meta>;
  */
 export const Japanese: Story = {
   args: {
+    header: (
+      <Header
+        currentUrlPath="/docs/github-app"
+        isLoggedIn={false}
+        language="ja"
+      />
+    ),
     language: "ja",
-    currentUrlPath: "/docs/github-app",
   },
   parameters: {
     nextjs: {
@@ -36,8 +43,14 @@ export const Japanese: Story = {
  */
 export const English: Story = {
   args: {
+    header: (
+      <Header
+        currentUrlPath="/en/docs/github-app"
+        isLoggedIn={false}
+        language="en"
+      />
+    ),
     language: "en",
-    currentUrlPath: "/en/docs/github-app",
   },
   parameters: {
     nextjs: {

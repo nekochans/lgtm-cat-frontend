@@ -12,10 +12,9 @@ import {
   sampleLgtmScreenshotWidth,
 } from "@/features/docs/functions/github-app-text";
 import type { Language } from "@/types/language";
-import type { IncludeLanguageAppPath } from "@/types/url";
 
 interface Props {
-  readonly currentUrlPath: IncludeLanguageAppPath;
+  readonly header: ReactNode;
   readonly language: Language;
 }
 
@@ -43,14 +42,13 @@ function Section({ title, children }: SectionProps) {
   );
 }
 
-export function DocsGitHubAppPage({ language, currentUrlPath }: Props) {
+export function DocsGitHubAppPage({ header, language }: Props) {
   const texts = getGitHubAppTexts(language);
   const basicFeatureDescription = getBasicFeatureFullDescription(language);
 
   return (
     <PageLayout
-      currentUrlPath={currentUrlPath}
-      isLoggedIn={false}
+      header={header}
       language={language}
       mainClassName="flex w-full flex-1 flex-col items-center bg-background"
     >

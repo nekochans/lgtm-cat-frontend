@@ -28,6 +28,10 @@ describe("src/functions/url.ts createIncludeLanguageAppPath TestCases", () => {
     ${"favorites"}                    | ${"en"}  | ${"/en/favorites"}
     ${"my-cats"}                      | ${"ja"}  | ${"/my-cats"}
     ${"my-cats"}                      | ${"en"}  | ${"/en/my-cats"}
+    ${"login"}                        | ${"ja"}  | ${"/login"}
+    ${"login"}                        | ${"en"}  | ${"/en/login"}
+    ${"logout"}                       | ${"ja"}  | ${"/logout"}
+    ${"logout"}                       | ${"en"}  | ${"/en/logout"}
   `(
     "should return $expected when appPathName is $appPathName and language is $language",
     ({ appPathName, language, expected }: TestTable) => {

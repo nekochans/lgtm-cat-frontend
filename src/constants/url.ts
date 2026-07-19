@@ -7,6 +7,7 @@ export const appPathList = {
   maintenance: "/maintenance",
   "external-transmission-policy": "/external-transmission-policy",
   login: "/login",
+  logout: "/logout",
   favorites: "/favorites",
   "my-cats": "/my-cats",
   "docs-how-to-use": "/docs/how-to-use",
@@ -42,6 +43,10 @@ export const i18nUrlList = {
   login: {
     ja: `${appPathList.login}/`,
     en: `/en${appPathList.login}/`,
+  },
+  logout: {
+    ja: `${appPathList.logout}/`,
+    en: `/en${appPathList.logout}/`,
   },
   favorites: {
     ja: `${appPathList.favorites}/`,

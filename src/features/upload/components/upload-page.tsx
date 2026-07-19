@@ -1,8 +1,7 @@
-import type { ComponentProps } from "react";
+import type { ComponentProps, ReactNode } from "react";
 import { PageLayout } from "@/components/page-layout";
 import { UploadForm } from "@/features/upload/components/upload-form";
 import type { Language } from "@/types/language";
-import type { IncludeLanguageAppPath } from "@/types/url";
 
 /**
  * UploadForm の Props から language を除外した型
@@ -11,19 +10,15 @@ import type { IncludeLanguageAppPath } from "@/types/url";
 type UploadFormProps = Omit<ComponentProps<typeof UploadForm>, "language">;
 
 interface Props extends UploadFormProps {
-  readonly currentUrlPath: IncludeLanguageAppPath;
+  readonly header: ReactNode;
   readonly language: Language;
 }
 
 export function UploadPage(props: Props) {
-  const { language, currentUrlPath, ...uploadFormProps } = props;
+  const { language, header, ...uploadFormProps } = props;
 
   return (
-    <PageLayout
-      currentUrlPath={currentUrlPath}
-      isLoggedIn={false}
-      language={language}
-    >
+    <PageLayout header={header} language={language}>
       {/* モーダル風の背景オーバーレイ */}
       <div className="absolute inset-0 bg-black/50" />
       {/* フォームコンテナ (オーバーレイの上に表示) */}

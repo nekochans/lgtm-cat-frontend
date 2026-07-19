@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { Header } from "@/components/header";
 import {
   createImageSizeTooLargeErrorMessage,
   errorMessageNotCatImage,
@@ -61,8 +62,10 @@ type Story = StoryObj<typeof meta>;
  */
 export const Japanese: Story = {
   args: {
+    header: (
+      <Header currentUrlPath="/upload" isLoggedIn={false} language="ja" />
+    ),
     language: "ja",
-    currentUrlPath: "/upload",
   },
   parameters: {
     nextjs: {
@@ -75,13 +78,13 @@ export const Japanese: Story = {
 
 /**
  * 英語版アップロードページ
- * 注意: currentUrlPath は本番実装に合わせて "/upload" を使用
- * (英語版でも日本語版と同じパスが使用されている)
  */
 export const English: Story = {
   args: {
+    header: (
+      <Header currentUrlPath="/en/upload" isLoggedIn={false} language="en" />
+    ),
     language: "en",
-    currentUrlPath: "/upload",
   },
   parameters: {
     nextjs: {
@@ -101,8 +104,10 @@ export const English: Story = {
  */
 export const Preview: Story = {
   args: {
+    header: (
+      <Header currentUrlPath="/upload" isLoggedIn={false} language="ja" />
+    ),
     language: "ja",
-    currentUrlPath: "/upload",
     initialState: "preview",
     initialPreviewUrl:
       "https://placehold.co/373x371/fed7aa/7c2d12?text=Preview",
@@ -128,8 +133,10 @@ export const Preview: Story = {
  */
 export const Uploading: Story = {
   args: {
+    header: (
+      <Header currentUrlPath="/upload" isLoggedIn={false} language="ja" />
+    ),
     language: "ja",
-    currentUrlPath: "/upload",
     initialState: "uploading",
     initialPreviewUrl:
       "https://placehold.co/373x371/fed7aa/7c2d12?text=Preview",
@@ -156,8 +163,10 @@ export const Uploading: Story = {
  */
 export const Success: Story = {
   args: {
+    header: (
+      <Header currentUrlPath="/upload" isLoggedIn={false} language="ja" />
+    ),
     language: "ja",
-    currentUrlPath: "/upload",
     initialState: "success",
     initialLgtmImageUrl: createLgtmImageUrl(
       "https://placehold.co/373x371/fed7aa/7c2d12?text=LGTM"
@@ -185,8 +194,10 @@ export const Success: Story = {
  */
 export const ErrorNotCatImage: Story = {
   args: {
+    header: (
+      <Header currentUrlPath="/upload" isLoggedIn={false} language="ja" />
+    ),
     language: "ja",
-    currentUrlPath: "/upload",
     initialState: "error",
     initialErrorMessages: [errorMessageNotCatImage("ja")],
   },
@@ -209,8 +220,10 @@ export const ErrorNotCatImage: Story = {
  */
 export const ErrorFileTooLarge: Story = {
   args: {
+    header: (
+      <Header currentUrlPath="/upload" isLoggedIn={false} language="ja" />
+    ),
     language: "ja",
-    currentUrlPath: "/upload",
     initialState: "error",
     initialErrorMessages: createImageSizeTooLargeErrorMessage("ja"),
   },
@@ -234,8 +247,10 @@ export const ErrorFileTooLarge: Story = {
  */
 export const ErrorPersonFaceInImage: Story = {
   args: {
+    header: (
+      <Header currentUrlPath="/upload" isLoggedIn={false} language="ja" />
+    ),
     language: "ja",
-    currentUrlPath: "/upload",
     initialState: "error",
     initialErrorMessages: [errorMessagePersonFaceInImage("ja")],
   },
@@ -265,8 +280,10 @@ export const ErrorPersonFaceInImage: Story = {
  */
 export const InteractiveSuccess: Story = {
   args: {
+    header: (
+      <Header currentUrlPath="/upload" isLoggedIn={false} language="ja" />
+    ),
     language: "ja",
-    currentUrlPath: "/upload",
     ...createSuccessMocks(),
   },
   parameters: {

@@ -1,17 +1,17 @@
+import type { ReactNode } from "react";
 import { ComingSoonContent } from "@/components/coming-soon-content";
 import { PageLayout } from "@/components/page-layout";
-import { createIncludeLanguageAppPath } from "@/functions/url";
 import type { Language } from "@/types/language";
 
 interface Props {
+  readonly header: ReactNode;
   readonly language: Language;
 }
 
-export function FavoritesPage({ language }: Props) {
+export function FavoritesPage({ header, language }: Props) {
   return (
     <PageLayout
-      currentUrlPath={createIncludeLanguageAppPath("favorites", language)}
-      isLoggedIn={false}
+      header={header}
       language={language}
       mainClassName="flex w-full flex-1 flex-col items-center"
     >

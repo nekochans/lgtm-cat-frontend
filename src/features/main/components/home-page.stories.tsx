@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { Header } from "@/components/header";
 import { LgtmImages } from "@/features/main/components/lgtm-images";
 import { fetchLgtmImagesMockBody } from "@/mocks/api/fetch-lgtm-images-mock-body";
 import { createLgtmImageId, createLgtmImageUrl } from "@/types/lgtm-image";
@@ -37,9 +38,8 @@ type Story = StoryObj<typeof meta>;
  */
 export const JapaneseRandom: Story = {
   args: {
+    header: <Header currentUrlPath="/" isLoggedIn={false} language="ja" />,
     language: "ja",
-    currentUrlPath: "/",
-    view: "random",
     lgtmImages: <MockLgtmImages />,
   },
   parameters: {
@@ -56,9 +56,8 @@ export const JapaneseRandom: Story = {
  */
 export const JapaneseLatest: Story = {
   args: {
+    header: <Header currentUrlPath="/" isLoggedIn={false} language="ja" />,
     language: "ja",
-    currentUrlPath: "/",
-    view: "latest",
     lgtmImages: <MockLgtmImages />,
   },
   parameters: {
@@ -75,9 +74,8 @@ export const JapaneseLatest: Story = {
  */
 export const EnglishRandom: Story = {
   args: {
+    header: <Header currentUrlPath="/en" isLoggedIn={false} language="en" />,
     language: "en",
-    currentUrlPath: "/en",
-    view: "random",
     lgtmImages: <MockLgtmImages />,
   },
   parameters: {
@@ -94,9 +92,8 @@ export const EnglishRandom: Story = {
  */
 export const EnglishLatest: Story = {
   args: {
+    header: <Header currentUrlPath="/en" isLoggedIn={false} language="en" />,
     language: "en",
-    currentUrlPath: "/en",
-    view: "latest",
     lgtmImages: <MockLgtmImages />,
   },
   parameters: {
@@ -113,9 +110,8 @@ export const EnglishLatest: Story = {
  */
 export const FewImages: Story = {
   args: {
+    header: <Header currentUrlPath="/" isLoggedIn={false} language="ja" />,
     language: "ja",
-    currentUrlPath: "/",
-    view: "random",
     lgtmImages: (
       <LgtmImages hideHeartIcon={true} images={mockImages.slice(0, 3)} />
     ),
@@ -140,9 +136,8 @@ export const FewImages: Story = {
  */
 export const EmptyImages: Story = {
   args: {
+    header: <Header currentUrlPath="/" isLoggedIn={false} language="ja" />,
     language: "ja",
-    currentUrlPath: "/",
-    view: "random",
     lgtmImages: <LgtmImages hideHeartIcon={true} images={[]} />,
   },
   parameters: {

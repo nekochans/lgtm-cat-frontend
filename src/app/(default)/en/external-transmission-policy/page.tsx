@@ -1,6 +1,7 @@
 import type { Metadata, NextPage } from "next";
 import { cacheLife } from "next/cache";
 import { notFound } from "next/navigation";
+import { SessionHeader } from "@/components/session-header";
 import { i18nUrlList } from "@/constants/url";
 import { ExternalTransmissionPolicyPage } from "@/features/external-transmission-policy/components/external-transmission-policy-page";
 import { appName, metaTagList } from "@/functions/meta-tag";
@@ -65,10 +66,15 @@ const EnExternalTransmissionPolicy: NextPage = async () => {
 
   return (
     <ExternalTransmissionPolicyPage
-      currentUrlPath={createIncludeLanguageAppPath(
-        "external-transmission-policy",
-        language
-      )}
+      header={
+        <SessionHeader
+          currentUrlPath={createIncludeLanguageAppPath(
+            "external-transmission-policy",
+            language
+          )}
+          language={language}
+        />
+      }
       language={language}
       markdownContent={markdownContent}
     />

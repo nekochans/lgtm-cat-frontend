@@ -4,21 +4,22 @@ import type { JSX } from "react";
 import { HeaderDesktop } from "@/components/header-desktop";
 import { HeaderMobile } from "@/components/header-mobile";
 import type { Language } from "@/types/language";
-import type { IncludeLanguageAppPath } from "@/types/url";
+import type { IncludeLanguageAppPath, LanguageSwitchHrefs } from "@/types/url";
 
 interface Props {
   readonly currentUrlPath: IncludeLanguageAppPath;
-  // TODO: ログイン機能実装後は hideLoginButton Propsを削除する
-  readonly hideLoginButton?: boolean;
   readonly isLoggedIn: boolean;
   readonly language: Language;
+  readonly languageSwitchHrefs?: LanguageSwitchHrefs;
+  readonly loginReturnTo?: IncludeLanguageAppPath;
 }
 
 export function Header({
   language,
+  languageSwitchHrefs,
   currentUrlPath,
-  hideLoginButton,
   isLoggedIn,
+  loginReturnTo,
 }: Props): JSX.Element {
   return (
     <>
@@ -26,18 +27,20 @@ export function Header({
       <div className="md:hidden">
         <HeaderMobile
           currentUrlPath={currentUrlPath}
-          hideLoginButton={hideLoginButton}
           isLoggedIn={isLoggedIn}
           language={language}
+          languageSwitchHrefs={languageSwitchHrefs}
+          loginReturnTo={loginReturnTo}
         />
       </div>
       {/* デスクトップ: md以上で表示 */}
       <div className="hidden md:block">
         <HeaderDesktop
           currentUrlPath={currentUrlPath}
-          hideLoginButton={hideLoginButton}
           isLoggedIn={isLoggedIn}
           language={language}
+          languageSwitchHrefs={languageSwitchHrefs}
+          loginReturnTo={loginReturnTo}
         />
       </div>
     </>

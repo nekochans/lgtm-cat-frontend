@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { Header } from "@/components/header";
 import { FavoritesPage } from "./favorites-page";
 
 const meta = {
@@ -16,6 +17,9 @@ type Story = StoryObj<typeof meta>;
 
 export const Japanese: Story = {
   args: {
+    header: (
+      <Header currentUrlPath="/favorites" isLoggedIn={true} language="ja" />
+    ),
     language: "ja",
   },
   parameters: {
@@ -29,6 +33,9 @@ export const Japanese: Story = {
 
 export const English: Story = {
   args: {
+    header: (
+      <Header currentUrlPath="/en/favorites" isLoggedIn={true} language="en" />
+    ),
     language: "en",
   },
   parameters: {

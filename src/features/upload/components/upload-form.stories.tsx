@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { http } from "msw";
+import { Header } from "@/components/header";
 import { PageLayout } from "@/components/page-layout";
 import { mockIsAcceptableCatImage } from "@/mocks/api/external/lgtmeow/mock-is-acceptable-cat-image";
 import { mockIsAcceptableCatImageNotCatImage } from "@/mocks/api/external/lgtmeow/mock-is-acceptable-cat-image-not-cat-image";
@@ -118,8 +119,13 @@ const meta = {
       const currentUrlPath: IncludeLanguageAppPath = `/${language}/upload`;
       return (
         <PageLayout
-          currentUrlPath={currentUrlPath}
-          isLoggedIn={false}
+          header={
+            <Header
+              currentUrlPath={currentUrlPath}
+              isLoggedIn={false}
+              language={language}
+            />
+          }
           language={language}
         >
           {/* モーダル風の背景オーバーレイ */}
