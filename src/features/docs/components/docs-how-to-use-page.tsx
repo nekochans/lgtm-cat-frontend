@@ -7,7 +7,6 @@ import {
 } from "@/features/docs/functions/how-to-use-text";
 import { appBaseUrl } from "@/lib/config/app-base-url";
 import type { Language } from "@/types/language";
-import type { IncludeLanguageAppPath } from "@/types/url";
 
 // トップレベルに正規表現を定義
 const MARKDOWN_LINK_SPLIT_REGEX = /(\[[^\]]+\]\([^)]+\))/g;
@@ -16,7 +15,7 @@ const BACKTICK_CODE_SPLIT_REGEX = /(`[^`]+`)/g;
 const BACKTICK_CODE_MATCH_REGEX = /`([^`]+)`/;
 
 interface Props {
-  readonly currentUrlPath: IncludeLanguageAppPath;
+  readonly header: ReactNode;
   readonly language: Language;
 }
 
@@ -131,14 +130,13 @@ function TextWithLinks({ text, baseUrl }: TextWithLinksProps) {
   );
 }
 
-export function DocsHowToUsePage({ language, currentUrlPath }: Props) {
+export function DocsHowToUsePage({ header, language }: Props) {
   const texts = getHowToUseTexts(language, appBaseUrl());
   const baseUrl = appBaseUrl();
 
   return (
     <PageLayout
-      currentUrlPath={currentUrlPath}
-      isLoggedIn={false}
+      header={header}
       language={language}
       mainClassName="flex w-full flex-1 flex-col items-center bg-background"
     >

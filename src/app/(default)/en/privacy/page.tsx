@@ -1,6 +1,7 @@
 import type { Metadata, NextPage } from "next";
 import { cacheLife } from "next/cache";
 import { notFound } from "next/navigation";
+import { SessionHeader } from "@/components/session-header";
 import { i18nUrlList } from "@/constants/url";
 import { PrivacyPage } from "@/features/privacy/components/privacy-page";
 import { appName, metaTagList } from "@/functions/meta-tag";
@@ -60,7 +61,12 @@ const EnPrivacy: NextPage = async () => {
 
   return (
     <PrivacyPage
-      currentUrlPath={createIncludeLanguageAppPath("privacy", language)}
+      header={
+        <SessionHeader
+          currentUrlPath={createIncludeLanguageAppPath("privacy", language)}
+          language={language}
+        />
+      }
       language={language}
       markdownContent={markdownContent}
     />

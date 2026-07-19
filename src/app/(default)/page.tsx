@@ -1,7 +1,10 @@
 import type { Metadata, NextPage } from "next";
 import { Suspense } from "react";
+import { SessionHeader } from "@/components/session-header";
 import { i18nUrlList } from "@/constants/url";
 import { HomePage } from "@/features/main/components/home-page";
+import { LatestLgtmImages } from "@/features/main/components/latest-lgtm-images";
+import { RandomLgtmImages } from "@/features/main/components/random-lgtm-images";
 import { appName, metaTagList } from "@/functions/meta-tag";
 import { convertLanguageToOpenGraphLocale } from "@/functions/open-graph-locale";
 import { appBaseUrl } from "@/lib/config/app-base-url";
@@ -43,7 +46,7 @@ interface Props {
   }>;
 }
 
-const HomePageContent = async ({
+const HomeLgtmImages = async ({
   searchParams,
 }: {
   readonly searchParams: Props["searchParams"];
@@ -51,13 +54,19 @@ const HomePageContent = async ({
   const params = await searchParams;
   const view = params.view ?? "random";
 
-  return <HomePage currentUrlPath="/" language={language} view={view} />;
+  return view === "random" ? <RandomLgtmImages /> : <LatestLgtmImages />;
 };
 
 const Home: NextPage<Props> = ({ searchParams }) => (
-  <Suspense fallback={null}>
-    <HomePageContent searchParams={searchParams} />
-  </Suspense>
+  <HomePage
+    header={<SessionHeader currentUrlPath="/" language={language} />}
+    language={language}
+    lgtmImages={
+      <Suspense fallback={null}>
+        <HomeLgtmImages searchParams={searchParams} />
+      </Suspense>
+    }
+  />
 );
 
 export default Home;

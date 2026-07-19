@@ -18,6 +18,27 @@ export function removeLanguageFromAppPath(
   return newUrlPath as IncludeLanguageAppPath;
 }
 
+/**
+ * アプリ内パスを指定した言語のパスに変換する。
+ * 例: "/upload" + "en" → "/en/upload"、"/en/upload" + "ja" → "/upload"
+ */
+export function switchLanguageInAppPath(
+  appPath: IncludeLanguageAppPath,
+  language: Language
+): IncludeLanguageAppPath {
+  const removedLanguagePath = removeLanguageFromAppPath(appPath);
+
+  if (language === "ja") {
+    return removedLanguagePath;
+  }
+
+  if (removedLanguagePath === "/") {
+    return `/${language}`;
+  }
+
+  return `/${language}${removedLanguagePath}` as IncludeLanguageAppPath;
+}
+
 export function isLanguage(value: unknown): value is Language {
   return languages.includes(value as Language);
 }

@@ -1,4 +1,5 @@
 import type { Metadata, NextPage } from "next";
+import { SessionHeader } from "@/components/session-header";
 import { i18nUrlList } from "@/constants/url";
 import { DocsHowToUsePage } from "@/features/docs/components/docs-how-to-use-page";
 import { appName, metaTagList } from "@/functions/meta-tag";
@@ -37,7 +38,15 @@ export const metadata: Metadata = {
 
 const EnDocsHowToUse: NextPage = () => (
   <DocsHowToUsePage
-    currentUrlPath={createIncludeLanguageAppPath("docs-how-to-use", language)}
+    header={
+      <SessionHeader
+        currentUrlPath={createIncludeLanguageAppPath(
+          "docs-how-to-use",
+          language
+        )}
+        language={language}
+      />
+    }
     language={language}
   />
 );

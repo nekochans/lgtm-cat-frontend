@@ -1,5 +1,5 @@
 import type { Metadata, NextPage } from "next";
-import { cacheLife } from "next/cache";
+import { SessionHeader } from "@/components/session-header";
 import { i18nUrlList } from "@/constants/url";
 import { DocsGitHubAppPage } from "@/features/docs/components/docs-github-app-page";
 import { appName, metaTagList } from "@/functions/meta-tag";
@@ -36,16 +36,19 @@ export const metadata: Metadata = {
   },
 };
 
-const DocsGitHubApp: NextPage = async () => {
-  "use cache";
-  cacheLife("max");
-
-  return (
-    <DocsGitHubAppPage
-      currentUrlPath={createIncludeLanguageAppPath("docs-github-app", language)}
-      language={language}
-    />
-  );
-};
+const DocsGitHubApp: NextPage = () => (
+  <DocsGitHubAppPage
+    header={
+      <SessionHeader
+        currentUrlPath={createIncludeLanguageAppPath(
+          "docs-github-app",
+          language
+        )}
+        language={language}
+      />
+    }
+    language={language}
+  />
+);
 
 export default DocsGitHubApp;

@@ -7,7 +7,7 @@ import {
   documentsText,
   favoriteListText,
   logoutText,
-  meowlistText,
+  myCatsText,
   uploadText,
 } from "@/components/header-i18n";
 import { HeaderLogo } from "@/components/header-logo";
@@ -22,21 +22,22 @@ import { removeLanguageFromAppPath } from "@/functions/language";
 import { createMcpLinksFromLanguages } from "@/functions/mcp";
 import { createIncludeLanguageAppPath } from "@/functions/url";
 import type { Language } from "@/types/language";
-import type { IncludeLanguageAppPath } from "@/types/url";
+import type { IncludeLanguageAppPath, LanguageSwitchHrefs } from "@/types/url";
 
 interface Props {
   readonly currentUrlPath: IncludeLanguageAppPath;
-  // TODO: ログイン機能実装後は hideLoginButton Propsを削除する
-  readonly hideLoginButton?: boolean;
   readonly isLoggedIn: boolean;
   readonly language: Language;
+  readonly languageSwitchHrefs?: LanguageSwitchHrefs;
+  readonly loginReturnTo?: IncludeLanguageAppPath;
 }
 
 export function HeaderDesktop({
   language,
+  languageSwitchHrefs,
   currentUrlPath,
-  hideLoginButton,
   isLoggedIn,
+  loginReturnTo,
 }: Props): JSX.Element {
   const githubApp = createGitHubAppLinksFromLanguages(language);
   const howToUse = createHowToUseLinksFromLanguages(language);
@@ -111,7 +112,7 @@ export function HeaderDesktop({
                     className={`data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm ${
                       language === "ja" ? "!bg-orange-400" : ""
                     }`}
-                    href={removedLanguagePath}
+                    href={languageSwitchHrefs?.ja ?? removedLanguagePath}
                     id="ja"
                     textValue="日本語"
                   >
@@ -129,9 +130,10 @@ export function HeaderDesktop({
                       language === "en" ? "!bg-orange-400" : ""
                     }`}
                     href={
-                      removedLanguagePath === "/"
+                      languageSwitchHrefs?.en ??
+                      (removedLanguagePath === "/"
                         ? "/en"
-                        : `/en${removedLanguagePath}`
+                        : `/en${removedLanguagePath}`)
                     }
                     id="en"
                     textValue="English"
@@ -164,7 +166,7 @@ export function HeaderDesktop({
                   >
                     <Dropdown.Item
                       className="data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm"
-                      href="/favorites"
+                      href={createIncludeLanguageAppPath("favorites", language)}
                       id="favorites"
                       textValue={favoriteListText(language)}
                     >
@@ -172,15 +174,15 @@ export function HeaderDesktop({
                     </Dropdown.Item>
                     <Dropdown.Item
                       className="data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm"
-                      href="/cat-list"
-                      id="cat-list"
-                      textValue={meowlistText(language)}
+                      href={createIncludeLanguageAppPath("my-cats", language)}
+                      id="my-cats"
+                      textValue={myCatsText(language)}
                     >
-                      {meowlistText(language)}
+                      {myCatsText(language)}
                     </Dropdown.Item>
                     <Dropdown.Item
                       className="data-[hovered=true]:!bg-orange-300 !min-h-0 !gap-0 !rounded-lg !px-3 !py-2 font-bold text-background text-sm"
-                      href="/logout"
+                      href={createIncludeLanguageAppPath("logout", language)}
                       id="logout"
                       textValue={logoutText(language)}
                     >
@@ -190,8 +192,10 @@ export function HeaderDesktop({
                 </Dropdown.Popover>
               </Dropdown>
             ) : (
-              // TODO: ログイン機能実装後は hideLoginButton による条件分岐を削除する
-              !hideLoginButton && <LoginButton language={language} />
+              <LoginButton
+                currentUrlPath={loginReturnTo ?? currentUrlPath}
+                language={language}
+              />
             )}
           </div>
         </div>

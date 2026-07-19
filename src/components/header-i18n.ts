@@ -45,12 +45,12 @@ export function favoriteListText(language: Language): string {
   }
 }
 
-export function meowlistText(language: Language): string {
+export function myCatsText(language: Language): string {
   switch (language) {
     case "ja":
-      return "にゃんリスト";
+      return "My Cats";
     case "en":
-      return "Meowlist";
+      return "My Cats";
     default:
       return assertNever(language);
   }

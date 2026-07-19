@@ -1,24 +1,22 @@
-import type { JSX } from "react";
+import type { JSX, ReactNode } from "react";
 import { MarkdownContent } from "@/components/markdown-content";
 import { PageLayout } from "@/components/page-layout";
 import type { Language } from "@/types/language";
-import type { IncludeLanguageAppPath } from "@/types/url";
 
 interface Props {
-  readonly currentUrlPath: IncludeLanguageAppPath;
+  readonly header: ReactNode;
   readonly language: Language;
   readonly markdownContent: string;
 }
 
 export function PrivacyPage({
+  header,
   language,
-  currentUrlPath,
   markdownContent,
 }: Props): JSX.Element {
   return (
     <PageLayout
-      currentUrlPath={currentUrlPath}
-      isLoggedIn={false}
+      header={header}
       language={language}
       mainClassName="flex w-full flex-1 flex-col items-center bg-background"
     >

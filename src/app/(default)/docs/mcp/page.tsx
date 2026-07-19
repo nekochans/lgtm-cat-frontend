@@ -1,8 +1,12 @@
 import type { Metadata, NextPage } from "next";
 import { cacheLife } from "next/cache";
+import { SessionHeader } from "@/components/session-header";
 import { i18nUrlList } from "@/constants/url";
 import { DocsMcpPage } from "@/features/docs/components/docs-mcp-page";
-import { loadAllMcpExternalCodes } from "@/features/docs/functions/mcp-code-loader";
+import {
+  loadAllMcpExternalCodes,
+  type McpExternalCodes,
+} from "@/features/docs/functions/mcp-code-loader";
 import { appName, metaTagList } from "@/functions/meta-tag";
 import { convertLanguageToOpenGraphLocale } from "@/functions/open-graph-locale";
 import { createIncludeLanguageAppPath } from "@/functions/url";
@@ -37,18 +41,26 @@ export const metadata: Metadata = {
   },
 };
 
-const DocsMcp: NextPage = async () => {
+async function loadExternalCodes(): Promise<McpExternalCodes> {
   "use cache";
   cacheLife("max");
+  return await loadAllMcpExternalCodes();
+}
 
-  // 外部コードファイルをパラレルで読み込み
-  // Promise.all により複数ファイルを並列取得してパフォーマンス最適化
-  const externalCodes = await loadAllMcpExternalCodes();
+const DocsMcp: NextPage = async () => {
+  // 外部コードファイルの読み込み結果のみキャッシュし、ページ自体は
+  // SessionHeader（実行時 API 使用）を含むためキャッシュしない
+  const externalCodes = await loadExternalCodes();
 
   return (
     <DocsMcpPage
-      currentUrlPath={createIncludeLanguageAppPath("docs-mcp", language)}
       externalCodes={externalCodes}
+      header={
+        <SessionHeader
+          currentUrlPath={createIncludeLanguageAppPath("docs-mcp", language)}
+          language={language}
+        />
+      }
       language={language}
     />
   );

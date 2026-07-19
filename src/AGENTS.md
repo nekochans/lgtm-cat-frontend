@@ -187,33 +187,33 @@ Server Action の型定義（状態型と関数型）は、実装ファイルと
 - `src/components/` は `types/` 配下の型定義ファイルにのみ依存可能（実装ファイルへの直接依存は禁止）
 
 ```typescript
-// src/actions/auth/types/signin-action.ts — 型定義のみ
-export type SigninActionState =
+// src/actions/auth/types/login-action.ts — 型定義のみ
+export type LoginActionState =
   | { readonly status: "SUCCESS" }
   | { readonly status: "ERROR"; readonly errorMessage: string }
   | null;
 
-export type SigninAction = (
-  previousState: SigninActionState,
+export type LoginAction = (
+  previousState: LoginActionState,
   formData: FormData,
-) => Promise<SigninActionState>;
+) => Promise<LoginActionState>;
 ```
 
 ```typescript
-// src/actions/auth/signin-action.ts — 実装
+// src/actions/auth/login-action.ts — 実装
 "use server";
 
 import { APIError } from "better-auth/api";
 import { auth } from "@/lib/better-auth/auth";
 import type {
-  SigninAction,
-  SigninActionState,
-} from "@/actions/auth/types/signin-action";
+  LoginAction,
+  LoginActionState,
+} from "@/actions/auth/types/login-action";
 
-export const signinAction: SigninAction = async (
-  _previousState: SigninActionState,
+export const loginAction: LoginAction = async (
+  _previousState: LoginActionState,
   formData: FormData,
-): Promise<SigninActionState> => {
+): Promise<LoginActionState> => {
   // 実装
 };
 ```
