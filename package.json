@@ -2,6 +2,7 @@
   "name": "lgtm-cat-frontend",
   "version": "1.0.0",
   "private": true,
+  "license": "MIT",
   "scripts": {
     "dev": "next dev -p 2222",
     "build": "next build",
