@@ -189,9 +189,9 @@ turso auth login
 以下は [mise](https://github.com/jdx/mise) を使った設定例です。
 
 ```bash
-mise install node@24.12.0
+mise install node@24.22.1
 
-mise use node@24.12.0
+mise use node@24.22.1
 ```
 
 ## 依存 package のインストールと開発用アプリケーションサーバーの起動
