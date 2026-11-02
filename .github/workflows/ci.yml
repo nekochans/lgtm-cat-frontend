@@ -9,6 +9,7 @@ on:
 jobs:
   build:
     name: Build And Test
+    # Playwright 1.59.1 が Ubuntu 26.04 に対応していないための一時的な固定。https://github.com/nekochans/lgtm-cat-frontend/issues/515 で ubuntu-latest に戻す
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     strategy:
