@@ -7,7 +7,7 @@ on:
 
 jobs:
   git-pr-release:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
@@ -19,7 +19,7 @@ jobs:
       - name: setup ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 4.0.0
+          ruby-version: "4.0"
       - name: setup git-pr-release
         run: gem install --no-document git-pr-release
       - name: create a release pull request
