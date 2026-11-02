@@ -31,12 +31,12 @@ LGTMeow（https://lgtmeow.com）のフロントエンド用 Next.js プロジェ
 
 用途固有のワークフローは `.agents/skills/` 配下の Skill に分離している。以下の状況に該当する場合は、対応する Skill を読み込んでから作業すること。
 
-| 状況                               | Skill 名           | 内容                                                                        |
-| ---------------------------------- | ------------------ | --------------------------------------------------------------------------- |
-| GitHub の Pull Request を作成する  | `create-pr`        | PR タイトル規約、本文テンプレート、ベースブランチ、許可される操作等         |
-| Git コミットメッセージを作成する   | `git-commit`       | コミットメッセージ規約、issue 番号付与ルール、コミット/プッシュ実行ポリシー |
-| Tailwind CSS v4 でスタイリングする | `tailwind-styling` | v4 構文ルール、Breaking Changes、新機能等                                   |
-| Figma デザインを取り込む           | `figma-import`     | Figma Dev Mode MCP の利用ルール、注意事項                                   |
+| 状況                               | Skill 名           | 内容                                                |
+| ---------------------------------- | ------------------ | --------------------------------------------------- |
+| GitHub の Pull Request を作成する  | `create-pr`        | PR タイトル規約、本文テンプレート、ベースブランチ等 |
+| Git コミットメッセージを作成する   | `git-commit`       | コミットメッセージ規約、issue 番号付与ルール        |
+| Tailwind CSS v4 でスタイリングする | `tailwind-styling` | v4 構文ルール、Breaking Changes、新機能等           |
+| Figma デザインを取り込む           | `figma-import`     | Figma Dev Mode MCP の利用ルール、注意事項           |
 
 各 Skill の実体は `.agents/skills/<skill名>/SKILL.md` に格納されている。Claude Code・Codex CLI ともに自動的に Skill を発見するが、確実に呼び出したい場合は明示的に Skill 名を指定すること。
 
@@ -75,6 +75,8 @@ ln -s AGENTS.md CLAUDE.md
 
 **許可なく実行可能：**
 
+- Git へのコミット
+- GitHub へのプッシュ
 - GitHub への PR の作成
 - GitHub への PR へのコメント追加
 - GitHub Issue の新規作成
@@ -82,7 +84,8 @@ ln -s AGENTS.md CLAUDE.md
 
 **ユーザーの明示的な許可が必要：**
 
-- Git へのコミット
-- GitHub へのプッシュ
+- PR のマージ（`staging` / `main` に反映され、取り消しが難しいため）
+
+`main` と `staging` には直接コミット・プッシュしない。これらのブランチにいるときは、`feature/issue<番号>/<内容>` 形式の作業ブランチを作ってからコミットする。
 
 PR 作成時は `create-pr` Skill、コミット時は `git-commit` Skill を参照すること。
