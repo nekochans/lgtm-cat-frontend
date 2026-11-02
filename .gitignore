@@ -77,3 +77,6 @@ next-env.d.ts
 
 # ClaudeCode MCP設定ファイル
 .mcp.json
+
+# Claude デスクトップアプリのプレビュー機能が生成する開発サーバー起動設定
+.claude/launch.json
